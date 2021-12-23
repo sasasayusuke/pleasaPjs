@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample PDF Viewer</title>
+<style>
+#canvas_container {
+    /** pdf表示画面のCSS この辺りはカスタマイズしてください。 */
+    height: 100%;
+    overflow: auto;
+    background: #333;
+    text-align: center;
+    border: solid 3px;
+}
+</style>
+<script src="//mozilla.github.io/pdf.js/build/pdf.js">
+</script>
+</head>
+<body>
+    <div id="pdf_viewer">
+        <div id="canvas_container">
+            <canvas id="pdf_renderer"></canvas>
+        </div>
+        <div id="navigation_controls">
+            <button id="go_previous">Previous</button>
+            <button id="go_next">Next</button>
+            <button id="zoom_in">Zoom In</button>
+            <button id="zoom_out">Zoom Out</button>
+        </div>
+    </div>
+    <script>
+    // 表示したいPDFのパスを指定
+    // https棟のURLでも可。ただしPDF配置サーバにCORSの設定をする必要あり。base64 encodeのPDFでも表示可能
+    var url = 'C:\\Users\\Y-Sasaki\\Downloads\\2021年度+SDT業務改善発表会（プレゼント告知）.pdf';
+    // PDF.js にアクセスするためのショートカット
+    var pdfjsLib = window['pdfjs-dist/build/pdf'];
+    // PDF.jsを使用するために「workerSrc」プロパティを指定する必要があるため指定
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+    var state = {
+        pdf: null,
+        // 表示ページ
+        currentPage: 1,
+        // 倍率 1.0は1倍
+        zoom: 1.0
+    }
+    // PDFの読み込み
+    pdfjsLib.getDocument(url).promise.then((pdf) => {
+        state.pdf = pdf;
+        render();
+    });
+    // PDFをレンダリングするファンクション
+    function render() {
+        state.pdf.getPage(state.currentPage).then(function(page) {
+            var canvas = document.getElementById("pdf_renderer");
+            var ctx = canvas.getContext('2d');
+            // 倍率を指定
+            var viewport = page.getViewport({scale: state.zoom});
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            // レンダリング
+            page.render({
+                canvasContext: ctx,
+                viewport: viewport
+            });
+        });
+    }
+    // 次のPDFのページを表示
+    document.getElementById('go_previous')
+    .addEventListener('click', (e) => {
+        if (state.pdf == null || state.currentPage == 1) return;
+        state.currentPage -= 1;
+        render();
+    });
+    // 前のPDFページを表示
+    document.getElementById('go_next')
+        .addEventListener('click', (e) => {
+           if (state.pdf == null || state.currentPage > state.pdf._pdfInfo.numPages) return;
+           state.currentPage += 1;
+           render();
+    });
+    // PDFのズームイン（拡大）
+    document.getElementById('zoom_in').addEventListener('click', (e) => {
+        if(state.pdf == null) return;
+        // + 0.5倍
+        state.zoom += 0.5;
+        render();
+    });
+     // PDFのズームアウト（拡小）
+    document.getElementById('zoom_out').addEventListener('click', (e) => {
+        if(state.pdf == null) return;
+        // - 0.5倍
+        state.zoom -= 0.5;
+        render();
+    });
+    </script>
+</body>
+</html>

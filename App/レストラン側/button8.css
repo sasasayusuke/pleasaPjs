@@ -1,0 +1,260 @@
+table.normal tr.tableBody.vacancy a.button8.vacancy {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  margin-right: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #e6e6e6 solid;
+  -webkit-box-shadow: inset #e6e6e6 0 0 0 0;
+          box-shadow: inset #e6e6e6 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+table.normal tr.tableBody.vacancy a.button8.use {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  margin-right: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #669900;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #669900 solid;
+  -webkit-box-shadow: inset #669900 0 0 0 0;
+          box-shadow: inset #669900 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+table.normal tr.tableBody.vacancy a.button8.use:hover {
+  color: #ffffff;
+  -webkit-box-shadow: inset #669900 0 0 0 2.5em;
+          box-shadow: inset #669900 0 0 0 2.5em;
+}
+
+table.normal tr.tableBody.vacancy a.button8.reserve {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #8484ff;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #8484ff solid;
+  -webkit-box-shadow: inset #8484ff 0 0 0 0;
+          box-shadow: inset #8484ff 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+table.normal tr.tableBody.vacancy a.button8.reserve:hover {
+  color: #ffffff;
+  -webkit-box-shadow: inset #8484ff 0 0 0 2.5em;
+          box-shadow: inset #8484ff 0 0 0 2.5em;
+}
+
+table.normal tr.tableBody.use a.button8.vacancy {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: red;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px red solid;
+  -webkit-box-shadow: inset red 0 0 0 0;
+          box-shadow: inset red 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+table.normal tr.tableBody.use a.button8.vacancy:hover {
+  color: #ffffff;
+  -webkit-box-shadow: inset red 0 0 0 2.5em;
+          box-shadow: inset red 0 0 0 2.5em;
+}
+
+table.normal tr.tableBody.use a.button8.use {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #e6e6e6 solid;
+  -webkit-box-shadow: inset #e6e6e6 0 0 0 0;
+          box-shadow: inset #e6e6e6 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  pointer-events: none;
+}
+
+table.normal tr.tableBody.use a.button8.reserve {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #e6e6e6 solid;
+  -webkit-box-shadow: inset #e6e6e6 0 0 0 0;
+          box-shadow: inset #e6e6e6 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  pointer-events: none;
+}
+
+table.normal tr.tableBody.reserve a.button8.vacancy {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: red;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px red solid;
+  -webkit-box-shadow: inset red 0 0 0 0;
+          box-shadow: inset red 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+table.normal tr.tableBody.reserve a.button8.vacancy:hover {
+  color: #ffffff;
+  -webkit-box-shadow: inset red 0 0 0 2.5em;
+          box-shadow: inset red 0 0 0 2.5em;
+}
+
+table.normal tr.tableBody.reserve a.button8.use {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #669900;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #669900 solid;
+  -webkit-box-shadow: inset #669900 0 0 0 0;
+          box-shadow: inset #669900 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+table.normal tr.tableBody.reserve a.button8.use:hover {
+  color: #ffffff;
+  -webkit-box-shadow: inset #669900 0 0 0 2.5em;
+          box-shadow: inset #669900 0 0 0 2.5em;
+}
+
+table.normal tr.tableBody.reserve a.button8.reserve {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #e6e6e6 solid;
+  -webkit-box-shadow: inset #e6e6e6 0 0 0 0;
+          box-shadow: inset #e6e6e6 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  pointer-events: none;
+}
+
+table.process a.button8 {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 0.5em 1.5em;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px #e6e6e6 solid;
+  -webkit-box-shadow: inset #e6e6e6 0 0 0 0;
+          box-shadow: inset #e6e6e6 0 0 0 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-right: 5px;
+  pointer-events: none;
+}
+/*# sourceMappingURL=button8.css.map */

@@ -1,0 +1,17 @@
+#othello {
+  display: -ms-grid;
+  display: grid;
+  width: 40%;
+  -ms-grid-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  border: 10px solid #b0c4de;
+}
+
+#othello div {
+  background-color: #98fb98;
+  border: 2px solid #b0c4de;
+  aspect-ratio: 1;
+}
+/*# sourceMappingURL=view.css.map */

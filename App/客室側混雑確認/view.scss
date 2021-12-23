@@ -1,0 +1,148 @@
+
+#container {
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	margin: 10px;
+}
+
+.flexItem {
+	margin: 20px;
+}
+
+.restaurantName {
+	font-size: 16px;
+	padding-left: 10px;
+    color: #ffffff;
+    text-align: left;
+}
+
+
+.restaurantImage {
+	background-color: #669900;
+    color: #ffffff;
+	width: 100%;
+	height: 120px;
+	border-style:none;
+}
+
+.restaurantOpenTime {
+	font-size: 12px;
+	padding-left: 20px;
+    color: #ffffff;
+    text-align: left;
+}
+
+table.receptionTable {
+	border-collapse: collapse;
+	border: 2px #26320c solid;
+	th {
+		width: 200px;
+		height: 200px;
+		background-color:#669900;
+	}
+	td {
+		width: 250px;
+		height: 200px;
+		background-color:#b8e68a;
+	}
+	&.open {
+		.restaurantName:after {
+			padding-left: 5px;
+			font-size: 15px;
+			content: '営業中';
+			color: #ffcccc;
+		}
+	}
+	&.close {
+		.restaurantName:after {
+			padding-left: 5px;
+			font-size: 15px;
+			content: '営業外';
+			color: #ccffff;
+		}
+	}
+}
+
+
+div.box1 {
+    position: relative;
+    margin: 2px 0;
+    padding: 25px 10px 7px;
+	text-align: center;
+	vertical-align: middle;
+	.box1Title {
+		position: absolute;
+		display: inline-block;
+		top: -2px;
+		left: -2px;
+		padding: 1px;
+		height: 25px;
+		font-size: 20px;
+		line-height: 25px;
+		color: #ffffff;
+		font-weight: bold;
+	}
+	p {
+		font-size: 110px;
+	}
+	&:after {
+		font-size: 16px;
+	}
+	&.good {
+		border: solid 4px red;
+		&:after {
+			content: 'すぐに入れます。';
+			color: #000000;
+		}
+		p:after {
+			content: '〇';
+			color: red;
+		}
+		.box1Title {
+			background: red;
+		}
+	}
+	&.neutral {
+		border: solid 4px #cc9b06;
+		&:after {
+			content: '残席わずかです。';
+			color: #000000;
+		}
+		p:after {
+			content: '△';
+			color: #cc9b06;
+		}
+		.box1Title {
+			background: #cc9b06;
+		}
+	}
+	&.bad {
+		border: solid 4px #000000;
+		&:after {
+			content: '混雑しています。';
+			color: #000000;
+		}
+		p:after {
+			content: '✕';
+			color: #000000;
+		}
+		.box1Title {
+			background: #000000;
+		}
+	}
+	&.close {
+		border: solid 4px blue;
+		&:after {
+			content: '只今の時間は営業していません。';
+			color: #000000;
+		}
+		p:after {
+			content: '-';
+			color: blue;
+		}
+		.box1Title {
+			background: blue;
+		}
+	}
+}

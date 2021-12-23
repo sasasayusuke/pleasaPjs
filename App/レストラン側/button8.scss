@@ -1,0 +1,211 @@
+table {
+    &.normal {
+		tr.tableBody {
+			&.vacancy {
+				a.button8 {
+					&.vacancy {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						margin-right: 5px;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #e6e6e6;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #e6e6e6 solid;
+						box-shadow: inset #e6e6e6 0 0 0 0;
+						transition: 0.3s;
+						pointer-events: none;
+					}
+					&.use {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						margin-right: 5px;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #669900;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #669900 solid;
+						box-shadow: inset #669900 0 0 0 0;
+						transition: 0.3s;
+						cursor: pointer;
+						&:hover {
+							color: #ffffff;
+							box-shadow: inset #669900 0 0 0 2.5em;
+						}
+					}
+					&.reserve {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #8484ff;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #8484ff solid;
+						box-shadow: inset #8484ff 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						cursor: pointer;
+						&:hover {
+							color: #ffffff;
+							box-shadow: inset #8484ff 0 0 0 2.5em;
+						}
+					}
+				}
+			}
+			&.use {
+				a.button8 {
+					&.vacancy {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: red;
+						text-decoration: none;
+						user-select: none;
+						border: 1px red solid;
+						box-shadow: inset red 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						cursor: pointer;
+						&:hover {
+							color: #ffffff;
+							box-shadow: inset red 0 0 0 2.5em;
+						}
+					}
+					&.use {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #e6e6e6;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #e6e6e6 solid;
+						box-shadow: inset #e6e6e6 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						pointer-events: none;
+					}
+					&.reserve {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #e6e6e6;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #e6e6e6 solid;
+						box-shadow: inset #e6e6e6 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						pointer-events: none;
+					}
+				}
+			}
+			&.reserve {
+				a.button8 {
+					&.vacancy {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: red;
+						text-decoration: none;
+						user-select: none;
+						border: 1px red solid;
+						box-shadow: inset red 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						cursor: pointer;
+						&:hover {
+							color: #ffffff;
+							box-shadow: inset red 0 0 0 2.5em;
+						}
+					}
+					&.use {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #669900;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #669900 solid;
+						box-shadow: inset #669900 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						cursor: pointer;
+						&:hover {
+							color: #ffffff;
+							box-shadow: inset #669900 0 0 0 2.5em;
+						}					}
+					&.reserve {
+						width: 30%;
+						min-width: 50px;
+						position: relative;
+						display: inline-block;
+						padding: 0.5em 1.5em;
+						font-size: 1.2em;
+						font-weight: bold;
+						color: #e6e6e6;
+						text-decoration: none;
+						user-select: none;
+						border: 1px #e6e6e6 solid;
+						box-shadow: inset #e6e6e6 0 0 0 0;
+						transition: 0.3s;
+						margin-right: 5px;
+						pointer-events: none;
+					}
+				}
+			}
+		}
+    }
+    &.process {
+        a.button8 {
+			width: 30%;
+			min-width: 50px;
+			position: relative;
+			display: inline-block;
+			padding: 0.5em 1.5em;
+			font-size: 1.2em;
+			font-weight: bold;
+			color: #e6e6e6;
+			text-decoration: none;
+			user-select: none;
+			border: 1px #e6e6e6 solid;
+			box-shadow: inset #e6e6e6 0 0 0 0;
+			transition: 0.3s;
+			margin-right: 5px;
+			pointer-events: none;
+        }
+    }
+}
+
+

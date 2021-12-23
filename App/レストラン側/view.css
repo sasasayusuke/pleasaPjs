@@ -1,0 +1,164 @@
+@charset "UTF-8";
+.restaurantLogo {
+  display: none;
+}
+
+.restaurantLogo + .restaurantImage {
+  background-color: #b8e68a;
+  color: #ffffff;
+  width: 120px;
+  height: 100px;
+  padding: 15px;
+  margin-right: 2px;
+  border-style: none;
+  cursor: pointer;
+}
+
+.restaurantLogo:checked + .restaurantImage {
+  background-color: #669900;
+  color: #ffffff;
+  width: 120px;
+  height: 100px;
+  padding: 15px;
+  border-style: none;
+  cursor: pointer;
+}
+
+#clock {
+  background-color: #b8e68a;
+  color: #ffffff;
+  text-align: center;
+  font-size: 40px;
+  font-weight: 100px;
+  font-family: "Arial", "メイリオ";
+}
+
+.main {
+  max-width: 1700px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.nav {
+  width: 260px;
+}
+
+table#statusTable {
+  width: 100%;
+  border-collapse: separate;
+}
+
+table#statusTable tbody {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 500px;
+}
+
+table#statusTable thead, table#statusTable tbody {
+  display: block;
+}
+
+table#statusTable tr {
+  height: 45px;
+}
+
+table#statusTable tr.vacancy td.status {
+  color: red;
+}
+
+table#statusTable tr.reserve td.status {
+  color: #8484ff;
+}
+
+table#statusTable tr.warning td.elapsedTime {
+  color: red;
+}
+
+table#statusTable td, table#statusTable th {
+  border: 1px #669900 solid;
+  text-align: center;
+  vertical-align: middle;
+  color: #669900;
+  width: 45px;
+}
+
+table#statusTable td.sheetNo, table#statusTable td.capacity {
+  font-size: 20px;
+  width: 5%;
+  min-width: 100px;
+}
+
+table#statusTable td.sheetType, table#statusTable td.status, table#statusTable td.startDate, table#statusTable td.elapsedTime {
+  font-size: 20px;
+  width: 12.5%;
+  min-width: 170px;
+}
+
+table#statusTable td.control {
+  width: 40%;
+  min-width: 200px;
+}
+
+table#statusTable th.sheetNo, table#statusTable th.capacity {
+  font-size: 30px;
+  width: 5%;
+  min-width: 100px;
+}
+
+table#statusTable th.sheetType, table#statusTable th.status, table#statusTable th.startDate, table#statusTable th.elapsedTime {
+  font-size: 30px;
+  width: 12.5%;
+  min-width: 170px;
+}
+
+table#statusTable th.control {
+  font-size: 30px;
+  width: 40%;
+  min-width: 200px;
+}
+
+table#statusTable.normal th {
+  background-color: #ffffff;
+  text-align: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+table#statusTable.normal tr.warning td.elapsedTime {
+  background-color: yellow;
+}
+
+table#statusTable.normal tr:nth-child(odd) {
+  background-color: #cfe6b8;
+}
+
+table#statusTable.normal tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+table#statusTable.process th {
+  background-color: #ffffff;
+  text-align: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+table#statusTable.process tr {
+  background-color: #82b258;
+}
+
+table#statusTable.process tr.process {
+  background-color: #e6b1e4;
+}
+/*# sourceMappingURL=view.css.map */

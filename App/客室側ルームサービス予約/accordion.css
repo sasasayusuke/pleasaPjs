@@ -1,0 +1,175 @@
+#main .accordion1 {
+	max-width: 1024px;
+	margin: 10px auto;
+}
+
+#main .accordion1 .accordionHeader {
+	background-color: #ece4d1;
+	border: 2px solid #334d00;
+	font-size: 26px;
+	font-weight: bold;
+	padding: 20px 11% 20px 20px;
+	text-align: center;
+	position: relative;
+	z-index: +1;
+	cursor: pointer;
+	-webkit-transition-duration: 0.2s;
+			transition-duration: 0.2s;
+}
+
+#main .accordion1 .accordionHeader:hover {
+	opacity: .8;
+}
+
+#main .accordion1 .accordionHeader .i_box {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+		-ms-flex-pack: center;
+			justify-content: center;
+	-webkit-box-align: center;
+		-ms-flex-align: center;
+			align-items: center;
+	position: absolute;
+	top: 50%;
+	right: 5%;
+	width: 40px;
+	height: 40px;
+	border: 1px solid #334d00;
+	margin-top: -20px;
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+	-webkit-transform-origin: center center;
+			transform-origin: center center;
+	-webkit-transition-duration: 0.2s;
+			transition-duration: 0.2s;
+}
+
+#main .accordion1 .accordionHeader.stay .i_box {
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+#main .accordion1 .accordionHeader .i_box .one_i {
+	display: block;
+	width: 18px;
+	height: 18px;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+	-webkit-transform-origin: center center;
+			transform-origin: center center;
+	-webkit-transition-duration: 0.2s;
+			transition-duration: 0.2s;
+	position: relative;
+}
+
+#main .accordion1 .accordionHeader.stay .i_box .one_i {
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+#main .accordion1 .accordionHeader.stay.openAccordion .i_box .one_i {
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+#main .accordion1 .accordionHeader.openAccordion .i_box {
+	-webkit-transform: rotate(-360deg);
+	transform: rotate(-360deg);
+}
+
+#main .accordion1 .accordionHeader.stay.openAccordion .i_box {
+	-webkit-transform: rotate(315eg);
+	transform: rotate(315deg);
+}
+
+#main .accordion1 .accordionHeader .i_box .one_i:before, #main .accordion1 .accordionHeader .i_box .one_i:after {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	content: '';
+	background-color: #334d00;
+	border-radius: 10px;
+	width: 18px;
+	height: 4px;
+	position: absolute;
+	top: 7px;
+	left: 0;
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+	-webkit-transform-origin: center center;
+			transform-origin: center center;
+}
+
+#main .accordion1 .accordionHeader .i_box .one_i:before {
+	width: 4px;
+	height: 18px;
+	top: 0;
+	left: 7px;
+}
+
+#main .accordion1 .accordionHeader.stay .i_box .one_i:before {
+	content: none;
+}
+
+#main .accordion1 .accordionHeader.openAccordion .i_box .one_i:before {
+	content: none;
+}
+
+#main .accordion1 .accordionHeader.stay.openAccordion .i_box .one_i:before {
+	content: "";
+}
+
+#main .accordion1 .accordionHeader.openAccordion .i_box .one_i:after {
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+#main .accordion1 .accordionHeader.stay.openAccordion .i_box .one_i:after {
+	-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+
+#main .accordion1 .accordionInner {
+	display: none;
+	padding: 30px 30px;
+	border-left: 2px solid #334d00;
+	border-right: 2px solid #334d00;
+	border-bottom: 2px solid #334d00;
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+}
+
+#main .accordion1 .accordionInner.stay {
+	display: block;
+}
+
+#main .accordion1 .accordionInner .box1 {
+	height: 100%;
+}
+
+#main .accordion1 .accordionInner p.txt_a_ac {
+	margin: 0;
+}
+
+@media screen and (max-width: 1024px) {
+	#main .accordion1 .accordionHeader {
+		font-size: 18px;
+	}
+	#main .accordion1 .accordionHeader .i_box {
+		width: 30px;
+		height: 30px;
+		margin-top: -15px;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	#main .accordion1 .accordionHeader {
+		font-size: 16px;
+		text-align: left;
+		padding: 15px 60px 15px 15px;
+	}
+}

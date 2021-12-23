@@ -1,0 +1,271 @@
+#utilHeader {
+	#utilHeaderTitle {
+		text-align: center;
+		font-size: 40px;
+		font-weight: 100px;
+		font-family: "游明朝体", "Yu Mincho", YuMincho, "Times New Roman", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "HG明朝E", "ＭＳ Ｐ明朝", sans-serif;
+		background-color: #b8e68a;
+		color: #ffffff;
+		margin-top: 20px;
+		margin-bottom: 2px;
+	}
+
+	#utilHeaderRemark {
+		font-size: 16px;
+		text-align: center;
+		font-family: "游明朝体", "Yu Mincho", YuMincho, "Times New Roman", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "HG明朝E", "ＭＳ Ｐ明朝", sans-serif;
+		white-space: pre-wrap;
+		margin-bottom: 30px;
+	}
+
+	#utilHeaderImage {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+#utilFooter {
+	#utilFooterTitle {
+		font-size: 30px;
+		text-align: center;
+		font-family: "游明朝体", "Yu Mincho", YuMincho, "Times New Roman", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "HG明朝E", "ＭＳ Ｐ明朝", sans-serif;
+		margin-top: 20px;
+		margin-bottom: 30px;
+	}
+
+	#utilFooterRemark {
+		font-size: 16px;
+		text-align: center;
+		font-family: "游明朝体", "Yu Mincho", YuMincho, "Times New Roman", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "HG明朝E", "ＭＳ Ｐ明朝", sans-serif;
+		white-space: pre-wrap;
+		margin-bottom: 30px;
+	}
+
+	#utilFooterImage {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+#utilImage-QR {
+	margin-top: 30px;
+	text-align: center;
+}
+
+#utilFix-left-down {
+	&.circle {
+		position: fixed;
+		bottom: 50px;
+		left: 100%;
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		background: #669900;/*背景色*/
+		text-align: center;
+		margin-left: -98%;
+		z-index: 2;
+		cursor: pointer;
+		img {
+			width: 75%;
+			height: 75%;
+			transition-duration: 0.5s;
+		}
+		&:hover img {
+			transform: rotateY( 360deg );
+			transition-duration: 0.5s;
+		}
+		@media only screen and (min-width: 768px) {
+			&:active img {
+				transform: rotateY( 360deg );
+				transition-duration: 0.5s;
+			}
+		}
+	}
+}
+#utilClock {
+	background-color: #b8e68a;
+    color: #ffffff;
+	text-align: center;
+	font-size: 40px;
+	font-weight: 100px;
+	font-family: "Arial", "メイリオ";
+}
+
+.utilLoading2 {
+	width: 50px;
+	height: 20px;
+	margin: 0 auto;
+	font-size: 0;
+	text-align: center;
+}
+
+.utilLoading2 > div {
+	display: inline-block;
+	width: 6px;
+	height: 100%;
+	margin: 0 2px;
+	background-color: #333;
+	transform-origin: center bottom;
+	animation: rectY 1.2s infinite linear;
+}
+
+.utilLoading2 .rect2 {
+	animation-delay: -1s;
+}
+
+.utilLoading2 .rect3 {
+	animation-delay: -2s;
+}
+
+.utilLoading2 .rect4 {
+	animation-delay: -3s;
+}
+
+.utilLoading2 .rect5 {
+	animation-delay: -4s;
+}
+
+@keyframes rectY {
+	0%,
+	50%,
+	100% {
+	transform: scaleY(0.5);
+	}
+
+	30% {
+	transform: scaleY(2);
+	}
+}
+
+
+.utilLoading3 {
+	position: relative;
+	text-align: center;
+}
+
+.utilLoading3 > div {
+	position: absolute;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background-color: #333;
+	border-radius: 100%;
+	animation: go-and-return 1.5s infinite linear;
+}
+
+.utilLoading3 .circle2 {
+	animation-delay: -0.6s;
+}
+
+.utilLoading3 .circle3 {
+	animation-delay: -0.3s;
+}
+
+@keyframes go-and-return {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	25% {
+		transform: translateX(-30px);
+	}
+
+	75% {
+		transform: translateX(30px);
+	}
+}
+
+.utilInlineRadio {
+	display: flex;
+	border-radius: 3px;
+	overflow: hidden;
+	width: 1000px;
+	border: 1px solid #b6b6b6;
+	margin: auto;
+	div {
+		position: relative;
+		flex: 1;
+	}
+
+	input {
+		width: 100%;
+		height: 25px;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	label {
+		position: absolute;
+		top: 0; left: 0;
+		color: #000000;
+		width: 100%;
+		height: 100%;
+		background: #eeeeee;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+		border-right: 1px solid #b6b6b6;
+
+	}
+
+	div:last-child label {
+		border-right: 0;
+	}
+
+	input:checked + label {
+		background: #cccccc;
+		font-weight: 500;
+		color: #000000;
+	}
+}
+
+
+#utilModal {
+	display: none;
+	position: fixed;
+	z-index: 5;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.5);
+}
+
+.utilModal-content {
+	background-color: #f4f4f4;
+	margin: 20% auto;
+	width: 50%;
+	box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 7px 20px 0 rgba(0,0,0,0.17);
+	animation-name: modalopen;
+	animation-duration: 1s;
+}
+
+@keyframes modalopen {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+.utilModal-header {
+	background: lightblue;
+	padding: 3px 15px;
+	display: flex;
+	justify-content: space-between;
+	h1 {
+		margin: 1rem 0;
+	}
+}
+
+.utilModal-close {
+	font-size: 2rem;
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.utilModal-body {
+	padding: 10px 20px;
+	color: black;
+}

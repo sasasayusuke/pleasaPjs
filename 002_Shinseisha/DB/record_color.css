@@ -1,0 +1,12 @@
+tr.grid-row {
+  background-color: #b8e68a;
+}
+
+tr.grid-row.expire {
+  background-color: #db5872;
+}
+
+tr.grid-row.invalid {
+  background-color: #93998a;
+}
+/*# sourceMappingURL=record_color.css.map */

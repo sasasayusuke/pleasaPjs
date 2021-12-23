@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="sec_inner">
+		<div class="slider">
+				<div><img src="C:\\Users\\Y-Sasaki\\Desktop\\sasaki\\image\\room_service_dinner_photo01.jpg"></div>
+				<div><img src="C:\\Users\\Y-Sasaki\\Desktop\\sasaki\\image\\room_service_dinner_photo02.jpg"></div>
+				<div><img src="C:\\Users\\Y-Sasaki\\Desktop\\sasaki\\image\\room_service_dinner_photo03.jpg"></div>
+		</div>
+	</div>
+</body>
+<script>
+
+utilImport('css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css')
+utilImport('css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css')
+utilImport('javascript', 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+utilImport('javascript', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js', function() {
+	$(function() {
+			$('.slider').slick({
+				autoplay: true,			//自動再生
+				autoplaySpeed: 2000,	//自動再生のスピード
+				speed: 800,				//スライドするスピード
+				dots: true,				//スライドしたのドット
+				arrows: true,			//左右の矢印
+				infinite: true,			//スライドのループ
+				pauseOnHover: false,	//ホバーしたときにスライドを一時停止しない　
+			});
+		})
+})
+
+function utilImport(type, src, addFunc) {
+	let head = document.getElementsByTagName('head')
+	let elem
+	if (type == 'css') {
+		elem = document.createElement('link')
+		elem.setAttribute('rel', 'stylesheet')
+		elem.setAttribute('type', 'text/css')
+		elem.setAttribute('href', src)
+	} else if (type == 'javascript') {
+		elem = document.createElement('script')
+		elem.setAttribute('type', 'text/javascript')
+		elem.setAttribute('src', src)
+		document.head.appendChild(elem)
+	} else {
+		console.log('typeパラメータが不正です')
+		return ''
+	}
+	document.head.appendChild(elem)
+	elem.addEventListener('load', function() {
+		if (addFunc && typeof addFunc === 'function') {
+			// 渡されたオブジェクトが関数なら実行する
+			addFunc()
+		}
+	})
+}
+</script>
+<style>
+/*--------画像サイズ調整---------*/
+img{
+	width:100%;
+}
+
+/*-----------height調整----------*/
+.slick-slide{
+	height:auto!important;
+}
+/*------------------------------*/
+
+
+/*-----------矢印表示----------*/
+.slick-next{
+    right:0!important;
+}
+.slick-prev{
+    left:0!important;
+}
+.slick-arrow{
+    width: initial!important;
+    height: initial!important;
+    z-index:2!important;
+}
+.slick-arrow:before{
+    font-size: 30px!important;
+}
+</style>
+</html>
+

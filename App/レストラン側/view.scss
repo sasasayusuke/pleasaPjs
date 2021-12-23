@@ -1,0 +1,149 @@
+
+.restaurantLogo {
+	display: none;
+	+ .restaurantImage {
+		background-color: #b8e68a;
+		color: #ffffff;
+		width: 120px;
+		height: 100px;
+		padding: 15px;
+		margin-right: 2px;
+		border-style:none;
+		cursor: pointer;
+	}
+	&:checked + .restaurantImage {
+		background-color: #669900;
+		color: #ffffff;
+		width: 120px;
+		height: 100px;
+		padding: 15px;
+		border-style:none;
+		cursor: pointer;
+	}
+}
+
+
+
+#clock {
+	background-color: #b8e68a;
+    color: #ffffff;
+	text-align: center;
+	font-size: 40px;
+	font-weight: 100px;
+	font-family: "Arial", "メイリオ";
+}
+
+.main {
+	max-width: 1700px;
+	flex: 1;
+}
+
+.container {
+	display: flex;
+}
+
+.nav {
+	width: 260px;
+}
+
+table#statusTable {
+	width: 100%;
+	border-collapse: separate;
+	tbody {
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 500px;
+	}
+	thead, tbody {
+		display: block;
+	}
+	tr {
+		height: 45px;
+		&.vacancy td.status {
+			color:red;
+		}
+		&.reserve td.status {
+			color:#8484ff;
+		}
+		&.warning td.elapsedTime {
+			color:red;
+		}
+	}
+	td, th {
+		border: 1px #669900 solid;
+		text-align: center;
+		vertical-align: middle;
+		color: #669900;
+		width: 45px;
+	}
+	td {
+		&.sheetNo, &.capacity {
+			font-size: 20px;
+			width: 5%;
+			min-width: 100px;
+		}
+		&.sheetType, &.status, &.startDate, &.elapsedTime {
+			font-size: 20px;
+			width: 12.5%;
+			min-width: 170px;
+		}
+		&.control {
+			width: 40%;
+			min-width: 200px;
+		}
+	}
+	th {
+		&.sheetNo, &.capacity {
+			font-size: 30px;
+			width: 5%;
+			min-width: 100px;
+		}
+		&.sheetType, &.status, &.startDate, &.elapsedTime {
+			font-size: 30px;
+			width: 12.5%;
+			min-width: 170px;
+		}
+		&.control {
+			font-size: 30px;
+			width: 40%;
+			min-width: 200px;
+		}
+	}
+	&.normal {
+		th {
+			background-color:#ffffff;
+			text-align: center;
+			position: sticky;
+			top: 0;
+			z-index: 2;
+		}
+		tr {
+			&.warning td.elapsedTime {
+				background-color: yellow;
+			}
+			&:nth-child(odd) {
+				background-color:#cfe6b8;
+			}
+			&:nth-child(even) {
+				background-color:#ffffff;
+			}
+		}
+	}
+	&.process {
+		th {
+			background-color:#ffffff;
+			text-align: center;
+			position: sticky;
+			top: 0;
+			z-index: 2;
+		}
+		tr {
+			background-color: #82b258;
+			&.process {
+				background-color:#e6b1e4;
+			}
+		}
+
+	}
+}
+

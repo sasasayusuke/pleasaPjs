@@ -1,0 +1,113 @@
+#container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 20px;
+}
+
+.flexItem {
+  margin: 20px;
+}
+
+.restaurantName {
+  font-size: 15px;
+  text-align: right;
+}
+
+.restaurantImage {
+  background-color: #669900;
+  color: #ffffff;
+  width: 140px;
+  height: 120px;
+  padding: 15px;
+  border-style: none;
+}
+
+table.receptionTable {
+  border-collapse: collapse;
+}
+
+table.receptionTable td, table.receptionTable th {
+  border: 2px #669900 solid;
+  text-align: center;
+  width: 150px;
+  font-size: 25px;
+}
+
+table.receptionTable td {
+  color: #000000;
+}
+
+table.receptionTable th {
+  color: #ffffff;
+  background-color: #669900;
+}
+
+table.receptionTable tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+table.receptionTable tr:nth-child(even) {
+  background-color: #cfe6b8;
+}
+
+#infoArea {
+  margin: 20px;
+}
+
+table.infoTable {
+  width: auto;
+  border-collapse: collapse;
+}
+
+table.infoTable thead, table.infoTable tbody {
+  display: block;
+}
+
+table.infoTable tbody {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 200px;
+}
+
+table.infoTable td, table.infoTable th {
+  border: 2px #669900 solid;
+  font-size: 25px;
+}
+
+table.infoTable td {
+  background-color: #cfe6b8;
+  color: #000000;
+  text-align: center;
+}
+
+table.infoTable td.infoDate {
+  width: 250px;
+  text-align: center;
+}
+
+table.infoTable td.infoSource {
+  width: 250px;
+  text-align: center;
+}
+
+table.infoTable td.infoContent {
+  width: 1200px;
+}
+
+table.infoTable th {
+  background-color: #669900;
+  color: #ffffff;
+  text-align: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: -2px;
+}
+/*# sourceMappingURL=view.css.map */
