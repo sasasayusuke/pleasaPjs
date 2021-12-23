@@ -2,7 +2,7 @@
 var roomServiceAlacartData = []
 console.log('ルームサービスアラカルト情報 : ' + SITE_URL + roomServiceAlacartDBId + '/index')
 
-function readRoomServiceAlacartInfo (public = false) {
+async function readRoomServiceAlacartInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + roomServiceAlacartDBId + '/get',

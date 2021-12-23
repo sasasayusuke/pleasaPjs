@@ -2,7 +2,7 @@
 var roomServiceMenuData = []
 console.log('ルームサービスメニュー情報 : ' + SITE_URL + roomServiceMenuDBId + '/index')
 
-function readRoomServiceMenuInfo (public = false) {
+async function readRoomServiceMenuInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + roomServiceMenuDBId + '/get',

@@ -3,7 +3,7 @@ var messageData = []
 let messageDBId = 5856
 console.log('メッセージマスタ : ' + SITE_URL + messageDBId + '/index')
 
-function readMessageMaster (public = false) {
+async function readMessageMaster (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + messageDBId + '/get',

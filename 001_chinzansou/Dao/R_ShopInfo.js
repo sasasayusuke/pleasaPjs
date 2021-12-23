@@ -2,7 +2,7 @@
 var shopData = []
 console.log('店舗情報 : ' + SITE_URL + shopDBId + '/index')
 
-function readShopInfo (public = false) {
+async function readShopInfo (public = false) {
 	if (public) {
 		let settings = {
             'url': SITE_API_URL + shopDBId + '/get',

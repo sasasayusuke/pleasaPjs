@@ -2,7 +2,7 @@
 var orderData = []
 console.log('注文情報 : ' + SITE_URL + orderDBId + '/index')
 
-function readOrderInfo (public = false) {
+async function readOrderInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + orderDBId + '/get',
@@ -37,7 +37,7 @@ function readOrderInfo (public = false) {
 }
 
 
-function createOrderInfo (ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash, public = false, addFunc) {
+async function createOrderInfo (ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash, public = false, addFunc) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + orderDBId + '/create',
@@ -89,7 +89,7 @@ function createOrderInfo (ClassHash = {}, NumHash= {}, DateHash= {}, Description
     }
 }
 
-function updateOrderInfo (updateId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, public = false, addFunc) {
+async function updateOrderInfo (updateId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, public = false, addFunc) {
     if (public) {
 
     } else {

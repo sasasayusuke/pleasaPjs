@@ -2,7 +2,7 @@
 var sheetData = []
 console.log('店舗席情報 : ' + SITE_URL + sheetDBId + '/index')
 
-function readSheetInfo (public = false) {
+async function readSheetInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + sheetDBId + '/get',
@@ -36,7 +36,7 @@ function readSheetInfo (public = false) {
 
 }
 
-function updateSheetInfo(updateId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, public = false, addFunc) {
+async function updateSheetInfo(updateId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, public = false, addFunc) {
     if (public) {
 
     } else {

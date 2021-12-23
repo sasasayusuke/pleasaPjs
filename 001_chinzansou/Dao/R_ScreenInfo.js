@@ -2,7 +2,7 @@
 var screenData = []
 console.log('画面情報 : ' + SITE_URL + screenDBId + '/index')
 
-function readScreenInfo (public = false) {
+async function readScreenInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + screenDBId + '/get',

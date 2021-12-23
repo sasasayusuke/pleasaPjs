@@ -2,7 +2,7 @@
 var panfletData = []
 console.log('パンフレット情報 : ' + SITE_URL + panfletDBId + '/index')
 
-function readPanfletInfo (public = false) {
+async function readPanfletInfo (public = false) {
     if (public) {
         let settings = {
             'url': SITE_API_URL + panfletDBId + '/get',
