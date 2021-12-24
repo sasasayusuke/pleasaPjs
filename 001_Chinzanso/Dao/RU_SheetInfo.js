@@ -18,6 +18,7 @@ async function readSheetInfo (public = false) {
         $.ajax(settings).done(function (response) {
             sheetData = response.Response.Data
             console.log(sheetData)
+            return true
         })
     } else {
         $p.apiGet({
@@ -25,9 +26,12 @@ async function readSheetInfo (public = false) {
             'done': function (data) {
                 sheetData = data.Response.Data
                 console.log(sheetData)
+                return true
             },
-            'fail': function (data) {d
+            'fail': function (data) {
 				alert(sheetDBId + 'との通信が失敗しました。')
+                console.log(data)
+                throw new Error("e");
             },
             'always': function (data) {
             }

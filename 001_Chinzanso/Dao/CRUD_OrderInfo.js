@@ -25,9 +25,11 @@ async function readOrderInfo (public = false) {
             'done': function (data) {
                 orderData = data.Response.Data
                 console.log(orderData)
+                return true
             },
             'fail': function (data) {
 				alert(orderDBId + 'との通信が失敗しました。')
+                throw new Error("e");
             },
             'always': function (data) {
             }

@@ -26,6 +26,7 @@ var USE = 'use'
 var RESERVE = 'reserve'
 var NORMAL = 'normal'
 var WARNING = 'warning'
+var ERROR = 'error'
 var PROCESS = 'process'
 var BREAKFAST = 'breakfast'
 var DINNER = 'dinner'
@@ -60,6 +61,47 @@ function utilImport(type, src, addFunc) {
       // 渡されたオブジェクトが関数なら実行する
       addFunc()
     }
+  }
+}
+
+function utilSetMessage (message = '', type = NORMAL) {
+  $p.clearMessage();
+  switch (type) {
+    case NORMAL:
+      $p.setMessage(
+        '#Message',
+        JSON.stringify({
+          Css: 'alert-success',
+          Text: message
+        })
+      )
+    break
+    case WARNING:
+      $p.setMessage(
+        '#Message',
+        JSON.stringify({
+          Css: 'alert-warning',
+          Text: message
+        })
+      )
+    break
+    case ERROR:
+      $p.setMessage(
+        '#Message',
+        JSON.stringify({
+          Css: 'alert-error',
+          Text: message
+        })
+      )
+    break
+    default:
+      $p.setMessage(
+        '#Message',
+        JSON.stringify({
+          Css: 'alert-error',
+          Text: 'message type が不正です。'
+        })
+      )
   }
 }
 

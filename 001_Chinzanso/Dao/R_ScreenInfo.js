@@ -15,9 +15,15 @@ async function readScreenInfo (public = false) {
                 'ApiKey': API_KEY
             }),
         }
-        $.ajax(settings).done(function (response) {
+        $.ajax(settings)
+        .done(function (response) {
             screenData = response.Response.Data
             console.log(screenData)
+            return true
+        })
+        .fail(function (response) {
+            alert(screenDBId + 'との通信が失敗しました。')
+            throw new Error("e");
         })
     } else {
         $p.apiGet({
@@ -25,9 +31,11 @@ async function readScreenInfo (public = false) {
             'done': function (data) {
                 screenData = data.Response.Data
                 console.log(screenData)
+                return true
             },
             'fail': function (data) {
 				alert(screenDBId + 'との通信が失敗しました。')
+                throw new Error("e");
             },
             'always': function (data) {
             }

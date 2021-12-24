@@ -25,6 +25,7 @@ async function createOrderHistory(ClassHash = {}, NumHash= {}, DateHash= {}, Des
                 // 渡されたオブジェクトが関数なら実行する
                 addFunc()
             }
+            return true
         })
     } else {
         $p.apiCreate({
@@ -42,10 +43,13 @@ async function createOrderHistory(ClassHash = {}, NumHash= {}, DateHash= {}, Des
                     // 渡されたオブジェクトが関数なら実行する
                     addFunc()
                 }
+                return true
             },
             'fail': function (data) {
                 alert(orderHistoryDBId + '登録に失敗しました。')
                 console.log(data)
+                throw new Error("e");
+
             },
             'always': function (data) {
             },

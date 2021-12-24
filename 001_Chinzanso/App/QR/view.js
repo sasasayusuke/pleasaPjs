@@ -1,7 +1,4 @@
 
-var PUBLIC_FLG = true
-
-readScreenInfo(PUBLIC_FLG)
 
 $p.events.on_grid_load = function () {
 
