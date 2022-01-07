@@ -1,5 +1,5 @@
 $p.events.on_grid_load = function () {
-	target = utilQuerySelector('div#MainCommands')
+	target = document.getElementById('MainCommands')
 	elem = document.createElement('button')
 	elem.id='orderCheck'
 	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'

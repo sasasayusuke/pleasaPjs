@@ -64,8 +64,10 @@ function utilImport(type, src, addFunc) {
   }
 }
 
-function utilSetMessage (message = '', type = NORMAL) {
-  $p.clearMessage();
+function utilSetMessage (message = '', type = NORMAL, clear = true) {
+  if (clear) {
+    $p.clearMessage()
+  }
   switch (type) {
     case NORMAL:
       $p.setMessage(

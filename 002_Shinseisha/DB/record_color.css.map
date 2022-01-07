@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAEA,AAAA,EAAE,AAAA,SAAS,CAAA;EACV,gBAAgB,EAAC,OAAO;CACxB;;AAED,AAAA,EAAE,AAAA,SAAS,AAAA,OAAO,CAAC;EAClB,gBAAgB,EAAC,OAAO;CACxB;;AAED,AAAA,EAAE,AAAA,SAAS,AAAA,QAAQ,CAAA;EAClB,gBAAgB,EAAC,OAAO;CACxB",
-    "sources": [
-        "record_color.scss"
-    ],
-    "names": [],
-    "file": "record_color.css"
-}
