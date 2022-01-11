@@ -276,7 +276,7 @@
   color: #000000;
 }
 
-#utilModal {
+.utilModal {
   display: none;
   position: fixed;
   z-index: 5;
@@ -319,7 +319,6 @@
 }
 
 .utilModal-header {
-  background: lightblue;
   padding: 3px 15px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -327,6 +326,14 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+.utilModal-header.red {
+  background: lightcoral;
+}
+
+.utilModal-header.blue {
+  background: lightblue;
 }
 
 .utilModal-header h1 {

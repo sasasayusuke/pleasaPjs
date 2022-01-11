@@ -23,10 +23,11 @@ $p.events.on_grid_load = function () {
 		<div id='utilFooter'></div>
 
 		<div id='utilFix-left-down' class='circle'></div>
-		<div id='utilModal'>
+
+		<div id='purchase' class='utilModal'>
 			<div class='utilModal-content'>
-				<div class='utilModal-header'>
-					<h1>決済画面（かいはつちゅう）</h1>
+				<div class='utilModal-header blue'>
+					<h1>購入選択画面（かいはつちゅう）</h1>
 					<span class='utilModal-close'>×</span>
 				</div>
 				<div class='utilModal-body'>
@@ -36,7 +37,18 @@ $p.events.on_grid_load = function () {
 			</div>
 		</div>
 
+		<div id='settlement' class='utilModal'>
+			<div class='utilModal-content'>
+				<div class='utilModal-header red'>
+					<h1>決済選択画面（かいはつちゅう）</h1>
+					<span class='utilModal-close'>×</span>
+				</div>
+				<div class='utilModal-body'>
+					<p>モーダルウィンドウ test</p>
 
+				</div>
+			</div>
+		</div>
 	`
 
 	$('#MainContainer').prepend(html)
@@ -50,12 +62,14 @@ $p.events.on_grid_load = function () {
 // セット秒後に実行
 window.setTimeout(function() {
 	utilSetHeader(SITE_ID)
-	utilSetFixIcon('basket', 'white', utilOpenModal, PUBLIC_FLG)
+	utilSetFixIcon('basket', 'white', function () {
+		utilOpenModal('settlement')
+	}, PUBLIC_FLG)
 
 	setRadio()
 	setAccordions()
 	setMenus()
-}, 2000)
+}, 3000)
 // セット秒毎に実行
 window.setInterval(checkOpenAll ,1000)
 
@@ -253,26 +267,20 @@ function setMenus() {
 			if (!utilIsNull(imgSource)) {
 				let img = new Image()
 				img.src = imgSource
-				img.className = 'menuImage'
 				menuPhoto.appendChild(img)
 			}
 			menuList.appendChild(menuPhoto)
 
 			let menuDescription = document.createElement('dd')
 			menuDescription.className = 'menuDescription'
-			let menuDetail = document.createElement('p')
-			menuDetail.className = 'menuDetail'
-			menuDetail.innerHTML = menu[description]
-			menuDescription.appendChild(menuDetail)
-			let menuPriceArea = document.createElement('div')
 
 			let sizeList = JSON.parse(menu[sizeType])
 			sizeList = (utilIsNull(sizeList)) ? [''] : sizeList
 
+			let menuPriceList = document.createElement('div')
+			menuPriceList.className = 'menuPriceList'
 			sizeList.forEach((size, index) => {
 
-				let menuPriceList = document.createElement('div')
-				menuPriceList.className = 'menuPriceList'
 				let menuSize = document.createElement('p')
 				menuSize.className = 'menuSize'
 				menuSize.innerHTML = size
@@ -290,73 +298,28 @@ function setMenus() {
 					menuSize.appendChild(menuSpecialPrice)
 				}
 				menuPriceList.appendChild(menuSize)
-				let obj = {add:'red', reduce:'blue'}
-				for(let o of Object.keys(obj)) {
-
-					let menuPurchase = document.createElement('a')
-					menuPurchase.className = 'button7'
-					menuPurchase.classList.add(o)
-					let shoppingImg = new Image()
-					shoppingImg.src = utilGetIconSrc('shopping_' + o, obj[o], PUBLIC_FLG)
-					shoppingImg.className = 'iconImage'
-					shoppingImg.draggable = false
-					menuPurchase.addEventListener('click', function() {
-						createOrderHistory(
-							{
-								ClassA: USER_ID,
-								ClassB: document.getElementById('selectedMenu').innerHTML,
-								ClassC: menu[alacartClass],
-								ClassD: size,
-								ClassL: menu[menuId],
-								ClassM: menu[alacartId],
-							},
-							{
-								NumC: 1,
-								NumD: price,
-								NumE: 123456789012345,
-							},
-							{
-								DateA: utilGetDate()
-							},
-							{},
-							{},
-							PUBLIC_FLG,
-						)
-						createOrderInfo(
-							{
-								ClassA: USER_ID,
-								ClassB: document.getElementById('selectedMenu').innerHTML,
-								ClassC: menu[alacartClass],
-								ClassD: size,
-								ClassL: menu[menuId],
-								ClassM: menu[alacartId],
-							},
-							{
-								NumC: 1,
-								NumD: price,
-								NumE: 123456789012345,
-							},
-							{
-								DateA: utilGetDate()
-							},
-							{},
-							{},
-							PUBLIC_FLG,
-							function() {
-								alert(menu[title] + 'を注文しました。')
-							}
-						)
-					})
-
-					menuPurchase.appendChild(shoppingImg)
-					menuPriceList.appendChild(menuPurchase)
-				}
-				menuPriceArea.appendChild(menuPriceList)
 			})
-			menuDescription.appendChild(menuPriceArea)
+			menuDescription.appendChild(menuPriceList)
 
+			let menuDetail = document.createElement('p')
+			menuDetail.className = 'menuDetail'
+			menuDetail.innerHTML = menu[description]
+			menuDescription.appendChild(menuDetail)
 
 			menuList.appendChild(menuDescription)
+
+			let menuPurchase = document.createElement('a')
+			menuPurchase.className = 'button7 menuPurchaseButton'
+			let shoppingImg = new Image()
+			shoppingImg.src = utilGetIconSrc('shopping_add', 'red', PUBLIC_FLG)
+			shoppingImg.className = 'iconImage'
+			shoppingImg.draggable = false
+			menuPurchase.addEventListener('click', function() {
+				let bodyDiv = utilOpenModal('purchase')
+				utilQuerySelector('.utilModal-body', false, bodyDiv).innerHTML = getOpenIconDom()
+			})
+			menuPurchase.appendChild(shoppingImg)
+			menuList.appendChild(menuPurchase)
 
 			v.appendChild(menuList)
 

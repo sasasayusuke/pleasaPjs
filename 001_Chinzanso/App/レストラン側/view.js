@@ -7,12 +7,6 @@ readScreenInfo(true)
 readSheetInfo(PUBLIC_FLG)
 readShopInfo(PUBLIC_FLG)
 
-//3秒毎に実行
-window.setInterval(function() {
-	readSheetInfo(PUBLIC_FLG)
-}, 3000)
-
-
 $p.events.on_grid_load = function () {
 
 	let html =  `
@@ -174,6 +168,13 @@ var tmpId = ''
 var tmpValue = ''
 let statuses = [USE, VACANCY, RESERVE, PROCESS]
 
+//3秒毎に実行
+window.setInterval(function() {
+	readSheetInfo(PUBLIC_FLG)
+	setTable()
+}, 3000)
+
+
 // セット秒後に実行
 window.setTimeout(function() {
 	utilSetHeader(SITE_ID)
@@ -181,8 +182,6 @@ window.setTimeout(function() {
 
 	setLogo()
 }, 2000)
-// セット秒毎に実行
-window.setInterval(setTable, 3000)
 
 function setLogo() {
 	let shopId = 'ResultId'

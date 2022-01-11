@@ -1,4 +1,4 @@
-a.button7.add {
+a.button7 {
   width: 30%;
   min-width: 50px;
   position: relative;
@@ -21,48 +21,14 @@ a.button7.add {
   cursor: pointer;
 }
 
-a.button7.add img {
+a.button7 img {
   width: 100%;
   height: 100%;
 }
 
-a.button7.add:hover {
+a.button7:hover {
   color: #ffffff;
   -webkit-box-shadow: inset #ff9999 0 0 0 2.5em;
           box-shadow: inset #ff9999 0 0 0 2.5em;
-}
-
-a.button7.reduce {
-  width: 30%;
-  min-width: 50px;
-  position: relative;
-  display: inline-block;
-  padding: 10px 20px;
-  margin-right: 10px;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #b3b3ff;
-  text-decoration: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  border: 1px #b3b3ff solid;
-  -webkit-box-shadow: inset #b3b3ff 0 0 0 0;
-          box-shadow: inset #b3b3ff 0 0 0 0;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-a.button7.reduce img {
-  width: 100%;
-  height: 100%;
-}
-
-a.button7.reduce:hover {
-  color: #ffffff;
-  -webkit-box-shadow: inset #b3b3ff 0 0 0 2.5em;
-          box-shadow: inset #b3b3ff 0 0 0 2.5em;
 }
 /*# sourceMappingURL=button7.css.map */

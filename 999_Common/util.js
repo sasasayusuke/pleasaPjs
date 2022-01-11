@@ -212,18 +212,15 @@ function utilGetImageSrc (path, public = false, noImage = false) {
   return url + path.split('[image](/')[1].split(')')[0]
 }
 
-
-// HTMLCollectionをArrayに変換してから返却
-function utilGetElementsByClassNames (name) {
-  return Array.prototype.slice.call(document.getElementsByClassName(name))
-}
-
-function utilQuerySelector (selector, all = false) {
+function utilQuerySelector (selector, all = false, dom) {
+  if (typeof dom === 'undefined' || utilIsNull(dom)) {
+    dom = document
+  }
   if (all) {
     // NodeListをArrayに変換してから返却
-    return Array.from(ducument.querySelectorAll(selector))
+    return Array.from(dom.querySelectorAll(selector))
   }
-  return ducument.querySelector(selector)
+  return dom.querySelector(selector)
 }
 function utilPad (num, size, min = 0, max = '9'.repeat(size)) {
 	const padding = +num < +min ? +min : +num > +max ? +max : +num
@@ -238,14 +235,6 @@ function utilFilterObject (object, category, words) {
     words = [words]
   }
   return object.filter(v => words.includes(v[category]))
-}
-
-function utilQuerySelector (selector, all = false) {
-  if (all) {
-    // NodeListをArrayに変換してから返却
-    return Array.from(document.querySelectorAll(selector))
-  }
-  return document.querySelector(selector)
 }
 
 function utilSort (array, ascending = true) {
@@ -349,7 +338,9 @@ function utilSetFixIcon(key, color, clickFunc, public) {
   iconDiv.appendChild(img)
   if (clickFunc && typeof clickFunc === 'function') {
     // 渡されたオブジェクトが関数なら実行する
-    iconDiv.addEventListener('click', clickFunc)
+    iconDiv.addEventListener('click', function() {
+      clickFunc()
+    }, false)
   }
 }
 
@@ -482,12 +473,12 @@ function utilViewQRcode(qrtext = '') {
   })
 }
 
-function utilOpenModal() {
-	const modal = document.getElementById('utilModal')
-	const buttonClose = utilQuerySelector('.utilModal-close')
+function utilOpenModal(id = '') {
+	let modal = utilQuerySelector('#' + id + '.utilModal')
+	let closeButton = utilQuerySelector('.utilModal-close', false, modal)
   modal.style.display = 'block'
 	//バツ印がクリックされた時
-	buttonClose.addEventListener('click',function () {
+	closeButton.addEventListener('click',function () {
     modal.style.display = 'none'
 	})
 
@@ -497,4 +488,5 @@ function utilOpenModal() {
       modal.style.display = 'none'
     }
 	})
+  return modal
 }

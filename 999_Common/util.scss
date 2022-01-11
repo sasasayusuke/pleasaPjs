@@ -222,7 +222,7 @@
 }
 
 
-#utilModal {
+.utilModal {
 	display: none;
 	position: fixed;
 	z-index: 5;
@@ -249,7 +249,12 @@
 }
 
 .utilModal-header {
-	background: lightblue;
+	&.red {
+		background: lightcoral;
+	}
+	&.blue {
+		background: lightblue;
+	}
 	padding: 3px 15px;
 	display: flex;
 	justify-content: space-between;

@@ -13,12 +13,8 @@ $p.events.on_grid_load = function () {
 	$('#Application').remove()
 }
 
-
-var PUBLIC_FLG = true
-
-readScreenInfo(PUBLIC_FLG)
-.then(response => {
+// セット秒後に実行
+window.setTimeout(function() {
 	utilSetHeader(SITE_ID)
 	utilViewQRcode(utilQuerySelector('meta[name="description"]').content)
-})
-
+}, 1000)
