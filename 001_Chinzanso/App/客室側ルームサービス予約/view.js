@@ -11,7 +11,7 @@ $p.events.on_grid_load = function () {
 	let html =  `
 		<div id='utilHeader'></div>
 
-		<group id='radioMenuClass' class='utilInlineRadio'></group>
+		<div id='radioMenuClass' class='utilInlineRadio'></div>
 
 		<div id='main'></div>
 
@@ -31,7 +31,8 @@ $p.events.on_grid_load = function () {
 					<span class='utilModal-close'>×</span>
 				</div>
 				<div class='utilModal-body'>
-					<p>モーダルウィンドウ test</p>
+				</div>
+				<div class='utilModal-action'>
 
 				</div>
 			</div>
@@ -44,7 +45,9 @@ $p.events.on_grid_load = function () {
 					<span class='utilModal-close'>×</span>
 				</div>
 				<div class='utilModal-body'>
-					<p>モーダルウィンドウ test</p>
+
+				</div>
+				<div class='utilModal-action'>
 
 				</div>
 			</div>
@@ -228,6 +231,13 @@ function setMenus() {
 	let alacartId = 'IssueId'
 	let alacartClass = 'ClassA'
 	let sizeType = 'ClassB'
+	let mainOption = 'ClassC'
+	let drinkOption = 'ClassD'
+	let breadOption = 'ClassE'
+	let toppingOption = 'ClassF'
+	let cheezeOption = 'ClassG'
+	let dressingOption = 'ClassH'
+	let afterDrinkOption = 'ClassI'
 	let menuId = 'ClassL'
 	let title = 'Title'
 	let description = 'DescriptionA'
@@ -251,7 +261,18 @@ function setMenus() {
 
 	targets.forEach(v => {
 		let menus = utilFilterObject(allowData, menuId, v.id)
+
 		for (let menu of menus) {
+
+			let sizeList = utilIsNull(menu[sizeType]) ? [] : JSON.parse(menu[sizeType])
+			let mainOptionList = utilIsNull(menu[mainOption]) ? [] : JSON.parse(menu[mainOption])
+			let drinkOptionList = utilIsNull(menu[drinkOption]) ? [] : JSON.parse(menu[drinkOption])
+			let breadOptionList = utilIsNull(menu[breadOption]) ? [] : JSON.parse(menu[breadOption])
+			let toppingOptionList = utilIsNull(menu[toppingOption]) ? [] : JSON.parse(menu[toppingOption])
+			let cheezeOptionList = utilIsNull(menu[cheezeOption]) ? [] : JSON.parse(menu[cheezeOption])
+			let dressingOptionList = utilIsNull(menu[dressingOption]) ? [] : JSON.parse(menu[dressingOption])
+			let afterDrinkOptionList = utilIsNull(menu[afterDrinkOption]) ? [] : JSON.parse(menu[afterDrinkOption])
+
 			let menuList = document.createElement('dl')
 			menuList.id = menu[alacartId]
 			menuList.className = 'menuList'
@@ -274,7 +295,6 @@ function setMenus() {
 			let menuDescription = document.createElement('dd')
 			menuDescription.className = 'menuDescription'
 
-			let sizeList = JSON.parse(menu[sizeType])
 			sizeList = (utilIsNull(sizeList)) ? [''] : sizeList
 
 			let menuPriceList = document.createElement('div')
@@ -311,12 +331,48 @@ function setMenus() {
 			let menuPurchase = document.createElement('a')
 			menuPurchase.className = 'button7 menuPurchaseButton'
 			let shoppingImg = new Image()
-			shoppingImg.src = utilGetIconSrc('shopping_add', 'red', PUBLIC_FLG)
+			shoppingImg.src = utilGetIconSrc('shopping', 'black', PUBLIC_FLG)
 			shoppingImg.className = 'iconImage'
 			shoppingImg.draggable = false
 			menuPurchase.addEventListener('click', function() {
 				let bodyDiv = utilOpenModal('purchase')
-				utilQuerySelector('.utilModal-body', false, bodyDiv).innerHTML = getOpenIconDom()
+				utilQuerySelector('.utilModal-body', false, bodyDiv).appendChild(getPurchaseModalDom({
+					prices: priceList,
+					sizes: {
+						text: 'サイズ',
+						values: sizeList,
+					},
+					options: {
+						main: {
+							text: 'メイン',
+							values: mainOptionList,
+						},
+						drink: {
+							text: 'お飲み物',
+							values: drinkOptionList,
+						},
+						bread: {
+							text: 'パン',
+							values: breadOptionList,
+						},
+						topping: {
+							text: 'トッピング',
+							values: toppingOptionList,
+						},
+						cheeze: {
+							text: 'チーズ',
+							values: cheezeOptionList,
+						},
+						dressing: {
+							text: 'ドレッシング',
+							values: dressingOptionList,
+						},
+						afterDrink: {
+							text: '食後のお飲み物',
+							values: afterDrinkOptionList,
+						}
+					}
+				}))
 			})
 			menuPurchase.appendChild(shoppingImg)
 			menuList.appendChild(menuPurchase)
@@ -336,6 +392,55 @@ function getOpenIconDom() {
 			<i class='one_i'></i>
 		</div>
 	`
+}
+
+function getPurchaseModalDom(obj) {
+	let ops = obj.options
+	let uniqId = 'purchaseModalBody'
+
+	let resultDom = document.getElementById(uniqId)
+	if (typeof resultDom === 'undefined' || utilIsNull(resultDom)) {
+	} else {
+		resultDom.remove()
+	}
+	resultDom = document.createElement('div')
+	resultDom.id = uniqId
+
+	Object.keys(ops).forEach(v => {
+		let radioText = document.createElement('p')
+		radioText.className = 'utilBoxRadio-header'
+		radioText.innerHTML = ops[v].text
+		let radioDiv = document.createElement('div')
+		radioDiv.className = 'utilBoxRadio-body'
+		if (ops[v].values.length) {
+			ops[v].values.forEach((w, index) => {
+				let optionId = v + '_' + index
+				let radioInput = document.createElement('input')
+				radioInput.id = optionId
+				radioInput.className = 'utilBoxRadio-input'
+				radioInput.type = 'radio'
+				radioInput.name = v
+				radioInput.value = optionId
+				if (index == 0) {
+					radioInput.checked = true
+				}
+
+				let radioLabel = document.createElement('label')
+				radioLabel.className = 'utilBoxRadio-label'
+				radioLabel.htmlFor  = optionId
+				radioLabel.innerHTML = w
+				radioDiv.appendChild(radioInput)
+				radioDiv.appendChild(radioLabel)
+			})
+			resultDom.appendChild(radioText)
+			resultDom.appendChild(radioDiv)
+		}
+	})
+	// let radioText = document.createElement('p')
+	// radioText.className = 'utilBoxRadio-header'
+	// radioText.innerHTML = 'ご要望'
+
+	return resultDom
 }
 
 function setClickAccordion() {

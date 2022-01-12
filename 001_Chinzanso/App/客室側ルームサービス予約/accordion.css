@@ -13,8 +13,8 @@
 	position: relative;
 	z-index: +1;
 	cursor: pointer;
-	-webkit-transition-duration: 0.2s;
-			transition-duration: 0.2s;
+	-webkit-transition-duration: 0.5s;
+			transition-duration: 0.5s;
 }
 
 #main .accordion1 .accordionHeader:hover {
@@ -44,8 +44,8 @@
 	transform: rotate(45deg);
 	-webkit-transform-origin: center center;
 			transform-origin: center center;
-	-webkit-transition-duration: 0.2s;
-			transition-duration: 0.2s;
+	-webkit-transition-duration: 0.5s;
+			transition-duration: 0.5s;
 }
 
 #main .accordion1 .accordionHeader.stay .i_box {
@@ -61,8 +61,8 @@
 	transform: rotate(45deg);
 	-webkit-transform-origin: center center;
 			transform-origin: center center;
-	-webkit-transition-duration: 0.2s;
-			transition-duration: 0.2s;
+	-webkit-transition-duration: 0.5s;
+			transition-duration: 0.5s;
 	position: relative;
 }
 

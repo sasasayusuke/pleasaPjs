@@ -220,6 +220,45 @@
   }
 }
 
+.utilBoxRadio-body {
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.utilBoxRadio-header {
+  padding-bottom: 5px;
+  border-top: 1px solid #ddd;
+}
+
+.utilBoxRadio-input {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+}
+
+.utilBoxRadio-label {
+  display: inline-block;
+  padding: 5px 10px;
+  margin-right: 18px;
+  border-radius: 3px;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+.utilBoxRadio-input:checked + .utilBoxRadio-label {
+  background: #B54A4A;
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
+}
+
+.utilBoxRadio-input:focus + .utilBoxRadio-label {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+
 .utilInlineRadio {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -288,7 +327,7 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.utilModal-content {
+.utilModal .utilModal-content {
   background-color: #f4f4f4;
   margin: 20% auto;
   width: 50%;
@@ -298,6 +337,41 @@
           animation-name: modalopen;
   -webkit-animation-duration: 1s;
           animation-duration: 1s;
+}
+
+.utilModal .utilModal-header {
+  padding: 3px 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.utilModal .utilModal-header.red {
+  background: lightcoral;
+}
+
+.utilModal .utilModal-header.blue {
+  background: lightblue;
+}
+
+.utilModal .utilModal-header h1 {
+  margin: 1rem 0;
+}
+
+.utilModal .utilModal-close {
+  font-size: 2rem;
+}
+
+.utilModal .utilModal-close:hover {
+  cursor: pointer;
+}
+
+.utilModal .utilModal-body {
+  padding: 10px 20px;
+  color: black;
 }
 
 @-webkit-keyframes modalopen {
@@ -316,40 +390,5 @@
   to {
     opacity: 1;
   }
-}
-
-.utilModal-header {
-  padding: 3px 15px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.utilModal-header.red {
-  background: lightcoral;
-}
-
-.utilModal-header.blue {
-  background: lightblue;
-}
-
-.utilModal-header h1 {
-  margin: 1rem 0;
-}
-
-.utilModal-close {
-  font-size: 2rem;
-}
-
-.utilModal-close:hover {
-  cursor: pointer;
-}
-
-.utilModal-body {
-  padding: 10px 20px;
-  color: black;
 }
 /*# sourceMappingURL=util.css.map */

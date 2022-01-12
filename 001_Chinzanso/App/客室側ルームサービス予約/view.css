@@ -68,10 +68,16 @@
 }
 
 .openTime .button7 {
-  width: 80px;
-  margin: 0 auto;
+  width: 150px;
   overflow: hidden;
   cursor: pointer;
+}
+
+.openTime .button7::after {
+  font-size: 14px;
+  padding-left: 6px;
+  content: 'かごに入れる';
+  color: red;
 }
 
 .closeTime .openType::after {
@@ -82,7 +88,7 @@
 }
 
 .closeTime .button7 {
-  width: 80px;
+  width: 150px;
   margin: 0 auto;
   overflow: hidden;
   visibility: hidden;
@@ -141,7 +147,7 @@
   padding: 5px;
   font-weight: bold;
   font-size: 25px;
-  color: #856b30;
+  color: #86620c;
 }
 
 .box1 dd.menuDescription .menuPriceList .menuPrice {
