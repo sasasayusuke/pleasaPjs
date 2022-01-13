@@ -33,7 +33,9 @@ $p.events.on_grid_load = function () {
 				<div class='utilModal-body'>
 				</div>
 				<div class='utilModal-action'>
-
+					<h1>合計金額</h1>
+					<h1 id='sumPrice'></h1>
+					<a class="button8 red">かごに入れる</a>
 				</div>
 			</div>
 		</div>
@@ -48,7 +50,8 @@ $p.events.on_grid_load = function () {
 
 				</div>
 				<div class='utilModal-action'>
-
+					<h1>合計金額</h1>
+					<a class="button8 blue">決済</a>
 				</div>
 			</div>
 		</div>
@@ -329,17 +332,19 @@ function setMenus() {
 			menuList.appendChild(menuDescription)
 
 			let menuPurchase = document.createElement('a')
-			menuPurchase.className = 'button7 menuPurchaseButton'
+			menuPurchase.className = 'button7 blue'
 			let shoppingImg = new Image()
 			shoppingImg.src = utilGetIconSrc('shopping', 'black', PUBLIC_FLG)
 			shoppingImg.className = 'iconImage'
 			shoppingImg.draggable = false
+			menuPurchase.appendChild(shoppingImg)
+			menuPurchase.insertAdjacentHTML('beforeend', 'かごに入れる')
 			menuPurchase.addEventListener('click', function() {
 				let bodyDiv = utilOpenModal('purchase')
 				utilQuerySelector('.utilModal-body', false, bodyDiv).appendChild(getPurchaseModalDom({
 					prices: priceList,
 					sizes: {
-						text: 'サイズ',
+						text: 'サイズ、量',
 						values: sizeList,
 					},
 					options: {
@@ -374,7 +379,6 @@ function setMenus() {
 					}
 				}))
 			})
-			menuPurchase.appendChild(shoppingImg)
 			menuList.appendChild(menuPurchase)
 
 			v.appendChild(menuList)
@@ -394,8 +398,8 @@ function getOpenIconDom() {
 	`
 }
 
+
 function getPurchaseModalDom(obj) {
-	let ops = obj.options
 	let uniqId = 'purchaseModalBody'
 
 	let resultDom = document.getElementById(uniqId)
@@ -405,40 +409,29 @@ function getPurchaseModalDom(obj) {
 	}
 	resultDom = document.createElement('div')
 	resultDom.id = uniqId
-
+	// サイズ変更可ならラジオボタンを作成する
+	if (!utilIsNull(obj.sizes.values)) {
+		resultDom.appendChild(utilGetBoxRadioDom(obj.sizes.text, obj.sizes.values, uniqId + '_' + 'size'))
+	}
+	let ops = obj.options
 	Object.keys(ops).forEach(v => {
-		let radioText = document.createElement('p')
-		radioText.className = 'utilBoxRadio-header'
-		radioText.innerHTML = ops[v].text
-		let radioDiv = document.createElement('div')
-		radioDiv.className = 'utilBoxRadio-body'
-		if (ops[v].values.length) {
-			ops[v].values.forEach((w, index) => {
-				let optionId = v + '_' + index
-				let radioInput = document.createElement('input')
-				radioInput.id = optionId
-				radioInput.className = 'utilBoxRadio-input'
-				radioInput.type = 'radio'
-				radioInput.name = v
-				radioInput.value = optionId
-				if (index == 0) {
-					radioInput.checked = true
-				}
-
-				let radioLabel = document.createElement('label')
-				radioLabel.className = 'utilBoxRadio-label'
-				radioLabel.htmlFor  = optionId
-				radioLabel.innerHTML = w
-				radioDiv.appendChild(radioInput)
-				radioDiv.appendChild(radioLabel)
-			})
-			resultDom.appendChild(radioText)
-			resultDom.appendChild(radioDiv)
+		// 追加オプションがあったらラジオボタンを作成する
+		if (!utilIsNull(ops[v].values)) {
+			resultDom.appendChild(utilGetBoxRadioDom(ops[v].text, ops[v].values, uniqId + '_' + v))
 		}
 	})
-	// let radioText = document.createElement('p')
-	// radioText.className = 'utilBoxRadio-header'
-	// radioText.innerHTML = 'ご要望'
+	let requestDiv = document.createElement('div')
+	requestDiv.id = uniqId + '_' + 'request'
+
+	let requestArea = document.createElement('p')
+	requestArea.className = 'utilBoxRadio-header'
+	requestArea.innerHTML = 'ご要望'
+	requestDiv.appendChild(requestArea)
+	let requestText = document.createElement('textarea')
+	requestText.rows = 10
+	requestText.cols = 100
+	requestDiv.appendChild(requestText)
+	resultDom.appendChild(requestDiv)
 
 	return resultDom
 }

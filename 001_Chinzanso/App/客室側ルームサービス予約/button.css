@@ -1,0 +1,84 @@
+a.button7 {
+  width: 30%;
+  min-width: 50px;
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 auto;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+a.button7.red {
+  color: red;
+  border: 1px red solid;
+  -webkit-box-shadow: inset red 0 0 0 0;
+          box-shadow: inset red 0 0 0 0;
+}
+
+a.button7.blue {
+  color: #75c9eb;
+  border: 1px #75c9eb solid;
+  -webkit-box-shadow: inset #75c9eb 0 0 0 0;
+          box-shadow: inset #75c9eb 0 0 0 0;
+}
+
+a.button7 img {
+  width: 24px;
+  height: 28px;
+  margin-right: 6px;
+}
+
+a.button7:hover {
+  color: #ffffff;
+}
+
+a.button7:hover.red {
+  -webkit-box-shadow: inset red 0 0 0 2.5em;
+          box-shadow: inset red 0 0 0 2.5em;
+}
+
+a.button7:hover.blue {
+  -webkit-box-shadow: inset #75c9eb 0 0 0 2.5em;
+          box-shadow: inset #75c9eb 0 0 0 2.5em;
+}
+
+.button8 {
+  display: inline-block;
+  padding: 0.3em 1em;
+  text-decoration: none;
+  border-radius: 3px;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.button8.red {
+  color: #b54a4a;
+  border: solid 2px #b54a4a;
+}
+
+.button8.blue {
+  color: #67c5ff;
+  border: solid 2px #67c5ff;
+}
+
+.button8:hover {
+  color: white;
+}
+
+.button8:hover.red {
+  background: #b54a4a;
+}
+
+.button8:hover.blue {
+  background: #67c5ff;
+}
+/*# sourceMappingURL=button.css.map */

@@ -222,8 +222,7 @@
 
 .utilBoxRadio-body {
   border: none;
-  padding: 0;
-  margin: 0;
+  padding: 10px;
   text-align: center;
 }
 
@@ -372,6 +371,26 @@
 .utilModal .utilModal-body {
   padding: 10px 20px;
   color: black;
+}
+
+.utilModal .utilModal-action {
+  background: khaki;
+  padding: 3px 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.utilModal .utilModal-action h1 {
+  margin: 1rem 0;
+}
+
+.utilModal textarea {
+  width: 100%;
+  padding: 5px;
 }
 
 @-webkit-keyframes modalopen {

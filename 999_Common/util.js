@@ -288,10 +288,44 @@ function utilEqualObject (obj1, obj2) {
 
 function utilIsNull (value) {
   if (Array.isArray(value)) {
-    return value.length === 0
+    return value.filter(v => v !== '').length == 0
   } else {
     return !value
   }
+}
+
+function utilGetBoxRadioDom(text, options, id = '') {
+	let radioText = document.createElement('p')
+	radioText.className = 'utilBoxRadio-header'
+	radioText.innerHTML = text
+	let radioDiv = document.createElement('div')
+	radioDiv.className = 'utilBoxRadio-body'
+	options.forEach((v, index) => {
+		let optionId = text + '_' + index
+		let radioInput = document.createElement('input')
+		radioInput.id = optionId
+		radioInput.className = 'utilBoxRadio-input'
+		radioInput.type = 'radio'
+		radioInput.name = text
+		radioInput.value = optionId
+		if (index == 0) {
+			radioInput.checked = true
+		}
+
+		let radioLabel = document.createElement('label')
+		radioLabel.className = 'utilBoxRadio-label'
+		radioLabel.htmlFor  = optionId
+		radioLabel.innerHTML = v
+		radioDiv.appendChild(radioInput)
+		radioDiv.appendChild(radioLabel)
+	})
+	let resultDom = document.createElement('div')
+	if (!utilIsNull(id)) {
+		resultDom.id = id
+	}
+	resultDom.appendChild(radioText)
+	resultDom.appendChild(radioDiv)
+	return resultDom
 }
 
 // フォーマット変換の日付を取得

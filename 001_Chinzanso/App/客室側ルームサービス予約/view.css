@@ -71,13 +71,11 @@
   width: 150px;
   overflow: hidden;
   cursor: pointer;
-}
-
-.openTime .button7::after {
-  font-size: 14px;
-  padding-left: 6px;
-  content: 'かごに入れる';
-  color: red;
+  -ms-grid-row: 3;
+  grid-row: 3;
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / 4;
 }
 
 .closeTime .openType::after {
@@ -164,13 +162,6 @@
   font-size: 20px;
   color: #cccccc;
   text-decoration: line-through;
-}
-
-.box1 .menuPurchaseButton {
-  -ms-grid-row: 3;
-  grid-row: 3;
-  -ms-grid-column: 3;
-  grid-column: 3;
 }
 
 #noticeMessage.warning {

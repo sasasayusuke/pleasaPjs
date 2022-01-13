@@ -169,8 +169,7 @@
 
 .utilBoxRadio-body {
 	border: none;
-	padding: 0;
-	margin: 0;
+	padding: 10px;
 	text-align: center;
 }
 
@@ -293,6 +292,19 @@
 		padding: 10px 20px;
 		color: black;
 	}
+	.utilModal-action {
+		background: khaki;
+		padding: 3px 15px;
+		display: flex;
+		justify-content: space-between;
+		h1 {
+			margin: 1rem 0;
+		}
+	}
+	textarea {
+		width: 100%;
+		padding: 5px;
+	};
 }
 
 
