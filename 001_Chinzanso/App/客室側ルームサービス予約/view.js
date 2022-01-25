@@ -35,7 +35,7 @@ $p.events.on_grid_load = function () {
 				<div class='utilModal-action'>
 					<h1>合計金額</h1>
 					<h1 id='sumPrice'></h1>
-					<a class="button8 red">かごに入れる</a>
+					<a class="button8 red" onclick='fffs'>かごに入れる</a>
 				</div>
 			</div>
 		</div>
@@ -47,11 +47,39 @@ $p.events.on_grid_load = function () {
 					<span class='utilModal-close'>×</span>
 				</div>
 				<div class='utilModal-body'>
+				<table id="statusTable" class="normal">
+					<tr class="tableHeader">
+						<th class="settlementName">メニュー名</th>
+						<th class="settlementPrice">金額</th>
+						<th class="settlementCount">数量</th>
+						<th class="settlementStatus">状況</th>
+					</tr>
+					<tr class="tableBody">
+						<td class="settlementName"></td>
+						<td class="settlementPrice"></td>
+						<td class="settlementCount"></td>
+						<td class="settlementStatus"></td>
+					</tr>
+					<tr class="tableBody">
+						<td class="settlementName"></td>
+						<td class="settlementPrice"></td>
+						<td class="settlementCount"></td>
+						<td class="settlementStatus"></td>
+					</tr>
+					<tr class="tableBody">
+						<td class="settlementName"></td>
+						<td class="settlementPrice"></td>
+						<td class="settlementCount"></td>
+						<td class="settlementStatus"></td>
+					</tr>
+
+				</table>
 
 				</div>
 				<div class='utilModal-action'>
 					<h1>合計金額</h1>
-					<a class="button8 blue">決済</a>
+					<h1 id='settlementSumPrice'></h1>
+					<a class="button8 green">決済</a>
 				</div>
 			</div>
 		</div>
@@ -298,12 +326,11 @@ function setMenus() {
 			let menuDescription = document.createElement('dd')
 			menuDescription.className = 'menuDescription'
 
-			sizeList = (utilIsNull(sizeList)) ? [''] : sizeList
+			sizeList = utilIsNull(sizeList) ? [''] : sizeList
 
 			let menuPriceList = document.createElement('div')
 			menuPriceList.className = 'menuPriceList'
 			sizeList.forEach((size, index) => {
-
 				let menuSize = document.createElement('p')
 				menuSize.className = 'menuSize'
 				menuSize.innerHTML = size
@@ -340,16 +367,23 @@ function setMenus() {
 			menuPurchase.appendChild(shoppingImg)
 			menuPurchase.insertAdjacentHTML('beforeend', 'かごに入れる')
 			menuPurchase.addEventListener('click', function() {
+				let prices = []
+				if (menu[specialize]) {
+					prices = priceList.filter((v, index) => index % 2 === 0).map(v => menu[v])
+				} else {
+					prices = priceList.filter((v, index) => index % 2 === 0).map(v => menu[v])
+				}
 				let bodyDiv = utilOpenModal('purchase')
 				utilQuerySelector('.utilModal-body', false, bodyDiv).appendChild(getPurchaseModalDom({
-					prices: priceList,
+					title: menu[title],
+					prices: prices,
 					sizes: {
-						text: 'サイズ、量',
+						text: '',
 						values: sizeList,
 					},
 					options: {
 						main: {
-							text: 'メイン',
+							text: '',
 							values: mainOptionList,
 						},
 						drink: {
@@ -409,9 +443,17 @@ function getPurchaseModalDom(obj) {
 	}
 	resultDom = document.createElement('div')
 	resultDom.id = uniqId
+
+	let titleArea = document.createElement('p')
+	titleArea.className = 'utilBoxRadio-title'
+	titleArea.innerHTML = obj.title
+
+	resultDom.appendChild(titleArea)
+
 	// サイズ変更可ならラジオボタンを作成する
 	if (!utilIsNull(obj.sizes.values)) {
-		resultDom.appendChild(utilGetBoxRadioDom(obj.sizes.text, obj.sizes.values, uniqId + '_' + 'size'))
+		let sizeId = uniqId + '_' + 'size'
+		resultDom.appendChild(utilGetBoxRadioDom(obj.sizes.text, obj.sizes.values, sizeId))
 	}
 	let ops = obj.options
 	Object.keys(ops).forEach(v => {
@@ -483,3 +525,6 @@ function checkOpenAll() {
 	utilQuerySelector('.accordion1', true).forEach(v => checkOpen(v))
 }
 
+function fffs() {
+	utilSetMessage('注文完了')
+}

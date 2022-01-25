@@ -53,6 +53,10 @@ a.button7 {
 		color: #67c5ff;
 		border: solid 2px #67c5ff;
 	}
+	&.green {
+		color: #669900;
+		border: solid 2px #669900;
+	}
 	&:hover {
 		&.red {
 			background: #b54a4a;
@@ -60,7 +64,9 @@ a.button7 {
 		&.blue {
 			background: #67c5ff;
 		}
-
+		&.green {
+			background: #669900;
+		}
 		color: white;
 	}
 }

@@ -150,3 +150,57 @@
 	white-space: pre-wrap;
 
 }
+
+table#statusTable {
+	width: 100%;
+	border-collapse: separate;
+	tbody {
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 300px;
+	}
+	thead, tbody {
+		display: block;
+	}
+	tr {
+		height: 45px;
+		&:nth-child(odd) {
+			background-color:#ffffff;
+		}
+		&:nth-child(even) {
+			background-color:#cfe6b8;
+		}
+
+	}
+	td, th {
+		border: 1px #669900 solid;
+		text-align: center;
+		vertical-align: middle;
+		color: #669900;
+		width: 45px;
+	}
+	td {
+		&.settlementName {
+			font-size: 30px;
+			width: 55%;
+			min-width: 200px;
+		}
+		&.settlementPrice, &.settlementCount, &.settlementStatus {
+			font-size: 30px;
+			width: 15%;
+			min-width: 100px;
+		}
+	}
+	th {
+		&.settlementName {
+			font-size: 20px;
+			width: 55%;
+			min-width: 200px;
+		}
+		&.settlementPrice, &.settlementCount, &.settlementStatus {
+			font-size: 20px;
+			width: 15%;
+			min-width: 100px;
+		}
+	}
+}

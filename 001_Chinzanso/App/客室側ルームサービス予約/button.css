@@ -70,6 +70,11 @@ a.button7:hover.blue {
   border: solid 2px #67c5ff;
 }
 
+.button8.green {
+  color: #669900;
+  border: solid 2px #669900;
+}
+
 .button8:hover {
   color: white;
 }
@@ -80,5 +85,9 @@ a.button7:hover.blue {
 
 .button8:hover.blue {
   background: #67c5ff;
+}
+
+.button8:hover.green {
+  background: #669900;
 }
 /*# sourceMappingURL=button.css.map */

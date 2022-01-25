@@ -301,12 +301,12 @@ function utilGetBoxRadioDom(text, options, id = '') {
 	let radioDiv = document.createElement('div')
 	radioDiv.className = 'utilBoxRadio-body'
 	options.forEach((v, index) => {
-		let optionId = text + '_' + index
+		let optionId = id + '_' + index
 		let radioInput = document.createElement('input')
 		radioInput.id = optionId
 		radioInput.className = 'utilBoxRadio-input'
 		radioInput.type = 'radio'
-		radioInput.name = text
+		radioInput.name = id
 		radioInput.value = optionId
 		if (index == 0) {
 			radioInput.checked = true

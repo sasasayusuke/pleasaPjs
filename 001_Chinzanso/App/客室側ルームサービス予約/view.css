@@ -171,4 +171,63 @@
   color: red;
   white-space: pre-wrap;
 }
+
+table#statusTable {
+  width: 100%;
+  border-collapse: separate;
+}
+
+table#statusTable tbody {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 300px;
+}
+
+table#statusTable thead, table#statusTable tbody {
+  display: block;
+}
+
+table#statusTable tr {
+  height: 45px;
+}
+
+table#statusTable tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+table#statusTable tr:nth-child(even) {
+  background-color: #cfe6b8;
+}
+
+table#statusTable td, table#statusTable th {
+  border: 1px #669900 solid;
+  text-align: center;
+  vertical-align: middle;
+  color: #669900;
+  width: 45px;
+}
+
+table#statusTable td.settlementName {
+  font-size: 30px;
+  width: 55%;
+  min-width: 200px;
+}
+
+table#statusTable td.settlementPrice, table#statusTable td.settlementCount, table#statusTable td.settlementStatus {
+  font-size: 30px;
+  width: 15%;
+  min-width: 100px;
+}
+
+table#statusTable th.settlementName {
+  font-size: 20px;
+  width: 55%;
+  min-width: 200px;
+}
+
+table#statusTable th.settlementPrice, table#statusTable th.settlementCount, table#statusTable th.settlementStatus {
+  font-size: 20px;
+  width: 15%;
+  min-width: 100px;
+}
 /*# sourceMappingURL=view.css.map */
