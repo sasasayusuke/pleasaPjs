@@ -149,14 +149,13 @@ function getSheetName() {
 function getData() {
 
 	var sheet = SpreadsheetApp.getActiveSheet()
+	// Header情報
+	getHeaderInfo(sheet)
+
 	var maxRow = sheet.getLastRow()//行数
 	var maxColumn = sheet.getLastColumn()//列数
 	var range = sheet.getRange(ROW_BODY + 2, 1, maxRow - ROW_BODY - 1, maxColumn)
 	var values = range.getValues()
-
-
-	// Header情報
-	getHeaderInfo(sheet)
 
 	// Site情報
 	values.forEach(v => {
@@ -190,7 +189,7 @@ function getData() {
 				DefaultInput: v[COL_DEFAULT],
 				Unit: v[COL_UNIT],
 				DecimalPlaces: v[COL_DECIMAL],
-				ValidateRequired: v[COL_REQUIRED] == MARK_OK ? true : false,
+				ValidateRequired: v[COL_REQUIRED] == MARK_OK,
 			})
 		}
 
