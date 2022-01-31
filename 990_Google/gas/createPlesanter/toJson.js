@@ -1,26 +1,31 @@
 const MARK_OK = '〇'
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 const ROW_HEADER = 1
 const ROW_BODY = 21
 
 const COL_NAME = 1
 const COL_TYPE = 2
-const COL_EDITOR = 3
-const COL_LINK = 4
-const COL_FILTER = 5
-const COL_LIST = 6
-const COL_LENGTH = 7
-const COL_DECIMAL = 8
-const COL_MIN = 9
-const COL_MAX = 10
-const COL_DEFAULT = 11
+const COL_FORMAT = 3
+const COL_EDITOR = 4
+const COL_LINK = 5
+const COL_FILTER = 6
+const COL_LIST = 7
+const COL_LENGTH = 8
+const COL_DECIMAL = 9
+const COL_MIN = 10
+const COL_MAX = 11
+const COL_DEFAULT = 12
 const COL_UNIT = 13
 const COL_REQUIRED = 14
+const COL_DUPLICATE = 15
 const COL_CHOISE = 16
 const COL_DESCRIPTION = 17
 const COL_CELLCSS = 18
+const COL_MULTIPLE = 19
+const COL_NOWRAP = 20
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 
 let type = {
 	TypeTitle : {
@@ -66,6 +71,11 @@ let type = {
 	TypeAttach : {
 		value: 'Attachments',
 		name: '添付ファイル項目',
+		count: 0,
+	},
+	TypeSection : {
+		value: 'Section',
+		name: '見出し',
 		count: 0,
 	},
 }
@@ -120,37 +130,42 @@ let Site = {
 		Sections: [],
 		LinkColumns: [],
 		Columns: [],
+    Links: [],
+    Exports: [],
+    Styles: [],
+    Scripts: [],
 		NoDisplayIfReadOnly: false,
 	},
 	Publish: false,
 	DisableCrossSearch: false,
 	Comments: [],
 }
-let Permission = {
-	SiteId: 0,
-	Permissions: [],
-}
-let Permission_children = {
-	ReferenceId: 0,
-	DeptId: 0,
-	GroupId: 0,
-	UserId: 0,
-	PermissionType: 511,
-}
 
 let userIdList = []
 let loginIdList = []
 
-
-function getSheetName() {
-	return SpreadsheetApp.getActiveSheet().getName()
-}
-
 function getData() {
 
 	var sheet = SpreadsheetApp.getActiveSheet()
-	// Header情報
-	getHeaderInfo(sheet)
+  try {
+    // Header情報
+    getHeaderInfo(sheet)
+    // Site情報
+    getSiteInfo(sheet)
+    return getJson()
+  } catch(error) {
+    Browser.msgBox(error)
+  }
+  finally {
+    Logger.log("finallyの処理です。")
+  }
+}
+
+function getJson() {
+  return JSON.stringify(json, null, '\t')
+}
+
+function getSiteInfo(sheet) {
 
 	var maxRow = sheet.getLastRow()//行数
 	var maxColumn = sheet.getLastColumn()//列数
@@ -158,31 +173,41 @@ function getData() {
 	var values = range.getValues()
 
 	// Site情報
-	values.forEach(v => {
+	values.forEach((v, index) => {
 		let typeName = ''
 		let typeObj = Object.keys(type).filter(k => type[k].name == v[COL_TYPE])[0]
 		// 型項目情報追加
-		if ([type.TypeTitle.name, type.TypeBody.name, type.TypeComplete.name].includes(v[COL_TYPE])) {
-			if (type[typeObj].count > 0) {
-				console.log(type[typeObj].name + 'が２つ以上あります')
+    if (v[COL_TYPE] == type.TypeSection.name) {
+      Site.SiteSettings.SectionLatestId++
+      Site.SiteSettings.Sections.push({
+        Id: Site.SiteSettings.SectionLatestId,
+        LabelText: v[COL_NAME],
+        AllowExpand: true,
+        Expand: true,
+      })
+      typeName = '_' + type[typeObj].value + '-' + Site.SiteSettings.SectionLatestId
+		} else if ([type.TypeTitle.name, type.TypeBody.name, type.TypeComplete.name].includes(v[COL_TYPE])) {
+			if (type[typeObj].count > 1) {
+        throw new Error(type[typeObj].name + 'が２つ以上あります')
 			}
 			typeName = type[typeObj].value
-			type[typeObj].count++
 		} else {
 			if (type[typeObj].count > 25) {
 				typeName = type[typeObj].value + padding(type[typeObj].count - 25)
 			} else {
 				typeName = type[typeObj].value + ALPHABET[type[typeObj].count]
 			}
-			type[typeObj].count++
 		}
-
+    type[typeObj].count++
 		// エディタ項目情報追加
 		if (v[COL_EDITOR] == MARK_OK) {
 			Site.SiteSettings.EditorColumnHash.General.push(typeName)
-			Site.SiteSettings.Columns.push({
+      let editObj = {
 				ColumnName: typeName,
 				LabelText: v[COL_NAME],
+        ChoicesText: v[COL_CHOISE],
+        Description: v[COL_DESCRIPTION],
+        FORMAT: v[COL_FORMAT],
 				MaxLength: v[COL_LENGTH],
 				Min: v[COL_MIN],
 				Max: v[COL_MAX],
@@ -190,7 +215,19 @@ function getData() {
 				Unit: v[COL_UNIT],
 				DecimalPlaces: v[COL_DECIMAL],
 				ValidateRequired: v[COL_REQUIRED] == MARK_OK,
-			})
+        NoDuplication: v[COL_DUPLICATE] == MARK_OK,
+				MultipleSelections: v[COL_MULTIPLE] == MARK_OK,
+        NoWrap: v[COL_NOWRAP] == MARK_OK,
+        Link: v[COL_CHOISE] !== "",
+        ExtendedCellCss: v[COL_CELLCSS],
+      }
+      // 空のプロパティを削除
+      for(let key in editObj) {
+        if(editObj[key] == ""){
+            delete editObj[key]
+        }
+      }
+			Site.SiteSettings.Columns.push(editObj)
 		}
 
 		// リンク項目情報追加
@@ -207,12 +244,13 @@ function getData() {
 		if (v[COL_LIST] == MARK_OK) {
 			Site.SiteSettings.GridColumns.push(typeName)
 		}
-	})
-	json.Sites.push(Site)
-	//整形してテキストに
-	return JSON.stringify(json, null, '\t')
 
+    // 採番クラス書き出し
+    sheet.getRange(ROW_BODY + 2 + index, 1).setValue(typeName)
+  })
+	json.Sites.push(Site)
 }
+
 function getHeaderInfo (sheet) {
 	let name_col = 3
 	var maxColumn = sheet.getLastColumn()//列数
@@ -273,17 +311,26 @@ function getHeaderInfo (sheet) {
 			Site.SiteSettings.ReferenceType = v[1]
 		}
 	})
+
+  // 許可情報を追加
+  let permissionInfo = {
+    SiteId: 0,
+    Permissions: [],
+  }
 	for (let i = 0; i < userIdList.length; i++) {
-		// オブジェクトをコピー
-		let permission = { ...Permission_children }
-		permission.UserId = userIdList[i]
-		Permission.Permissions.push(permission)
+		permissionInfo.Permissions.push({
+      ReferenceId: 0,
+      DeptId: 0,
+      GroupId: 0,
+      UserId: userIdList[i],
+      PermissionType: 511,
+    })
 		json.PermissionIdList.UserIdList.push({
 			UserId: userIdList[i],
 			LoginId: loginIdList[i]
 		})
 	}
-	json.Permissions.push(Permission)
+	json.Permissions.push(permissionInfo)
 
 	Site.Title = sheet.getName()
 	// オブジェクトをコピー
@@ -311,13 +358,15 @@ function onOpen() {
 	spreadsheet.addMenu("pleasanter用JSON出力", entries)
 }
 
-//ダウンロードダイヤログ表示
+//ダウンロードダイアログ表示
 function toJson() {
-	//ダイヤログテンプレート読み込み
+	//ダイアログテンプレート読み込み
 	var dl_html = HtmlService.createTemplateFromFile("downloadDialog").evaluate()
 
-	//ダイヤログ表示
+	//ダイアログ表示
 	SpreadsheetApp.getUi().showModalDialog(dl_html, "JSONファイルをダウンロード")
 }
 
-
+function getSheetName() {
+	return SpreadsheetApp.getActiveSheet().getName()
+}

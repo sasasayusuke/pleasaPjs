@@ -1,13 +1,13 @@
 
-var screenDBId = 56807 //5859
-var shopDBId = 56805 //5860
+var screenDBId = 87697 //5859
+var shopDBId = 87691 //5860
 var sheetDBId = 0 //5852
 var visitHistoryDBId = 0 //5857
-var roomServiceAlacartDBId = 56800 //5853
-var roomServiceMenuDBId = 56801 //5851
-var orderDBId = 56808 //5854
-var orderHistoryDBId = 56809 //5858
-var panfletDBId = 56803 //8383
+var roomServiceAlacartDBId = 87696 //5853
+var roomServiceMenuDBId = 87693 //5851
+var orderDBId = 87698 //5854
+var orderHistoryDBId = 87699 //5858
+var panfletDBId = 87695 //8383
 
 var BASE_URL = 'https://ssj-pleasanter-01.sdt-test.work/'
 var API_KEY = '3b80682c7c46eb8defd61b956100e49792b9c0f273d4345515d0ac9bfcd251a69cd3eeff5610ce0d669b1072a79ecbbce4f37209f2927e3e54c5d1859feb305f'
@@ -222,6 +222,8 @@ function utilQuerySelector (selector, all = false, dom) {
   }
   return dom.querySelector(selector)
 }
+
+// 左に０を付与
 function utilPad (num, size, min = 0, max = '9'.repeat(size)) {
 	const padding = +num < +min ? +min : +num > +max ? +max : +num
 	return ('0'.repeat(+size) + padding).substr(-1 * +size)
@@ -355,6 +357,7 @@ function utilIsOverDate (date) {
 
   return !utilIsNull(date) && expiration > +date
 }
+
 // 空日付を取得
 function utilGetDateEmpty () {
   return '1899-12-30T00:00:00'
