@@ -1,79 +1,106 @@
 const MARK_OK = '〇'
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-const ROW_HEADER = 1
-const ROW_BODY = 21
+const HEADER_START_ROW = 2
+const SITE_START_ROW = 12
+const TABLE_START_ROW = 23
 
-const COL_NAME = 1
-const COL_TYPE = 2
-const COL_FORMAT = 3
-const COL_EDITOR = 4
-const COL_LINK = 5
-const COL_FILTER = 6
-const COL_LIST = 7
-const COL_LENGTH = 8
-const COL_DECIMAL = 9
-const COL_MIN = 10
-const COL_MAX = 11
-const COL_DEFAULT = 12
-const COL_UNIT = 13
-const COL_REQUIRED = 14
-const COL_DUPLICATE = 15
-const COL_CHOISE = 16
-const COL_DESCRIPTION = 17
-const COL_CELLCSS = 18
-const COL_MULTIPLE = 19
-const COL_NOWRAP = 20
+const ROW = 0
+const COL = 1
 
-
+let cell = {
+	header_info: {
+		UserId: [HEADER_START_ROW + 1, 4],
+		LoginId: [HEADER_START_ROW + 2, 4],
+		Version: [HEADER_START_ROW + 3, 4],
+		Server: [HEADER_START_ROW + 4, 4],
+		CreatorName: [HEADER_START_ROW + 5, 4],
+		PackageTime: [HEADER_START_ROW + 6, 4],
+		IncludeSitePermission: [HEADER_START_ROW + 7, 4],
+		IncludeRecordPermission: [HEADER_START_ROW + 8, 4],
+		IncludeColumnPermission: [HEADER_START_ROW + 9, 4],
+	},
+	site_info: {
+		TenantId: [SITE_START_ROW + 1, 4],
+		Body: [SITE_START_ROW + 2, 4],
+		GridGuide: [SITE_START_ROW + 3, 4],
+		EditorGuide: [SITE_START_ROW + 4, 4],
+		Publish: [SITE_START_ROW + 5, 4],
+		DisableCrossSearch: [SITE_START_ROW + 6, 4],
+		ReferenceType: [SITE_START_ROW + 7, 4],
+	},
+	table_info: {
+		Index: [TABLE_START_ROW , 1],
+		Name: [TABLE_START_ROW , 2],
+		Type: [TABLE_START_ROW , 3],
+		Format: [TABLE_START_ROW , 4],
+		Editor: [TABLE_START_ROW , 5],
+		Link: [TABLE_START_ROW , 6],
+		Filter: [TABLE_START_ROW , 7],
+		List: [TABLE_START_ROW , 8],
+		Length: [TABLE_START_ROW , 9],
+		Decimal: [TABLE_START_ROW , 10],
+		Min: [TABLE_START_ROW , 11],
+		Max: [TABLE_START_ROW , 12],
+		Default: [TABLE_START_ROW , 13],
+		Unit: [TABLE_START_ROW , 14],
+		Required: [TABLE_START_ROW , 15],
+		Duplicate: [TABLE_START_ROW , 16],
+		Choise: [TABLE_START_ROW , 17],
+		Description: [TABLE_START_ROW , 18],
+		Cellcss: [TABLE_START_ROW , 19],
+		Multiple: [TABLE_START_ROW , 20],
+		Nowrap: [TABLE_START_ROW , 21],
+	},
+}
 
 let type = {
-	TypeTitle : {
+	Title : {
 		value: 'Title',
 		name: 'タイトル',
 		count: 0,
 	},
-	TypeBody : {
+	Body : {
 		value: 'Body',
 		name: '内容',
 		count: 0,
 	},
-	TypeComplete : {
+	Complete : {
 		value: 'CompletionTime',
 		name: '完了',
 		count: 0,
 	},
-	TypeClass : {
+	Class : {
 		value: 'Class',
 		name: '分類項目',
 		count: 0,
 	},
-	TypeNumber : {
+	Number : {
 		value: 'Num',
 		name: '数値項目',
 		count: 0,
 	},
-	TypeDate : {
+	Date : {
 		value: 'Date',
 		name: '日付項目',
 		count: 0,
 	},
-	TypeDescription : {
+	Description : {
 		value: 'Description',
 		name: '説明項目',
 		count: 0,
 	},
-	TypeCheck : {
+	Check : {
 		value: 'Check',
 		name: 'チェック項目',
 		count: 0,
 	},
-	TypeAttach : {
+	Attach : {
 		value: 'Attachments',
 		name: '添付ファイル項目',
 		count: 0,
 	},
-	TypeSection : {
+	Section : {
 		value: 'Section',
 		name: '見出し',
 		count: 0,
@@ -130,10 +157,10 @@ let Site = {
 		Sections: [],
 		LinkColumns: [],
 		Columns: [],
-    Links: [],
-    Exports: [],
-    Styles: [],
-    Scripts: [],
+		Links: [],
+		Exports: [],
+		Styles: [],
+		Scripts: [],
 		NoDisplayIfReadOnly: false,
 	},
 	Publish: false,
@@ -147,48 +174,49 @@ let loginIdList = []
 function getData() {
 
 	var sheet = SpreadsheetApp.getActiveSheet()
-  try {
-    // Header情報
-    getHeaderInfo(sheet)
-    // Site情報
-    getSiteInfo(sheet)
-    return getJson()
-  } catch(error) {
-    Browser.msgBox(error)
-  }
-  finally {
-    Logger.log("finallyの処理です。")
-  }
+	try {
+		// Header情報
+		getHeaderInfo(sheet)
+		// Site情報
+		getSiteInfo(sheet)
+		return getJson()
+	} catch(error) {
+		Browser.msgBox(error)
+	}
+	finally {
+		Logger.log("finallyの処理です。")
+	}
 }
 
 function getJson() {
-  return JSON.stringify(json, null, '\t')
+	return JSON.stringify(json, null, '\t')
 }
 
 function getSiteInfo(sheet) {
 
-	var maxRow = sheet.getLastRow()//行数
-	var maxColumn = sheet.getLastColumn()//列数
-	var range = sheet.getRange(ROW_BODY + 2, 1, maxRow - ROW_BODY - 1, maxColumn)
-	var values = range.getValues()
+	let maxRow = sheet.getLastRow()//行数
+	let maxColumn = sheet.getLastColumn()//列数
+	let range = sheet.getRange(TABLE_START_ROW, 1, maxRow - TABLE_START_ROW + 1, maxColumn)
+	let values = range.getValues()
+	let table = cell.table_info
 
 	// Site情報
 	values.forEach((v, index) => {
 		let typeName = ''
-		let typeObj = Object.keys(type).filter(k => type[k].name == v[COL_TYPE])[0]
+		let typeObj = Object.keys(type).filter(k => type[k].name == v[table.Type[COL] - 1])[0]
 		// 型項目情報追加
-    if (v[COL_TYPE] == type.TypeSection.name) {
-      Site.SiteSettings.SectionLatestId++
-      Site.SiteSettings.Sections.push({
-        Id: Site.SiteSettings.SectionLatestId,
-        LabelText: v[COL_NAME],
-        AllowExpand: true,
-        Expand: true,
-      })
-      typeName = '_' + type[typeObj].value + '-' + Site.SiteSettings.SectionLatestId
-		} else if ([type.TypeTitle.name, type.TypeBody.name, type.TypeComplete.name].includes(v[COL_TYPE])) {
+		if (v[table.Type[COL] - 1] == type.Section.name) {
+			Site.SiteSettings.SectionLatestId++
+			Site.SiteSettings.Sections.push({
+				Id: Site.SiteSettings.SectionLatestId,
+				LabelText: v[table.Name[COL] - 1],
+				AllowExpand: true,
+				Expand: true,
+			})
+			typeName = '_' + type[typeObj].value + '-' + Site.SiteSettings.SectionLatestId
+		} else if ([type.Title.name, type.Body.name, type.Complete.name].includes(v[table.Type[COL] - 1])) {
 			if (type[typeObj].count > 1) {
-        throw new Error(type[typeObj].name + 'が２つ以上あります')
+				throw new Error(type[typeObj].name + 'が２つ以上あります')
 			}
 			typeName = type[typeObj].value
 		} else {
@@ -198,133 +226,97 @@ function getSiteInfo(sheet) {
 				typeName = type[typeObj].value + ALPHABET[type[typeObj].count]
 			}
 		}
-    type[typeObj].count++
+		type[typeObj].count++
 		// エディタ項目情報追加
-		if (v[COL_EDITOR] == MARK_OK) {
+		if (v[table.Editor[COL] - 1] == MARK_OK) {
 			Site.SiteSettings.EditorColumnHash.General.push(typeName)
-      let editObj = {
+			let editObj = {
 				ColumnName: typeName,
-				LabelText: v[COL_NAME],
-        ChoicesText: v[COL_CHOISE],
-        Description: v[COL_DESCRIPTION],
-        FORMAT: v[COL_FORMAT],
-				MaxLength: v[COL_LENGTH],
-				Min: v[COL_MIN],
-				Max: v[COL_MAX],
-				DefaultInput: v[COL_DEFAULT],
-				Unit: v[COL_UNIT],
-				DecimalPlaces: v[COL_DECIMAL],
-				ValidateRequired: v[COL_REQUIRED] == MARK_OK,
-        NoDuplication: v[COL_DUPLICATE] == MARK_OK,
-				MultipleSelections: v[COL_MULTIPLE] == MARK_OK,
-        NoWrap: v[COL_NOWRAP] == MARK_OK,
-        Link: v[COL_CHOISE] !== "",
-        ExtendedCellCss: v[COL_CELLCSS],
-      }
-      // 空のプロパティを削除
-      for(let key in editObj) {
-        if(editObj[key] == ""){
-            delete editObj[key]
-        }
-      }
+				LabelText: v[table.Name[COL] - 1],
+				ChoicesText: v[table.Choise[COL] - 1],
+				Description: v[table.Description[COL] - 1],
+				FORMAT: v[table.Format[COL] - 1],
+				MaxLength: v[table.Length[COL] - 1],
+				Min: v[table.Min[COL] - 1],
+				Max: v[table.Max[COL] - 1],
+				DefaultInput: v[table.Default[COL] - 1],
+				Unit: v[table.Unit[COL] - 1],
+				DecimalPlaces: v[table.Decimal[COL] - 1],
+				ValidateRequired: v[table.Required[COL] - 1] == MARK_OK,
+				NoDuplication: v[table.Duplicate[COL] - 1] == MARK_OK,
+				MultipleSelections: v[table.Multiple[COL] - 1] == MARK_OK,
+				NoWrap: v[table.Nowrap[COL] - 1] == MARK_OK,
+				Link: v[table.Choise[COL] - 1] !== "",
+				ExtendedCellCss: v[table.Cellcss[COL] - 1],
+			}
+			// 空のプロパティを削除
+			for(let key in editObj) {
+				if(editObj[key] == ""){
+						delete editObj[key]
+				}
+			}
 			Site.SiteSettings.Columns.push(editObj)
 		}
 
 		// リンク項目情報追加
-		if (v[COL_LINK] == MARK_OK) {
+		if (v[table.Link[COL] - 1] == MARK_OK) {
 			Site.SiteSettings.LinkColumns.push(typeName)
 		}
 
 		// フィルタ項目情報追加
-		if (v[COL_FILTER] == MARK_OK) {
+		if (v[table.Filter[COL] - 1] == MARK_OK) {
 			Site.SiteSettings.FilterColumns.push(typeName)
 		}
 
 		// 一覧項目情報追加
-		if (v[COL_LIST] == MARK_OK) {
+		if (v[table.List[COL] - 1] == MARK_OK) {
 			Site.SiteSettings.GridColumns.push(typeName)
 		}
 
-    // 採番クラス書き出し
-    sheet.getRange(ROW_BODY + 2 + index, 1).setValue(typeName)
-  })
+		// 採番クラス書き出し
+		sheet.getRange(table.Index[ROW] + index, table.Index[COL]).setValue(typeName)
+	})
 	json.Sites.push(Site)
 }
 
 function getHeaderInfo (sheet) {
-	let name_col = 3
-	var maxColumn = sheet.getLastColumn()//列数
-	var range = sheet.getRange(ROW_HEADER, name_col, ROW_BODY - 1, maxColumn)
-	var values = range.getValues()
+	header = cell.header_info
+	// セルから情報を参照
+	Site.SiteSettings.Version = sheet.getRange(header.Version[ROW], header.Version[COL]).getValue()
+	json.HeaderInfo.Server = sheet.getRange(header.Server[ROW], header.Server[COL]).getValue()
+	json.HeaderInfo.CreatorName = sheet.getRange(header.CreatorName[ROW], header.CreatorName[COL]).getValue()
+	json.HeaderInfo.PackageTime = sheet.getRange(header.PackageTime[ROW], header.PackageTime[COL]).getValue()
+	json.HeaderInfo.IncludeSitePermission = sheet.getRange(header.IncludeSitePermission[ROW], header.IncludeSitePermission[COL]).getValue()
+	json.HeaderInfo.IncludeRecordPermission = sheet.getRange(header.IncludeRecordPermission[ROW], header.IncludeRecordPermission[COL]).getValue()
+	json.HeaderInfo.IncludeColumnPermission = sheet.getRange(header.IncludeColumnPermission[ROW], header.IncludeColumnPermission[COL]).getValue()
 
+	site = cell.site_info
+	Site.TenantId = sheet.getRange(site.TenantId[ROW], site.TenantId[COL]).getValue()
+	Site.Body = sheet.getRange(site.Body[ROW], site.Body[COL]).getValue()
+	Site.GridGuide = sheet.getRange(site.GridGuide[ROW], site.GridGuide[COL]).getValue()
+	Site.EditorGuide = sheet.getRange(site.EditorGuide[ROW], site.EditorGuide[COL]).getValue()
+	Site.Publish = sheet.getRange(site.Publish[ROW], site.Publish[COL]).getValue()
+	Site.DisableCrossSearch = sheet.getRange(site.DisableCrossSearch[ROW], site.DisableCrossSearch[COL]).getValue()
+	Site.ReferenceType = Site.SiteSettings.ReferenceType = sheet.getRange(site.ReferenceType[ROW], site.ReferenceType[COL]).getValue()
 
-	values.forEach(v => {
-		if (v[0] == 'UserId') {
-			v.shift()
-			userIdList = v.filter(v => v.length !== 0)
+	// 複数を想定
+	userIdList = [sheet.getRange(header.UserId[ROW], header.UserId[COL]).getValue()]
+	// 複数を想定
+	loginIdList = [sheet.getRange(header.LoginId[ROW], header.LoginId[COL]).getValue()]
 
-		} else if (v[0] == 'LoginId') {
-			v.shift()
-			loginIdList = v.filter(v => v.length !== 0)
-
-		} else if (v[0] == 'Version') {
-			Site.SiteSettings.Version = v[1]
-
-		} else if (v[0] == 'Server') {
-			json.HeaderInfo.Server = v[1]
-
-		} else if (v[0] == 'CreatorName') {
-			json.HeaderInfo.CreatorName = v[1]
-
-		} else if (v[0] == 'PackageTime') {
-			json.HeaderInfo.PackageTime = v[1]
-
-		} else if (v[0] == 'IncludeSitePermission') {
-			json.HeaderInfo.IncludeSitePermission = v[1]
-
-		} else if (v[0] == 'IncludeRecordPermission') {
-			json.HeaderInfo.IncludeRecordPermission = v[1]
-
-		} else if (v[0] == 'IncludeColumnPermission') {
-			json.HeaderInfo.IncludeColumnPermission = v[1]
-
-		} else if (v[0] == 'TenantId') {
-			Site.TenantId = v[1]
-
-		} else if (v[0] == 'Body') {
-			Site.Body = v[1]
-
-		} else if (v[0] == 'GridGuide') {
-			Site.GridGuide = v[1]
-
-		} else if (v[0] == 'EditorGuide') {
-			Site.EditorGuide = v[1]
-
-		} else if (v[0] == 'Publish') {
-			Site.Publish = v[1]
-
-		} else if (v[0] == 'DisableCrossSearch') {
-			Site.DisableCrossSearch = v[1]
-
-		} else if (v[0] == 'ReferenceType') {
-			Site.ReferenceType = v[1]
-			Site.SiteSettings.ReferenceType = v[1]
-		}
-	})
-
-  // 許可情報を追加
-  let permissionInfo = {
-    SiteId: 0,
-    Permissions: [],
-  }
+	// 許可情報を追加
+	let permissionInfo = {
+		SiteId: 0,
+		Permissions: [],
+	}
 	for (let i = 0; i < userIdList.length; i++) {
 		permissionInfo.Permissions.push({
-      ReferenceId: 0,
-      DeptId: 0,
-      GroupId: 0,
-      UserId: userIdList[i],
-      PermissionType: 511,
-    })
+			ReferenceId: 0,
+			DeptId: 0,
+			GroupId: 0,
+			UserId: userIdList[i],
+			PermissionType: 511,
+		})
 		json.PermissionIdList.UserIdList.push({
 			UserId: userIdList[i],
 			LoginId: loginIdList[i]
