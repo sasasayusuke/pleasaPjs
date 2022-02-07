@@ -16,13 +16,11 @@
   margin: 20px;
 }
 
-.restaurantName {
-  font-size: 15px;
-  text-align: right;
+.flexItem.normal img {
+  display: none;
 }
 
 .restaurantImage {
-  background-color: #669900;
   color: #ffffff;
   width: 140px;
   height: 120px;

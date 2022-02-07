@@ -227,6 +227,11 @@
 }
 
 .utilBoxRadio-header {
+  font-size: large;
+  padding-bottom: 5px;
+}
+
+.utilBoxRadio-header {
   padding-bottom: 5px;
   border-top: 1px solid #ddd;
 }

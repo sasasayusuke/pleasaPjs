@@ -8,6 +8,9 @@
 
 .flexItem {
 	margin: 20px;
+	&.normal img {
+		display: none;
+	}
 }
 
 

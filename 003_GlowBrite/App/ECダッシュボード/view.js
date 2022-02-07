@@ -96,6 +96,7 @@ function setDashboard() {
 			let signalImg = new Image()
 			signalImg.src = utilGetIconSrc('signal', c, PUBLIC_FLG)
 			signalImg.className = 'restaurantImage'
+			signalImg.classList.add(c)
 			signalImg.draggable = false
 			item.appendChild(signalImg)
 		})
