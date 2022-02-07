@@ -8,6 +8,7 @@ var roomServiceMenuDBId = 87693 //5851
 var orderDBId = 87698 //5854
 var orderHistoryDBId = 87699 //5858
 var panfletDBId = 87695 //8383
+var companyDBId = 88214
 
 var BASE_URL = 'https://ssj-pleasanter-01.sdt-test.work/'
 var API_KEY = '3b80682c7c46eb8defd61b956100e49792b9c0f273d4345515d0ac9bfcd251a69cd3eeff5610ce0d669b1072a79ecbbce4f37209f2927e3e54c5d1859feb305f'
@@ -122,10 +123,13 @@ function utilGetMaster (key, pre = '', post = '') {
     case NORMAL:
       retStr += '正常'
       break
+    case ERROR:
+      retStr += '異常'
+      break
     case WARNING:
       retStr += '警告'
       break
-    case PROCESS:
+      case PROCESS:
       retStr += '処理中'
       break
     case BREAKFAST:
@@ -140,7 +144,6 @@ function utilGetMaster (key, pre = '', post = '') {
     case DRINK:
       retStr += 'お飲み物'
       break
-
 
   }
   return pre + retStr + post

@@ -1,0 +1,90 @@
+
+#container {
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	margin: 20px;
+}
+
+.flexItem {
+	margin: 20px;
+}
+
+
+.restaurantImage {
+    color: #ffffff;
+	width: 140px;
+	height: 120px;
+	padding: 15px;
+	border-style:none;
+}
+
+table.receptionTable {
+	border-collapse: collapse;
+	td, th {
+		border: 2px #669900 solid;
+		text-align: center;
+		width: 150px;
+		font-size: 25px;
+	}
+	td {
+		color: #000000;
+	}
+	th {
+		color: #ffffff;
+		background-color:#669900;
+	}
+	tr:nth-child(odd){
+		background-color:#ffffff;
+	}
+	tr:nth-child(even){
+		background-color:#cfe6b8;
+	}
+}
+
+
+
+#infoArea {
+	margin: 20px;
+}
+
+table.infoTable {
+	width: auto;
+    border-collapse: collapse;
+	thead, tbody {
+		display: block;
+	}
+	tbody {
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 200px;
+	}
+	td, th {
+		border: 2px #669900 solid;
+		font-size: 25px;
+	}
+	td {
+		background-color: #cfe6b8;
+		color: #000000;
+		text-align: center;
+		&.infoDate {
+			width: 250px;
+			text-align: center;
+		}
+		&.infoSource {
+			width: 250px;
+			text-align: center;
+		}
+		&.infoContent {
+			width: 1200px
+		}
+	}
+	th {
+		background-color: #669900;
+		color: #ffffff;
+		text-align: center;
+		position: sticky;
+		top: -2px;
+	}
+}
+
