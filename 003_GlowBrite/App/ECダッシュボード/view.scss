@@ -1,6 +1,9 @@
+#infoArea {
+	background-color: #33ccff;
+}
 
-#container {
-    display: flex;
+#signalArea {
+	display: flex;
 	flex-flow: row wrap;
 	justify-content: center;
 	margin: 20px;
@@ -8,19 +11,52 @@
 
 .flexItem {
 	margin: 20px;
-	&.normal img {
-		display: none;
+	background-color: #ffffff;
+	font-weight: bold;
+	text-align: center;
+	&.dashboard_normal {
+		border: solid 2.5px deepskyblue;
+		border-radius: 10px;
+		.dashboard_green {
+			color: #ffffff;
+			width: 140px;
+			height: 120px;
+			padding: 15px;
+		}
+		.dashboard_yellow, .dashboard_red {
+			display: none;
+		}
 	}
+	&.dashboard_error {
+		border: solid 2.5px red;
+		border-radius: 10px;
+		.dashboard_red {
+			color: #ffffff;
+			width: 140px;
+			height: 120px;
+			padding: 15px;
+		}
+		.dashboard_green, .dashboard_yellow {
+			display: none;
+		}
+	}
+	&.dashboard_warning {
+		border: solid 2.5px goldenrod;
+		border-radius: 10px;
+		.dashboard_yellow {
+			color: #ffffff;
+			width: 140px;
+			height: 120px;
+			padding: 15px;
+		}
+		.dashboard_green, .dashboard_red {
+			display: none;
+		}
+	}
+
 }
 
 
-.restaurantImage {
-    color: #ffffff;
-	width: 140px;
-	height: 120px;
-	padding: 15px;
-	border-style:none;
-}
 
 table.receptionTable {
 	border-collapse: collapse;

@@ -1,4 +1,8 @@
-#container {
+#infoArea {
+  background-color: #33ccff;
+}
+
+#signalArea {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -14,18 +18,57 @@
 
 .flexItem {
   margin: 20px;
+  background-color: #ffffff;
+  font-weight: bold;
+  text-align: center;
 }
 
-.flexItem.normal img {
-  display: none;
+.flexItem.dashboard_normal {
+  border: solid 2.5px deepskyblue;
+  border-radius: 10px;
 }
 
-.restaurantImage {
+.flexItem.dashboard_normal .dashboard_green {
   color: #ffffff;
   width: 140px;
   height: 120px;
   padding: 15px;
-  border-style: none;
+}
+
+.flexItem.dashboard_normal .dashboard_yellow, .flexItem.dashboard_normal .dashboard_red {
+  display: none;
+}
+
+.flexItem.dashboard_error {
+  border: solid 2.5px red;
+  border-radius: 10px;
+}
+
+.flexItem.dashboard_error .dashboard_red {
+  color: #ffffff;
+  width: 140px;
+  height: 120px;
+  padding: 15px;
+}
+
+.flexItem.dashboard_error .dashboard_green, .flexItem.dashboard_error .dashboard_yellow {
+  display: none;
+}
+
+.flexItem.dashboard_warning {
+  border: solid 2.5px goldenrod;
+  border-radius: 10px;
+}
+
+.flexItem.dashboard_warning .dashboard_yellow {
+  color: #ffffff;
+  width: 140px;
+  height: 120px;
+  padding: 15px;
+}
+
+.flexItem.dashboard_warning .dashboard_green, .flexItem.dashboard_warning .dashboard_red {
+  display: none;
 }
 
 table.receptionTable {
