@@ -15,8 +15,7 @@
 	}
 	function load() {
 		//JSONデータの取得
-		var content = <?= getData(); ?>;
-		document.getElementById("preview_text").innerHTML = content
+		document.getElementById("preview_text").innerHTML =  <?= getJson(); ?>;
 	}
 	</script>
 	<style>

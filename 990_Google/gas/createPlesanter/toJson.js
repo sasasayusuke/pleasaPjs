@@ -118,6 +118,19 @@ function getData() {
 				Nowrap: '',
 			},
 		}
+		// テーブル型情報
+		let referenceTypeObjects = {
+			Results : {
+				value: 'Results',
+				name: '記録テーブル',
+				count: 0,
+			},
+			Issues : {
+				value: 'Issues',
+				name: '期限付きテーブル',
+				count: 0,
+			},
+		}
 
 		// 型情報
 		let typeObjects = {
@@ -177,7 +190,7 @@ function getData() {
 		// ヘッダー入力情報の読み込み
 		Object.keys(h).forEach((value, index) => {
 			if (value == 'UserId' || value == 'LoginId' || value == 'PermissionType' || value == 'StyleTitle' || value == 'StyleContent'|| value == 'ScriptTitle' || value == 'ScriptContent') {
-				h[value] = sheet.getRange(HEADER_START_ROW + index, INPUT_START_COL, 1, 10).getValues()[0].filter(Boolean)
+				h[value] = sheet.getRange(HEADER_START_ROW + index, INPUT_START_COL, 1, 20).getValues()[0].filter(Boolean)
 			} else {
 				h[value] = sheet.getRange(HEADER_START_ROW + index, INPUT_START_COL).getValue()
 			}
@@ -199,9 +212,13 @@ function getData() {
 		Site.ReferenceType = h.ReferenceType
 		Site.Publish = h.Publish
 		Site.DisableCrossSearch = h.DisableCrossSearch
-
 		Site.SiteSettings.Version = h.Version
-		Site.SiteSettings.ReferenceType = h.ReferenceType
+
+		if ([referenceTypeObjects.Issues.value, referenceTypeObjects.Results.value].includes(h.ReferenceType)) {
+			Site.SiteSettings.ReferenceType = h.ReferenceType
+		} else {
+			throw new Error('テーブル型情報が間違っています。')
+		}
 
 		json.HeaderInfo.BaseSiteId = h.SiteID
 		json.HeaderInfo.Server = h.Server
@@ -210,6 +227,18 @@ function getData() {
 		json.HeaderInfo.IncludeSitePermission = h.IncludeSitePermission
 		json.HeaderInfo.IncludeRecordPermission = h.IncludeRecordPermission
 		json.HeaderInfo.IncludeColumnPermission = h.IncludeColumnPermission
+
+		// Convertor情報を追加　
+		let convertorInfo = {
+			SiteId: h.SiteID,
+			SiteTitle: '',
+			ReferenceType: '',
+			IncludeData: false,
+		}
+		convertorInfo.SiteTitle = Site.Title
+		convertorInfo.ReferenceType = Site.ReferenceType
+		json.HeaderInfo.Convertors.push(convertorInfo)
+
 
 		// 許可情報を追加
 		let permissionInfo = {
@@ -231,25 +260,41 @@ function getData() {
 		}
 		json.Permissions.push(permissionInfo)
 
-		// Convertor情報を追加　
-		let convertorInfo = {
-			SiteId: h.SiteID,
-			SiteTitle: '',
-			ReferenceType: '',
-			IncludeData: false,
+
+		// style情報を追加
+		for (let i = 0; i < h.StyleTitle.length; i++) {
+			Site.SiteSettings.Styles.push({
+				Id: i + 1,
+				Title: h.StyleTitle[i],
+				All: true,
+				Body: h.StyleContent[i],
+			})
 		}
-		convertorInfo.SiteTitle = Site.Title
-		convertorInfo.ReferenceType = Site.ReferenceType
-		json.HeaderInfo.Convertors.push(convertorInfo)
+
+		// script情報を追加
+		for (let i = 0; i < h.ScriptTitle.length; i++) {
+			Site.SiteSettings.Scripts.push({
+				Id: i + 1,
+				Title: h.ScriptTitle[i],
+				All: true,
+				Body: h.ScriptContent[i],
+			})
+		}
+
 
 	// テーブル入力情報の書き込み
 		tableValues.forEach((v, i) => {
 			//　型
-			let tobj = Object.keys(typeObjects).filter(k => typeObjects[k].name == v[getIndex(t, 'Type')])[0]
+			let tobj = ""
+			if (Object.keys(typeObjects).filter(k => typeObjects[k].name == v[getIndex(t, 'Type')]).length == 1){
+				tobj = Object.keys(typeObjects).filter(k => typeObjects[k].name == v[getIndex(t, 'Type')])[0]
+			} else {
+				throw new Error('不正な型が入力されています。')
+			}
 			//　型名
 			let tname = ''
 
-			// 型項目情報追加
+			// 型名：見出し項目
 			if (tobj == typeObjects.Section.value) {
 				Site.SiteSettings.SectionLatestId++
 				Site.SiteSettings.Sections.push({
@@ -259,11 +304,32 @@ function getData() {
 					Expand: true,
 				})
 				tname = '_Section-' + Site.SiteSettings.SectionLatestId
-			} else if ([typeObjects.Title.value, typeObjects.Body.value, typeObjects.CompletionTime.value].includes(tobj)) {
+
+			// 型名：タイトル
+			} else if (tobj == typeObjects.Title.value) {
 				if (typeObjects[tobj].count > 1) {
 					throw new Error(typeObjects[tobj].name + 'が２つ以上あります')
 				}
 				tname = typeObjects[tobj].value
+
+			// 型名：内容
+			} else if (tobj == typeObjects.Body.value) {
+				if (typeObjects[tobj].count > 1) {
+					throw new Error(typeObjects[tobj].name + 'が２つ以上あります')
+				}
+				tname = typeObjects[tobj].value
+
+			// 型名：完了
+			} else if (tobj == typeObjects.CompletionTime.value) {
+				if (h.ReferenceType !== referenceTypeObjects.Issues.value) {
+					throw new Error('記録テーブル以外で完了項目は使えません。')
+				}
+				if (typeObjects[tobj].count > 1) {
+					throw new Error(typeObjects[tobj].name + 'が２つ以上あります')
+				}
+				tname = typeObjects[tobj].value
+
+			// 型名：その他の項目
 			} else {
 				if (typeObjects[tobj].count > ALPHABET.length - 1) {
 					tname = typeObjects[tobj].value + getPadding(typeObjects[tobj].count - ALPHABET.length + 1)

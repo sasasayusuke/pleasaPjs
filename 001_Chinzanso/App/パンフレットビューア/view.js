@@ -6,7 +6,7 @@ readPanfletInfo(PUBLIC_FLG)
 
 utilImport('css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css')
 utilImport('css', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css')
-utilImport('javascript', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js')
+utilImport('js', 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js')
 
 $p.events.on_grid_load = function () {
 

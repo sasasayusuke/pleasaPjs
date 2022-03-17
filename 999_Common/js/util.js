@@ -42,7 +42,7 @@ function utilImport(type, src, addFunc) {
       elem.setAttribute('rel', 'stylesheet')
       elem.setAttribute('type', 'text/css')
       elem.setAttribute('href', src)
-    } else if (type == 'javascript') {
+    } else if (type == 'js') {
       elem = document.createElement('script')
       elem.setAttribute('type', 'text/javascript')
       elem.setAttribute('src', src)
@@ -506,7 +506,7 @@ function utilViewClock(addFunc) {
 }
 
 function utilViewQRcode(qrtext = '') {
-  utilImport('javascript', 'https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js', function() {
+  utilImport('js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js', function() {
     let utf8qrtext = unescape(encodeURIComponent(qrtext))
     $("#utilImage-QR").html("")
     $("#utilImage-QR").qrcode({text:utf8qrtext})
