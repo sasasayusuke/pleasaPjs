@@ -533,12 +533,9 @@ On Err GoTo ErrStep:
     typeCountDic.Add "å©èoÇµ", 0
 
     'IndexÇçÃî‘
-    Dim alphabetArray() As Variant
     Dim tableLastRow As Integer
     Dim typeVal As String
     Dim sectionLatestId As Integer
-
-    alphabetArray = Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
 
     tableLastRow = Cells(Rows.count, 2).End(xlUp).Row
 
@@ -591,8 +588,8 @@ On Err GoTo ErrStep:
 
             'ÇªÇÃëº
             Else
-                If typeCountDic.Item(typeVal) < utilCount(alphabetArray) Then
-                    Cells(i, INDEX_COLUMN).value = typeDic.Item(typeVal) & alphabetArray(typeCountDic.Item(typeVal))
+                If typeCountDic.Item(typeVal) < len(ALPHABET_LIST) Then
+                    Cells(i, INDEX_COLUMN).value = typeDic.Item(typeVal) & utilConvertAlphabet(typeCountDic.Item(typeVal))
                     typeCountDic(typeVal) = typeCountDic.Item(typeVal) + 1
                 Else
                     strNum = format(typeCountDic.Item(typeVal) - 25, "000")
