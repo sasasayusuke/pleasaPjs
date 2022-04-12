@@ -2,6 +2,13 @@ var NORMAL = 'normal'
 var WARNING = 'warning'
 var ERROR = 'error'
 
+/**
+ * Plesanter共通メッセージを利用する関数です。
+ * @param {string} message メッセージ内容
+ * @param {string} type 深刻度
+ * @param {boolean} clear メッセージを消す
+ * @return {string} 加工された文字列
+ */
 function utilSetMessage (message = '', type = NORMAL, clear = true) {
   if (clear) {
     $p.clearMessage()
