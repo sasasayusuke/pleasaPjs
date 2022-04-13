@@ -2,7 +2,6 @@
 const YEAR_SALE_DAYS = 240
 const getsu = 12
 try{
-    context.Log(model.NumA)
     // 発注点 = 年間出荷実績 * リードタイム / 年間営業日数
     model.Num004 = model.NumZ * model.NumA / YEAR_SALE_DAYS
     model.Num005 = model.Num001 * model.NumA / YEAR_SALE_DAYS
