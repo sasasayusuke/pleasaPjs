@@ -9,7 +9,21 @@ $p.events.on_grid_load = function () {
 	target.appendChild(elem)
 }
 
+const RESULT_ID_COL = 0
+const SHOUHIN_CODE_COL = 1
+const HAIBAN_COL = 2
+const HACCHUU_SHIIRESAKI_CODE_COL = 3
+const LEAD_TIME_COL = 4
+const STATUS_COL = 5
+const CHECK_KB_COL = 6
+const TO_KYUSHU_COL = 7
+const TO_KANTO_COL = 8
+const TO_HOKKAIDO_COL = 9
+const TO_ZENKOKU_COL = 10
+
 let records = []
+let header = []
+
 
 function checkOrder() {
 	let ans = window.confirm('発注チェックを開始しますか?')
@@ -45,7 +59,7 @@ function checkOrder() {
 					{
 						"ColumnName": "NumA"
 					},
-					// 発注管理連携ステータス
+					// 発注管理~~連携ステータス
 					{
 						"ColumnName": "ClassA~~26839,Status"
 					},
@@ -70,7 +84,7 @@ function checkOrder() {
 						"ColumnName": "Num011"
 					},
 				],
-				"Header": false,
+				"Header": true,
 				"Type": "csv"
 			},
 			"View": {
@@ -88,23 +102,30 @@ function checkOrder() {
 		}
 	})
 	function extractData() {
-		console.log(records)
+		header = records.shift()
 		records = records.filter(record => {
-			// 発注チェック　:　チェックなし
-			return record[2] == ''
+			// 廃番　:　チェックなし
+			return record[HAIBAN_COL] == ''
 		}).filter(record => {
 			// 発注仕入先コード　:　入力あり
-			return record[3] !== ''
+			return record[HACCHUU_SHIIRESAKI_CODE_COL] !== ''
 		}).filter(record => {
-		// リードタイム　:　入力あり
-			return record[4] > 0
-		})
-		.filter(record => {
-		// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　以外のデータ
-			return ![" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[5])
+			// リードタイム　:　入力あり
+			return record[LEAD_TIME_COL] > 0
 		})
 
-		console.log(records)
+		// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を排除
+		let tmpObj = {}
+		records.filter(record => {
+			return [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[STATUS_COL])
+		}).forEach(record => {
+			tmpObj[record[RESULT_ID_COL]] = record[SHOUHIN_CODE_COL]
+		})
+
+		records = records.filter(record => {
+			return !(record[RESULT_ID_COL] in tmpObj)
+		})
+		utilDownloadCsv(records, '発注チェック' + utilGetDate("", "_YYYY_MM_DD hh_mm_ss"))
 
 	}
 
