@@ -15,24 +15,23 @@ const TORIHIKI_SHURYOU_COL = 2
 const HAIBAN_COL = 3
 const HACCHUU_SHIIRESAKI_CODE_COL = 4
 const LEAD_TIME_COL = 5
-const TICKET_REVIEWER_COL = 6
-const STATUS_COL = 7
-const CHECK_KB_COL = 8
+const STATUS_COL = 6
+const CHECK_KB_COL = 7
 
-const TO_KYUSHU_COL = 9
-const TO_KANTO_COL = 10
-const TO_HOKKAIDO_COL = 11
-const TO_ZENKOKU_COL = 12
+const TO_KYUSHU_COL = 8
+const TO_KANTO_COL = 9
+const TO_HOKKAIDO_COL = 10
+const TO_ZENKOKU_COL = 11
 
-const KYUSHU_ZAIKO_COL = 13
-const KANTO_ZAIKO_COL = 14
-const HOKKAIDO_ZAIKO_COL = 15
-const ZENKOKU_ZAIKO_COL = 16
+const KYUSHU_ZAIKO_COL = 12
+const KANTO_ZAIKO_COL = 13
+const HOKKAIDO_ZAIKO_COL = 14
+const ZENKOKU_ZAIKO_COL = 15
 
-const KYUSHU_1M_ZAIKO_COL = 17
-const KANTO_1M_ZAIKO_COL = 18
-const HOKKAIDO_1M_ZAIKO_COL = 19
-const ZENKOKU_1M_ZAIKO_COL = 20
+const KYUSHU_1M_ZAIKO_COL = 16
+const KANTO_1M_ZAIKO_COL = 17
+const HOKKAIDO_1M_ZAIKO_COL = 18
+const ZENKOKU_1M_ZAIKO_COL = 19
 
 let records = []
 
@@ -74,10 +73,6 @@ function checkOrder() {
 					// リードタイム
 					{
 						"ColumnName": "NumA"
-					},
-					// チケット確認担当者
-					{
-						"ColumnName": "Class009"
 					},
 					// 発注管理~~連携ステータス
 					{
@@ -167,9 +162,6 @@ function checkOrder() {
 		}).filter(record => {
 			// リードタイム　:　1以上
 			return record[LEAD_TIME_COL] >= 1
-		}).filter(record => {
-			// チケット確認担当者:　入力あり
-			return record[TICKET_REVIEWER_COL] !== ''
 		})
 
 		// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を排除
@@ -187,7 +179,7 @@ function checkOrder() {
 		// 発注チケット作成処理
 		let ticketList = []
 		// ヘッダー情報入力
-		ticketList.push(["商品ｺｰﾄﾞ" ,"確認担当者", "作成日" ,"確認期日" ,"入庫倉庫" ,"発注根拠", "発注数量"])
+		ticketList.push(["商品ｺｰﾄﾞ" , "作成日" ,"確認期日" ,"入庫倉庫" ,"発注根拠", "発注数量"])
 		let date = new Date()
 		let now = utilGetDate(date)
 		let tommorow = utilGetDate(date.setDate(date.getDate() + 1))
@@ -196,8 +188,6 @@ function checkOrder() {
 			let ticket = []
 			// 商品ｺｰﾄﾞ
 			ticket.push(r[SHOUHIN_CODE_COL])
-			// 確認担当者
-			ticket.push(r[TICKET_REVIEWER_COL])
 			// 作成日
 			ticket.push(now)
 			// 確認期日(作成日から１日後)
@@ -259,25 +249,19 @@ function checkOrder() {
 	}
 
 	function getReason(record) {
-		return `
-現在在庫
-	九州在庫数量:${record[KYUSHU_ZAIKO_COL]}
-	関東在庫数量:${record[KANTO_ZAIKO_COL]}
-	北海道在庫数量:${record[HOKKAIDO_ZAIKO_COL]}
-	全国在庫数量:${record[ZENKOKU_ZAIKO_COL]}
+		let advice = record[TO_ZENKOKU_COL] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
+		let reason =
+`現在在庫
+	九州 : ${utilPaddingRight(record[KYUSHU_ZAIKO_COL], 10)}関東 : ${utilPaddingRight(record[KANTO_ZAIKO_COL], 10)}北海道 : ${utilPaddingRight(record[HOKKAIDO_ZAIKO_COL], 10)}全国 : ${utilPaddingRight(record[ZENKOKU_ZAIKO_COL], 10)}
 
 1ヶ月分在庫
-	九州一ヶ月分在庫:${record[KYUSHU_1M_ZAIKO_COL]}
-	関東一ヶ月分在庫:${record[KANTO_1M_ZAIKO_COL]}
-	北海道一ヶ月分在庫:${record[HOKKAIDO_1M_ZAIKO_COL]}
-	全国一ヶ月分在庫:${record[ZENKOKU_1M_ZAIKO_COL]}
+	九州 : ${utilPaddingRight(record[KYUSHU_1M_ZAIKO_COL], 10)}関東 : ${utilPaddingRight(record[KANTO_1M_ZAIKO_COL], 10)}北海道 : ${utilPaddingRight(record[HOKKAIDO_1M_ZAIKO_COL], 10)}全国 : ${utilPaddingRight(record[ZENKOKU_1M_ZAIKO_COL], 10)}
 
 発注まで
-	九州まで:${record[TO_KYUSHU_COL]}
-	関東まで:${record[TO_KANTO_COL]}
-	北海道まで:${record[TO_HOKKAIDO_COL]}
-	全国まで:${record[TO_ZENKOKU_COL]}
-		`
+	九州 : ${utilPaddingRight(record[TO_KYUSHU_COL], 10)}関東 : ${utilPaddingRight(record[TO_KANTO_COL], 10)}北海道 : ${utilPaddingRight(record[TO_HOKKAIDO_COL], 10)}全国 : ${utilPaddingRight(record[TO_ZENKOKU_COL], 10)}
+
+`
+		return reason + advice
 	}
 
 }

@@ -66,27 +66,42 @@ function utilGetDate (date, format) {
     format = 'YYYY-MM-DDThh:mm:ss'
   }
   date = new Date(date)
-  format = format.replace(/YYYY/, utilPad(date.getFullYear(), 4))
-  format = format.replace(/MM/, utilPad(date.getMonth() + 1, 2))
-  format = format.replace(/DD/, utilPad(date.getDate(), 2))
-  format = format.replace(/hh/, utilPad(date.getHours(), 2))
-  format = format.replace(/mm/, utilPad(date.getMinutes(), 2))
-  format = format.replace(/ss/, utilPad(date.getSeconds(), 2))
+  format = format.replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
+  format = format.replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
+  format = format.replace(/DD/, utilPaddingLeft(date.getDate(), 2))
+  format = format.replace(/hh/, utilPaddingLeft(date.getHours(), 2))
+  format = format.replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
+  format = format.replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
 
   return format
 }
 
 /**
- * 数値を０パディングする関数です。
- * @param {int} num 数値
- * @param {int} size 桁数
- * @param {int} min 最小値
- * @param {int} max 最大値
- * @return {string} ０パディングされた数値
+ * 左パディングする関数です。
+ * @param {string} str 数値
+ * @param {number} size 桁数
+ * @param {string} char パディング文字
+ * @return {string} パディングされた文字列
  */
-function utilPad (num, size, min = 0, max = '9'.repeat(size)) {
-	const padding = +num < +min ? +min : +num > +max ? +max : +num
-	return ('0'.repeat(+size) + padding).substr(-1 * +size)
+function utilPaddingLeft (str, size = 1, char = '0') {
+  if (char.length !== 1) {
+    console.log("1文字ではないです。")
+  }
+	return (char.repeat(size) + str).substr(-1 * size)
+}
+
+/**
+ * 右パディングする関数です。
+ * @param {string} str 数値
+ * @param {number} size 桁数
+ * @param {string} char パディング文字
+ * @return {string} パディングされた文字列
+ */
+function utilPaddingRight (str, size = 1, char = ' ') {
+  if (char.length !== 1) {
+    console.log("1文字ではないです。")
+  }
+	return (str + char.repeat(size)).substr(0, size)
 }
 
 /**
