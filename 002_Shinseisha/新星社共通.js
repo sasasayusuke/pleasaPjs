@@ -103,7 +103,7 @@ function utilDownloadCsv(array, title = 'test') {
   // csvDataに出力方法を追加
   let csvData = 'data:text/csvcharset=utf-8,'
   array.forEach(arr => {
-    const row = arr.join(',')
+    const row = '"' + arr.join('","') + '"'
     csvData += row + '\r\n'
   })
 
@@ -121,3 +121,15 @@ function utilDownloadCsv(array, title = 'test') {
 
 }
 
+/**
+ * Null判定する関数です。
+ * @param {object} obj オブジェクト
+ * @return {boolean} 判定結果
+ */
+function utilIsNull (obj) {
+  if (Array.isArray(obj)) {
+    return obj.filter(v => v !== '').length == 0
+  } else {
+    return !obj
+  }
+}
