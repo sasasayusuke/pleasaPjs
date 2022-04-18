@@ -232,7 +232,7 @@ function utilPad (num, size, min = 0, max = '9'.repeat(size)) {
 	return ('0'.repeat(+size) + padding).substr(-1 * +size)
 }
 
-// object       Object    フィルタリング対象
+// object       Object[]  フィルタリング対象
 // category     String    フィルタリング対象のカテゴリー
 // words        String[]  含まれる語
 function utilFilterObject (object, category, words) {

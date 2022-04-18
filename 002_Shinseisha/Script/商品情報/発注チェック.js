@@ -164,7 +164,6 @@ function checkOrder() {
 			return record[LEAD_TIME_COL] >= 1
 		})
 
-		// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を排除
 		let tmpObj = {}
 		records.filter(record => {
 			return [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[STATUS_COL])
@@ -173,7 +172,11 @@ function checkOrder() {
 		})
 
 		records = records.filter(record => {
+			// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を持つ商品を排除
 			return !(record[RESULT_ID_COL] in tmpObj)
+		}).filter((record, i, self) => {
+			// ResultId重複削除
+			return self.map(item => item[RESULT_ID_COL]).indexOf(record[RESULT_ID_COL]) === i
 		})
 
 		// 発注チケット作成処理
@@ -252,13 +255,13 @@ function checkOrder() {
 		let advice = record[TO_ZENKOKU_COL] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
 		let reason =
 `現在在庫
-	九州 : ${utilPaddingRight(record[KYUSHU_ZAIKO_COL], 10)}関東 : ${utilPaddingRight(record[KANTO_ZAIKO_COL], 10)}北海道 : ${utilPaddingRight(record[HOKKAIDO_ZAIKO_COL], 10)}全国 : ${utilPaddingRight(record[ZENKOKU_ZAIKO_COL], 10)}
+	九州 : ${utilPaddingRight(record[KYUSHU_ZAIKO_COL], 10)}	関東 : ${utilPaddingRight(record[KANTO_ZAIKO_COL], 10)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_ZAIKO_COL], 10)}	全国 : ${utilPaddingRight(record[ZENKOKU_ZAIKO_COL], 10)}
 
 1ヶ月分在庫
-	九州 : ${utilPaddingRight(record[KYUSHU_1M_ZAIKO_COL], 10)}関東 : ${utilPaddingRight(record[KANTO_1M_ZAIKO_COL], 10)}北海道 : ${utilPaddingRight(record[HOKKAIDO_1M_ZAIKO_COL], 10)}全国 : ${utilPaddingRight(record[ZENKOKU_1M_ZAIKO_COL], 10)}
+	九州 : ${utilPaddingRight(record[KYUSHU_1M_ZAIKO_COL], 10)}	関東 : ${utilPaddingRight(record[KANTO_1M_ZAIKO_COL], 10)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_1M_ZAIKO_COL], 10)}	全国 : ${utilPaddingRight(record[ZENKOKU_1M_ZAIKO_COL], 10)}
 
 発注まで
-	九州 : ${utilPaddingRight(record[TO_KYUSHU_COL], 10)}関東 : ${utilPaddingRight(record[TO_KANTO_COL], 10)}北海道 : ${utilPaddingRight(record[TO_HOKKAIDO_COL], 10)}全国 : ${utilPaddingRight(record[TO_ZENKOKU_COL], 10)}
+	九州 : ${utilPaddingRight(record[TO_KYUSHU_COL], 10)}	関東 : ${utilPaddingRight(record[TO_KANTO_COL], 10)}	北海道 : ${utilPaddingRight(record[TO_HOKKAIDO_COL], 10)}	全国 : ${utilPaddingRight(record[TO_ZENKOKU_COL], 10)}
 
 `
 		return reason + advice
