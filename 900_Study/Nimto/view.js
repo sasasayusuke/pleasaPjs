@@ -232,16 +232,16 @@ function test() {
       Num003: trashCards.shift(),
       Num004: trashCards.shift(),
     },
-    {
-      DateA: utilGetDate()
-    },
+    {},
     {},
     {},
     function(data) {
+      let id = data.Id
+      let turnCards =
       window.setTimeout(function() {
         create(
           {
-            ClassA: data.Id,
+            ClassA: id,
           },
           {
             NumA: playerCount,
@@ -250,9 +250,7 @@ function test() {
             Num003: trashCards.shift(),
             Num004: trashCards.shift(),
           },
-          {
-            DateA: utilGetDate()
-          },
+          {},
           {},
           {}
         )

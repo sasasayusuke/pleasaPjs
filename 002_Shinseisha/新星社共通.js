@@ -3,10 +3,25 @@ var WARNING = 'warning'
 var ERROR = 'error'
 
 /**
+ * Null判定する関数です。
+ * @param {object} obj オブジェクト
+ *
+ * @return {boolean} 判定結果
+ */
+function utilIsNull (obj) {
+  if (Array.isArray(obj)) {
+    return obj.filter(v => v !== '').length == 0
+  } else {
+    return !obj && isNaN(obj)
+  }
+}
+
+/**
  * Plesanterメッセージを利用する関数です。
  * @param {string} message メッセージ内容
  * @param {string} type 深刻度
  * @param {boolean} clear メッセージを消す
+ *
  * @return {string} 加工された文字列
  */
 function utilSetMessage (message = '', type = NORMAL, clear = true) {
@@ -56,7 +71,12 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
  * 時刻を出力する関数です。
  * @param {date} date 日付型
  * @param {string} format フォーマット
+ *
  * @return {string} フォーマット加工された日付文字列
+ *
+ * 例. date = 'Mon Apr 18 2022 19:05:52 GMT+0900 (日本標準時)' format='YYYY-MM-DD'
+ *            ⇓
+ *    '2022-04-18'
  */
 function utilGetDate (date, format) {
   if (typeof date === 'undefined' || utilIsNull(date)) {
@@ -105,27 +125,16 @@ function utilPaddingRight (str, size = 1, char = ' ') {
 }
 
 /**
- * 引数の2次元配列をUTF-8のCSVでダウンロードする関数です。
- * @param {array} array 2次元配列
- * 例 [
- *      ['1', '2', '3'],
- *      ['4', '5', '6'],
- *      ['7', '8', '9'],
- * ]
+ * 引数のcsv文字列をUTF-8のCSVでダウンロードする関数です。
+ * @param {string} csvStr csv文字列
  * @param {string} title ファイル名
  */
-function utilDownloadCsv(array, title = 'test') {
-  // csvDataに出力方法を追加
-  let csvData = 'data:text/csvcharset=utf-8,'
-  array.forEach(arr => {
-    const row = '"' + arr.join('","') + '"'
-    csvData += row + '\r\n'
-  })
+function utilDownloadCsv (csvStr, title = 'test') {
 
   // a要素を作成する
   const ele = document.createElement('a')
   // a要素にエンコード化した出力データを追加
-  ele.setAttribute('href', encodeURI(csvData))
+  ele.setAttribute('href', encodeURI(csvStr))
   // a要素に出力情報を追加
   ele.setAttribute('download', title + '.csv')
   ele.style.visibility = 'hidden'
@@ -137,14 +146,47 @@ function utilDownloadCsv(array, title = 'test') {
 }
 
 /**
- * Null判定する関数です。
- * @param {object} obj オブジェクト
- * @return {boolean} 判定結果
+ * 引数の2次元配列をCSVに変換する関数です。
+ * @param {array} array 2次元配列
+ *
+ * @return {string} csvData
+ * 例. [
+ *      ['数量', '単価', '合計'],
+ *      ['1', '2', '2'],
+ *      ['4', '5', '20'],
+ *      ['7', '8', '56'],
+ * ]
+ *            ⇓
+ * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
+ *
  */
-function utilIsNull (obj) {
-  if (Array.isArray(obj)) {
-    return obj.filter(v => v !== '').length == 0
-  } else {
-    return !obj
-  }
+function utilConvert2DToCsv (array) {
+  // csvDataに出力方法を追加
+  let csvData = 'data:text/csvcharset=utf-8,'
+
+  array.forEach(v => {
+    const row = '"' + v.join('","') + '"'
+    csvData += row + '\r\n'
+  })
+  return csvData
+}
+
+/**
+ * m行n列の2次元配列を生成する関数です。
+ * @param {number} m 行数
+ * @param {number} n 列数
+ * @param {number} val 初期値
+ *
+ * @return {array} 2次元配列
+ *
+ * 例. m = 3, n = 4, val = 1
+ *            ⇓
+ * [
+ *      ['1', '1', '1', '1'],
+ *      ['1', '1', '1', '1'],
+ *      ['1', '1', '1', '1'],
+ * ]
+ */
+function generate2DArray (m, n, val = 0) {
+  return [...Array(m)].map(_ => Array(n).fill(val))
 }

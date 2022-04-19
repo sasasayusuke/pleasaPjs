@@ -247,7 +247,7 @@ function checkOrder() {
 			}
 		}
 
-		utilDownloadCsv(ticketList, '発注チェック_' + utilGetDate(now, "YYYY_MM_DD hh_mm_ss"))
+		utilDownloadCsv(utilConvert2DToCsv(ticketList), '発注チェック_' + utilGetDate(now, "YYYY_MM_DD hh_mm_ss"))
 
 	}
 
@@ -255,13 +255,13 @@ function checkOrder() {
 		let advice = record[TO_ZENKOKU_COL] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
 		let reason =
 `現在在庫
-	九州 : ${utilPaddingRight(record[KYUSHU_ZAIKO_COL], 10)}	関東 : ${utilPaddingRight(record[KANTO_ZAIKO_COL], 10)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_ZAIKO_COL], 10)}	全国 : ${utilPaddingRight(record[ZENKOKU_ZAIKO_COL], 10)}
+	九州 : ${utilPaddingRight(record[KYUSHU_ZAIKO_COL], 7)}	関東 : ${utilPaddingRight(record[KANTO_ZAIKO_COL], 7)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_ZAIKO_COL], 7)}	全国 : ${utilPaddingRight(record[ZENKOKU_ZAIKO_COL], 7)}
 
 1ヶ月分在庫
-	九州 : ${utilPaddingRight(record[KYUSHU_1M_ZAIKO_COL], 10)}	関東 : ${utilPaddingRight(record[KANTO_1M_ZAIKO_COL], 10)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_1M_ZAIKO_COL], 10)}	全国 : ${utilPaddingRight(record[ZENKOKU_1M_ZAIKO_COL], 10)}
+	九州 : ${utilPaddingRight(record[KYUSHU_1M_ZAIKO_COL], 7)}	関東 : ${utilPaddingRight(record[KANTO_1M_ZAIKO_COL], 7)}	北海道 : ${utilPaddingRight(record[HOKKAIDO_1M_ZAIKO_COL], 7)}	全国 : ${utilPaddingRight(record[ZENKOKU_1M_ZAIKO_COL], 7)}
 
 発注まで
-	九州 : ${utilPaddingRight(record[TO_KYUSHU_COL], 10)}	関東 : ${utilPaddingRight(record[TO_KANTO_COL], 10)}	北海道 : ${utilPaddingRight(record[TO_HOKKAIDO_COL], 10)}	全国 : ${utilPaddingRight(record[TO_ZENKOKU_COL], 10)}
+	九州 : ${utilPaddingRight(record[TO_KYUSHU_COL], 7)}	関東 : ${utilPaddingRight(record[TO_KANTO_COL], 7)}	北海道 : ${utilPaddingRight(record[TO_HOKKAIDO_COL], 7)}	全国 : ${utilPaddingRight(record[TO_ZENKOKU_COL], 7)}
 
 `
 		return reason + advice
