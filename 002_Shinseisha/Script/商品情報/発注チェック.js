@@ -8,31 +8,50 @@ $p.events.on_grid_load = function () {
 
 	target.appendChild(elem)
 }
-let indexCount = 0
 
-const COL_INDEX_RESULT_ID = indexCount++
-const COL_INDEX_SHOUHIN_CODE = indexCount++
-const COL_INDEX_TORIHIKI_SHURYOU = indexCount++
-const COL_INDEX_HAIBAN = indexCount++
-const COL_INDEX_HACCHUU_SHIIRESAKI_CODE = indexCount++
-const COL_INDEX_LEAD_TIME = indexCount++
-const COL_INDEX_STATUS = indexCount++
-const COL_INDEX_CHECK_KB = indexCount++
-
-const COL_INDEX_TO_KYUSHU = indexCount++
-const COL_INDEX_TO_KANTO = indexCount++
-const COL_INDEX_TO_HOKKAIDO = indexCount++
-const COL_INDEX_TO_ZENKOKU = indexCount++
-
-const COL_INDEX_KYUSHU_ZAIKO = indexCount++
-const COL_INDEX_KANTO_ZAIKO = indexCount++
-const COL_INDEX_HOKKAIDO_ZAIKO = indexCount++
-const COL_INDEX_ZENKOKU_ZAIKO = indexCount++
-
-const COL_INDEX_KYUSHU_1M_ZAIKO = indexCount++
-const COL_INDEX_KANTO_1M_ZAIKO = indexCount++
-const COL_INDEX_HOKKAIDO_1M_ZAIKO = indexCount++
-const COL_INDEX_ZENKOKU_1M_ZAIKO = indexCount++
+const COL_INDEX = [
+	RESULT_ID
+	, SHOUHIN_CODE
+	, TORIHIKI_SHURYOU
+	, HAIBAN
+	, HACCHUU_SHIIRESAKI_CODE
+	, LEAD_TIME
+	, STATUS
+	, CHECK_KB
+	, TO_KYUSHU
+	, TO_KANTO
+	, TO_HOKKAIDO
+	, TO_ZENKOKU
+	, KYUSHU_ZAIKO
+	, KANTO_ZAIKO
+	, HOKKAIDO_ZAIKO
+	, ZENKOKU_ZAIKO
+	, KYUSHU_1M_ZAIKO
+	, KANTO_1M_ZAIKO
+	, HOKKAIDO_1M_ZAIKO
+	, ZENKOKU_1M_ZAIKO
+] = [
+	"ResultId"
+	, "Title"
+	, "Class099~" + SITE_ID_SHIIRESAKI + ",CheckA"
+	, "CheckA"
+	, "Class099"
+	, "NumA"
+	, "ClassA~~" + SITE_ID_HACCHU_KANRI + ",Status"
+	, "ClassF"
+	, "Num008"
+	, "Num009"
+	, "Num010"
+	, "Num011"
+	, "NumB"
+	, "NumC"
+	, "NumD"
+	, "NumE"
+	, "NumR"
+	, "NumS"
+	, "NumT"
+	, "NumU"
+]
 
 let records = []
 
@@ -53,83 +72,83 @@ function checkOrder() {
 			"Export": {
 				"Columns":[
 					{
-						"ColumnName": "ResultId"
+						"ColumnName": RESULT_ID
 					},
 					// 商品コード
 					{
-						"ColumnName": "Title"
+						"ColumnName": SHOUHIN_CODE
 					},
 					// 仕入先情報~~取引終了
 					{
-						"ColumnName": "Class099~" + SITE_ID_SHIIRESAKI + ",CheckA"
+						"ColumnName": TORIHIKI_SHURYOU
 					},
 					// 廃番
 					{
-						"ColumnName": "CheckA"
+						"ColumnName": HAIBAN
 					},
 					// 発注仕入先コード
 					{
-						"ColumnName": "Class099"
+						"ColumnName": HACCHUU_SHIIRESAKI_CODE
 					},
 					// リードタイム
 					{
-						"ColumnName": "NumA"
+						"ColumnName": LEAD_TIME
 					},
 					// 発注管理~~連携ステータス
 					{
-						"ColumnName": "ClassA~~" + SITE_ID_HACCHU_KANRI + ",Status"
+						"ColumnName": STATUS
 					},
 					// チェック区分
 					{
-						"ColumnName": "ClassF"
+						"ColumnName": CHECK_KB
 					},
 					// 九州まで
 					{
-						"ColumnName": "Num008"
+						"ColumnName": TO_KYUSHU
 					},
 					// 関東まで
 					{
-						"ColumnName": "Num009"
+						"ColumnName": TO_KANTO
 					},
 					// 北海道まで
 					{
-						"ColumnName": "Num010"
+						"ColumnName": TO_HOKKAIDO
 					},
 					// 全国まで
 					{
-						"ColumnName": "Num011"
+						"ColumnName": TO_ZENKOKU
 					},
 					// 九州在庫数量
 					{
-						"ColumnName": "NumB"
+						"ColumnName": KYUSHU_ZAIKO
 					},
 					// 関東在庫数量
 					{
-						"ColumnName": "NumC"
+						"ColumnName": KANTO_ZAIKO
 					},
 					// 北海道在庫数量
 					{
-						"ColumnName": "NumD"
+						"ColumnName": HOKKAIDO_ZAIKO
 					},
 					// 全国在庫数量
 					{
-						"ColumnName": "NumE"
+						"ColumnName": ZENKOKU_ZAIKO
 					},
 					// 九州一ヶ月分在庫
 					{
-						"ColumnName": "NumR"
+						"ColumnName": KYUSHU_1M_ZAIKO
 					},
 					// 関東一ヶ月分在庫
 					{
-						"ColumnName": "NumS"
+						"ColumnName": KANTO_1M_ZAIKO
 					},
 					// 北海道一ヶ月分在庫
 					{
-						"ColumnName": "NumT"
+						"ColumnName": HOKKAIDO_1M_ZAIKO
 					},
 					// 全国一ヶ月分在庫
 					{
-						"ColumnName": "NumU"
+						"ColumnName": ZENKOKU_1M_ZAIKO
 					},
 				],
 				"Header": true,
@@ -147,10 +166,9 @@ function checkOrder() {
 				records.push(JSON.parse(`[${r}]`))
 			}
 			let header = records.shift()
-			if (header.length !== indexCount) {
+			if (header.length !== COL_INDEX.length) {
 				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = WARNING)
-				return
+				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
 			extractData()
 		}
@@ -159,32 +177,32 @@ function checkOrder() {
 	function extractData() {
 		records = records.filter(record => {
 			// 取引終了　:　チェックなし
-			return record[COL_INDEX_TORIHIKI_SHURYOU] == ''
+			return record[COL_INDEX.indexOf(TORIHIKI_SHURYOU)] == ''
 		}).filter(record => {
 			// 廃番　:　チェックなし
-			return record[COL_INDEX_HAIBAN] == ''
+			return record[COL_INDEX.indexOf(HAIBAN)] == ''
 		}).filter(record => {
 			// 発注仕入先コード　:　入力あり
-			return record[COL_INDEX_HACCHUU_SHIIRESAKI_CODE] !== ''
+			return record[COL_INDEX.indexOf(HACCHUU_SHIIRESAKI_CODE)] !== ''
 		}).filter(record => {
 			// リードタイム　:　1以上
-			return record[COL_INDEX_LEAD_TIME] >= 1
+			return record[COL_INDEX.indexOf(LEAD_TIME)] >= 1
 		})
 
 		// 発注管理テーブルに"確認待","確認済","出庫準備中","出庫済"のチケットがない商品
 		let tmpObj = {}
 		records.filter(record => {
-			return [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[COL_INDEX_STATUS])
+			return [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[COL_INDEX.indexOf(STATUS)])
 		}).forEach(record => {
-			tmpObj[record[COL_INDEX_RESULT_ID]] = record[COL_INDEX_SHOUHIN_CODE]
+			tmpObj[record[COL_INDEX.indexOf(RESULT_ID)]] = record[COL_INDEX.indexOf(SHOUHIN_CODE)]
 		})
 
 		records = records.filter(record => {
 			// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を持つ商品を排除
-			return !(record[COL_INDEX_RESULT_ID] in tmpObj)
+			return !(record[COL_INDEX.indexOf(RESULT_ID)] in tmpObj)
 		}).filter((record, i, self) => {
 			// ResultId重複削除
-			return self.map(item => item[COL_INDEX_RESULT_ID]).indexOf(record[COL_INDEX_RESULT_ID]) === i
+			return self.map(item => item[COL_INDEX.indexOf(RESULT_ID)]).indexOf(record[COL_INDEX.indexOf(RESULT_ID)]) === i
 		})
 
 		// 発注チケット作成処理
@@ -198,55 +216,55 @@ function checkOrder() {
 		for (let r of records) {
 			let ticket = []
 			// 商品ｺｰﾄﾞ
-			ticket.push(r[COL_INDEX_SHOUHIN_CODE])
+			ticket.push(r[COL_INDEX.indexOf(SHOUHIN_CODE)])
 			// 作成日
 			ticket.push(now)
 			// 確認期日(作成日から１日後)
 			ticket.push(tommorow)
 
-			if (r[COL_INDEX_CHECK_KB] == ' 九州のみ') {
+			if (r[COL_INDEX.indexOf(CHECK_KB)] == ' 九州のみ') {
 				// 全国閾値がマイナス
-				if (r[COL_INDEX_TO_ZENKOKU] < 0) {
+				if (r[COL_INDEX.indexOf(TO_ZENKOKU)] < 0) {
 					// 入庫倉庫：九州
 					ticket.push(' 九州倉庫')
 					// 発注根拠
 					ticket.push(getReason(r))
 					// 発注数量
-					ticket.push(Math.ceil(-r[COL_INDEX_TO_ZENKOKU]))
+					ticket.push(Math.ceil(-r[COL_INDEX.indexOf(TO_ZENKOKU)]))
 					ticketList.push(ticket)
 				}
-			} else if (r[COL_INDEX_CHECK_KB] == ' 全国') {
+			} else if (r[COL_INDEX.indexOf(CHECK_KB)] == ' 全国') {
 				let ticketCopy = Array.from(ticket)
 				// 九州閾値がマイナス
-				if (r[COL_INDEX_TO_KYUSHU] < 0) {
+				if (r[COL_INDEX.indexOf(TO_KYUSHU)] < 0) {
 					// 入庫倉庫：九州
 					ticketCopy.push(' 九州倉庫')
 					// 発注根拠
 					ticketCopy.push(getReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COL_INDEX_TO_KYUSHU]))
+					ticketCopy.push(Math.ceil(-r[COL_INDEX.indexOf(TO_KYUSHU)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
 				// 関東閾値がマイナス
-				if (r[COL_INDEX_TO_KANTO] < 0) {
+				if (r[COL_INDEX.indexOf(TO_KANTO)] < 0) {
 					// 入庫倉庫：関東
 					ticketCopy.push(' 関東倉庫')
 					// 発注根拠
 					ticketCopy.push(getReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COL_INDEX_TO_KANTO]))
+					ticketCopy.push(Math.ceil(-r[COL_INDEX.indexOf(TO_KANTO)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
 				// 北海道閾値がマイナス
-				if (r[COL_INDEX_TO_HOKKAIDO] < 0) {
+				if (r[COL_INDEX.indexOf(TO_HOKKAIDO)] < 0) {
 					// 入庫倉庫：北海道
 					ticketCopy.push(' 北海道倉庫')
 					// 発注根拠
 					ticketCopy.push(getReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COL_INDEX_TO_HOKKAIDO]))
+					ticketCopy.push(Math.ceil(-r[COL_INDEX.indexOf(TO_HOKKAIDO)]))
 					ticketList.push(ticketCopy)
 				}
 			} else {
@@ -260,16 +278,16 @@ function checkOrder() {
 	}
 
 	function getReason(record) {
-		let advice = record[COL_INDEX_TO_ZENKOKU] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
+		let advice = record[COL_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
 		let reason =
 `現在在庫
-	九州 : ${utilPaddingRight(record[COL_INDEX_KYUSHU_ZAIKO], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX_KANTO_ZAIKO], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX_HOKKAIDO_ZAIKO], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX_ZENKOKU_ZAIKO], 7)}
+	九州 : ${utilPaddingRight(record[COL_INDEX.indexOf(KYUSHU_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX.indexOf(KANTO_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX.indexOf(HOKKAIDO_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX.indexOf(ZENKOKU_ZAIKO)], 7)}
 
 1ヶ月分在庫
-	九州 : ${utilPaddingRight(record[COL_INDEX_KYUSHU_1M_ZAIKO], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX_KANTO_1M_ZAIKO], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX_HOKKAIDO_1M_ZAIKO], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX_ZENKOKU_1M_ZAIKO], 7)}
+	九州 : ${utilPaddingRight(record[COL_INDEX.indexOf(KYUSHU_1M_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX.indexOf(KANTO_1M_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX.indexOf(HOKKAIDO_1M_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX.indexOf(ZENKOKU_1M_ZAIKO)], 7)}
 
 発注まで
-	九州 : ${utilPaddingRight(record[COL_INDEX_TO_KYUSHU], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX_TO_KANTO], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX_TO_HOKKAIDO], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX_TO_ZENKOKU], 7)}
+	九州 : ${utilPaddingRight(record[COL_INDEX.indexOf(TO_KYUSHU)], 7)}	関東 : ${utilPaddingRight(record[COL_INDEX.indexOf(TO_KANTO)], 7)}	北海道 : ${utilPaddingRight(record[COL_INDEX.indexOf(TO_HOKKAIDO)], 7)}	全国 : ${utilPaddingRight(record[COL_INDEX.indexOf(TO_ZENKOKU)], 7)}
 
 `
 		return reason + advice

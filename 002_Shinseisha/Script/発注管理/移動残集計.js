@@ -8,13 +8,22 @@ $p.events.on_grid_load = function () {
 
 	target.appendChild(elem)
 }
-let indexCount = 0
 
-const COL_INDEX_SHOUHIN_CODE = indexCount++
-const COL_INDEX_IN_SOUKO = indexCount++
-const COL_INDEX_OUT_SOUKO = indexCount++
-const COL_INDEX_HACCHUU_SUURYOU = indexCount++
-const COL_INDEX_STATUS = indexCount++
+const COL_INDEX = [
+	ISSUE_ID
+	, SHOUHIN_CODE
+	, IN_SOUKO
+	, OUT_SOUKO
+	, HACCHUU_SUURYOU
+	, STATUS
+] = [
+	"IssueId"
+	, "ClassA"
+	, "ClassF"
+	, "ClassG"
+	, "NumA"
+	, "Status"
+]
 
 let records = []
 
@@ -33,25 +42,28 @@ function sumMove() {
 			"ApiVersion": 1.1,
 			"Export": {
 				"Columns":[
+					{
+						"ColumnName": ISSUE_ID
+					},
 					// 商品コード
 					{
-						"ColumnName": "ClassA"
+						"ColumnName": SHOUHIN_CODE
 					},
 					// 入庫倉庫
 					{
-						"ColumnName": "ClassF"
+						"ColumnName": IN_SOUKO
 					},
 					// 出庫倉庫
 					{
-						"ColumnName": "ClassG"
+						"ColumnName": OUT_SOUKO
 					},
 					// 発注数量
 					{
-						"ColumnName": "NumA"
+						"ColumnName": HACCHUU_SUURYOU
 					},
 					// 連携ステータス
 					{
-						"ColumnName": "Status"
+						"ColumnName": STATUS
 					}
 				],
 				"Header": true,
@@ -69,17 +81,29 @@ function sumMove() {
 				records.push(JSON.parse(`[${r}]`))
 			}
 			let header = records.shift()
-			if (header.length !== indexCount) {
+			if (header.length !== COL_INDEX.length) {
 				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = WARNING)
-				return
+				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
 			extractData()
 		}
 	})
 	function extractData() {
 		// 発注管理連携ステータス : " 出荷済"," 移動中"," 補充済"　のデータを抽出
-		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COL_INDEX_STATUS]))
+		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COL_INDEX.indexOf(STATUS)]))
+
+		// エラー処理（異常データなのでRPA中断）
+		records.forEach(record => {
+			if (record[COL_INDEX.indexOf(OUT_SOUKO)] == "") {
+				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 出庫倉庫が入力されてません。', type = ERROR)
+			}
+			if (record[COL_INDEX.indexOf(HACCHUU_SUURYOU)] <= 0) {
+				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
+			}
+			if (record[COL_INDEX.indexOf(IN_SOUKO)] == record[COL_INDEX.indexOf(OUT_SOUKO)]) {
+				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
+			}
+		})
 
 		// ヘッダー情報入力
 		let header = [shouhin_code , kyushu_move, kanto_move, hokkaido_move] = ["商品ｺｰﾄﾞ" , "九州移動残数量", "関東移動残数量", "北海道移動残数量"]
@@ -88,15 +112,15 @@ function sumMove() {
 		let codes = {}
 
 		for (let r of records) {
-			let key = r[COL_INDEX_SHOUHIN_CODE] + ',' + r[COL_INDEX_IN_SOUKO]
+			let key = r[COL_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COL_INDEX.indexOf(IN_SOUKO)]
 			if (!(key in tmp)) tmp[key] = 0
-			if (!(r[COL_INDEX_SHOUHIN_CODE] in codes)) codes[r[COL_INDEX_SHOUHIN_CODE]] = 0
-			tmp[key] += +r[COL_INDEX_HACCHUU_SUURYOU]
-			if (r[COL_INDEX_STATUS] == " 出荷済") {
+			if (!(r[COL_INDEX.indexOf(SHOUHIN_CODE)] in codes)) codes[r[COL_INDEX.indexOf(SHOUHIN_CODE)]] = 0
+			tmp[key] += +r[COL_INDEX.indexOf(HACCHUU_SUURYOU)]
+			if (r[COL_INDEX.indexOf(STATUS)] == " 出荷済") {
 				// 発注管理連携ステータス : " 出荷済"の場合
-				key = r[COL_INDEX_SHOUHIN_CODE] + ',' + r[COL_INDEX_OUT_SOUKO]
+				key = r[COL_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COL_INDEX.indexOf(OUT_SOUKO)]
 				if (!(key in tmp)) tmp[key] = 0
-				tmp[key] -= +r[COL_INDEX_HACCHUU_SUURYOU]
+				tmp[key] -= +r[COL_INDEX.indexOf(HACCHUU_SUURYOU)]
 			}
 		}
 		// 移動残集計作成処理
@@ -115,8 +139,7 @@ function sumMove() {
 			} else if (souko == " 北海道倉庫") {
 				columnIndex = header.indexOf(hokkaido_move)
 			} else {
-				utilSetMessage(message = " 出荷済 または 移動中 または 補充済 の " + code + 'の倉庫区分に異常または未入力項目があります。', type = WARNING)
-				return
+				utilSetMessage(message = " 出荷済 または 移動中 または 補充済 の " + code + 'の倉庫区分に異常または未入力項目があります。', type = ERROR)
 			}
 			tbl.find(v => v[0] == code)[columnIndex] = tmp[t]
 		}
