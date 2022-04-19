@@ -1,24 +1,23 @@
 $p.events.on_grid_load = function () {
 	target = document.getElementById('MainCommands')
 	elem = document.createElement('button')
-	elem.id='sumMove'
+	elem.id='sumAchievement'
 	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
-	elem.onclick = sumMove
-	elem.innerText = '移動残集計'
+	elem.onclick = sumAchievement
+	elem.innerText = '出荷実績集計'
 
 	target.appendChild(elem)
 }
-let indexCount = 0
 
-const COL_INDEX_SHOUHIN_CODE = indexCount++
-const COL_INDEX_IN_SOUKO = indexCount++
-const COL_INDEX_OUT_SOUKO = indexCount++
-const COL_INDEX_HACCHUU_SUURYOU = indexCount++
-const COL_INDEX_STATUS = indexCount++
+const SHOUHIN_CODE_COL = 0
+const IN_SOUKO_COL = 1
+const OUT_SOUKO_COL = 2
+const HACCHUU_SUURYOU_COL = 3
+const STATUS_COL = 4
 
 let records = []
 
-function sumMove() {
+function sumAchievement() {
 	let ans = window.confirm('移動残集計を開始しますか?')
 	if (!ans) {
 		console.log('移動残集計を開始しますか? : Noを押下しました。')
@@ -54,7 +53,7 @@ function sumMove() {
 						"ColumnName": "Status"
 					}
 				],
-				"Header": true,
+				"Header": false,
 				"Type": "csv"
 			},
 			"View": {
@@ -68,35 +67,29 @@ function sumMove() {
 			for (let r of data.Response.Content.split(/\n/)) {
 				records.push(JSON.parse(`[${r}]`))
 			}
-			let header = records.shift()
-			if (header.length !== indexCount) {
-				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = WARNING)
-				return
-			}
 			extractData()
 		}
 	})
 	function extractData() {
 		// 発注管理連携ステータス : " 出荷済"," 移動中"," 補充済"　のデータを抽出
-		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COL_INDEX_STATUS]))
+		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[STATUS_COL]))
 
 		// ヘッダー情報入力
-		let header = [shouhin_code , kyushu_move, kanto_move, hokkaido_move] = ["商品ｺｰﾄﾞ" , "九州移動残数量", "関東移動残数量", "北海道移動残数量"]
+		let header = ["商品ｺｰﾄﾞ" , "九州移動残数量", "関東移動残数量", "北海道移動残数量"]
 
 		let tmp = {}
 		let codes = {}
 
 		for (let r of records) {
-			let key = r[COL_INDEX_SHOUHIN_CODE] + ',' + r[COL_INDEX_IN_SOUKO]
+			let key = r[SHOUHIN_CODE_COL] + ',' + r[IN_SOUKO_COL]
 			if (!(key in tmp)) tmp[key] = 0
-			if (!(r[COL_INDEX_SHOUHIN_CODE] in codes)) codes[r[COL_INDEX_SHOUHIN_CODE]] = 0
-			tmp[key] += +r[COL_INDEX_HACCHUU_SUURYOU]
-			if (r[COL_INDEX_STATUS] == " 出荷済") {
+			if (!(r[SHOUHIN_CODE_COL] in codes)) codes[r[SHOUHIN_CODE_COL]] = 0
+			tmp[key] += +r[HACCHUU_SUURYOU_COL]
+			if (r[STATUS_COL] == " 出荷済") {
 				// 発注管理連携ステータス : " 出荷済"の場合
-				key = r[COL_INDEX_SHOUHIN_CODE] + ',' + r[COL_INDEX_OUT_SOUKO]
+				key = r[SHOUHIN_CODE_COL] + ',' + r[OUT_SOUKO_COL]
 				if (!(key in tmp)) tmp[key] = 0
-				tmp[key] -= +r[COL_INDEX_HACCHUU_SUURYOU]
+				tmp[key] -= +r[HACCHUU_SUURYOU_COL]
 			}
 		}
 		// 移動残集計作成処理
@@ -107,18 +100,18 @@ function sumMove() {
 
 		for (let t in tmp) {
 			let [code, souko] = t.split(',')
-			let columnIndex = 0
+			let columIndex = 0
 			if (souko == " 九州倉庫") {
-				columnIndex = header.indexOf(kyushu_move)
+				columIndex = 1
 			} else if (souko == " 関東倉庫") {
-				columnIndex = header.indexOf(kanto_move)
+				columIndex = 2
 			} else if (souko == " 北海道倉庫") {
-				columnIndex = header.indexOf(hokkaido_move)
+				columIndex = 3
 			} else {
 				utilSetMessage(message = " 出荷済 または 移動中 または 補充済 の " + code + 'の倉庫区分に異常または未入力項目があります。', type = WARNING)
 				return
 			}
-			tbl.find(v => v[0] == code)[columnIndex] = tmp[t]
+			tbl.find(v => v[0] == code)[columIndex] = tmp[t]
 		}
 		tbl.unshift(header)
 

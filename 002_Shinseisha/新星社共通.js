@@ -1,6 +1,3 @@
-var NORMAL = 'normal'
-var WARNING = 'warning'
-var ERROR = 'error'
 
 /**
  * Null判定する関数です。
@@ -12,7 +9,7 @@ function utilIsNull (obj) {
   if (Array.isArray(obj)) {
     return obj.filter(v => v !== '').length == 0
   } else {
-    return !obj && isNaN(obj)
+    return !obj && obj !== 0
   }
 }
 
