@@ -32,6 +32,10 @@ function sumMove() {
 		return
 	}
 	console.log('移動残集計を開始しますか? : Yesを押下しました。')
+	if ($p.siteId() !== SITE_ID_HACCHU_KANRI) {
+		console.log(header)
+		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	}
 	$.ajax({
 		type: "POST",
 		url: "/api/items/" + SITE_ID_HACCHU_KANRI + "/export",
@@ -78,7 +82,7 @@ function sumMove() {
 			let header = records.shift()
 			if (header.length !== COLUMN_INDEX.length) {
 				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
+				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 			}
 
 			utilDownloadCsv(extractData(records), '移動残集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))

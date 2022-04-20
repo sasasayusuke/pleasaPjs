@@ -7,7 +7,10 @@ const COLUMN_INDEX = [
 ]
 
 function checkDouble() {
-
+	if ($p.siteId() !== SITE_ID_SHUKKA_JISSEKI) {
+		console.log(header)
+		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	}
 	$.ajax({
 		type: "POST",
 		url: "/api/items/" + SITE_ID_SHUKKA_JISSEKI + "/export",
@@ -47,3 +50,5 @@ function checkDouble() {
 }
 
 
+function extractData() {
+}

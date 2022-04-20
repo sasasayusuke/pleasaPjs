@@ -60,6 +60,10 @@ function checkOrder() {
 		return
 	}
 	console.log('発注チェックを開始しますか? : Yesを押下しました。')
+	if ($p.siteId() !== SITE_ID_SHOUHIN) {
+		console.log(header)
+		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	}
 	$.ajax({
 		type: "POST",
 		url: "/api/items/" + SITE_ID_SHOUHIN + "/export",
@@ -162,7 +166,7 @@ function checkOrder() {
 			let header = records.shift()
 			if (header.length !== COLUMN_INDEX.length) {
 				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
+				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 			}
 
 			utilDownloadCsv(extractData(records), '発注チェック_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
