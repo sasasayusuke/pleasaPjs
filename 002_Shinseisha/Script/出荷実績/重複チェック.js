@@ -1,9 +1,13 @@
 const COLUMN_INDEX = [
 	RESULT_ID
 	, TITLE
+	, DOUBLE_FLAG
+	, UPDATE_TIME
 ] = [
 	"ResultId"
 	, "Title"
+	, "CheckA"
+	, "UpdatedTime"
 ]
 
 function checkDouble() {
@@ -25,6 +29,14 @@ function checkDouble() {
 					// 商品ｺｰﾄﾞ_年月
 					{
 						"ColumnName": TITLE
+					},
+					// 重複無効フラグ
+					{
+						"ColumnName": DOUBLE_FLAG
+					},
+					// 更新日時
+					{
+						"ColumnName": UPDATE_TIME
 					}
 				],
 				"Header": true,
@@ -43,12 +55,18 @@ function checkDouble() {
 				console.log(header)
 				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
-			extractData()
+			extractData(records)
 		}
 	})
 
 }
 
+function extractData(records) {
+	console.log(records)
 
-function extractData() {
+	records = records.map(item => item[COLUMN_INDEX.indexOf(TITLE)])
+	records = records.filter(function (x, i, self) {
+		return self.indexOf(x) !== self.lastIndexOf(x)
+	})
+	console.log(records)
 }

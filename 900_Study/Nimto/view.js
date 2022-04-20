@@ -142,7 +142,7 @@ function changeBadge(i) {
   if (document.getElementById("ownRadio").checked) {
     if (ownCards.includes(+i) || trashCards.includes(+i)) return
     ownCards.push(+i)
-    document.getElementById("badge" + i).className = "badge bg-warning"
+    document.getElementById("badge" + +i).className = "badge bg-warning"
   } else if (document.getElementById("trashRadio").checked) {
     if (trashCards.includes(+i)) return
     if (ownCards.includes(+i)) {
@@ -155,7 +155,7 @@ function changeBadge(i) {
     ownCards = ownCards.filter(v => v !== +i)
     ownTrashCards = ownTrashCards.filter(v => v !== +i)
     trashCards = trashCards.filter(v => v !== +i)
-    document.getElementById("badge" + i).className = "badge bg-light text-dark"
+    document.getElementById("badge" + +i).className = "badge bg-light text-dark"
   }
   updateData()
 }
@@ -210,12 +210,13 @@ function utilGetDate (date, format) {
     format = 'YYYY-MM-DDThh:mm:ss'
   }
   date = new Date(date)
-  format = format.replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
-  format = format.replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
-  format = format.replace(/DD/, utilPaddingLeft(date.getDate(), 2))
-  format = format.replace(/hh/, utilPaddingLeft(date.getHours(), 2))
-  format = format.replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
-  format = format.replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
+  format = format
+    .replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
+    .replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
+    .replace(/DD/, utilPaddingLeft(date.getDate(), 2))
+    .replace(/hh/, utilPaddingLeft(date.getHours(), 2))
+    .replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
+    .replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
 
   return format
 }
@@ -286,16 +287,18 @@ function create(ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, 
   })
 }
 
+
 /**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
+ *
  * @return {boolean} 判定結果
  */
 function utilIsNull (obj) {
   if (Array.isArray(obj)) {
     return obj.filter(v => v !== '').length == 0
   } else {
-    return !obj
+    return !obj && obj !== 0
   }
 }
 

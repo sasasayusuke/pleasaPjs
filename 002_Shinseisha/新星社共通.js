@@ -84,12 +84,13 @@ function utilGetDate (date, format) {
     format = 'YYYY-MM-DDThh:mm:ss'
   }
   date = new Date(date)
-  format = format.replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
-  format = format.replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
-  format = format.replace(/DD/, utilPaddingLeft(date.getDate(), 2))
-  format = format.replace(/hh/, utilPaddingLeft(date.getHours(), 2))
-  format = format.replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
-  format = format.replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
+  format = format
+    .replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
+    .replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
+    .replace(/DD/, utilPaddingLeft(date.getDate(), 2))
+    .replace(/hh/, utilPaddingLeft(date.getHours(), 2))
+    .replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
+    .replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
 
   return format
 }

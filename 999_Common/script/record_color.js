@@ -25,12 +25,13 @@ function utilGetDate (date, format = 'YYYY-MM-DDThh:mm:ss') {
 		date = new Date()
 	}
 	date = new Date(date)
-	format = format.replace(/YYYY/, utilPad(date.getFullYear(), 4))
-	format = format.replace(/MM/, utilPad(date.getMonth() + 1, 2))
-	format = format.replace(/DD/, utilPad(date.getDate(), 2))
-	format = format.replace(/hh/, utilPad(date.getHours(), 2))
-	format = format.replace(/mm/, utilPad(date.getMinutes(), 2))
-	format = format.replace(/ss/, utilPad(date.getSeconds(), 2))
+	format = format
+    .replace(/YYYY/, utilPad(date.getFullYear(), 4))
+    .replace(/MM/, utilPad(date.getMonth() + 1, 2))
+    .replace(/DD/, utilPad(date.getDate(), 2))
+    .replace(/hh/, utilPad(date.getHours(), 2))
+    .replace(/mm/, utilPad(date.getMinutes(), 2))
+    .replace(/ss/, utilPad(date.getSeconds(), 2))
 
 	return format
 }
@@ -53,11 +54,17 @@ function utilPad (num, size, min = 0, max = '9'.repeat(size)) {
 	return ('0'.repeat(+size) + padding).substr(-1 * +size)
 }
 
-// Null判定
-function utilIsNull (value) {
-	if (Array.isArray(value)) {
-		return value.filter(v => v !== '').length == 0
-	} else {
-		return !value
-	}
+
+/**
+ * Null判定する関数です。
+ * @param {object} obj オブジェクト
+ *
+ * @return {boolean} 判定結果
+ */
+function utilIsNull (obj) {
+  if (Array.isArray(obj)) {
+    return obj.filter(v => v !== '').length == 0
+  } else {
+    return !obj && obj !== 0
+  }
 }

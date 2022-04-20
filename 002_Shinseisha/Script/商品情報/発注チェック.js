@@ -174,35 +174,27 @@ function checkOrder() {
 	})
 
 	function extractData(records) {
-		records = records.filter(record => {
+		records = records
 			// 取引終了　:　チェックなし
-			return record[COLUMN_INDEX.indexOf(TORIHIKI_SHURYOU)] == ''
-		}).filter(record => {
+			.filter(record => record[COLUMN_INDEX.indexOf(TORIHIKI_SHURYOU)] == '')
 			// 廃番　:　チェックなし
-			return record[COLUMN_INDEX.indexOf(HAIBAN)] == ''
-		}).filter(record => {
+			.filter(record => record[COLUMN_INDEX.indexOf(HAIBAN)] == '')
 			// 発注仕入先コード　:　入力あり
-			return record[COLUMN_INDEX.indexOf(HACCHUU_SHIIRESAKI_CODE)] !== ''
-		}).filter(record => {
+			.filter(record => record[COLUMN_INDEX.indexOf(HACCHUU_SHIIRESAKI_CODE)] !== '')
 			// リードタイム　:　1以上
-			return record[COLUMN_INDEX.indexOf(LEAD_TIME)] >= 1
-		})
+			.filter(record => record[COLUMN_INDEX.indexOf(LEAD_TIME)] >= 1)
 
 		// 発注管理テーブルに"確認待","確認済","出庫準備中","出庫済"のチケットがない商品
 		let tmpObj = {}
-		records.filter(record => {
-			return [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[COLUMN_INDEX.indexOf(STATUS)])
-		}).forEach(record => {
-			tmpObj[record[COLUMN_INDEX.indexOf(RESULT_ID)]] = record[COLUMN_INDEX.indexOf(SHOUHIN_CODE)]
-		})
+		records
+			.filter(record => [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[COLUMN_INDEX.indexOf(STATUS)]))
+			.forEach(record => tmpObj[record[COLUMN_INDEX.indexOf(RESULT_ID)]] = record[COLUMN_INDEX.indexOf(SHOUHIN_CODE)])
 
-		records = records.filter(record => {
+		records = records
 			// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を持つ商品を排除
-			return !(record[COLUMN_INDEX.indexOf(RESULT_ID)] in tmpObj)
-		}).filter((record, i, self) => {
+			.filter(record =>  !(record[COLUMN_INDEX.indexOf(RESULT_ID)] in tmpObj))
 			// ResultId重複削除
-			return self.map(item => item[COLUMN_INDEX.indexOf(RESULT_ID)]).indexOf(record[COLUMN_INDEX.indexOf(RESULT_ID)]) === i
-		})
+			.filter((record, index, self) => self.map(item => item[COLUMN_INDEX.indexOf(RESULT_ID)]).indexOf(record[COLUMN_INDEX.indexOf(RESULT_ID)]) === index)
 
 		// 発注チケット作成処理
 		let ticketList = []
