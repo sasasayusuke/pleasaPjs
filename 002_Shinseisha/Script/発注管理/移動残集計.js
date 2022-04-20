@@ -9,7 +9,7 @@ $p.events.on_grid_load = function () {
 	target.appendChild(elem)
 }
 
-const COL_INDEX = [
+const COLUMN_INDEX = [
 	ISSUE_ID
 	, SHOUHIN_CODE
 	, IN_SOUKO
@@ -24,8 +24,6 @@ const COL_INDEX = [
 	, "NumA"
 	, "Status"
 ]
-
-let records = []
 
 function sumMove() {
 	let ans = window.confirm('移動残集計を開始しますか?')
@@ -76,32 +74,30 @@ function sumMove() {
 			}
 		}),
 		success: function(data){
-			records = []
-			for (let r of data.Response.Content.split(/\n/)) {
-				records.push(JSON.parse(`[${r}]`))
-			}
+			let records = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
 			let header = records.shift()
-			if (header.length !== COL_INDEX.length) {
+			if (header.length !== COLUMN_INDEX.length) {
 				console.log(header)
 				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
-			extractData()
+
+			utilDownloadCsv(extractData(records), '移動残集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 		}
 	})
-	function extractData() {
+	function extractData(records) {
 		// 発注管理連携ステータス : " 出荷済"," 移動中"," 補充済"　のデータを抽出
-		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COL_INDEX.indexOf(STATUS)]))
+		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COLUMN_INDEX.indexOf(STATUS)]))
 
 		// エラー処理（異常データなのでRPA中断）
 		records.forEach(record => {
-			if (record[COL_INDEX.indexOf(OUT_SOUKO)] == "") {
-				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 出庫倉庫が入力されてません。', type = ERROR)
+			if (record[COLUMN_INDEX.indexOf(OUT_SOUKO)] == "") {
+				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX.indexOf(ISSUE_ID)] + ' 出庫倉庫が入力されてません。', type = ERROR)
 			}
-			if (record[COL_INDEX.indexOf(HACCHUU_SUURYOU)] <= 0) {
-				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
+			if (record[COLUMN_INDEX.indexOf(HACCHUU_SUURYOU)] <= 0) {
+				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
 			}
-			if (record[COL_INDEX.indexOf(IN_SOUKO)] == record[COL_INDEX.indexOf(OUT_SOUKO)]) {
-				utilSetMessage(message = 'ID:' + record[COL_INDEX.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
+			if (record[COLUMN_INDEX.indexOf(IN_SOUKO)] == record[COLUMN_INDEX.indexOf(OUT_SOUKO)]) {
+				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
 			}
 		})
 
@@ -112,15 +108,15 @@ function sumMove() {
 		let codes = {}
 
 		for (let r of records) {
-			let key = r[COL_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COL_INDEX.indexOf(IN_SOUKO)]
+			let key = r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COLUMN_INDEX.indexOf(IN_SOUKO)]
 			if (!(key in tmp)) tmp[key] = 0
-			if (!(r[COL_INDEX.indexOf(SHOUHIN_CODE)] in codes)) codes[r[COL_INDEX.indexOf(SHOUHIN_CODE)]] = 0
-			tmp[key] += +r[COL_INDEX.indexOf(HACCHUU_SUURYOU)]
-			if (r[COL_INDEX.indexOf(STATUS)] == " 出荷済") {
+			if (!(r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)] in codes)) codes[r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)]] = 0
+			tmp[key] += +r[COLUMN_INDEX.indexOf(HACCHUU_SUURYOU)]
+			if (r[COLUMN_INDEX.indexOf(STATUS)] == " 出荷済") {
 				// 発注管理連携ステータス : " 出荷済"の場合
-				key = r[COL_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COL_INDEX.indexOf(OUT_SOUKO)]
+				key = r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)] + ',' + r[COLUMN_INDEX.indexOf(OUT_SOUKO)]
 				if (!(key in tmp)) tmp[key] = 0
-				tmp[key] -= +r[COL_INDEX.indexOf(HACCHUU_SUURYOU)]
+				tmp[key] -= +r[COLUMN_INDEX.indexOf(HACCHUU_SUURYOU)]
 			}
 		}
 		// 移動残集計作成処理
@@ -145,6 +141,6 @@ function sumMove() {
 		}
 		tbl.unshift(header)
 
-		utilDownloadCsv(utilConvert2DToCsv(tbl), '移動残集計_' + utilGetDate("", "YYYY_MM_DD hh_mm_ss"))
+		return utilConvert2DToCsv(tbl)
 	}
 }

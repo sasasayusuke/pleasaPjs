@@ -52,7 +52,7 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
           Text: message
         })
       )
-      throw new Error(message);
+      throw new Error(message)
     break
     default:
       $p.setMessage(

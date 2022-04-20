@@ -1,30 +1,12 @@
-$p.events.on_grid_load = function () {
-	target = document.getElementById('MainCommands')
-	elem = document.createElement('button')
-	elem.id='sumMove'
-	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
-	elem.onclick = sumMove
-	elem.innerText = '移動残集計'
-
-	target.appendChild(elem)
-}
+const COLUMN_INDEX = [
+	RESULT_ID
+	, TITLE
+] = [
+	"ResultId"
+	, "Title"
+]
 
 function checkDouble() {
-
-	const COL_INDEX = [
-		SHOUHIN_CODE
-		, IN_SOUKO
-		, OUT_SOUKO
-		, HACCHUU_SUURYOU
-		, STATUS
-	] = [
-		"ClassA"
-		, "ClassF"
-		, "ClassG"
-		, "NumA"
-		, "Status"
-	]
-
 
 	$.ajax({
 		type: "POST",
@@ -34,20 +16,15 @@ function checkDouble() {
 			"ApiVersion": 1.1,
 			"Export": {
 				"Columns":[
-					// 商品コード
 					{
-						"ColumnName": "ClassA"
+						"ColumnName": RESULT_ID
 					},
-					// 年
+					// 商品ｺｰﾄﾞ_年月
 					{
-						"ColumnName": "ClassF"
-					},
-					// 月
-					{
-						"ColumnName": "ClassG"
+						"ColumnName": TITLE
 					}
 				],
-				"Header": false,
+				"Header": true,
 				"Type": "csv"
 			},
 			"View": {
@@ -57,9 +34,11 @@ function checkDouble() {
 			}
 		}),
 		success: function(data){
-			records = []
-			for (let r of data.Response.Content.split(/\n/)) {
-				records.push(JSON.parse(`[${r}]`))
+			records = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+			let header = records.shift()
+			if (header.length !== COLUMN_INDEX.length) {
+				console.log(header)
+				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
 			extractData()
 		}
