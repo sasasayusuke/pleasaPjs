@@ -346,7 +346,7 @@ function utilGetDate (date, format = 'YYYY-MM-DDThh:mm:ss') {
     date = new Date()
   }
   date = new Date(date)
-  format = format
+  return format
     .replace(/YYYY/, utilPad(date.getFullYear(), 4))
     .replace(/MM/, utilPad(date.getMonth() + 1, 2))
     .replace(/DD/, utilPad(date.getDate(), 2))
@@ -354,7 +354,6 @@ function utilGetDate (date, format = 'YYYY-MM-DDThh:mm:ss') {
     .replace(/mm/, utilPad(date.getMinutes(), 2))
     .replace(/ss/, utilPad(date.getSeconds(), 2))
 
-  return format
 }
 
 // 日付が現在時刻を超えているかどうか判定
