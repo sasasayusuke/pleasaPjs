@@ -123,7 +123,7 @@ function utilPaddingRight (str, size = 1, char = ' ') {
 }
 
 /**
- * 引数のcsv文字列をUTF-8のCSVでダウンロードする関数です。
+ * 引数のcsv文字列をCSVでダウンロードする関数です。
  * @param {string} csvStr csv文字列
  * @param {string} title ファイル名
  */
@@ -144,7 +144,7 @@ function utilDownloadCsv (csvStr, title = 'test') {
 }
 
 /**
- * 引数の2次元配列をCSVに変換する関数です。
+ * 引数の2次元配列をUTF-8のCSVに変換する関数です。
  * @param {array} array 2次元配列
  *
  * @return {string} csvData

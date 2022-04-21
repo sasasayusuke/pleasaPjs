@@ -236,7 +236,7 @@ function test() {
     {},
     function(data) {
       let id = data.Id
-      let turnCards =
+//      let turnCards = []
       window.setTimeout(function() {
         create(
           {

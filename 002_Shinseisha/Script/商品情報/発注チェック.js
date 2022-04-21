@@ -16,8 +16,13 @@ const COLUMN_INDEX = [
 	, HAIBAN
 	, HACCHUU_SHIIRESAKI_CODE
 	, LEAD_TIME
+	, MINIMUM_LOT
 	, STATUS
 	, CHECK_KB
+	, KYUSHU_HACCHU_POINT
+	, KANTO_HACCHU_POINT
+	, HOKKAIDO_HACCHU_POINT
+	, ZENKOKU_HACCHU_POINT
 	, TO_KYUSHU
 	, TO_KANTO
 	, TO_HOKKAIDO
@@ -37,8 +42,13 @@ const COLUMN_INDEX = [
 	, "CheckA"
 	, "Class099"
 	, "NumA"
+	, "Num039"
 	, "ClassA~~" + SITE_ID_HACCHU_KANRI + ",Status"
 	, "ClassF"
+	, "Num004"
+	, "Num005"
+	, "Num006"
+	, "Num007"
 	, "Num008"
 	, "Num009"
 	, "Num010"
@@ -52,7 +62,9 @@ const COLUMN_INDEX = [
 	, "NumT"
 	, "NumU"
 ]
-
+/**
+ * 発注チェックをする関数です。
+ */
 function checkOrder() {
 	let ans = window.confirm('発注チェックを開始しますか?')
 	if (!ans) {
@@ -95,6 +107,10 @@ function checkOrder() {
 					{
 						"ColumnName": LEAD_TIME
 					},
+					// 最小ロット
+					{
+						"ColumnName": MINIMUM_LOT
+					},
 					// 発注管理~~連携ステータス
 					{
 						"ColumnName": STATUS
@@ -102,6 +118,22 @@ function checkOrder() {
 					// チェック区分
 					{
 						"ColumnName": CHECK_KB
+					},
+					// 九州発注点
+					{
+						"ColumnName": KYUSHU_HACCHU_POINT
+					},
+					// 関東発注点
+					{
+						"ColumnName": KANTO_HACCHU_POINT
+					},
+					// 北海道発注点
+					{
+						"ColumnName": HOKKAIDO_HACCHU_POINT
+					},
+					// 全国発注点
+					{
+						"ColumnName": ZENKOKU_HACCHU_POINT
 					},
 					// 九州まで
 					{
@@ -119,19 +151,19 @@ function checkOrder() {
 					{
 						"ColumnName": TO_ZENKOKU
 					},
-					// 九州在庫数量
+					// 九州現在庫数量
 					{
 						"ColumnName": KYUSHU_ZAIKO
 					},
-					// 関東在庫数量
+					// 関東現在庫数量
 					{
 						"ColumnName": KANTO_ZAIKO
 					},
-					// 北海道在庫数量
+					// 北海道現在庫数量
 					{
 						"ColumnName": HOKKAIDO_ZAIKO
 					},
-					// 全国在庫数量
+					// 全国現在庫数量
 					{
 						"ColumnName": ZENKOKU_ZAIKO
 					},
@@ -173,6 +205,9 @@ function checkOrder() {
 		}
 	})
 
+	/**
+	 * レコードを抽出する関数です。
+	 */
 	function extractData(records) {
 		records = records
 			// 取引終了　:　チェックなし
@@ -183,6 +218,8 @@ function checkOrder() {
 			.filter(record => record[COLUMN_INDEX.indexOf(HACCHUU_SHIIRESAKI_CODE)] !== '')
 			// リードタイム　:　1以上
 			.filter(record => record[COLUMN_INDEX.indexOf(LEAD_TIME)] >= 1)
+			// 最小ロット　:　1以上
+			.filter(record => record[COLUMN_INDEX.indexOf(MINIMUM_LOT)] >= 1)
 
 		// 発注管理テーブルに"確認待","確認済","出庫準備中","出庫済"のチケットがない商品
 		let tmpObj = {}
@@ -219,9 +256,9 @@ function checkOrder() {
 					// 入庫倉庫：九州
 					ticket.push(' 九州倉庫')
 					// 発注根拠
-					ticket.push(getReason(r))
+					ticket.push(getOrderReason(r))
 					// 発注数量
-					ticket.push(Math.ceil(-r[COLUMN_INDEX.indexOf(TO_ZENKOKU)]))
+					ticket.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticket)
 				}
 			} else if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == ' 全国') {
@@ -231,9 +268,9 @@ function checkOrder() {
 					// 入庫倉庫：九州
 					ticketCopy.push(' 九州倉庫')
 					// 発注根拠
-					ticketCopy.push(getReason(r))
+					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COLUMN_INDEX.indexOf(TO_KYUSHU)]))
+					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KYUSHU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
@@ -242,9 +279,9 @@ function checkOrder() {
 					// 入庫倉庫：関東
 					ticketCopy.push(' 関東倉庫')
 					// 発注根拠
-					ticketCopy.push(getReason(r))
+					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COLUMN_INDEX.indexOf(TO_KANTO)]))
+					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KANTO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
@@ -253,9 +290,9 @@ function checkOrder() {
 					// 入庫倉庫：北海道
 					ticketCopy.push(' 北海道倉庫')
 					// 発注根拠
-					ticketCopy.push(getReason(r))
+					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(Math.ceil(-r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)]))
+					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 			} else {
@@ -267,7 +304,18 @@ function checkOrder() {
 		return utilConvert2DToCsv(ticketList)
 	}
 
-	function getReason(record) {
+	/**
+	 * 発注数量を算出する関数です。
+	 * ( = （発注まで - 発注点） を 超える最小ロットの倍数)
+	 */
+	function getOrderQuantity(orderPoint, toOrder, minimumLot) {
+		return Math.ceil((orderPoint - toOrder) / minimumLot) * minimumLot
+	}
+
+	/**
+	 * 発注根拠を算出する関数です。
+	 */
+	function getOrderReason(record) {
 		let advice = record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
 		let reason =
 `現在在庫
@@ -276,8 +324,14 @@ function checkOrder() {
 1ヶ月分在庫
 	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_1M_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_1M_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_1M_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_1M_ZAIKO)], 7)}
 
+発注点
+	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], 7)}
+
 発注まで
 	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_KYUSHU)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_KANTO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_ZENKOKU)], 7)}
+
+リードタイム : ${record[COLUMN_INDEX.indexOf(LEAD_TIME)]}
+最小ロット　 : ${record[COLUMN_INDEX.indexOf(MINIMUM_LOT)]}
 
 `
 		return reason + advice
