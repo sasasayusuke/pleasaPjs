@@ -188,3 +188,62 @@ function utilConvert2DToCsv (array) {
 function generate2DArray (m, n, val = 0) {
   return [...Array(m)].map(_ => Array(n).fill(val))
 }
+
+
+/**
+ * 登録APIを呼び出す関数です。
+ */
+function create(ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc, id = $p.siteId()) {
+  $p.apiCreate({
+    'id': id,
+    'data': Object.assign(
+      ClassHash,
+      NumHash,
+      DateHash,
+      DescriptionHash,
+      CheckHash
+    ),
+    'done': function (data) {
+      console.log(data)
+      if (addFunc && typeof addFunc === 'function') {
+        // 渡されたオブジェクトが関数なら実行する
+        addFunc(data)
+      }
+    },
+    'fail': function (data) {
+      console.log(data)
+      utilSetMessage(message = id + ' : 登録に失敗しました。', type = ERROR)
+    },
+    'always': function (data) {
+    },
+  })
+}
+
+/**
+ * 更新APIを呼び出す関数です。
+ */
+function update(ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc, id) {
+  $p.apiUpdate({
+    'id': id,
+    'data': Object.assign(
+      ClassHash,
+      NumHash,
+      DateHash,
+      DescriptionHash,
+      CheckHash
+    ),
+    'done': function (data) {
+      console.log(data)
+      if (addFunc && typeof addFunc === 'function') {
+        // 渡されたオブジェクトが関数なら実行する
+        addFunc(data)
+      }
+    },
+    'fail': function (data) {
+      console.log(data)
+      utilSetMessage(message = id + ' : 更新に失敗しました。', type = ERROR)
+    },
+    'always': function (data) {
+    },
+  })
+}

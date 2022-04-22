@@ -1,13 +1,11 @@
 const COLUMN_INDEX = [
 	RESULT_ID
 	, TITLE
-	, DOUBLE_FLAG
-	, UPDATE_TIME
+	, CREATE_TIME
 ] = [
 	"ResultId"
 	, "Title"
-	, "CheckA"
-	, "UpdatedTime"
+	, "CreatedTime"
 ]
 
 function checkDouble() {
@@ -30,13 +28,9 @@ function checkDouble() {
 					{
 						"ColumnName": TITLE
 					},
-					// 重複無効フラグ
+					// 作成日時
 					{
-						"ColumnName": DOUBLE_FLAG
-					},
-					// 更新日時
-					{
-						"ColumnName": UPDATE_TIME
+						"ColumnName": CREATE_TIME
 					}
 				],
 				"Header": true,
@@ -62,11 +56,49 @@ function checkDouble() {
 }
 
 function extractData(records) {
-	console.log(records)
+	// Title 重複行のみ抽出
+	records = records
+		.filter((record, index, self) => {
+			return self.map(v => v[COLUMN_INDEX.indexOf(TITLE)]).indexOf(record[COLUMN_INDEX.indexOf(TITLE)]) !== self.map(v => v[COLUMN_INDEX.indexOf(TITLE)]).lastIndexOf(record[COLUMN_INDEX.indexOf(TITLE)])
+		})
+		// Title昇順 作成日時降順 ソート
+		.sort((a, b) => {
+			if (a[COLUMN_INDEX.indexOf(TITLE)] !== b[COLUMN_INDEX.indexOf(TITLE)]) {
+				// Title昇順ソート
+				if (a[COLUMN_INDEX.indexOf(TITLE)] > b[COLUMN_INDEX.indexOf(TITLE)]) return 1
+				if (a[COLUMN_INDEX.indexOf(TITLE)] < b[COLUMN_INDEX.indexOf(TITLE)]) return -1
+			}
+			// 作成日時降順ソート
+			return b[COLUMN_INDEX.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '') - a[COLUMN_INDEX.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '')
+		})
 
-	records = records.map(item => item[COLUMN_INDEX.indexOf(TITLE)])
-	records = records.filter(function (x, i, self) {
-		return self.indexOf(x) !== self.lastIndexOf(x)
-	})
-	console.log(records)
+	// 更新API呼び出し
+	let cnt = 0
+	let tmp
+	let check = false
+	for (let record of records) {
+		// タイトル変わったらcntを0に戻す。1行目はfalseで更新する。
+		if (tmp !== record[COLUMN_INDEX.indexOf(TITLE)]) {
+			cnt = 0
+			check = false
+		}
+		// 同タイトルの2行目以降はtrueで更新する。。
+		if (cnt++ == 1) check = true
+
+		update(
+			ClassHash = {}
+			, NumHash= {}
+			, DateHash= {}
+			, DescriptionHash= {}
+			, CheckHash = {
+				CheckA : check
+			}
+			, addFunc = ""
+			, id = record[COLUMN_INDEX.indexOf(RESULT_ID)]
+		)
+
+		// タイトルを代入
+		tmp = record[COLUMN_INDEX.indexOf(TITLE)]
+	}
+
 }
