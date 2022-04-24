@@ -18,76 +18,39 @@ const COLUMN_INDEX = [
 	, STATUS
 ] = [
 	"IssueId"
+	// 商品コード
 	, "ClassA"
+	// 入庫倉庫
 	, "ClassF"
+	// 出庫倉庫
 	, "ClassG"
+	// 発注数量
 	, "NumA"
+	// 連携ステータス
 	, "Status"
 ]
 
-function sumMove() {
+async function sumMove() {
 	let ans = window.confirm('移動残集計を開始しますか?')
 	if (!ans) {
 		console.log('移動残集計を開始しますか? : Noを押下しました。')
 		return
 	}
 	console.log('移動残集計を開始しますか? : Yesを押下しました。')
-	if ($p.siteId() !== SITE_ID_HACCHU_KANRI) {
-		console.log(header)
-		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
-	}
-	$.ajax({
-		type: "POST",
-		url: "/api/items/" + SITE_ID_HACCHU_KANRI + "/export",
-		contentType: 'application/json',
-		data:JSON.stringify({
-			"ApiVersion": 1.1,
-			"Export": {
-				"Columns":[
-					{
-						"ColumnName": ISSUE_ID
-					},
-					// 商品コード
-					{
-						"ColumnName": SHOUHIN_CODE
-					},
-					// 入庫倉庫
-					{
-						"ColumnName": IN_SOUKO
-					},
-					// 出庫倉庫
-					{
-						"ColumnName": OUT_SOUKO
-					},
-					// 発注数量
-					{
-						"ColumnName": HACCHUU_SUURYOU
-					},
-					// 連携ステータス
-					{
-						"ColumnName": STATUS
-					}
-				],
-				"Header": true,
-				"Type": "csv"
-			},
-			"View": {
-				"ColumnSorterHash": {
-					"ResultId": "asc"
-				},
-			}
-		}),
-		success: function(data){
-			let records = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
-			let header = records.shift()
-			if (header.length !== COLUMN_INDEX.length) {
-				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
-			}
 
-			utilDownloadCsv(extractData(records), '移動残集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
-		}
-	})
+	let records = await utilExportAjax(
+		SITE_ID_HACCHU_KANRI
+		, COLUMN_INDEX
+	)
+	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	let header = records.shift()
+	if (header.length !== COLUMN_INDEX.length) {
+		console.log(header)
+		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	}
+
+	utilDownloadCsv(extractData(records), '移動残集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+
 	function extractData(records) {
 		// 発注管理連携ステータス : " 出荷済"," 移動中"," 補充済"　のデータを抽出
 		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COLUMN_INDEX.indexOf(STATUS)]))

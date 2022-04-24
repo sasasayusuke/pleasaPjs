@@ -37,35 +37,59 @@ const COLUMN_INDEX = [
 	, ZENKOKU_1M_ZAIKO
 ] = [
 	"ResultId"
+	// 商品コード
 	, "Title"
+	// 仕入先情報~~取引終了
 	, "Class099~" + SITE_ID_SHIIRESAKI + ",CheckA"
+	// 廃番
 	, "CheckA"
+	// 発注仕入先コード
 	, "Class099"
+	// リードタイム
 	, "NumA"
+	// 最小ロット
 	, "Num039"
+	// 発注管理~~連携ステータス
 	, "ClassA~~" + SITE_ID_HACCHU_KANRI + ",Status"
+	// チェック区分
 	, "ClassF"
+	// 九州発注点
 	, "Num004"
+	// 関東発注点
 	, "Num005"
+	// 北海道発注点
 	, "Num006"
+	// 全国発注点
 	, "Num007"
+	// 九州まで
 	, "Num008"
+	// 関東まで
 	, "Num009"
+	// 北海道まで
 	, "Num010"
+	// 全国まで
 	, "Num011"
+	// 九州現在庫数量
 	, "NumB"
+	// 関東現在庫数量
 	, "NumC"
+	// 北海道現在庫数量
 	, "NumD"
+	// 全国現在庫数量
 	, "NumE"
+	// 九州一ヶ月分在庫
 	, "NumR"
+	// 関東一ヶ月分在庫
 	, "NumS"
+	// 北海道一ヶ月分在庫
 	, "NumT"
+	// 全国一ヶ月分在庫
 	, "NumU"
 ]
 /**
  * 発注チェックをする関数です。
  */
-function checkOrder() {
+async function checkOrder() {
 	let ans = window.confirm('発注チェックを開始しますか?')
 	if (!ans) {
 		console.log('発注チェックを開始しますか? : Noを押下しました。')
@@ -76,134 +100,20 @@ function checkOrder() {
 		console.log(header)
 		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
-	$.ajax({
-		type: "POST",
-		url: "/api/items/" + SITE_ID_SHOUHIN + "/export",
-		contentType: 'application/json',
-		data:JSON.stringify({
-			"ApiVersion": 1.1,
-			"Export": {
-				"Columns":[
-					{
-						"ColumnName": RESULT_ID
-					},
-					// 商品コード
-					{
-						"ColumnName": SHOUHIN_CODE
-					},
-					// 仕入先情報~~取引終了
-					{
-						"ColumnName": TORIHIKI_SHURYOU
-					},
-					// 廃番
-					{
-						"ColumnName": HAIBAN
-					},
-					// 発注仕入先コード
-					{
-						"ColumnName": HACCHUU_SHIIRESAKI_CODE
-					},
-					// リードタイム
-					{
-						"ColumnName": LEAD_TIME
-					},
-					// 最小ロット
-					{
-						"ColumnName": MINIMUM_LOT
-					},
-					// 発注管理~~連携ステータス
-					{
-						"ColumnName": STATUS
-					},
-					// チェック区分
-					{
-						"ColumnName": CHECK_KB
-					},
-					// 九州発注点
-					{
-						"ColumnName": KYUSHU_HACCHU_POINT
-					},
-					// 関東発注点
-					{
-						"ColumnName": KANTO_HACCHU_POINT
-					},
-					// 北海道発注点
-					{
-						"ColumnName": HOKKAIDO_HACCHU_POINT
-					},
-					// 全国発注点
-					{
-						"ColumnName": ZENKOKU_HACCHU_POINT
-					},
-					// 九州まで
-					{
-						"ColumnName": TO_KYUSHU
-					},
-					// 関東まで
-					{
-						"ColumnName": TO_KANTO
-					},
-					// 北海道まで
-					{
-						"ColumnName": TO_HOKKAIDO
-					},
-					// 全国まで
-					{
-						"ColumnName": TO_ZENKOKU
-					},
-					// 九州現在庫数量
-					{
-						"ColumnName": KYUSHU_ZAIKO
-					},
-					// 関東現在庫数量
-					{
-						"ColumnName": KANTO_ZAIKO
-					},
-					// 北海道現在庫数量
-					{
-						"ColumnName": HOKKAIDO_ZAIKO
-					},
-					// 全国現在庫数量
-					{
-						"ColumnName": ZENKOKU_ZAIKO
-					},
-					// 九州一ヶ月分在庫
-					{
-						"ColumnName": KYUSHU_1M_ZAIKO
-					},
-					// 関東一ヶ月分在庫
-					{
-						"ColumnName": KANTO_1M_ZAIKO
-					},
-					// 北海道一ヶ月分在庫
-					{
-						"ColumnName": HOKKAIDO_1M_ZAIKO
-					},
-					// 全国一ヶ月分在庫
-					{
-						"ColumnName": ZENKOKU_1M_ZAIKO
-					},
-				],
-				"Header": true,
-				"Type": "csv"
-			},
-			"View": {
-				"ColumnSorterHash": {
-					"ResultId": "asc"
-				},
-			}
-		}),
-		success: function(data){
-			let records = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
-			let header = records.shift()
-			if (header.length !== COLUMN_INDEX.length) {
-				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
-			}
+	let records = await utilExportAjax(
+		SITE_ID_SHOUHIN
+		, COLUMN_INDEX
+	)
 
-			utilDownloadCsv(extractData(records), '発注チェック_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
-		}
-	})
+	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	let header = records.shift()
+	if (header.length !== COLUMN_INDEX.length) {
+		console.log(header)
+		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	}
+
+	utilDownloadCsv(extractData(records), '発注チェック_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+
 
 	/**
 	 * レコードを抽出する関数です。

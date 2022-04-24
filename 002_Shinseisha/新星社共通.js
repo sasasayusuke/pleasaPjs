@@ -261,7 +261,10 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
 /**
  * 取得APIを呼び出す関数です。
  */
-function utilExportAjax (siteId, requests, header = true, type = "csv", ascend = "ResultId", addFunc) {
+function utilExportAjax (siteId, requests, header = true, type = "csv", addFunc) {
+  let req = []
+  requests.forEach(v => req.push({"ColumnName" : v}))
+
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
@@ -270,13 +273,13 @@ function utilExportAjax (siteId, requests, header = true, type = "csv", ascend =
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
 				"Export": {
-					"Columns":requests,
+					"Columns": req,
 					"Header": header,
 					"Type": type
 				},
 				"View": {
 					"ColumnSorterHash": {
-						ascend: "asc"
+						"ResultId": "asc"
 					},
 				}
 			})
