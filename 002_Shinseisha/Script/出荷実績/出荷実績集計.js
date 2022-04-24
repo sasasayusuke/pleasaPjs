@@ -16,5 +16,7 @@ function sumAchievement() {
 		return
 	}
 	console.log('出荷実績集計を開始しますか? : Yesを押下しました。')
-	checkDouble()
+	check()
+
+
 }

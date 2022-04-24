@@ -1,4 +1,4 @@
-const COLUMN_INDEX = [
+const COLUMN_INDEX_CHECK = [
 	RESULT_ID
 	, TITLE
 	, CREATE_TIME
@@ -8,7 +8,7 @@ const COLUMN_INDEX = [
 	, "CreatedTime"
 ]
 
-function checkDouble() {
+function check() {
 	if ($p.siteId() !== SITE_ID_SHUKKA_JISSEKI) {
 		console.log(header)
 		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
@@ -43,33 +43,31 @@ function checkDouble() {
 			}
 		}),
 		success: function(data){
-			records = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
-			let header = records.shift()
-			if (header.length !== COLUMN_INDEX.length) {
+			let checkRecords = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+			let header = checkRecords.shift()
+			if (header.length !== COLUMN_INDEX_CHECK.length) {
 				console.log(header)
 				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 			}
-			extractData(records)
+			checkDouble(checkRecords)
 		}
 	})
-
 }
 
-function extractData(records) {
+function checkDouble(records) {
 	// Title 重複行のみ抽出
 	records = records
 		.filter((record, index, self) => {
-			return self.map(v => v[COLUMN_INDEX.indexOf(TITLE)]).indexOf(record[COLUMN_INDEX.indexOf(TITLE)]) !== self.map(v => v[COLUMN_INDEX.indexOf(TITLE)]).lastIndexOf(record[COLUMN_INDEX.indexOf(TITLE)])
+			return self.map(v => v[COLUMN_INDEX_CHECK.indexOf(TITLE)]).indexOf(record[COLUMN_INDEX_CHECK.indexOf(TITLE)]) !== self.map(v => v[COLUMN_INDEX_CHECK.indexOf(TITLE)]).lastIndexOf(record[COLUMN_INDEX_CHECK.indexOf(TITLE)])
 		})
 		// Title昇順 作成日時降順 ソート
 		.sort((a, b) => {
-			if (a[COLUMN_INDEX.indexOf(TITLE)] !== b[COLUMN_INDEX.indexOf(TITLE)]) {
+			if (a[COLUMN_INDEX_CHECK.indexOf(TITLE)] !== b[COLUMN_INDEX_CHECK.indexOf(TITLE)]) {
 				// Title昇順ソート
-				if (a[COLUMN_INDEX.indexOf(TITLE)] > b[COLUMN_INDEX.indexOf(TITLE)]) return 1
-				if (a[COLUMN_INDEX.indexOf(TITLE)] < b[COLUMN_INDEX.indexOf(TITLE)]) return -1
+				return a[COLUMN_INDEX_CHECK.indexOf(TITLE)] > b[COLUMN_INDEX_CHECK.indexOf(TITLE)] ? 1 : -1
 			}
 			// 作成日時降順ソート
-			return b[COLUMN_INDEX.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '') - a[COLUMN_INDEX.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '')
+			return b[COLUMN_INDEX_CHECK.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '') - a[COLUMN_INDEX_CHECK.indexOf(CREATE_TIME)].replace(/[^0-9]/g, '')
 		})
 
 	// 更新API呼び出し
@@ -78,7 +76,7 @@ function extractData(records) {
 	let check = false
 	for (let record of records) {
 		// タイトル変わったらcntを0に戻す。1行目はfalseで更新する。
-		if (tmp !== record[COLUMN_INDEX.indexOf(TITLE)]) {
+		if (tmp !== record[COLUMN_INDEX_CHECK.indexOf(TITLE)]) {
 			cnt = 0
 			check = false
 		}
@@ -94,11 +92,10 @@ function extractData(records) {
 				CheckA : check
 			}
 			, addFunc = ""
-			, id = record[COLUMN_INDEX.indexOf(RESULT_ID)]
+			, id = record[COLUMN_INDEX_CHECK.indexOf(RESULT_ID)]
 		)
 
 		// タイトルを代入
-		tmp = record[COLUMN_INDEX.indexOf(TITLE)]
+		tmp = record[COLUMN_INDEX_CHECK.indexOf(TITLE)]
 	}
-
 }
