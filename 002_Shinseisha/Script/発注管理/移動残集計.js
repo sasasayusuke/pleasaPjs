@@ -124,7 +124,7 @@ function sumMove() {
 			}
 		}
 		// 移動残集計作成処理
-		let tbl = generate2DArray(Object.keys(codes).length, header.length, 0)
+		let tbl = utilGenerate2DArray(Object.keys(codes).length, header.length, 0)
 		for (let r = 0; r < tbl.length; r++) {
 			tbl[r][0] = Object.keys(codes)[r]
 		}

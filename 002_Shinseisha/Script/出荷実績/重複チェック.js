@@ -8,50 +8,36 @@ const COLUMN_INDEX_CHECK = [
 	, "CreatedTime"
 ]
 
-function check() {
+async function check() {
 	if ($p.siteId() !== SITE_ID_SHUKKA_JISSEKI) {
 		console.log(header)
 		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
-	$.ajax({
-		type: "POST",
-		url: "/api/items/" + SITE_ID_SHUKKA_JISSEKI + "/export",
-		contentType: 'application/json',
-		data:JSON.stringify({
-			"ApiVersion": 1.1,
-			"Export": {
-				"Columns":[
-					{
-						"ColumnName": RESULT_ID
-					},
-					// 商品ｺｰﾄﾞ_年月
-					{
-						"ColumnName": TITLE
-					},
-					// 作成日時
-					{
-						"ColumnName": CREATE_TIME
-					}
-				],
-				"Header": true,
-				"Type": "csv"
+
+	let checkRecords = await utilExportAjax(
+		SITE_ID_SHUKKA_JISSEKI
+		, [
+			{
+				"ColumnName": RESULT_ID
 			},
-			"View": {
-				"ColumnSorterHash": {
-					"ResultId": "asc"
-				},
+			// 商品ｺｰﾄﾞ_年月
+			{
+				"ColumnName": TITLE
+			},
+			// 作成日時
+			{
+				"ColumnName": CREATE_TIME
 			}
-		}),
-		success: function(data){
-			let checkRecords = data.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
-			let header = checkRecords.shift()
-			if (header.length !== COLUMN_INDEX_CHECK.length) {
-				console.log(header)
-				utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
-			}
-			checkDouble(checkRecords)
-		}
-	})
+		]
+	)
+
+	checkRecords = checkRecords.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	let header = checkRecords.shift()
+	if (header.length !== COLUMN_INDEX_CHECK.length) {
+		console.log(header)
+		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
+	}
+	checkDouble(checkRecords)
 }
 
 function checkDouble(records) {
@@ -83,8 +69,9 @@ function checkDouble(records) {
 		// 同タイトルの2行目以降はtrueで更新する。。
 		if (cnt++ == 1) check = true
 
-		update(
-			ClassHash = {}
+		utilUpdateAjax(
+			id = record[COLUMN_INDEX_CHECK.indexOf(RESULT_ID)]
+			, ClassHash = {}
 			, NumHash= {}
 			, DateHash= {}
 			, DescriptionHash= {}
@@ -92,7 +79,6 @@ function checkDouble(records) {
 				CheckA : check
 			}
 			, addFunc = ""
-			, id = record[COLUMN_INDEX_CHECK.indexOf(RESULT_ID)]
 		)
 
 		// タイトルを代入
