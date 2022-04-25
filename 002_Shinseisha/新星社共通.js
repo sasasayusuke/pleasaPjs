@@ -189,6 +189,21 @@ function utilGenerate2DArray (m, n, val = 0) {
   return [...Array(m)].map(_ => Array(n).fill(val))
 }
 
+/**
+ * 配列を分割する関数です。
+ * @param {array} array 配列
+ *
+ * @return {array} 2次元配列
+ *
+ * 例. array = [1, 1, 2, 3, 3, 4, 1, 2, 3, 5, 5, 1, 2, 3, 5]
+ *            ⇓
+ * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
+ *
+ */
+function utilDivideArray (array) {
+  return [...new Set(array)].map(x => Array(array.filter(y => y == x).length).fill(x))
+}
+
 
 /**
  * 登録APIを呼び出す関数です。

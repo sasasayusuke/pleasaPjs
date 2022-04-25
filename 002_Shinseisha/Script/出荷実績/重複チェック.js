@@ -48,11 +48,8 @@ async function check() {
 		let check = false
 		for (let record of records) {
 			// タイトル変わったらcntを0に戻す。1行目はfalseで更新する。
-			if (tmp !== record[COLUMN_INDEX_CHECK.indexOf(TITLE)]) {
-				cnt = 0
-				check = false
-			}
-			// 同タイトルの2行目以降はtrueで更新する。。
+			if (tmp !== record[COLUMN_INDEX_CHECK.indexOf(TITLE)]) [cnt, check] = [0, false]
+			// 同タイトルの2行目以降はtrueで更新する。
 			if (cnt++ == 1) check = true
 
 			utilUpdateAjax(

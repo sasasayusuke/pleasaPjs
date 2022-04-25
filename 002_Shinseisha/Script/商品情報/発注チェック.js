@@ -146,7 +146,7 @@ async function checkOrder() {
 		// 発注チケット作成処理
 		let ticketList = []
 		// ヘッダー情報入力
-		ticketList.push(["商品ｺｰﾄﾞ" , "作成日" ,"確認期日" ,"入庫倉庫" ,"発注根拠", "発注数量"])
+		ticketList.push(["商品ｺｰﾄﾞ", "作成日", "確認期日", "入庫倉庫", "発注根拠", "発注数量"])
 		let date = new Date()
 		let now = utilGetDate(date)
 		let tommorow = utilGetDate(date.setDate(date.getDate() + 1))
@@ -168,7 +168,7 @@ async function checkOrder() {
 					// 発注根拠
 					ticket.push(getOrderReason(r))
 					// 発注数量
-					ticket.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticket.push(getOrderAmount(r[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticket)
 				}
 			} else if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == ' 全国') {
@@ -180,7 +180,7 @@ async function checkOrder() {
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KYUSHU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KYUSHU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
@@ -191,7 +191,7 @@ async function checkOrder() {
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KANTO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KANTO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
@@ -202,7 +202,7 @@ async function checkOrder() {
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(getOrderQuantity(r[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticketCopy)
 				}
 			} else {
@@ -218,7 +218,7 @@ async function checkOrder() {
 	 * 発注数量を算出する関数です。
 	 * ( = （発注まで - 発注点） を 超える最小ロットの倍数)
 	 */
-	function getOrderQuantity(orderPoint, toOrder, minimumLot) {
+	function getOrderAmount(orderPoint, toOrder, minimumLot) {
 		return Math.ceil((orderPoint - toOrder) / minimumLot) * minimumLot
 	}
 
