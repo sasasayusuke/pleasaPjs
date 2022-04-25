@@ -1,13 +1,3 @@
-$p.events.on_grid_load = function () {
-	target = document.getElementById('MainCommands')
-	elem = document.createElement('button')
-	elem.id='sumAchievement'
-	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
-	elem.onclick = sumAchievement
-	elem.innerText = '出荷実績集計'
-
-	target.appendChild(elem)
-}
 
 const COLUMN_INDEX_ACHIEVEMENT = [
 	SHOUHIN_RESULT_ID
