@@ -4,7 +4,7 @@ $p.events.on_grid_load = function () {
 	elem.id='orderCheck'
 	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
 	elem.onclick = checkOrder
-	elem.innerText = '発注チェック'
+	elem.innerText = '発注チケット作成'
 
 	target.appendChild(elem)
 }
@@ -35,6 +35,7 @@ const COLUMN_INDEX = [
 	, KANTO_1M_ZAIKO
 	, HOKKAIDO_1M_ZAIKO
 	, ZENKOKU_1M_ZAIKO
+	, NEW_FLAG
 ] = [
 	"ResultId"
 	// 商品コード
@@ -85,17 +86,19 @@ const COLUMN_INDEX = [
 	, "NumT"
 	// 全国一ヶ月分在庫
 	, "NumU"
+	// 新商品フラグ
+	, "CheckB"
 ]
 /**
- * 発注チェックをする関数です。
+ * 発注チケット作成をする関数です。
  */
 async function checkOrder() {
-	let ans = window.confirm('発注チェックを開始しますか?')
+	let ans = window.confirm('発注チケット作成を開始しますか?')
 	if (!ans) {
-		console.log('発注チェックを開始しますか? : Noを押下しました。')
+		console.log('発注チケット作成を開始しますか? : Noを押下しました。')
 		return
 	}
-	console.log('発注チェックを開始しますか? : Yesを押下しました。')
+	console.log('発注チケット作成を開始しますか? : Yesを押下しました。')
 	if ($p.siteId() !== SITE_ID_SHOUHIN) {
 		console.log(header)
 		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
@@ -112,7 +115,7 @@ async function checkOrder() {
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 
-	utilDownloadCsv(extractData(records), '発注チェック_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+	utilDownloadCsv(extractData(records), '発注チケット作成_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
 
 	/**
@@ -226,9 +229,15 @@ async function checkOrder() {
 	 * 発注根拠を算出する関数です。
 	 */
 	function getOrderReason(record) {
-		let advice = record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
+		let advice =
+`
+${record[COLUMN_INDEX.indexOf(NEW_FLAG)] == 1 ? '新商品の可能性がある商品です。' : ''}
+${record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'}
+`
+
 		let reason =
-`現在在庫
+`
+現在在庫
 	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_ZAIKO)], 7)}
 
 1ヶ月分在庫
@@ -242,9 +251,8 @@ async function checkOrder() {
 
 リードタイム : ${record[COLUMN_INDEX.indexOf(LEAD_TIME)]}
 最小ロット　 : ${record[COLUMN_INDEX.indexOf(MINIMUM_LOT)]}
-
 `
-		return reason + advice
+		return advice + reason
 	}
 
 }
