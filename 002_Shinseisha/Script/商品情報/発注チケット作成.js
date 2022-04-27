@@ -25,59 +25,35 @@ const COLUMN_INDEX = [
 	, KANTO_1M_ZAIKO
 	, HOKKAIDO_1M_ZAIKO
 	, ZENKOKU_1M_ZAIKO
-	, NEW_FLAG
+	, JISSEKI_KEISOKU_KIKAN
 ] = [
 	"ResultId"
-	// 商品コード
-	, "Title"
-	// 仕入先情報~~取引終了
-	, "Class099~" + SITE_ID_SHIIRESAKI + ",CheckA"
-	// 廃番
-	, "CheckA"
-	// 発注仕入先コード
-	, "Class099"
-	// リードタイム
-	, "NumA"
-	// 最小ロット
-	, "Num039"
-	// 発注管理~~連携ステータス
-	, "ClassA~~" + SITE_ID_HACCHU_KANRI + ",Status"
-	// チェック区分
-	, "ClassF"
-	// 九州発注点
-	, "Num004"
-	// 関東発注点
-	, "Num005"
-	// 北海道発注点
-	, "Num006"
-	// 全国発注点
-	, "Num007"
-	// 九州まで
-	, "Num008"
-	// 関東まで
-	, "Num009"
-	// 北海道まで
-	, "Num010"
-	// 全国まで
-	, "Num011"
-	// 九州現在庫数量
-	, "NumB"
-	// 関東現在庫数量
-	, "NumC"
-	// 北海道現在庫数量
-	, "NumD"
-	// 全国現在庫数量
-	, "NumE"
-	// 九州一ヶ月分在庫
-	, "NumR"
-	// 関東一ヶ月分在庫
-	, "NumS"
-	// 北海道一ヶ月分在庫
-	, "NumT"
-	// 全国一ヶ月分在庫
-	, "NumU"
-	// 新商品フラグ
-	, "CheckB"
+	, $p.getColumnName("商品ｺｰﾄﾞ")
+	, $p.getColumnName("取引終了")
+	, $p.getColumnName("廃番")
+	, $p.getColumnName("発注仕入先ｺｰﾄﾞ")
+	, $p.getColumnName("リードタイム")
+	, $p.getColumnName("最小ロット")
+	, $p.getColumnName("連携ステータス")
+	, "ClassA~~" + TABLE_ID_HACCHU_KANRI + ",Status"	// 発注管理~~連携ステータス
+	, $p.getColumnName("チェック区分")
+	, $p.getColumnName("九州発注点")
+	, $p.getColumnName("関東発注点")
+	, $p.getColumnName("北海道発注点")
+	, $p.getColumnName("全国発注点")
+	, $p.getColumnName("九州まで")
+	, $p.getColumnName("関東まで")
+	, $p.getColumnName("北海道まで")
+	, $p.getColumnName("全国まで")
+	, $p.getColumnName("九州現在庫数量")
+	, $p.getColumnName("関東現在庫数量")
+	, $p.getColumnName("北海道現在庫数量")
+	, $p.getColumnName("全国現在庫数量")
+	, $p.getColumnName("九州一ヶ月分在庫")
+	, $p.getColumnName("関東一ヶ月分在庫")
+	, $p.getColumnName("北海道一ヶ月分在庫")
+	, $p.getColumnName("全国一ヶ月分在庫")
+	, $p.getColumnName("出荷実績計測期間")
 ]
 /**
  * 発注チケット作成をする関数です。
@@ -89,12 +65,11 @@ async function checkOrder() {
 		return
 	}
 	console.log('発注チケット作成を開始しますか? : Yesを押下しました。')
-	if ($p.siteId() !== SITE_ID_SHOUHIN) {
-		console.log(header)
-		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	if ($p.siteId() !== TABLE_ID_SHOUHIN) {
+		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	let records = await utilExportAjax(
-		SITE_ID_SHOUHIN
+		TABLE_ID_SHOUHIN
 		, COLUMN_INDEX
 	)
 
@@ -124,10 +99,17 @@ async function checkOrder() {
 			// 最小ロット　:　1以上
 			.filter(record => record[COLUMN_INDEX.indexOf(MINIMUM_LOT)] >= 1)
 
-		// 発注管理テーブルに"確認待","確認済","出庫準備中","出庫済"のチケットがない商品
+		// 発注管理テーブルに"確認待","確認済","出庫準備中","出荷済"のチケットがない商品
 		let tmpObj = {}
 		records
-			.filter(record => [" 確認待"," 確認済"," 出荷準備中"," 出荷済"].includes(record[COLUMN_INDEX.indexOf(STATUS)]))
+			.filter(record => {
+				return [
+					WIKI_STATUS_HACCHU_KANRI.waiting.value
+					, WIKI_STATUS_HACCHU_KANRI.confirmed.value
+					, WIKI_STATUS_HACCHU_KANRI.preparing.value
+					, WIKI_STATUS_HACCHU_KANRI.shipped.value
+				].includes(record[COLUMN_INDEX.indexOf(STATUS)])
+			})
 			.forEach(record => tmpObj[record[COLUMN_INDEX.indexOf(RESULT_ID)]] = record[COLUMN_INDEX.indexOf(SHOUHIN_CODE)])
 
 		records = records
@@ -152,8 +134,8 @@ async function checkOrder() {
 			ticket.push(now)
 			// 確認期日(作成日から１日後)
 			ticket.push(tommorow)
-
-			if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == ' 九州のみ') {
+			// チェック区分　:　九州のみ
+			if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == WIKI_CHECK_KB.onlyKyushu.value) {
 				// 全国閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0) {
 					// 入庫倉庫：九州
@@ -164,12 +146,13 @@ async function checkOrder() {
 					ticket.push(getOrderAmount(r[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
 					ticketList.push(ticket)
 				}
-			} else if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == ' 全国') {
+			// チェック区分　:　全国
+			} else if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == WIKI_CHECK_KB.all.value) {
 				let ticketCopy = Array.from(ticket)
 				// 九州閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_KYUSHU)] < 0) {
 					// 入庫倉庫：九州
-					ticketCopy.push(' 九州倉庫')
+					ticketCopy.push(WIKI_SOUKO_KB.kyushu.value)
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
@@ -180,7 +163,7 @@ async function checkOrder() {
 				// 関東閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_KANTO)] < 0) {
 					// 入庫倉庫：関東
-					ticketCopy.push(' 関東倉庫')
+					ticketCopy.push(WIKI_SOUKO_KB.kanto.value)
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
@@ -191,7 +174,7 @@ async function checkOrder() {
 				// 北海道閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)] < 0) {
 					// 入庫倉庫：北海道
-					ticketCopy.push(' 北海道倉庫')
+					ticketCopy.push(WIKI_SOUKO_KB.hokkaido.value)
 					// 発注根拠
 					ticketCopy.push(getOrderReason(r))
 					// 発注数量
@@ -221,7 +204,7 @@ async function checkOrder() {
 	function getOrderReason(record) {
 		let advice =
 `
-${record[COLUMN_INDEX.indexOf(NEW_FLAG)] == 1 ? '新商品の可能性がある商品です。' : ''}
+${record[COLUMN_INDEX.indexOf(JISSEKI_KEISOKU_KIKAN)] < 6 ? '新商品の可能性がある商品です。' : ''}
 ${record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'}
 `
 

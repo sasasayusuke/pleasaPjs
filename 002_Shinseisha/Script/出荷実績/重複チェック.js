@@ -4,16 +4,14 @@ const COLUMN_INDEX_CHECK = [
 	, CREATE_TIME
 ] = [
 	"ResultId"
-	// 商品ｺｰﾄﾞ_年月
-	, "Title"
-	// 作成日時
-	, "CreatedTime"
+	, $p.getColumnName("商品ｺｰﾄﾞ_年月")
+	, $p.getColumnName("作成日時")
 ]
 
 async function check() {
 
 	let checkRecords = await utilExportAjax(
-		SITE_ID_SHUKKA_JISSEKI
+		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_CHECK
 	)
 

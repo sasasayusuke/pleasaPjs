@@ -8,16 +8,11 @@ const COLUMN_INDEX_MOVE = [
 	, STATUS
 ] = [
 	"IssueId"
-	// 商品コード
-	, "ClassA"
-	// 入庫倉庫
-	, "ClassF"
-	// 出庫倉庫
-	, "ClassG"
-	// 発注数量
-	, "NumA"
-	// 連携ステータス
-	, "Status"
+	, $p.getColumnName("商品ｺｰﾄﾞ")
+	, $p.getColumnName("入庫倉庫")
+	, $p.getColumnName("出庫倉庫")
+	, $p.getColumnName("発注数量")
+	, $p.getColumnName("連携ステータス")
 ]
 
 async function sumMove() {
@@ -27,12 +22,11 @@ async function sumMove() {
 		return
 	}
 	console.log('移動残集計を開始しますか? : Yesを押下しました。')
-	if ($p.siteId() !== SITE_ID_HACCHU_KANRI) {
-		console.log(header)
-		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	if ($p.siteId() !== TABLE_ID_HACCHU_KANRI) {
+		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	let records = await utilExportAjax(
-		SITE_ID_HACCHU_KANRI
+		TABLE_ID_HACCHU_KANRI
 		, COLUMN_INDEX_MOVE
 	)
 	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
@@ -46,7 +40,13 @@ async function sumMove() {
 
 	function extractData(records) {
 		// 発注管理連携ステータス : " 出荷済"," 移動中"," 補充済"　のデータを抽出
-		records = records.filter(record => [" 出荷済", " 移動中"," 補充済"].includes(record[COLUMN_INDEX_MOVE.indexOf(STATUS)]))
+		records = records.filter(record => {
+			return [
+				WIKI_STATUS_HACCHU_KANRI.shipped.value
+				, WIKI_STATUS_HACCHU_KANRI.moving.value
+				, WIKI_STATUS_HACCHU_KANRI.filled.value
+			].includes(record[COLUMN_INDEX_MOVE.indexOf(STATUS)])
+		})
 
 		// エラー処理（異常データなのでRPA中断）
 		records.forEach(record => {
@@ -72,7 +72,7 @@ async function sumMove() {
 			if (!(key in tmp)) tmp[key] = 0
 			if (!(r[COLUMN_INDEX_MOVE.indexOf(SHOUHIN_CODE)] in codes)) codes[r[COLUMN_INDEX_MOVE.indexOf(SHOUHIN_CODE)]] = 0
 			tmp[key] += +r[COLUMN_INDEX_MOVE.indexOf(HACCHUU_SUURYOU)]
-			if (r[COLUMN_INDEX_MOVE.indexOf(STATUS)] == " 出荷済") {
+			if (r[COLUMN_INDEX_MOVE.indexOf(STATUS)] ==  WIKI_STATUS_HACCHU_KANRI.shipped.value) {
 				// 発注管理連携ステータス : " 出荷済"の場合
 				key = r[COLUMN_INDEX_MOVE.indexOf(SHOUHIN_CODE)] + ',' + r[COLUMN_INDEX_MOVE.indexOf(OUT_SOUKO)]
 				if (!(key in tmp)) tmp[key] = 0
@@ -88,11 +88,11 @@ async function sumMove() {
 		for (let t in tmp) {
 			let [code, souko] = t.split(',')
 			let columnIndex = 0
-			if (souko == " 九州倉庫") {
+			if (souko == WIKI_SOUKO_KB.kyushu.value) {
 				columnIndex = header.indexOf(kyushu_move)
-			} else if (souko == " 関東倉庫") {
+			} else if (souko == WIKI_SOUKO_KB.kanto.value) {
 				columnIndex = header.indexOf(kanto_move)
-			} else if (souko == " 北海道倉庫") {
+			} else if (souko == WIKI_SOUKO_KB.hokkaido.value) {
 				columnIndex = header.indexOf(hokkaido_move)
 			} else {
 				utilSetMessage(message = " 出荷済 または 移動中 または 補充済 の " + code + 'の倉庫区分に異常または未入力項目があります。', type = ERROR)

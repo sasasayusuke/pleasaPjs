@@ -2,7 +2,7 @@ function processCheck(n) {
     console.log(n)
     // RPA実行ステータス確認
     $p.apiGet({
-        'id': SITE_ID_RPA_STATUS,
+        'id': TABLE_ID_RPA_STATUS,
         'done': function (data) {
             console.log(data.Response.Data[0])
             if (data.Response.Data.filter(v => v["ClassA"] === "SMILE連携")[0]["CheckA"]) {

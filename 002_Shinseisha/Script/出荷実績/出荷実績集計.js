@@ -9,22 +9,14 @@ const COLUMN_INDEX_ACHIEVEMENT = [
 	, HOKKAIDO_SHUKKA_SUURYOU
 	, DOUBLE_FLAG
 ] = [
-	// 商品マスタResultID
-	"ClassA~" + SITE_ID_SHOUHIN + ",ResultId"
-	// 商品コード
-	, "ClassA"
-	// 年
-	, "ClassB"
-	// 月
-	, "ClassC"
-	// 九州出荷数量
-	, "NumA"
-	// 関東出荷数量
-	, "NumB"
-	// 北海道出荷数量
-	, "NumC"
-	// 重複無効フラグ
-	, "CheckA"
+	"ClassA~" + TABLE_ID_SHOUHIN + ",ResultId"	// 商品マスタResultID
+	, $p.getColumnName("商品ｺｰﾄﾞ")
+	, $p.getColumnName("年")
+	, $p.getColumnName("月")
+	, $p.getColumnName("九州出荷数量")
+	, $p.getColumnName("関東出荷数量")
+	, $p.getColumnName("北海道出荷数量")
+	, $p.getColumnName("重複無効フラグ")
 ]
 
 async function sumAchievement() {
@@ -34,13 +26,12 @@ async function sumAchievement() {
 		return
 	}
 	console.log('出荷実績集計を開始しますか? : Yesを押下しました。')
-	if ($p.siteId() !== SITE_ID_SHUKKA_JISSEKI) {
-		console.log(header)
-		utilSetMessage(message = 'サイトIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
+	if ($p.siteId() !== TABLE_ID_SHUKKA_JISSEKI) {
+		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	await check()
 	let records = await utilExportAjax(
-		SITE_ID_SHUKKA_JISSEKI
+		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
 	)
 
@@ -93,22 +84,22 @@ async function sumAchievement() {
 		// 出荷実績集計作成処理
 		let table = []
 		// ヘッダー情報入力
-		table.push(["ID", "商品ｺｰﾄﾞ", "新商品フラグ", "九州直近一年間出荷実績", "関東直近一年間出荷実績", "北海道直近一年間出荷実績"])
+		table.push(["ID", "商品ｺｰﾄﾞ", "出荷実績計測期間", "九州直近一年間出荷実績", "関東直近一年間出荷実績", "北海道直近一年間出荷実績"])
 
 		for (let codes of shouhinList) {
 			let record = []
-			let counnt = codes.length
+			let count = codes.length
 			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)])
 			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE)])
-			record.push(codes.length < 12)
+			record.push(count)
 			for (let place of [KYUSHU_SHUKKA_SUURYOU, KANTO_SHUKKA_SUURYOU, HOKKAIDO_SHUKKA_SUURYOU]) {
 				let amounts = codes.map(item => +item[COLUMN_INDEX_ACHIEVEMENT.indexOf(place)])
 				// 直近１２ヶ月以上の出荷実績がある場合（12ヶ月分の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
-				if (counnt >= 12) {
+				if (count >= 12) {
 					amounts.splice(amounts.indexOf(Math.min.apply(null, amounts)), 1)
 					amounts.splice(amounts.indexOf(Math.max.apply(null, amounts)), 1)
 					console.log(codes)
-					if (counnt > 12) {
+					if (count > 12) {
 						console.log("1年間のデータが13個以上あります。")
 					}
 				// その他の場合　
