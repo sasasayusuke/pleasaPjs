@@ -29,6 +29,7 @@ var FLOW_ID_ZAIKO_DOUKI_AND_TICKET  = 73995
 //月次出荷実績登録
 var FLOW_ID_SHUKKA_JISSEKI_TOUROKU  = 73994
 
+
 // 発注管理 連携ステータス
 var WIKI_STATUS_HACCHU_KANRI  = {
     waiting: {
@@ -81,6 +82,7 @@ var WIKI_STATUS_HACCHU_KANRI  = {
     }
 }
 
+
 // 発注管理 倉庫区分
 var WIKI_SOUKO_KB  = {
     kyushu: {
@@ -97,6 +99,7 @@ var WIKI_SOUKO_KB  = {
     }
 }
 
+
 // 商品情報 チェック区分
 var WIKI_CHECK_KB  = {
     uncheck: {
@@ -112,6 +115,20 @@ var WIKI_CHECK_KB  = {
         value: "全国",
     }
 }
+
+
+// 商品情報 適用区分
+var WIKI_TEKIYOU_KB  = {
+    order: {
+        index: 1,
+        value: "メーカー発注",
+    }
+    , move: {
+        index: 2,
+        value: "倉庫間移動",
+    }
+}
+
 
 //在庫品種別
 //1,シート

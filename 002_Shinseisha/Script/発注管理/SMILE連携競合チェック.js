@@ -1,11 +1,11 @@
+// SMILE連携競合チェック
 function processCheck(n) {
     console.log(n)
     // RPA実行ステータス確認
     $p.apiGet({
-        'id': TABLE_ID_RPA_STATUS,
+        'id': FLOW_ID_SMILE_RENKEI,
         'done': function (data) {
-            console.log(data.Response.Data[0])
-            if (data.Response.Data.filter(v => v["ClassA"] === "SMILE連携")[0]["CheckA"]) {
+            if (data.Response.Data[0].CheckA) {
                 // RPA実行中の場合はエラーメッセージ表示
                 utilSetMessage("RPA実行中のため更新できません。", WARNING)
             } else {

@@ -66,6 +66,32 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
 }
 
 /**
+ * 指定されたIDを持つHTMLエレメントを削除する関数です。
+ * @param {array} ids 削除ID
+ */
+function removeElements (ids) {
+  ids.forEach(v => document.getElementById(v).remove())
+}
+
+/**
+ * コマンドエリアにボタンを追加する関数です。
+ * @param {string} buttonId ボタンID
+ * @param {string} label ラベル
+ * @param {function} clickFunc click時間数
+ */
+function addButton (buttonId, label, clickFunc) {
+	let target = document.getElementById('MainCommands')
+	let elem = document.createElement('button')
+	elem.id = buttonId
+	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
+	elem.onclick = clickFunc
+	elem.innerText = label
+
+  target.appendChild(elem)
+}
+
+
+/**
  * 時刻を出力する関数です。
  * @param {date} date 日付型
  * @param {string} format フォーマット

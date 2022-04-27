@@ -34,7 +34,6 @@ const COLUMN_INDEX = [
 	, $p.getColumnName("発注仕入先ｺｰﾄﾞ")
 	, $p.getColumnName("リードタイム")
 	, $p.getColumnName("最小ロット")
-	, $p.getColumnName("連携ステータス")
 	, "ClassA~~" + TABLE_ID_HACCHU_KANRI + ",Status"	// 発注管理~~連携ステータス
 	, $p.getColumnName("チェック区分")
 	, $p.getColumnName("九州発注点")
