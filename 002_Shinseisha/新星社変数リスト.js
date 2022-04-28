@@ -82,6 +82,28 @@ var WIKI_STATUS_HACCHU_KANRI  = {
     }
 }
 
+// RPA実行ログ フローステータス
+var WIKI_STATUS_RPA_LOG  = {
+    inprogress: {
+        index: 100,
+        value: "処理中",
+        label: "処理中",
+        style: "status-inprogress"
+    }
+    , normal: {
+        index: 900,
+        value: "正常終了",
+        label: "正常終了",
+        style: "status-closed"
+    }
+    , error: {
+        index: 999,
+        value: "異常終了",
+        label: "異常終了",
+        style: "status-rejected"
+    }
+}
+
 
 // 発注管理 倉庫区分
 var WIKI_SOUKO_KB  = {
@@ -98,7 +120,21 @@ var WIKI_SOUKO_KB  = {
         value: "北海道倉庫",
     }
 }
-
+// フォーマット作成ログ 書類フォーマット区分
+var WIKI_SHORUI_FORMAT_KB = {
+    order: {
+        index: 1,
+        value: "メーカー発注書",
+    }
+    , in: {
+        index: 2,
+        value: "入庫指示書",
+    }
+    , out: {
+        index: 3,
+        value: "出庫指示書",
+    }
+}
 
 // 商品情報 チェック区分
 var WIKI_CHECK_KB  = {
