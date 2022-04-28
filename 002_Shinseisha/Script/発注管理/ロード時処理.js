@@ -1,11 +1,13 @@
 
 $p.events.on_editor_load = function () {
-    removeElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
+    utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
+	utilQuerySelector(".ui-icon.ui-icon-clock.current-time", true).forEach(v => v.remove())
+	utilQuerySelector(".ui-icon.ui-icon-person.current-user", true).forEach(v => v.remove())
 	createFlow()
 
 }
 
 $p.events.on_grid_load = function () {
-	addButton('sumMove', '移動残集計', sumMove)
-	addButton('linkageSMILE', 'SMILE連携', linkageSMILE)
+	utilAddButton('sumMove', '移動残集計', sumMove)
+	utilAddButton('linkageSMILE', 'SMILE連携', linkageSMILE)
 }

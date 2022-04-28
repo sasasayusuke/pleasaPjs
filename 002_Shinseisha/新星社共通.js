@@ -69,7 +69,7 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
  * @param {array} ids 削除ID
  */
-function removeElements (ids) {
+function utilRemoveElements (ids) {
   ids.forEach(v => document.getElementById(v).remove())
 }
 
@@ -79,7 +79,7 @@ function removeElements (ids) {
  * @param {string} label ラベル
  * @param {function} clickFunc click時間数
  */
-function addButton (buttonId, label, clickFunc) {
+function utilAddButton (buttonId, label, clickFunc) {
 	let target = document.getElementById('MainCommands')
 	let elem = document.createElement('button')
 	elem.id = buttonId
@@ -182,7 +182,6 @@ function utilDownloadCsv (csvStr, title = 'test') {
  * ]
  *            ⇓
  * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
- *
  */
 function utilConvert2DToCsv (array) {
   // csvDataに出力方法を追加
@@ -224,12 +223,29 @@ function utilGenerate2DArray (m, n, val = 0) {
  * 例. array = [1, 1, 2, 3, 3, 4, 1, 2, 3, 5, 5, 1, 2, 3, 5]
  *            ⇓
  * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
- *
  */
 function utilDivideArray (array) {
   return [...new Set(array)].map(x => Array(array.filter(y => y == x).length).fill(x))
 }
 
+/**
+ * querySelectorを利用してHTMLエレメントを返却、複数取得した場合はNodeListをArrayに変換してから返却
+ * @param {array} selector セレクタ
+ * @param {array} all 複数返却
+ * @param {array} dom 親DOM
+ *
+ * @return {array} HTMLエレメント
+ */
+function utilQuerySelector (selector, all = false, dom) {
+  if (typeof dom === 'undefined' || utilIsNull(dom)) {
+    dom = document
+  }
+  if (all) {
+    // NodeListをArrayに変換してから返却
+    return Array.from(dom.querySelectorAll(selector))
+  }
+  return dom.querySelector(selector)
+}
 
 /**
  * 登録APIを呼び出す関数です。

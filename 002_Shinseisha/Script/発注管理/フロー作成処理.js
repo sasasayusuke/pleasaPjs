@@ -1,6 +1,6 @@
 function createFlow() {
     	// メーカー発注または倉庫間移動ではなければ終了
-	if (![WIKI_TEKIYOU_KB.order.value, WIKI_TEKIYOU_KB.move.value].includes($p.getControl('適用区分')[0].innerHTML)) return
+	if (![WIKI_TEKIYOU_KB.order.index, WIKI_TEKIYOU_KB.move.index].includes(+$p.getControl('適用区分').val())) return
 
 	let html = `
 		<div id="statusFlow" class="flow">
@@ -43,13 +43,13 @@ function createFlow() {
 	$("#CommentField").prepend(html)
 
 	let useStatus = []
-	if ($p.getControl('適用区分')[0].innerHTML == WIKI_TEKIYOU_KB.order.value) {
+	if (+$p.getControl('適用区分').val() == WIKI_TEKIYOU_KB.order.index) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.confirmed
 			, WIKI_STATUS_HACCHU_KANRI.closed
 		]
-	} else if ($p.getControl('適用区分')[0].innerHTML == WIKI_TEKIYOU_KB.move.value) {
+	} else if (+$p.getControl('適用区分').val() == WIKI_TEKIYOU_KB.move.index) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.preparing
