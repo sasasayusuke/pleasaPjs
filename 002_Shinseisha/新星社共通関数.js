@@ -179,20 +179,41 @@ function utilDownloadCsv (csvStr, title = 'test') {
  *      ['1', '2', '2'],
  *      ['4', '5', '20'],
  *      ['7', '8', '56'],
- * ]
+ *     ]
  *            ⇓
  * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
  */
-function utilConvert2DToCsv (array) {
+function utilConvert2DToCsv (d2array) {
   // csvDataに出力方法を追加
-  let csvData = 'data:text/csvcharset=utf-8,'
-
-  array.forEach(v => {
+  let csvOutput = 'data:text/csvcharset=utf-8,'
+  let csvData = csvOutput
+  d2array.forEach(v => {
     const row = '"' + v.join('","') + '"'
     csvData += row + '\r\n'
   })
   return csvData
 }
+
+/**
+ * 引数の2次元配列をUTF-8のCSVに変換する関数です。
+ * @param {String} csvData
+ *
+ * @return {Array} array 2次元配列
+ * 例. 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
+ *            ⇓
+ *     [
+ *      ['数量', '単価', '合計'],
+ *      ['1', '2', '2'],
+ *      ['4', '5', '20'],
+ *      ['7', '8', '56'],
+ *     ]
+ */
+function utilConvertCsvTo2D (csvData) {
+  // csvDataに出力方法を追加
+  let csvOutput = 'data:text/csvcharset=utf-8,'
+  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+}
+
 
 /**
  * m行n列の2次元配列を生成する関数です。

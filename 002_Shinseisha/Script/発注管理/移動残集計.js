@@ -29,7 +29,7 @@ async function sumMove() {
 		TABLE_ID_HACCHU_KANRI
 		, COLUMN_INDEX_MOVE
 	)
-	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	records = utilConvertCsvTo2D(records.Response.Content)
 	let header = records.shift()
 	if (header.length !== COLUMN_INDEX_MOVE.length) {
 		console.log(header)

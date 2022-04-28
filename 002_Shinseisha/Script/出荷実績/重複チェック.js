@@ -15,7 +15,7 @@ async function checkDouble() {
 		, COLUMN_INDEX_CHECK
 	)
 
-	checkRecords = checkRecords.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	checkRecords = utilConvertCsvTo2D(checkRecords.Response.Content)
 	let header = checkRecords.shift()
 	if (header.length !== COLUMN_INDEX_CHECK.length) {
 		console.log(header)

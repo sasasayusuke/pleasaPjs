@@ -72,7 +72,7 @@ async function createOrderTicket() {
 		, COLUMN_INDEX
 	)
 
-	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	records = utilConvertCsvTo2D(records.Response.Content)
 	let header = records.shift()
 	if (header.length !== COLUMN_INDEX.length) {
 		console.log(header)

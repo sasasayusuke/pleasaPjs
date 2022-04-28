@@ -35,7 +35,7 @@ async function sumAchievement() {
 		, COLUMN_INDEX_ACHIEVEMENT
 	)
 
-	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	records = utilConvertCsvTo2D(records.Response.Content)
 	let header = records.shift()
 	if (header.length !== COLUMN_INDEX_ACHIEVEMENT.length) {
 		console.log(header)

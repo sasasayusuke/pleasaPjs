@@ -32,76 +32,84 @@ async function createFormat() {
 		TABLE_ID_HACCHU_KANRI
 		, COLUMN_INDEX_ORDER
 	)
-	records = records.Response.Content.split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+	records = utilConvertCsvTo2D(records.Response.Content)
 	let header = records.shift()
 	if (header.length !== COLUMN_INDEX_ORDER.length) {
 		console.log(header)
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 
-	extractData(records)
+	// 発注管理連携ステータス : " 確認済", " 出荷済", " 補充済"　のデータを抽出
+	records = records.filter(record => {
+		return [
+			WIKI_STATUS_HACCHU_KANRI.confirmed.value
+			, WIKI_STATUS_HACCHU_KANRI.shipped.value
+			, WIKI_STATUS_HACCHU_KANRI.filled.value
+		].includes(record[COLUMN_INDEX_ORDER.indexOf(STATUS)])
+	})
 
-	function extractData(records) {
-		// 発注管理連携ステータス : " 確認済", " 出荷済", " 補充済"　のデータを抽出
-		records = records.filter(record => {
-			return [
-				WIKI_STATUS_HACCHU_KANRI.confirmed.value
-				, WIKI_STATUS_HACCHU_KANRI.shipped.value
-				, WIKI_STATUS_HACCHU_KANRI.filled.value
-			].includes(record[COLUMN_INDEX_ORDER.indexOf(STATUS)])
-		})
-
-		// エラー処理（異常データなのでRPA中断）
-		records.forEach(record => {
-			if ([WIKI_STATUS_HACCHU_KANRI.shipped.value, WIKI_STATUS_HACCHU_KANRI.filled.value].includes(record[COLUMN_INDEX_ORDER.indexOf(STATUS)]) && record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)] == "") {
-				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 出荷済 または 補充済 のデータは出庫倉庫を入力してください。', type = ERROR)
-			}
-			if (record[COLUMN_INDEX_ORDER.indexOf(HACCHUU_SUURYOU)] <= 0) {
-				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
-			}
-			if (record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)] == record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)]) {
-				utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
-			}
-		})
-
-		// 確認済のデータに絞って引数に渡す
-		createMakerOrderFormat(records.filter(record => record[COLUMN_INDEX_ORDER.indexOf(STATUS)] == WIKI_STATUS_HACCHU_KANRI.confirmed.value))
-		//let response = await Promise.all(records.map(record => {
-		//	return utilUpdateAjax(
-		//		id = record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)]
-		//		, ClassHash = {}
-		//		, NumHash= {}
-		//		, DateHash= {}
-		//		, DescriptionHash= {}
-		//		, CheckHash = {
-		//			CheckA : false
-		//		}
-		//		, addFunc = ""
-		//	)
-		//}))
-	}
-
-	/**
-	 * メーカーコード×倉庫コードに分割した発注書を作成
-	 *
-	 * @param {Array} records 確認済チケット
-	 *
-	 */
-	function createMakerOrderFormat(records) {
-		// 商品コードごとに分割
-		let shouhinList = []
-		let shouhinCodes = []
-		let tmp = ""
-		for (let record of records) {
-			if (tmp !== record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]) {
-				shouhinList.push(shouhinCodes)
-				shouhinCodes = []
-			}
-			shouhinCodes.push(record)
-			tmp = record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]
+	// エラー処理（異常データなのでRPA中断）
+	records.forEach(record => {
+		if ([WIKI_STATUS_HACCHU_KANRI.shipped.value, WIKI_STATUS_HACCHU_KANRI.filled.value].includes(record[COLUMN_INDEX_ORDER.indexOf(STATUS)]) && record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)] == "") {
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 出荷済 または 補充済 のデータは出庫倉庫を入力してください。', type = ERROR)
 		}
-		shouhinList.push(shouhinCodes)
-		shouhinList = shouhinList.filter(v => !utilIsNull(v))
-	}
+		if (record[COLUMN_INDEX_ORDER.indexOf(HACCHUU_SUURYOU)] <= 0) {
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
+		}
+		if (record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)] == record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)]) {
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
+		}
+	})
 
+
+	await createMakerOrderFormat(records)
+	console.log(records)
+	//let response = await Promise.all(records.map(record => {
+	//	return utilUpdateAjax(
+	//		id = record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)]
+	//		, ClassHash = {}
+	//		, NumHash= {}
+	//		, DateHash= {}
+	//		, DescriptionHash= {}
+	//		, CheckHash = {
+	//			CheckA : false
+	//		}
+	//		, addFunc = ""
+	//	)
+	//}))
+}
+
+/**
+ * メーカーコード×倉庫コードをkeyに分割した発注書を作成
+ *
+ * @param {Array} records
+ *
+ */
+async function createMakerOrderFormat(records) {
+	// 確認済のデータに絞る
+	let confirmedData = records
+		// 発注管理連携ステータス : "確認済" のデータを抽出
+//		.filter(record => record[COLUMN_INDEX_ORDER.indexOf(STATUS)] == WIKI_STATUS_HACCHU_KANRI.confirmed.value)
+		// key行（メーカーコード×倉庫コード）を追加
+		.map(record => [...record, record[COLUMN_INDEX_ORDER.indexOf(MAKER_CODE)] + "," + record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)]])
+
+
+	// メーカーコードごとに分割
+	let makerList = utilDivide2DArray(confirmedData, COLUMN_INDEX_ORDER.length)
+	let response = await Promise.all(makerList.map(record => {
+		return utilCreateAjax(
+			siteId = TABLE_ID_FORMAT_LOG
+			, ClassHash = {}
+			, NumHash= {}
+			, DateHash= {}
+			, DescriptionHash= {
+				DescriptionA : utilConvert2DToCsv(record)
+			}
+			, CheckHash = {
+				CheckA : true
+			}
+			, addFunc = ""
+		)
+	}))
+	return response
 }
