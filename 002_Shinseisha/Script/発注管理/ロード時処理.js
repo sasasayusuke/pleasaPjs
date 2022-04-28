@@ -9,5 +9,4 @@ $p.events.on_editor_load = function () {
 
 $p.events.on_grid_load = function () {
 	utilAddButton('sumMove', '移動残集計', sumMove)
-	utilAddButton('linkageSMILE', 'SMILE連携', linkageSMILE)
 }

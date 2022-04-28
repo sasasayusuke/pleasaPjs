@@ -29,7 +29,7 @@ async function sumAchievement() {
 	if ($p.siteId() !== TABLE_ID_SHUKKA_JISSEKI) {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
-	await check()
+	await checkDouble()
 	let records = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT

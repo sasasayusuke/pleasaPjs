@@ -15,11 +15,11 @@ function utilIsNull (obj) {
 
 /**
  * Plesanterメッセージを利用する関数です。
- * @param {string} message メッセージ内容
- * @param {string} type 深刻度
+ * @param {String} message メッセージ内容
+ * @param {String} type 深刻度
  * @param {boolean} clear メッセージを消す
  *
- * @return {string} 加工された文字列
+ * @return {String} 加工された文字列
  */
 function utilSetMessage (message = '', type = NORMAL, clear = true) {
   if (clear) {
@@ -67,7 +67,7 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
 
 /**
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
- * @param {array} ids 削除ID
+ * @param {Array} ids 削除ID
  */
 function utilRemoveElements (ids) {
   ids.forEach(v => document.getElementById(v).remove())
@@ -75,8 +75,8 @@ function utilRemoveElements (ids) {
 
 /**
  * コマンドエリアにボタンを追加する関数です。
- * @param {string} buttonId ボタンID
- * @param {string} label ラベル
+ * @param {String} buttonId ボタンID
+ * @param {String} label ラベル
  * @param {function} clickFunc click時間数
  */
 function utilAddButton (buttonId, label, clickFunc) {
@@ -94,9 +94,9 @@ function utilAddButton (buttonId, label, clickFunc) {
 /**
  * 時刻を出力する関数です。
  * @param {date} date 日付型
- * @param {string} format フォーマット
+ * @param {String} format フォーマット
  *
- * @return {string} フォーマット加工された日付文字列
+ * @return {String} フォーマット加工された日付文字列
  *
  * 例. date = 'Mon Apr 18 2022 19:05:52 GMT+0900 (日本標準時)' format='YYYY-MM-DD'
  *            ⇓
@@ -122,10 +122,10 @@ function utilGetDate (date, format) {
 
 /**
  * 左パディングする関数です。
- * @param {string} str 数値
- * @param {number} size 桁数
- * @param {string} char パディング文字
- * @return {string} パディングされた文字列
+ * @param {String} str 数値
+ * @param {Number} size 桁数
+ * @param {String} char パディング文字
+ * @return {String} パディングされた文字列
  */
 function utilPaddingLeft (str, size = 1, char = '0') {
   if (char.length !== 1) {
@@ -136,10 +136,10 @@ function utilPaddingLeft (str, size = 1, char = '0') {
 
 /**
  * 右パディングする関数です。
- * @param {string} str 数値
- * @param {number} size 桁数
- * @param {string} char パディング文字
- * @return {string} パディングされた文字列
+ * @param {String} str 数値
+ * @param {Number} size 桁数
+ * @param {String} char パディング文字
+ * @return {String} パディングされた文字列
  */
 function utilPaddingRight (str, size = 1, char = ' ') {
   if (char.length !== 1) {
@@ -150,8 +150,8 @@ function utilPaddingRight (str, size = 1, char = ' ') {
 
 /**
  * 引数のcsv文字列をCSVでダウンロードする関数です。
- * @param {string} csvStr csv文字列
- * @param {string} title ファイル名
+ * @param {String} csvStr csv文字列
+ * @param {String} title ファイル名
  */
 function utilDownloadCsv (csvStr, title = 'test') {
 
@@ -171,9 +171,9 @@ function utilDownloadCsv (csvStr, title = 'test') {
 
 /**
  * 引数の2次元配列をUTF-8のCSVに変換する関数です。
- * @param {array} array 2次元配列
+ * @param {Array} array 2次元配列
  *
- * @return {string} csvData
+ * @return {String} csvData
  * 例. [
  *      ['数量', '単価', '合計'],
  *      ['1', '2', '2'],
@@ -196,11 +196,11 @@ function utilConvert2DToCsv (array) {
 
 /**
  * m行n列の2次元配列を生成する関数です。
- * @param {number} m 行数
- * @param {number} n 列数
- * @param {number} val 初期値
+ * @param {Number} m 行数
+ * @param {Number} n 列数
+ * @param {Number} val 初期値
  *
- * @return {array} 2次元配列
+ * @return {Array} 2次元配列
  *
  * 例. m = 3, n = 4, val = 1
  *            ⇓
@@ -216,9 +216,9 @@ function utilGenerate2DArray (m, n, val = 0) {
 
 /**
  * 配列を分割する関数です。
- * @param {array} array 配列
+ * @param {Array} array 配列
  *
- * @return {array} 2次元配列
+ * @return {Array} 2次元配列
  *
  * 例. array = [1, 1, 2, 3, 3, 4, 1, 2, 3, 5, 5, 1, 2, 3, 5]
  *            ⇓
@@ -229,12 +229,41 @@ function utilDivideArray (array) {
 }
 
 /**
- * querySelectorを利用してHTMLエレメントを返却、複数取得した場合はNodeListをArrayに変換してから返却
- * @param {array} selector セレクタ
- * @param {array} all 複数返却
- * @param {array} dom 親DOM
+ * 2次元配列の指定列にて分割する関数です。
+ * @param {Array} d2array 2次元配列
+ * @param {Number} index 指定列番号
  *
- * @return {array} HTMLエレメント
+ * @return {Array} 3次元配列
+ *
+ * 例. d2array = [1, 1, 2, 3, 3, 4, 1, 2, 3, 5, 5, 1, 2, 3, 5]
+ *            ⇓
+ * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
+ */
+
+function utilDivide2DArray(d2array, index) {
+  let list = []
+  let codes = []
+  let tmp = ""
+  for (let arr of d2array) {
+    if (tmp !== arr[index]) {
+      list.push(codes)
+      codes = []
+    }
+    codes.push(arr)
+    tmp = arr[index]
+  }
+  list.push(codes)
+  return list.filter(v => !utilIsNull(v))
+}
+
+
+/**
+ * querySelectorを利用してHTMLエレメントを返却、複数取得した場合はNodeListをArrayに変換してから返却
+ * @param {Array} selector セレクタ
+ * @param {Array} all 複数返却
+ * @param {Array} dom 親DOM
+ *
+ * @return {Array} HTMLエレメント
  */
 function utilQuerySelector (selector, all = false, dom) {
   if (typeof dom === 'undefined' || utilIsNull(dom)) {

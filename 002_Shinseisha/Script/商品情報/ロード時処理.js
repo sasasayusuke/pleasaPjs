@@ -4,5 +4,5 @@ $p.events.on_editor_load = function () {
 }
 
 $p.events.on_grid_load = function () {
-	utilAddButton('checkOrder', '発注チケット作成', checkOrder)
+	utilAddButton('createOrderTicket', '発注チケット作成', createOrderTicket)
 }

@@ -57,7 +57,7 @@ const COLUMN_INDEX = [
 /**
  * 発注チケット作成をする関数です。
  */
-async function checkOrder() {
+async function createOrderTicket() {
 	let ans = window.confirm('発注チケット作成を開始しますか?')
 	if (!ans) {
 		console.log('発注チケット作成を開始しますか? : Noを押下しました。')

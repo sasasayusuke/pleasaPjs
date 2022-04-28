@@ -199,8 +199,8 @@ function pause() {
 /**
  * 時刻を出力する関数です。
  * @param {date} date 日付型
- * @param {string} format フォーマット
- * @return {string} フォーマット加工された日付文字列
+ * @param {String} format フォーマット
+ * @return {String} フォーマット加工された日付文字列
  */
 function utilGetDate (date, format) {
   if (typeof date === 'undefined' || utilIsNull(date)) {
@@ -303,10 +303,10 @@ function utilIsNull (obj) {
 
 /**
  * 左パディングする関数です。
- * @param {string} str 数値
- * @param {number} size 桁数
- * @param {string} char パディング文字
- * @return {string} パディングされた文字列
+ * @param {String} str 数値
+ * @param {Number} size 桁数
+ * @param {String} char パディング文字
+ * @return {String} パディングされた文字列
  */
 function utilPaddingLeft (str, size = 1, char = '0') {
   if (char.length !== 1) {
@@ -317,10 +317,10 @@ function utilPaddingLeft (str, size = 1, char = '0') {
 
 /**
  * 右パディングする関数です。
- * @param {string} str 数値
- * @param {number} size 桁数
- * @param {string} char パディング文字
- * @return {string} パディングされた文字列
+ * @param {String} str 数値
+ * @param {Number} size 桁数
+ * @param {String} char パディング文字
+ * @return {String} パディングされた文字列
  */
 function utilPaddingRight (str, size = 1, char = ' ') {
   if (char.length !== 1) {

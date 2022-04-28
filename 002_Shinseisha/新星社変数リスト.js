@@ -12,8 +12,8 @@ var TABLE_ID_HACCHU_KANRI        = 70576
 var TABLE_ID_RPA_STATUS          = 70573
 // RPA実行ログ
 var TABLE_ID_RPA_LOG             = 70577
-// 作成フォーマットログ
-var TABLE_ID_FORMAT_LOG          = 70571
+// フォーマット作成ログ
+var TABLE_ID_FORMAT_LOG          = 74088
 
 
 // フローID
