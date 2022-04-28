@@ -64,6 +64,7 @@ async function createFormat() {
 			}
 		})
 
+		// 確認済のデータに絞って引数に渡す
 		createMakerOrderFormat(records.filter(record => record[COLUMN_INDEX_ORDER.indexOf(STATUS)] == WIKI_STATUS_HACCHU_KANRI.confirmed.value))
 		//let response = await Promise.all(records.map(record => {
 		//	return utilUpdateAjax(
@@ -81,28 +82,26 @@ async function createFormat() {
 	}
 
 	/**
-	 * メーカーコード×倉庫コード
+	 * メーカーコード×倉庫コードに分割した発注書を作成
 	 *
-	 * @param {string} makerCode メーカーコード
-	 * @param {string} soukoCode 倉庫コード
-	 * @param {string} array 配列
+	 * @param {Array} records 確認済チケット
 	 *
 	 */
-	function createMakerOrderFormat() {
-				// 商品コードごとに分割
-				let shouhinList = []
-				let shouhinCodes = []
-				let tmp = ""
-				for (let record of records) {
-					if (tmp !== record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]) {
-						shouhinList.push(shouhinCodes)
-						shouhinCodes = []
-					}
-					shouhinCodes.push(record)
-					tmp = record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]
-				}
+	function createMakerOrderFormat(records) {
+		// 商品コードごとに分割
+		let shouhinList = []
+		let shouhinCodes = []
+		let tmp = ""
+		for (let record of records) {
+			if (tmp !== record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]) {
 				shouhinList.push(shouhinCodes)
-				shouhinList = shouhinList.filter(v => !utilIsNull(v))
+				shouhinCodes = []
+			}
+			shouhinCodes.push(record)
+			tmp = record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]
+		}
+		shouhinList.push(shouhinCodes)
+		shouhinList = shouhinList.filter(v => !utilIsNull(v))
 	}
 
 }

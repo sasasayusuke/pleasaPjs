@@ -64,23 +64,9 @@ async function sumAchievement() {
 					}
 				}
 			})
-			// 商品コード降順ソート
-			.sort((a, b) =>  b[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)] > a[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)] ? 1 : -1)
-
 		// 商品コードごとに分割
-		let shouhinList = []
-		let shouhinCodes = []
-		let tmp = ""
-		for (let record of records) {
-			if (tmp !== record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]) {
-				shouhinList.push(shouhinCodes)
-				shouhinCodes = []
-			}
-			shouhinCodes.push(record)
-			tmp = record[COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)]
-		}
-		shouhinList.push(shouhinCodes)
-		shouhinList = shouhinList.filter(v => !utilIsNull(v))
+		let shouhinList = utilDivide2DArray(records, COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID))
+
 		// 出荷実績集計作成処理
 		let table = []
 		// ヘッダー情報入力
