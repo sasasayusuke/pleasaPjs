@@ -12,8 +12,8 @@ var TABLE_ID_HACCHU_KANRI        = 70576
 var TABLE_ID_RPA_STATUS          = 70573
 // RPA実行ログ
 var TABLE_ID_RPA_LOG             = 70577
-// フォーマット作成ログ
-var TABLE_ID_FORMAT_LOG          = 74088
+// 作成書類ログ
+var TABLE_ID_SHORUI_LOG          = 74088
 
 
 // フローID
@@ -120,7 +120,7 @@ var WIKI_SOUKO_KB  = {
         value: "北海道倉庫",
     }
 }
-// フォーマット作成ログ 書類フォーマット区分
+// 作成書類ログ 書類フォーマット区分
 var WIKI_SHORUI_FORMAT_KB = {
     order: {
         index: 1,

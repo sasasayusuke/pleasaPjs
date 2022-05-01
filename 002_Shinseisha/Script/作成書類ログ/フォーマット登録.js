@@ -39,16 +39,13 @@ async function createFormat() {
 		, "ClassA"
 	]
 
-	let makerIds = []
-
-
 	let ans = window.confirm('フォーマット登録を開始しますか?')
 	if (!ans) {
 		console.log('フォーマット登録を開始しますか? : Noを押下しました。')
 		return
 	}
 	console.log('フォーマット登録を開始しますか? : Yesを押下しました。')
-	if ($p.siteId() !== TABLE_ID_FORMAT_LOG) {
+	if ($p.siteId() !== TABLE_ID_SHORUI_LOG) {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	let records = await utilExportAjax(
@@ -101,7 +98,7 @@ async function createFormat() {
 	let logId = logIds.filter(v => v[COLUMN_INDEX_RPALOG.indexOf(FLOW_STATUS)] == WIKI_STATUS_RPA_LOG.inprogress.value)[0][COLUMN_INDEX_RPALOG.indexOf(RESULT_ID)]
 
 	// 仕入先コードとResultID変換用に取得
-	makerIds = await utilExportAjax(
+	let makerIds = await utilExportAjax(
 		TABLE_ID_SHIIRESAKI
 		, COLUMN_INDEX_MAKER
 	)
@@ -116,6 +113,13 @@ async function createFormat() {
 	await createMakerOrderFormat(records, logId)
 	await createInOperateFormat(records, logId)
 	await createOutOperateFormat(records, logId)
+
+	let finalAns = window.confirm('登録が完了しました。画面をリロードしますがよろしいでしょうか?')
+	if (finalAns) {
+		// キャッシュからリロード
+		location.reload(false)
+	}
+
 
 
 	/**
@@ -141,7 +145,7 @@ async function createFormat() {
 			// 入庫倉庫を倉庫コードに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)])
 			return utilCreateAjax(
-				siteId = TABLE_ID_FORMAT_LOG
+				siteId = TABLE_ID_SHORUI_LOG
 				, ClassHash = {
 					ClassD : WIKI_SHORUI_FORMAT_KB.order.index
 					, ClassE : logId
@@ -182,7 +186,7 @@ async function createFormat() {
 			// 入庫倉庫を倉庫コードに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)])
 			return utilCreateAjax(
-				siteId = TABLE_ID_FORMAT_LOG
+				siteId = TABLE_ID_SHORUI_LOG
 				, ClassHash = {
 					ClassD : WIKI_SHORUI_FORMAT_KB.in.index
 					, ClassE : logId
@@ -220,7 +224,7 @@ async function createFormat() {
 			// 出庫倉庫を倉庫コードに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)])
 			return utilCreateAjax(
-				siteId = TABLE_ID_FORMAT_LOG
+				siteId = TABLE_ID_SHORUI_LOG
 				, ClassHash = {
 					ClassD : WIKI_SHORUI_FORMAT_KB.out.index
 					, ClassE : logId
