@@ -13,7 +13,7 @@ var TABLE_ID_RPA_STATUS          = 70573
 // RPA実行ログ
 var TABLE_ID_RPA_LOG             = 70577
 // 作成書類ログ
-var TABLE_ID_SHORUI_LOG          = 74088
+var TABLE_ID_SHORUI_LOG          = 74199
 
 
 // フローID
@@ -120,6 +120,13 @@ var WIKI_SOUKO_KB  = {
         value: "北海道倉庫",
     }
 }
+function convertSoukoValueToIndex(value) {
+    for (let souko of Object.keys(WIKI_SOUKO_KB)) {
+        if (WIKI_SOUKO_KB[souko].value == value) {
+            return WIKI_SOUKO_KB[souko].index
+        }
+    }
+}
 // 作成書類ログ 書類フォーマット区分
 var WIKI_SHORUI_FORMAT_KB = {
     order: {
@@ -133,6 +140,13 @@ var WIKI_SHORUI_FORMAT_KB = {
     , out: {
         index: 3,
         value: "出庫指示書",
+    }
+}
+function convertShoruiValueToIndex(value) {
+    for (let shorui of Object.keys(WIKI_SHORUI_FORMAT_KB)) {
+        if (WIKI_SHORUI_FORMAT_KB[shorui].value == value) {
+            return WIKI_SHORUI_FORMAT_KB[shorui].index
+        }
     }
 }
 

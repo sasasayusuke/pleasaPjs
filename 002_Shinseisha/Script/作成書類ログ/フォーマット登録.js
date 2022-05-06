@@ -1,5 +1,3 @@
-
-
 async function createFormat() {
 
 	// 発注管理テーブル
@@ -7,14 +5,18 @@ async function createFormat() {
 		ISSUE_ID_ORDER
 		, MAKER_CODE
 		, SHOUHIN_CODE
+		, SHOUHIN_NAME
+		, HYOUJUN_SHIIRE_TANKA
 		, IN_SOUKO
 		, OUT_SOUKO
 		, HACCHUU_SUURYOU
 		, STATUS
 	] = [
 		"IssueId"
-		, "ClassA~" + TABLE_ID_SHOUHIN + ",Class099"// 発注仕入先コード
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",Class099"// 発注仕入先ｺｰﾄﾞ
 		, "ClassA"
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",DescriptionA"// 商品名
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",Num018"// 標準仕入単価
 		, "ClassF"
 		, "ClassG"
 		, "NumA"
@@ -71,13 +73,13 @@ async function createFormat() {
 	// エラー処理（異常データなのでRPA中断）
 	records.forEach(record => {
 		if ([WIKI_STATUS_HACCHU_KANRI.shipped.value, WIKI_STATUS_HACCHU_KANRI.filled.value].includes(record[COLUMN_INDEX_ORDER.indexOf(STATUS)]) && record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)] == "") {
-			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 出荷済 または 補充済 のデータは出庫倉庫を入力してください。', type = ERROR)
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)] + ' 出荷済 または 補充済 のデータは出庫倉庫を入力してください。', type = ERROR)
 		}
 		if (record[COLUMN_INDEX_ORDER.indexOf(HACCHUU_SUURYOU)] <= 0) {
-			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 発注数量は1以上を入力してください。', type = ERROR)
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)] + ' 発注数量は1以上を入力してください。', type = ERROR)
 		}
 		if (record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)] == record[COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)]) {
-			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
+			utilSetMessage(message = 'ID:' + record[COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)] + ' 入庫倉庫と出庫倉庫が同じです。', type = ERROR)
 		}
 	})
 
@@ -97,7 +99,7 @@ async function createFormat() {
 	// RPAログ　フローステータス : "処理中"　のデータを抽出
 	let logId = logIds.filter(v => v[COLUMN_INDEX_RPALOG.indexOf(FLOW_STATUS)] == WIKI_STATUS_RPA_LOG.inprogress.value)[0][COLUMN_INDEX_RPALOG.indexOf(RESULT_ID)]
 
-	// 仕入先コードとResultID変換用に取得
+	// 仕入先ｺｰﾄﾞとResultID変換用に取得
 	let makerIds = await utilExportAjax(
 		TABLE_ID_SHIIRESAKI
 		, COLUMN_INDEX_MAKER
@@ -109,21 +111,25 @@ async function createFormat() {
 		console.log(makerHeader)
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
-
-	await createMakerOrderFormat(records, logId)
-	await createInOperateFormat(records, logId)
-	await createOutOperateFormat(records, logId)
-
-	let finalAns = window.confirm('登録が完了しました。画面をリロードしますがよろしいでしょうか?')
-	if (finalAns) {
-		// キャッシュからリロード
-		location.reload(false)
+	let [orderRes, inRes, outRes] = await Promise.all([
+		createMakerOrderFormat(records, logId)
+		, createInOperateFormat(records, logId)
+		, createOutOperateFormat(records, logId)
+	])
+	if (orderRes.length + inRes.length + outRes.length > 0) {
+		let finalAns = window.confirm('登録が完了しました。画面をリロードしますがよろしいでしょうか?')
+		if (finalAns) {
+			// キャッシュからリロード
+			location.reload(false)
+		}
+	} else {
+		utilSetMessage(message = '登録データがありませんでした。', type = WARNING)
 	}
 
 
 
 	/**
-	 * 発注仕入先コード×入庫倉庫をkeyに分割した発注書を作成
+	 * 発注仕入先ｺｰﾄﾞ×入庫倉庫をkeyに分割した発注書を作成
 	 *
 	 * @param {Array} records
 	 * @param {String} logId
@@ -134,15 +140,15 @@ async function createFormat() {
 		let confirmedData = records
 			// 発注管理連携ステータス : "確認済" のデータを抽出
 			.filter(record => record[COLUMN_INDEX_ORDER.indexOf(STATUS)] == WIKI_STATUS_HACCHU_KANRI.confirmed.value)
-			// key行（発注仕入先コード×入庫倉庫）を追加
-			.map(record => [...record, record[COLUMN_INDEX_ORDER.indexOf(MAKER_CODE)] + "," + record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)]])
+			// key行（発注仕入先ｺｰﾄﾞ×入庫倉庫）を追加
+			.map(record => [...record, record[COLUMN_INDEX_ORDER.indexOf(MAKER_CODE)] + "*" + record[COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)]])
 
-		// 発注仕入先コード×入庫倉庫ごとに分割
+		// 発注仕入先ｺｰﾄﾞ×入庫倉庫ごとに分割
 		let makerList = utilDivide2DArray(confirmedData, COLUMN_INDEX_ORDER.length)
-		let response = await Promise.all(makerList.map(record => {
-			// 仕入先コードを仕入先ResultIDに変換
+		let response = await Promise.all(makerList.map(async record => {
+			// 仕入先ｺｰﾄﾞを仕入先ResultIDに変換
 			let makerId = convertMakerCodeToResultId(record[0][COLUMN_INDEX_ORDER.indexOf(MAKER_CODE)])
-			// 入庫倉庫を倉庫コードに変換
+			// 入庫倉庫を倉庫ｺｰﾄﾞに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)])
 			return utilCreateAjax(
 				siteId = TABLE_ID_SHORUI_LOG
@@ -155,7 +161,7 @@ async function createFormat() {
 				, NumHash= {}
 				, DateHash= {}
 				, DescriptionHash= {
-					DescriptionA : utilConvert2DToCsv(record)
+					DescriptionA : utilConvert2DToCsv([[...header, "発注仕入先ｺｰﾄﾞ×入庫倉庫"], ...record])
 				}
 				, CheckHash = {
 					CheckA : true
@@ -182,8 +188,8 @@ async function createFormat() {
 
 		// 入庫倉庫ごとに分割
 		let soukoList = utilDivide2DArray(filledData, COLUMN_INDEX_ORDER.indexOf(IN_SOUKO))
-		let response = await Promise.all(soukoList.map(record => {
-			// 入庫倉庫を倉庫コードに変換
+		let response = await Promise.all(soukoList.map(async record => {
+			// 入庫倉庫を倉庫ｺｰﾄﾞに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)])
 			return utilCreateAjax(
 				siteId = TABLE_ID_SHORUI_LOG
@@ -195,7 +201,7 @@ async function createFormat() {
 				, NumHash= {}
 				, DateHash= {}
 				, DescriptionHash= {
-					DescriptionA : utilConvert2DToCsv(record)
+					DescriptionA : utilConvert2DToCsv([header, ...record])
 				}
 				, CheckHash = {
 					CheckA : true
@@ -220,8 +226,8 @@ async function createFormat() {
 
 		// 出庫倉庫ごとに分割
 		let soukoList = utilDivide2DArray(shippedData, COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO))
-		let response = await Promise.all(soukoList.map(record => {
-			// 出庫倉庫を倉庫コードに変換
+		let response = await Promise.all(soukoList.map(async record => {
+			// 出庫倉庫を倉庫ｺｰﾄﾞに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)])
 			return utilCreateAjax(
 				siteId = TABLE_ID_SHORUI_LOG
@@ -233,7 +239,7 @@ async function createFormat() {
 				, NumHash= {}
 				, DateHash= {}
 				, DescriptionHash= {
-					DescriptionA : utilConvert2DToCsv(record)
+					DescriptionA : utilConvert2DToCsv([header, ...record])
 				}
 				, CheckHash = {
 					CheckA : true
@@ -246,14 +252,6 @@ async function createFormat() {
 
 	function convertMakerCodeToResultId(makerCode) {
 		return makerIds[makerIds.map(v => v[COLUMN_INDEX_MAKER.indexOf(MAKER_CODE_M)]).indexOf(makerCode)][COLUMN_INDEX_MAKER.indexOf(RESULT_ID_M)]
-	}
-
-	function convertSoukoValueToIndex(value) {
-		for (let souko of Object.keys(WIKI_SOUKO_KB)) {
-			if (WIKI_SOUKO_KB[souko].value == value) {
-				return WIKI_SOUKO_KB[souko].index
-			}
-		}
 	}
 }
 

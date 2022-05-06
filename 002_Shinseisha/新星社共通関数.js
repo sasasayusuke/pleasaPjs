@@ -306,6 +306,10 @@ function utilQuerySelector (selector, all = false, dom) {
   return dom.querySelector(selector)
 }
 
+function utilGetControl (label) {
+    return utilIsNull($p.getControl(label).val()) ? $p.getControl(label)[0].innerHTML : $p.getControl(label).val()
+}
+
 /**
  * 登録APIを呼び出す関数です。
  */
