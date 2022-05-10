@@ -26,7 +26,7 @@ async function createFormat() {
 	// RPA実行ログテーブル
 	const COLUMN_INDEX_RPALOG = [
 		RESULT_ID
-		, FLOW_STATUS
+		, PROCESS_STATUS
 	] = [
 		"ResultId"
 		, "ClassB"
@@ -96,8 +96,12 @@ async function createFormat() {
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 
-	// RPAログ　フローステータス : "処理中"　のデータを抽出
-	let logId = logIds.filter(v => v[COLUMN_INDEX_RPALOG.indexOf(FLOW_STATUS)] == WIKI_STATUS_RPA_LOG.inprogress.value)[0][COLUMN_INDEX_RPALOG.indexOf(RESULT_ID)]
+	// RPAログ　プロセスステータス : "処理中"　のデータを抽出
+	logIds = logIds.filter(v => v[COLUMN_INDEX_RPALOG.indexOf(PROCESS_STATUS)] == WIKI_STATUS_RPA_LOG.inprogress.value)
+	if (utilIsNull(logIds)) {
+		utilSetMessage(message = 'RPA実行ログ処理中のデータが取得できませんでした。現状この機能はRPAからのみの実行を想定しています。', type = ERROR)
+	}
+	let logId = logIds[0][COLUMN_INDEX_RPALOG.indexOf(RESULT_ID)]
 
 	// 仕入先ｺｰﾄﾞとResultID変換用に取得
 	let makerIds = await utilExportAjax(
@@ -165,6 +169,7 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
+					, CheckB : true
 				}
 				, addFunc = ""
 			)
@@ -205,6 +210,7 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
+					, CheckB : true
 				}
 				, addFunc = ""
 			)
@@ -243,6 +249,7 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
+					, CheckB : true
 				}
 				, addFunc = ""
 			)

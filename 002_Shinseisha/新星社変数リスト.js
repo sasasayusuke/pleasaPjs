@@ -16,18 +16,18 @@ var TABLE_ID_RPA_LOG             = 70577
 var TABLE_ID_SHORUI_LOG          = 74199
 
 
-// フローID
+// プロセスID
 
-//仕入先マスタ同期
-var FLOW_ID_SHIIRESAKI_DOUKI        = 73996
-//商品マスタ同期
-var FLOW_ID_SHOUHIN_DOUKI           = 73998
-//SMILE連携
-var FLOW_ID_SMILE_RENKEI            = 73997
 //在庫数同期＆発注管理チケット作成
-var FLOW_ID_ZAIKO_DOUKI_AND_TICKET  = 73995
+var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 73995
+//SMILE連携
+var PROCESS_ID_SMILE_RENKEI            = 73997
 //月次出荷実績登録
-var FLOW_ID_SHUKKA_JISSEKI_TOUROKU  = 73994
+var PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 73994
+//仕入先マスタ同期
+var PROCESS_ID_SHIIRESAKI_DOUKI        = 73996
+//商品マスタ同期
+var PROCESS_ID_SHOUHIN_DOUKI           = 73998
 
 
 // 発注管理 連携ステータス
@@ -82,7 +82,7 @@ var WIKI_STATUS_HACCHU_KANRI  = {
     }
 }
 
-// RPA実行ログ フローステータス
+// RPA実行ログ プロセスステータス
 var WIKI_STATUS_RPA_LOG  = {
     inprogress: {
         index: 100,

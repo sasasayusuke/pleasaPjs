@@ -3,7 +3,7 @@ function processCheck(n) {
     console.log(n)
     // RPA実行ステータス確認
     $p.apiGet({
-        'id': FLOW_ID_SMILE_RENKEI,
+        'id': PROCESS_ID_SMILE_RENKEI,
         'done': function (data) {
             if (data.Response.Data[0].CheckA) {
                 // RPA実行中の場合はエラーメッセージ表示
