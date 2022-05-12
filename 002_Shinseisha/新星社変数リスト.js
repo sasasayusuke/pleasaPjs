@@ -15,7 +15,7 @@ var TABLE_ID_RPA_LOG             = 77797
 // 作成書類ログ
 var TABLE_ID_SHORUI_LOG          = 77794
 // 交換ペア
-var TABLE_ID_KKOUKAN_PAIR          = 81277
+var TABLE_ID_KKOUKAN_PAIR        = 81277
 
 
 
@@ -32,6 +32,21 @@ var PROCESS_ID_SHIIRESAKI_DOUKI        = 79913
 //商品マスタ同期
 var PROCESS_ID_SHOUHIN_DOUKI           = 79915
 
+// 仕入先情報 取引状態
+var WIKI_STATUS_TORIHIKI = {
+    inprogress: {
+        index: 100,
+        value: "取引中",
+        label: "取引中",
+        style: "status-inprogress"
+    }
+    , end: {
+        index: 900,
+        value: "取引終了",
+        label: "取引終了",
+        style: "status-closed"
+    }
+}
 
 // 発注管理 連携ステータス
 var WIKI_STATUS_HACCHU_KANRI  = {
@@ -144,7 +159,6 @@ var WIKI_SHORUI_FORMAT_KB = {
         index: 3,
         value: "メーカー発注書",
     }
-
 }
 function convertShoruiValueToIndex(value) {
     for (let shorui of Object.keys(WIKI_SHORUI_FORMAT_KB)) {

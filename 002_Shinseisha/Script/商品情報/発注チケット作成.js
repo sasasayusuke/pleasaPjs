@@ -2,7 +2,7 @@
 const COLUMN_INDEX = [
 	RESULT_ID
 	, SHOUHIN_CODE
-	, TORIHIKI_SHURYOU
+	, TORIHIKI_JOUTAI
 	, HAIBAN
 	, HACCHUU_SHIIRESAKI_CODE
 	, LEAD_TIME
@@ -29,7 +29,7 @@ const COLUMN_INDEX = [
 ] = [
 	"ResultId"
 	, $p.getColumnName("商品ｺｰﾄﾞ")
-	, $p.getColumnName("取引終了")
+	, "Class099~" + TABLE_ID_SHIIRESAKI + ",Class074"
 	, $p.getColumnName("廃番")
 	, $p.getColumnName("発注仕入先ｺｰﾄﾞ")
 	, $p.getColumnName("リードタイム")
@@ -87,8 +87,8 @@ async function createOrderTicket() {
 	 */
 	function extractData(records) {
 		records = records
-			// 取引終了　:　チェックなし
-			.filter(record => record[COLUMN_INDEX.indexOf(TORIHIKI_SHURYOU)] == '')
+			// 取引状態　:　取引中
+			.filter(record => record[COLUMN_INDEX.indexOf(TORIHIKI_JOUTAI)] == WIKI_STATUS_TORIHIKI.inprogress.value)
 			// 廃番　:　チェックなし
 			.filter(record => record[COLUMN_INDEX.indexOf(HAIBAN)] == '')
 			// 発注仕入先コード　:　入力あり

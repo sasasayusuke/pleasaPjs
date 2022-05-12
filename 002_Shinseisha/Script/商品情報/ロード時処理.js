@@ -5,4 +5,13 @@ $p.events.on_editor_load = function () {
 
 $p.events.on_grid_load = function () {
 	utilAddButton('createOrderTicket', '発注チケット作成', createOrderTicket)
+    window.setInterval(function() {
+        Array.from(document.querySelectorAll('td.invalidation span'))
+        .filter(v => v.classList.contains('ui-icon-circle-check'))
+        .forEach(v => {
+			if (!v.parentNode.parentNode.classList.contains('invalid')) {
+				v.parentNode.parentNode.classList.add('invalid')
+			}
+        })
+    }, 500)
 }
