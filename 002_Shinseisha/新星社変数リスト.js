@@ -1,33 +1,36 @@
 // テーブルID
 
 // 仕入先情報
-var TABLE_ID_SHIIRESAKI          = 70574
+var TABLE_ID_SHIIRESAKI          = 77796
 // 商品情報
-var TABLE_ID_SHOUHIN             = 70578
+var TABLE_ID_SHOUHIN             = 77795
 // 出荷実績
-var TABLE_ID_SHUKKA_JISSEKI      = 70572
+var TABLE_ID_SHUKKA_JISSEKI      = 77799
 // 発注管理
-var TABLE_ID_HACCHU_KANRI        = 70576
+var TABLE_ID_HACCHU_KANRI        = 77798
 // RPA実行状況
-var TABLE_ID_RPA_STATUS          = 70573
+var TABLE_ID_RPA_STATUS          = 77800
 // RPA実行ログ
-var TABLE_ID_RPA_LOG             = 70577
+var TABLE_ID_RPA_LOG             = 77797
 // 作成書類ログ
-var TABLE_ID_SHORUI_LOG          = 74199
+var TABLE_ID_SHORUI_LOG          = 77794
+// 交換ペア
+var TABLE_ID_KKOUKAN_PAIR          = 81277
+
 
 
 // プロセスID
 
 //在庫数同期＆発注管理チケット作成
-var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 73995
+var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 79912
 //SMILE連携
-var PROCESS_ID_SMILE_RENKEI            = 73997
+var PROCESS_ID_SMILE_RENKEI            = 79916
 //月次出荷実績登録
-var PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 73994
+var PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 79911
 //仕入先マスタ同期
-var PROCESS_ID_SHIIRESAKI_DOUKI        = 73996
+var PROCESS_ID_SHIIRESAKI_DOUKI        = 79913
 //商品マスタ同期
-var PROCESS_ID_SHOUHIN_DOUKI           = 73998
+var PROCESS_ID_SHOUHIN_DOUKI           = 79915
 
 
 // 発注管理 連携ステータス
@@ -129,18 +132,19 @@ function convertSoukoValueToIndex(value) {
 }
 // 作成書類ログ 書類フォーマット区分
 var WIKI_SHORUI_FORMAT_KB = {
-    order: {
+    in: {
         index: 1,
-        value: "メーカー発注書",
-    }
-    , in: {
-        index: 2,
         value: "入庫指示書",
     }
     , out: {
-        index: 3,
+        index: 2,
         value: "出庫指示書",
     }
+    , order: {
+        index: 3,
+        value: "メーカー発注書",
+    }
+
 }
 function convertShoruiValueToIndex(value) {
     for (let shorui of Object.keys(WIKI_SHORUI_FORMAT_KB)) {

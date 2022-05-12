@@ -138,7 +138,7 @@ async function createOrderTicket() {
 				// 全国閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0) {
 					// 入庫倉庫：九州
-					ticket.push(' 九州倉庫')
+					ticket.push(WIKI_SOUKO_KB.kyushu.value)
 					// 発注根拠
 					ticket.push(getOrderReason(r))
 					// 発注数量

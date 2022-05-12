@@ -60,15 +60,15 @@ async function download(id) {
     let name = ''
     if (shoruiFormatKb == WIKI_SHORUI_FORMAT_KB.order.index) {
         data = getOrderFormat()
-        name = '発注書_'
+        name = WIKI_SHORUI_FORMAT_KB.order.value
     } else if (shoruiFormatKb == WIKI_SHORUI_FORMAT_KB.in.index) {
         data = getInOutFormat()
-        name = '入庫指示書_'
+        name = WIKI_SHORUI_FORMAT_KB.in.value
     } else if (shoruiFormatKb == WIKI_SHORUI_FORMAT_KB.out.index) {
         data = getInOutFormat()
-        name = '出庫指示書_'
+        name = WIKI_SHORUI_FORMAT_KB.out.value
     }
-utilDownloadCsv(utilConvert2DToCsv(data), name + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+    utilDownloadCsv(utilConvert2DToCsv(data), name + '_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
     function getOrderFormat() {
         if (JSON.stringify(inputHeader) !== JSON.stringify(["ID", "発注仕入先ｺｰﾄﾞ", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス", "発注仕入先ｺｰﾄﾞ×入庫倉庫"])) {
@@ -129,7 +129,7 @@ utilDownloadCsv(utilConvert2DToCsv(data), name + utilGetDate(date = "", format =
             // 発注日付
             data.push(today)
             // 発注№
-            data.push(denpyouNo)
+            data.push("")
             // 行
             data.push(i++)
             // 仕入先ｺｰﾄﾞ
@@ -149,7 +149,7 @@ utilDownloadCsv(utilConvert2DToCsv(data), name + utilGetDate(date = "", format =
             // 納期
             data.push(utilGetControl("納期_発注"))
             // オーダー№
-            data.push(utilGetControl("オーダー№_発注"))
+            data.push(denpyouNo)
             // 倉庫ｺｰﾄﾞ
             data.push(soukoKb)
             // 商品ｺｰﾄﾞ
@@ -189,9 +189,9 @@ utilDownloadCsv(utilConvert2DToCsv(data), name + utilGetDate(date = "", format =
             // 行摘要ｺｰﾄﾞ
             data.push(utilGetControl("行摘要ｺｰﾄﾞ_発注"))
             // 行摘要１
-            data.push("行摘要１_発注")
+            data.push(utilGetControl("行摘要１_発注"))
             // 行摘要２
-            data.push("行摘要２_発注")
+            data.push(utilGetControl("行摘要２_発注"))
             // 備考ｺｰﾄﾞ
             data.push(utilGetControl("備考ｺｰﾄﾞ"))
             // 備考
