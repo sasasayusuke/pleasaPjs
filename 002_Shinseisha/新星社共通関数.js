@@ -214,6 +214,37 @@ function utilConvertCsvTo2D (csvData) {
   return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
 }
 
+/**
+ * 2次元配列 * 2次元配列 で left join する関数です。(比較する行はuniqueにしてください。)
+ * @param {Array} arr1 2次元配列
+ * @param {Array} arr2 2次元配列
+ * @param {Number} val 初期値
+ * @param {Number} arr1KeyIndex arr1の比較列
+ * @param {Number} arr2KeyIndex arr2の比較列
+ *
+ * @return {Array} 2次元配列
+ *
+ * 例. arr1 = [["T3B-12",5413,1879],    arr2 = [["SC133S","SC133L","2",true],      val = ""
+ *             ["TD-150",2858,8520],            ["SC144S","SC144L","2",true],
+ *             ["SC144S",2900,9696],            ["SC147S","SC147L","20",false]]
+ *             ["SC147S",1476,9144]]
+ *     　　　　                           ⇓
+ *            [["T3B-12",5413,1879,"","","",""],
+ *             ["TD-150",2858,8520,"","","",""],
+ *     　　　　 ["SC144S",2900,9696,"SC144S","SC144L","2",true],
+ *     　　　　 ["SC147S",1476,9144,"SC147S","SC147L","20",false]]
+ */
+function utilJoinLeft (arr1, arr2, val = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
+  let size = arr2[0].length
+  return arr1.map(v => {
+    let tmpArr = arr2.find(w => v[arr1KeyIndex] == w[arr2KeyIndex])
+    if (utilIsNull(tmpArr)) {
+      return v.concat(Array(size).fill(val))
+    } else {
+      return v.concat(tmpArr)
+    }
+  })
+}
 
 /**
  * m行n列の2次元配列を生成する関数です。
@@ -236,13 +267,46 @@ function utilGenerate2DArray (m, n, val = 0) {
 }
 
 /**
+ * 2次元配列の列を追加する関数です。
+ * @param {Array} d2array 2次元配列
+ * @param {Number} n 生成２次元配列列数
+ * @param {Number} val 初期値
+ *
+ * @return {Array} 生成２次元配列
+ *
+ *
+ * 例. d2array = [["74060", "60"]  n = 5, val = 10
+ *               ,["74063", "25"]
+ *               ,["74061", "15"]
+ *               ,["74058", "24"]
+ *               ,["74057", "47"]]
+ *  　　　　                   ⇓
+ *                [["74060", "60", 10, 10, 10]
+ *                ,["74063", "25", 10, 10, 10]
+ *                ,["74061", "15", 10, 10, 10]
+ *                ,["74058", "24", 10, 10, 10]
+ *                ,["74057", "47", 10, 10, 10]]
+ *
+ */
+function utilAddColumn (d2array, n, val = 0) {
+  let m = d2array.length
+  let arr = utilGenerate2DArray(m, n, val)
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (!utilIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
+    }
+  }
+  return arr
+}
+
+/**
  * 配列を分割する関数です。
  * @param {Array} array 配列
  *
  * @return {Array} 2次元配列
  *
  * 例. array = [1, 1, 2, 3, 3, 4, 1, 2, 3, 5, 5, 1, 2, 3, 5]
- *            ⇓
+ *                             ⇓
  * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
  */
 function utilDivideArray (array) {

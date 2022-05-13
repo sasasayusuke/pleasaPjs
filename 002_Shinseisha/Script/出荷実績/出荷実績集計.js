@@ -1,7 +1,6 @@
 
 const COLUMN_INDEX_ACHIEVEMENT = [
-	SHOUHIN_RESULT_ID
-	, SHOUHIN_CODE
+	SHOUHIN_CODE_A
 	, YEAR
 	, MONTH
 	, KYUSHU_SHUKKA_SUURYOU
@@ -9,14 +8,49 @@ const COLUMN_INDEX_ACHIEVEMENT = [
 	, HOKKAIDO_SHUKKA_SUURYOU
 	, DOUBLE_FLAG
 ] = [
-	"ClassA~" + TABLE_ID_SHOUHIN + ",ResultId"	// 商品マスタResultID
-	, $p.getColumnName("商品ｺｰﾄﾞ")
+	$p.getColumnName("商品ｺｰﾄﾞ")
 	, $p.getColumnName("年")
 	, $p.getColumnName("月")
 	, $p.getColumnName("九州出荷数量")
 	, $p.getColumnName("関東出荷数量")
 	, $p.getColumnName("北海道出荷数量")
 	, $p.getColumnName("重複無効フラグ")
+]
+
+const COLUMN_INDEX_TRADE = [
+	SHOUHIN_CODE_SALE
+	, SHOUHIN_CODE_ORDER
+	, KOUKAN_RATE
+	, INVALID
+] = [
+	"ClassA"
+	, "ClassB"
+	, "NumC"
+	, "CheckA"
+]
+
+const COLUMN_INDEX_ITEM = [
+	RESULT_ID
+	, SHOUHIN_CODE_I
+] = [
+	"ResultId"
+	, "ClassA"
+]
+
+const OUTPUT_HEADER = [
+	OUTPUT_SHOUHIN_CODE
+	, OUTPUT_JISSEKI_KYUSHU
+	, OUTPUT_JISSEKI_KANTO
+	, OUTPUT_JISSEKI_HOKKAIDO
+	, OUTPUT_KIKAN
+	, OUTPUT_KIKAN_PAIR
+] = [
+	"商品ｺｰﾄﾞ"
+	, "九州直近一年間出荷実績"
+	, "関東直近一年間出荷実績"
+	, "北海道直近一年間出荷実績"
+	, "出荷実績計測期間"
+	, "出荷実績計測期間(交換ペア)"
 ]
 
 async function sumAchievement() {
@@ -30,21 +64,51 @@ async function sumAchievement() {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	await checkDouble()
-	let records = await utilExportAjax(
+	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
 	)
 
-	records = utilConvertCsvTo2D(records.Response.Content)
-	let header = records.shift()
-	if (header.length !== COLUMN_INDEX_ACHIEVEMENT.length) {
-		console.log(header)
+	let data = extractData(achievements.Response.Content)
+
+	let trades = await utilExportAjax(
+		TABLE_ID_KOUKAN_PAIR
+		, COLUMN_INDEX_TRADE
+	)
+	data = exchangePair(data, trades.Response.Content)
+	let header = data.shift()
+
+	let itemRecords = await utilExportAjax(
+		TABLE_ID_SHOUHIN
+		, COLUMN_INDEX_ITEM
+	)
+	items = utilConvertCsvTo2D(itemRecords.Response.Content)
+	let itemHeader = items.shift()
+	if (itemHeader.length !== COLUMN_INDEX_ITEM.length) {
+		console.log(itemHeader)
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 	}
+	// Result ID を含んだ商品マスタと突合
+	let table = utilJoinLeft(items, data, val = 0, arr1KeyIndex = 1)
+	// 重複商品ｺｰﾄﾞ列削除
+	table = table.map(v => {
+		v.splice(COLUMN_INDEX_ITEM.length, 1)
+		return v
+	})
+	// ヘッダ生成
+	table.unshift(["ID", ...header])
+	utilDownloadCsv(utilConvert2DToCsv(table), '出荷実績集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
-	utilDownloadCsv(extractData(records), '出荷実績集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
-
-	function extractData(records) {
+	/**
+	 * 出荷実績を抽出する関数です。
+	 */
+	function extractData(achievementContent) {
+		let records = utilConvertCsvTo2D(achievementContent)
+		let header = records.shift()
+		if (header.length !== COLUMN_INDEX_ACHIEVEMENT.length) {
+			console.log(header)
+			utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
+		}
 		records = records
 			// 重複無効フラグ : チェックなし　のデータを抽出
 			.filter(record => record[COLUMN_INDEX_ACHIEVEMENT.indexOf(DOUBLE_FLAG)] == '')
@@ -65,41 +129,35 @@ async function sumAchievement() {
 				}
 			})
 		// 商品コードごとに分割
-		let shouhinList = utilDivide2DArray(records, COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID))
+		let shouhinList = utilDivide2DArray(records, COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A))
 
 		// 出荷実績集計作成処理
 		let table = []
 		// ヘッダー情報入力
-		table.push(["ID", "商品ｺｰﾄﾞ", "出荷実績計測期間", "九州直近一年間出荷実績", "関東直近一年間出荷実績", "北海道直近一年間出荷実績"])
+		table.push(OUTPUT_HEADER)
 
 		for (let codes of shouhinList) {
 			let record = []
 			let count = codes.length
-			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_RESULT_ID)])
-			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE)])
-			record.push(count)
+			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A)])
 			for (let place of [KYUSHU_SHUKKA_SUURYOU, KANTO_SHUKKA_SUURYOU, HOKKAIDO_SHUKKA_SUURYOU]) {
 				let amounts = codes.map(item => +item[COLUMN_INDEX_ACHIEVEMENT.indexOf(place)])
-				// 直近１２ヶ月以上の出荷実績がある場合（12ヶ月分の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
+				// 直近12ヶ月分の出荷実績が12ヶ月分分以上ある場合（12ヶ月分以上の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
 				if (count >= 12) {
 					amounts.splice(amounts.indexOf(Math.min.apply(null, amounts)), 1)
 					amounts.splice(amounts.indexOf(Math.max.apply(null, amounts)), 1)
-					console.log(codes)
-					if (count > 12) {
-						console.log("1年間のデータが13個以上あります。")
-					}
-				// その他の場合　
-				} else {
-					console.log("1年間のデータが11個以下しかありません。")
-					console.log(codes)
 				}
-
+				// 倉庫ごとの出荷実績
 				record.push(getAchievementAmount(amounts))
 			}
+			// 集計期間
+			record.push(count)
+			// 集計期間（交換ペア）
+			record.push(0)
 			table.push(record)
 		}
 
-		return utilConvert2DToCsv(table)
+		return table
 	}
 
 	/**
@@ -108,5 +166,64 @@ async function sumAchievement() {
 	 */
 	function getAchievementAmount(list) {
 		return Math.round(list.reduce((sum, val) => sum + val, 0) / list.length * 12)
+	}
+
+	/**
+	 * 交換ペアに登録された変換を行う
+	 */
+	function exchangePair (achievementData, tradeContent) {
+
+		// 無効化　:　チェックなし
+		let records = utilConvertCsvTo2D(tradeContent).filter(record => record[COLUMN_INDEX_TRADE.indexOf(INVALID)] == '')
+
+		let header = records.shift()
+		if (header.length !== COLUMN_INDEX_TRADE.length) {
+			console.log(header)
+			utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
+		}
+		let achievementHeader = achievementData.shift()
+
+		let keyIndex = achievementHeader.length
+
+		// left join
+		let mergeTable = utilJoinLeft(achievementData, records, "")
+
+		mergeTable = mergeTable
+			// 交換ペアに登録されたもの変換する
+			.map(v => {
+				if (utilIsNull(v[keyIndex])) {
+					return v.slice(0, keyIndex)
+				} else {
+					return [
+						v[keyIndex + COLUMN_INDEX_TRADE.indexOf(SHOUHIN_CODE_ORDER)]
+						, Math.ceil(v[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)] * v[keyIndex + COLUMN_INDEX_TRADE.indexOf(KOUKAN_RATE)])
+						, Math.ceil(v[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)] * v[keyIndex + COLUMN_INDEX_TRADE.indexOf(KOUKAN_RATE)])
+						, Math.ceil(v[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)] * v[keyIndex + COLUMN_INDEX_TRADE.indexOf(KOUKAN_RATE)])
+						, v[OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]
+						, v[OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]
+					]
+				}
+			})
+		mergeTable = utilDivide2DArray(mergeTable, 0)
+			.map(v => {
+				if (v.length > 2) {
+					utilSetMessage(message = '交換ペア突合エラー', type = ERROR)
+				} else if (v.length == 2) {
+					return [
+						v[0][OUTPUT_HEADER.indexOf(OUTPUT_SHOUHIN_CODE)]
+						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)]	+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)]
+						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)]		+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)]
+						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)]	+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)]
+						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]				+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]
+						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]		+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]
+					]
+				} else {
+					return v[0]
+				}
+			})
+
+		mergeTable.unshift(achievementHeader)
+		return mergeTable
+
 	}
 }
