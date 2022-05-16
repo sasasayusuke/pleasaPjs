@@ -1,0 +1,1 @@
+document.getElementById('Issues_Status').disable
