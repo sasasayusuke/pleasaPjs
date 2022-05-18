@@ -3,6 +3,7 @@ $p.events.on_editor_load = function () {
     utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
 	utilQuerySelector(".ui-icon.ui-icon-clock.current-time", true).forEach(v => v.remove())
 	utilQuerySelector(".ui-icon.ui-icon-person.current-user", true).forEach(v => v.remove())
+	controlReadOnly()
 	createFlow()
 
 }

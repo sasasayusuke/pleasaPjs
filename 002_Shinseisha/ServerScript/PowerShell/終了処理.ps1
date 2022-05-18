@@ -1,7 +1,10 @@
 
 Param(
     [Int] $processId,
-    [Int] $logId
+    [Int] $logId,
+    [string] $logMessage = "",
+    [boolean] $errorFlg = $False
+
 )
 
 try{
@@ -9,6 +12,11 @@ try{
     $key = "503b75c454115189579d41958da552068703cc4692cc0dbca3ecbe1a94a57bcaae26c7a6cd9af2a1fe946649b17da6d57a2c2aba09068294c39e627187b46adf"
     $ver = "1.1"
 
+    if ($errorFlg) {
+        $status = "999"
+    } else {
+        $status = "900"
+    }
     # プロセスID
     #在庫数同期＆発注管理チケット作成
     $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 104090
@@ -40,96 +48,59 @@ try{
         }
     }
 
-# 実行状況の実行中のレコードがないことを確認
+
+# 実行ログのレコード更新
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103333/get"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/"+ $logId +"/update"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
             ApiKey = $key
+            ClassHash = @{
+                ClassB = $status
+            }
+            DateHash = @{
+                DateB = $now
+            }
+            DescriptionHash = @{
+                DescriptionA = $logMessage
+            }
         } | ConvertTo-Json
         ContentType = 'application/json'
     }
 
     $post = Invoke-RestMethod @params
-
+    $post
     if ($post.StatusCode -ne 200) {
         return 1
     }
-    if ($post.Response.Data.CheckHash.CheckA.Contains($True)) {
-        return 2
-    }
-# 実行ログの処理中のレコードがないことを確認
+
+    # 実行状況のレコード更新
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103332/get"
-        Method = "POST"
-        Body = @{
-            ApiVersion = $ver
-            ApiKey = $key
-        } | ConvertTo-Json
-        ContentType = 'application/json'
-    }
-
-    $post = Invoke-RestMethod @params
-
-    if ($post.StatusCode -ne 200) {
-        return 3
-    }
-    if ($post.Response.Data.ClassHash.ClassB.Contains("100")) {
-        return 4
-    }
-
-# 実行状況のレコード更新
-    $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/104089/update"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $processId + "/update"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
             ApiKey = $key
             ClassHash = @{
-                ClassB = "1"
+                ClassB = ""
             }
             CheckHash = @{
-                CheckA = $True
+                CheckA = $False
             }
             DateHash = @{
-                DateA = $now
+                DateA = "1899-12-30T00:00:00"
             }
         } | ConvertTo-Json
         ContentType = 'application/json'
     }
 
     $post = Invoke-RestMethod @params
+    $post
     if ($post.StatusCode -ne 200) {
-        return 5
+        return 2
     }
-
-# 実行ログのレコード登録
-    $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103332/create"
-        Method = "POST"
-        Body = @{
-            ApiVersion = $ver
-            ApiKey = $key
-            ClassHash = @{
-                ClassA = $processId
-                ClassB = "100"
-                ClassC = "1"
-            }
-            DateHash = @{
-                DateA = $now
-            }
-        } | ConvertTo-Json
-        ContentType = 'application/json'
-    }
-
-    $post = Invoke-RestMethod @params
-
-
-    if ($post.StatusCode -ne 200) {
-        return 6
-    }
-    return $post.Id
+    return 0
 } catch {
     return 10
 }

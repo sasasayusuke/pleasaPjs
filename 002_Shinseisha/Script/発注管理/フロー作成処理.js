@@ -1,6 +1,8 @@
 function createFlow() {
+	let tekiyouKb = utilGetControl('適用区分')
+	let status = utilGetControl('連携ステータス')
     	// メーカー発注または倉庫間移動ではなければ終了
-	if (![WIKI_TEKIYOU_KB.order.index, WIKI_TEKIYOU_KB.move.index].includes(+$p.getControl('適用区分').val())) return
+	if (![WIKI_TEKIYOU_KB.order.value, WIKI_TEKIYOU_KB.move.value].includes(tekiyouKb)) return
 
 	let html = `
 		<div id="statusFlow" class="flow">
@@ -43,13 +45,13 @@ function createFlow() {
 	$("#CommentField").prepend(html)
 
 	let useStatus = []
-	if (+$p.getControl('適用区分').val() == WIKI_TEKIYOU_KB.order.index) {
+	if (tekiyouKb == WIKI_TEKIYOU_KB.order.value) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.confirmed
 			, WIKI_STATUS_HACCHU_KANRI.closed
 		]
-	} else if (+$p.getControl('適用区分').val() == WIKI_TEKIYOU_KB.move.index) {
+	} else if (tekiyouKb == WIKI_TEKIYOU_KB.move.value) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.preparing
@@ -63,7 +65,7 @@ function createFlow() {
 		let box = document.createElement("div")
 		box.classList.add("box")
 		box.innerHTML = stat.value
-		if ($p.getControl('Status')[0].innerHTML == stat.value) box.classList.add("state")
+		if (status == stat.value) box.classList.add("state")
 		document.getElementById("statusFlow").appendChild(box)
 	}
 }

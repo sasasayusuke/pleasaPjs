@@ -206,6 +206,7 @@ var WIKI_TEKIYOU_KB  = {
 //5,小物
 
 
-var NORMAL    = 'normal'
-var WARNING   = 'warning'
-var ERROR     = 'error'
+var NORMAL  = 'normal'
+var WARNING = 'warning'
+var ERROR   = 'error'
+var NEW     = 'new'

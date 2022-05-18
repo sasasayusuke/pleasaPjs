@@ -80,7 +80,7 @@ try{
 
 # 実行状況のレコード更新
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/104089/update"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $processId + "/update"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
