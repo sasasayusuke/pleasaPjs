@@ -122,6 +122,28 @@ var WIKI_STATUS_RPA_LOG  = {
     }
 }
 
+// 作成書類ログ 連携ステータス
+var WIKI_STATUS_FORMAT_LOG  = {
+    inprogress: {
+        index: 100,
+        value: "処理中",
+        label: "処理中",
+        style: "status-inprogress"
+    }
+    , normal: {
+        index: 900,
+        value: "連携成功",
+        label: "連携成功",
+        style: "status-closed"
+    }
+    , error: {
+        index: 999,
+        value: "連携失敗",
+        label: "連携失敗",
+        style: "status-rejected"
+    }
+}
+
 
 // 発注管理 倉庫区分
 var WIKI_SOUKO_KB  = {

@@ -206,16 +206,24 @@ async function sumAchievement() {
 			})
 		mergeTable = utilDivide2DArray(mergeTable, 0)
 			.map(v => {
-				if (v.length > 2) {
-					utilSetMessage(message = '交換ペア突合エラー', type = ERROR)
-				} else if (v.length == 2) {
+				if (v.length > 1) {
 					return [
 						v[0][OUTPUT_HEADER.indexOf(OUTPUT_SHOUHIN_CODE)]
-						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)]	+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)]
-						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)]		+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)]
-						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)]	+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)]
-						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]				+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]
-						, v[0][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]		+ v[1][OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]
+						, v.reduce((sum, elem) => {
+							return sum + elem[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KYUSHU)]
+						}, 0)
+						, v.reduce((sum, elem) => {
+							return sum + elem[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_KANTO)]
+						}, 0)
+						, v.reduce((sum, elem) => {
+							return sum + elem[OUTPUT_HEADER.indexOf(OUTPUT_JISSEKI_HOKKAIDO)]
+						}, 0)
+						, v.reduce((sum, elem) => {
+							return sum + elem[OUTPUT_HEADER.indexOf(OUTPUT_KIKAN)]
+						}, 0)
+						, v.reduce((sum, elem) => {
+							return sum + elem[OUTPUT_HEADER.indexOf(OUTPUT_KIKAN_PAIR)]
+						}, 0)
 					]
 				} else {
 					return v[0]

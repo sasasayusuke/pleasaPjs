@@ -169,7 +169,6 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
-					, CheckB : true
 				}
 				, addFunc = ""
 			)
@@ -210,7 +209,6 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
-					, CheckB : true
 				}
 				, addFunc = ""
 			)
@@ -249,7 +247,6 @@ async function createFormat() {
 				}
 				, CheckHash = {
 					CheckA : true
-					, CheckB : true
 				}
 				, addFunc = ""
 			)
