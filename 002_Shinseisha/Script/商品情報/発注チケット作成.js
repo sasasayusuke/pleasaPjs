@@ -181,7 +181,7 @@ async function createOrderTicket() {
 					ticketList.push(ticketCopy)
 				}
 			} else {
-			// チェック区分　:　チェックしない
+			// チェック区分　:　チェックしない　または　ブランク
 				continue
 			}
 		}

@@ -1,8 +1,8 @@
 function createFlow() {
-	let tekiyouKb = utilGetControl('適用区分')
+	let tekiyouKb = +utilGetControl('適用区分')
 	let status = utilGetControl('連携ステータス')
     	// メーカー発注または倉庫間移動ではなければ終了
-	if (![WIKI_TEKIYOU_KB.order.value, WIKI_TEKIYOU_KB.move.value].includes(tekiyouKb)) return
+	if (![WIKI_TEKIYOU_KB.order.index, WIKI_TEKIYOU_KB.move.index].includes(tekiyouKb)) return
 
 	let html = `
 		<div id="statusFlow" class="flow">
@@ -45,13 +45,13 @@ function createFlow() {
 	$("#CommentField").prepend(html)
 
 	let useStatus = []
-	if (tekiyouKb == WIKI_TEKIYOU_KB.order.value) {
+	if (tekiyouKb == WIKI_TEKIYOU_KB.order.index) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.confirmed
 			, WIKI_STATUS_HACCHU_KANRI.closed
 		]
-	} else if (tekiyouKb == WIKI_TEKIYOU_KB.move.value) {
+	} else if (tekiyouKb == WIKI_TEKIYOU_KB.move.index) {
 		useStatus = [
 			WIKI_STATUS_HACCHU_KANRI.waiting
 			, WIKI_STATUS_HACCHU_KANRI.preparing

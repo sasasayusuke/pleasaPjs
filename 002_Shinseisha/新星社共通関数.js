@@ -350,7 +350,6 @@ function utilDivide2DArray(d2array, index) {
   return list.filter(v => !utilIsNull(v))
 }
 
-
 /**
  * querySelectorを利用してHTMLエレメントを返却、複数取得した場合はNodeListをArrayに変換してから返却
  * @param {Array} selector セレクタ
@@ -370,6 +369,19 @@ function utilQuerySelector (selector, all = false, dom) {
   return dom.querySelector(selector)
 }
 
+/**
+ * 入力されたラベルに一致する項目を読取専用に変更または解除する。
+ * @param {String} label ラベル
+ * @param {Boolean} flg trueなら読取専用 falseなら読取解除
+ */
+function utilChangeReadOnly (label, flg = true) {
+  document.getElementById($p.tableName() + "_" + $p.getColumnName(label)).disabled = flg
+}
+
+/**
+ * 入力されたラベルに一致する項目の値を返却する。（エディタから読取専用にしないと正常動作しない場合があります。）
+ * @param {String} label ラベル
+ */
 function utilGetControl (label) {
     return utilIsNull($p.getControl(label).val()) ? $p.getControl(label)[0].innerHTML : $p.getControl(label).val()
 }

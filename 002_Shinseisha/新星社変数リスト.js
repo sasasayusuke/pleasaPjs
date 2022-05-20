@@ -212,10 +212,14 @@ var WIKI_TEKIYOU_KB  = {
     order: {
         index: 1,
         value: "メーカー発注",
+        label: "メーカー発注",
+        style: "status-preparation"
     }
     , move: {
         index: 2,
         value: "倉庫間移動",
+        label: "倉庫間移動",
+        style: "status-inprogress"
     }
 }
 
