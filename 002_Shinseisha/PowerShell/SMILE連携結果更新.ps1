@@ -1,5 +1,6 @@
 Param(
     [Int] $formatLogId,
+    [Int] $ticketId,
     [boolean] $errorFlg = $False
 )
 try{
@@ -12,7 +13,7 @@ try{
         $status = "900"
     }
 
-    # 実行状況のレコード更新
+    # 作成書類のステータス更新
     $params = @{
         Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $formatLogId + "/update"
         Method = "POST"

@@ -225,7 +225,7 @@ async function createFormat() {
 	async function createOutOperateFormat(records, logId) {
 		// 確認済のデータに絞る
 		let shippedData = records
-			// 発注管理連携ステータス : "出庫済" のデータを抽出
+			// 発注管理連携ステータス : "出荷済" のデータを抽出
 			.filter(record => record[COLUMN_INDEX_ORDER.indexOf(STATUS)] == WIKI_STATUS_HACCHU_KANRI.shipped.value)
 
 		// 出庫倉庫ごとに分割

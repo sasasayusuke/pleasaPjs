@@ -19,15 +19,15 @@ try{
     }
     # プロセスID
     #在庫数同期＆発注管理チケット作成
-    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 104090
+    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 332758
     #SMILE連携
-    $PROCESS_ID_SMILE_RENKEI            = 104087
+    $PROCESS_ID_SMILE_RENKEI            = 332755
     #月次出荷実績登録
-    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 104091
+    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 332754
     #仕入先マスタ同期
-    $PROCESS_ID_SHIIRESAKI_DOUKI        = 104089
+    $PROCESS_ID_SHIIRESAKI_DOUKI        = 332757
     #商品マスタ同期
-    $PROCESS_ID_SHOUHIN_DOUKI           = 104088
+    $PROCESS_ID_SHOUHIN_DOUKI           = 332756
     switch ($processId) {
         $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET {
             ##$processTitle = "在庫数同期＆発注管理チケット作成"
@@ -70,7 +70,6 @@ try{
     }
 
     $post = Invoke-RestMethod @params
-    $post
     if ($post.StatusCode -ne 200) {
         return 1
     }
@@ -96,7 +95,6 @@ try{
     }
 
     $post = Invoke-RestMethod @params
-    $post
     if ($post.StatusCode -ne 200) {
         return 2
     }

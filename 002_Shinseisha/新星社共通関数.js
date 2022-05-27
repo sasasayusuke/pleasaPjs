@@ -389,11 +389,11 @@ function utilGetControl (label) {
 /**
  * 登録APIを呼び出す関数です。
  */
-function utilCreateAjax(siteId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
+function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
-			url: "/api/items/" + siteId + "/create",
+			url: `/api/items/${tableId}/create`,
 			contentType: 'application/json',
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
@@ -427,7 +427,7 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
-			url: "/api/items/" + recordId + "/update",
+			url: `/api/items/${recordId}/update`,
 			contentType: 'application/json',
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
@@ -456,27 +456,40 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
 
 /**
  * 取得APIを呼び出す関数です。
+ *
+ * @param {String}    tableId 取得テーブルID
+ * @param {Array}     columns 取得列
+ * @param {Object}    filters フィルター条件
+ * @param {Boolean}   over trueなら超過分のみ取得
+ * @param {Boolean}   header trueならheaderも取得
+ * @param {String}    type csv か jsonを選択
+ * @param {Function}  addFunc trueなら読取専用 falseなら読取解除
  */
-function utilExportAjax (siteId, requests, header = true, type = "csv", addFunc) {
-  let req = []
-  requests.forEach(v => req.push({"ColumnName" : v}))
+function utilExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
+  let col = []
+  columns.forEach(v => col.push({"ColumnName" : v}))
+  if (utilIsNull(filters)) {
+    filters = {}
+  }
 
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
-			url: "/api/items/" + siteId + "/export",
+			url: `/api/items/${tableId}/export`,
 			contentType: 'application/json',
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
 				"Export": {
-					"Columns": req,
+					"Columns": col,
 					"Header": header,
 					"Type": type
 				},
 				"View": {
+          "Overdue": over,
 					"ColumnSorterHash": {
 						"ResultId": "asc"
 					},
+          "ColumnFilterHash": filters
 				}
 			})
 		}).then(

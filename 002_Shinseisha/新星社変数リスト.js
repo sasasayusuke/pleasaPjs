@@ -1,36 +1,36 @@
 // テーブルID
 
 // 仕入先情報
-var TABLE_ID_SHIIRESAKI         = 103337
+var TABLE_ID_SHIIRESAKI         = 332046
 // 商品情報
-var TABLE_ID_SHOUHIN            = 103336
+var TABLE_ID_SHOUHIN            = 332044
 // 出荷実績
-var TABLE_ID_SHUKKA_JISSEKI     = 103338
+var TABLE_ID_SHUKKA_JISSEKI     = 458426
 // 発注管理
-var TABLE_ID_HACCHU_KANRI       = 103334
+var TABLE_ID_HACCHU_KANRI       = 332039
 // RPA実行状況
-var TABLE_ID_RPA_STATUS         = 103333
+var TABLE_ID_RPA_STATUS         = 332041
 // RPA実行ログ
-var TABLE_ID_RPA_LOG            = 103332
+var TABLE_ID_RPA_LOG            = 332040
 // 作成書類ログ
-var TABLE_ID_SHORUI_LOG         = 103335
+var TABLE_ID_SHORUI_LOG         = 332045
 // 交換ペア
-var TABLE_ID_KOUKAN_PAIR        = 103339
+var TABLE_ID_KOUKAN_PAIR        = 332043
 
 
 
 // プロセスID
 
 //在庫数同期＆発注管理チケット作成
-var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 104090
+var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 332758
 //SMILE連携
-var PROCESS_ID_SMILE_RENKEI            = 104087
+var PROCESS_ID_SMILE_RENKEI            = 332755
 //月次出荷実績登録
-var PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 104091
+var PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 332754
 //仕入先マスタ同期
-var PROCESS_ID_SHIIRESAKI_DOUKI        = 104089
+var PROCESS_ID_SHIIRESAKI_DOUKI        = 332757
 //商品マスタ同期
-var PROCESS_ID_SHOUHIN_DOUKI           = 104088
+var PROCESS_ID_SHOUHIN_DOUKI           = 332756
 
 // 仕入先情報 取引状態
 var WIKI_STATUS_TORIHIKI = {

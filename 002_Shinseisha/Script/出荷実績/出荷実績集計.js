@@ -6,7 +6,6 @@ const COLUMN_INDEX_ACHIEVEMENT = [
 	, KYUSHU_SHUKKA_SUURYOU
 	, KANTO_SHUKKA_SUURYOU
 	, HOKKAIDO_SHUKKA_SUURYOU
-	, DOUBLE_FLAG
 ] = [
 	$p.getColumnName("商品ｺｰﾄﾞ")
 	, $p.getColumnName("年")
@@ -14,7 +13,6 @@ const COLUMN_INDEX_ACHIEVEMENT = [
 	, $p.getColumnName("九州出荷数量")
 	, $p.getColumnName("関東出荷数量")
 	, $p.getColumnName("北海道出荷数量")
-	, $p.getColumnName("重複無効フラグ")
 ]
 
 const COLUMN_INDEX_TRADE = [
@@ -63,10 +61,16 @@ async function sumAchievement() {
 	if ($p.siteId() !== TABLE_ID_SHUKKA_JISSEKI) {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
-	await checkDouble()
+
+	let date = new Date()
+	let now = utilGetDate(date,'YYYY-MM-DD')
+	// ３５０日後（閾値集計反映期間のデフォルト値）
+	let after = utilGetDate(date.setDate(date.getDate() + 350), 'YYYY-MM-DD')
+
 	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
+		, {"CompletionTime": `["${now}, ${after}"]`}
 	)
 
 	let data = extractData(achievements.Response.Content)
@@ -75,26 +79,33 @@ async function sumAchievement() {
 		TABLE_ID_KOUKAN_PAIR
 		, COLUMN_INDEX_TRADE
 	)
+
 	data = exchangePair(data, trades.Response.Content)
 	let header = data.shift()
 
-	let itemRecords = await utilExportAjax(
+	let items = await utilExportAjax(
 		TABLE_ID_SHOUHIN
 		, COLUMN_INDEX_ITEM
 	)
-	items = utilConvertCsvTo2D(itemRecords.Response.Content)
-	let itemHeader = items.shift()
+
+	let itemRecords = utilConvertCsvTo2D(items.Response.Content)
+
+	let itemHeader = itemRecords.shift()
+
 	if (itemHeader.length !== COLUMN_INDEX_ITEM.length) {
 		console.log(itemHeader)
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 	}
+
 	// Result ID を含んだ商品マスタと突合
-	let table = utilJoinLeft(items, data, val = 0, arr1KeyIndex = 1)
+	let table = utilJoinLeft(itemRecords, data, val = 0, arr1KeyIndex = 1)
+
 	// 重複商品ｺｰﾄﾞ列削除
 	table = table.map(v => {
 		v.splice(COLUMN_INDEX_ITEM.length, 1)
 		return v
 	})
+
 	// ヘッダ生成
 	table.unshift(["ID", ...header])
 	utilDownloadCsv(utilConvert2DToCsv(table), '出荷実績集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
@@ -110,24 +121,6 @@ async function sumAchievement() {
 			utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 		}
 		records = records
-			// 重複無効フラグ : チェックなし　のデータを抽出
-			.filter(record => record[COLUMN_INDEX_ACHIEVEMENT.indexOf(DOUBLE_FLAG)] == '')
-			// 直近一年間(先月から)　のデータを抽出
-			.filter(record => {
-				if (utilGetDate("","MM") == 1) {
-					// 1月の場合は、去年のデータだけ抽出
-					return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == (utilGetDate("","YYYY") - 1)
-				} else {
-					// その他の場合
-					if (record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == utilGetDate("","YYYY")) {
-						// 今年のデータであれば、先月以前を抽出
-						return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(MONTH)] < utilGetDate("","MM")
-					} else if (record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == (utilGetDate("","YYYY") - 1)) {
-						// 去年のデータであれば、今月以降を抽出
-						return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(MONTH)] >= utilGetDate("","MM")
-					}
-				}
-			})
 		// 商品コードごとに分割
 		let shouhinList = utilDivide2DArray(records, COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A))
 
@@ -142,7 +135,7 @@ async function sumAchievement() {
 			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A)])
 			for (let place of [KYUSHU_SHUKKA_SUURYOU, KANTO_SHUKKA_SUURYOU, HOKKAIDO_SHUKKA_SUURYOU]) {
 				let amounts = codes.map(item => +item[COLUMN_INDEX_ACHIEVEMENT.indexOf(place)])
-				// 直近12ヶ月分の出荷実績が12ヶ月分分以上ある場合（12ヶ月分以上の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
+				// 直近12ヶ月分の出荷実績が12ヶ月分ある場合（12ヶ月の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
 				if (count >= 12) {
 					amounts.splice(amounts.indexOf(Math.min.apply(null, amounts)), 1)
 					amounts.splice(amounts.indexOf(Math.max.apply(null, amounts)), 1)

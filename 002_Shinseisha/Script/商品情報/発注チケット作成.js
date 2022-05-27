@@ -98,7 +98,7 @@ async function createOrderTicket() {
 			// 最小ロット　:　1以上
 			.filter(record => record[COLUMN_INDEX.indexOf(MINIMUM_LOT)] >= 1)
 
-		// 発注管理テーブルに"確認待","確認済","出庫準備中","出荷済"のチケットがない商品
+		// 発注管理テーブルに"確認待","確認済","出荷準備中","出荷済"のチケットがない商品
 		let tmpObj = {}
 		records
 			.filter(record => {
@@ -112,7 +112,7 @@ async function createOrderTicket() {
 			.forEach(record => tmpObj[record[COLUMN_INDEX.indexOf(RESULT_ID)]] = record[COLUMN_INDEX.indexOf(SHOUHIN_CODE)])
 
 		records = records
-			// 発注管理連携ステータス : "確認待","確認済","出庫準備中","出庫済"　を持つ商品を排除
+			// 発注管理連携ステータス : "確認待","確認済","出荷準備中","出荷済"　を持つ商品を排除
 			.filter(record =>  !(record[COLUMN_INDEX.indexOf(RESULT_ID)] in tmpObj))
 			// ResultId重複削除
 			.filter((record, index, self) => self.map(item => item[COLUMN_INDEX.indexOf(RESULT_ID)]).indexOf(record[COLUMN_INDEX.indexOf(RESULT_ID)]) === index)
@@ -124,7 +124,6 @@ async function createOrderTicket() {
 		let date = new Date()
 		let now = utilGetDate(date)
 		let tommorow = utilGetDate(date.setDate(date.getDate() + 1))
-		tommorow
 		for (let r of records) {
 			let ticket = []
 			// 商品ｺｰﾄﾞ
@@ -191,7 +190,7 @@ async function createOrderTicket() {
 
 	/**
 	 * 発注数量を算出する関数です。
-	 * ( = （発注まで - 発注点） を 超える最小ロットの倍数)
+	 * ( = （ 発注点 - 発注まで） を 超える最小ロットの倍数)
 	 */
 	function getOrderAmount(orderPoint, toOrder, minimumLot) {
 		return Math.ceil((orderPoint - toOrder) / minimumLot) * minimumLot

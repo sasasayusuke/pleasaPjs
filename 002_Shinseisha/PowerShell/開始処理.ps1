@@ -3,22 +3,26 @@ Param(
     [Int] $processId
 )
 
-try{
     $now = Get-Date -Format "yyyy/MM/dd HH:mm:ss"
     $key = "503b75c454115189579d41958da552068703cc4692cc0dbca3ecbe1a94a57bcaae26c7a6cd9af2a1fe946649b17da6d57a2c2aba09068294c39e627187b46adf"
     $ver = "1.1"
 
+    # テーブルID
+    $TABLE_ID_STATUS_TABLE  = 332041
+    $TABLE_ID_STATUS_LOG    = 332040
+
     # プロセスID
     #在庫数同期＆発注管理チケット作成
-    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 104090
+    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 332758
     #SMILE連携
-    $PROCESS_ID_SMILE_RENKEI            = 104087
+    $PROCESS_ID_SMILE_RENKEI            = 332755
     #月次出荷実績登録
-    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 104091
+    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 332754
     #仕入先マスタ同期
-    $PROCESS_ID_SHIIRESAKI_DOUKI        = 104089
+    $PROCESS_ID_SHIIRESAKI_DOUKI        = 332757
     #商品マスタ同期
-    $PROCESS_ID_SHOUHIN_DOUKI           = 104088
+    $PROCESS_ID_SHOUHIN_DOUKI           = 332756
+
     switch ($processId) {
         $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET {
             ##$processTitle = "在庫数同期＆発注管理チケット作成"
@@ -41,7 +45,7 @@ try{
 
 # 実行状況の実行中のレコードがないことを確認
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103333/get"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $TABLE_ID_STATUS_TABLE + "/get"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
@@ -60,7 +64,7 @@ try{
     }
 # 実行ログの処理中のレコードがないことを確認
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103332/get"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $TABLE_ID_STATUS_LOG + "/get"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
@@ -105,7 +109,7 @@ try{
 
 # 実行ログのレコード登録
     $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/103332/create"
+        Uri = "https://shinseisha.sdt-autolabo.com/api/items/" + $TABLE_ID_STATUS_LOG + "/create"
         Method = "POST"
         Body = @{
             ApiVersion = $ver
@@ -129,6 +133,3 @@ try{
         return 6
     }
     return $post.Id
-} catch {
-    return 10
-}
