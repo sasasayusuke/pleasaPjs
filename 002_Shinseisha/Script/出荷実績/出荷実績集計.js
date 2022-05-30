@@ -70,7 +70,7 @@ async function sumAchievement() {
 	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
-		, {"CompletionTime": `["${now}, ${after}"]`}
+		, {"DateA": `["${now}, ${after}"]`}
 	)
 
 	let data = extractData(achievements.Response.Content)

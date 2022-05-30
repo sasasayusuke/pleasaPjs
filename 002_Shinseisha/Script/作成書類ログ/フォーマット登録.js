@@ -150,6 +150,8 @@ async function createFormat() {
 		// 発注仕入先ｺｰﾄﾞ×入庫倉庫ごとに分割
 		let makerList = utilDivide2DArray(confirmedData, COLUMN_INDEX_ORDER.length)
 		let response = await Promise.all(makerList.map(async record => {
+			// 発注管理ID
+			let orderId = record[0][COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)]
 			// 仕入先ｺｰﾄﾞを仕入先ResultIDに変換
 			let makerId = convertMakerCodeToResultId(record[0][COLUMN_INDEX_ORDER.indexOf(MAKER_CODE)])
 			// 入庫倉庫を倉庫ｺｰﾄﾞに変換
@@ -161,6 +163,7 @@ async function createFormat() {
 					, ClassE : logId
 					, ClassF : makerId
 					, ClassG : soukoKb
+					, ClassY : orderId
 				}
 				, NumHash= {}
 				, DateHash= {}
@@ -193,6 +196,8 @@ async function createFormat() {
 		// 入庫倉庫ごとに分割
 		let soukoList = utilDivide2DArray(filledData, COLUMN_INDEX_ORDER.indexOf(IN_SOUKO))
 		let response = await Promise.all(soukoList.map(async record => {
+			// 発注管理ID
+			let orderId = record[0][COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)]
 			// 入庫倉庫を倉庫ｺｰﾄﾞに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(IN_SOUKO)])
 			return utilCreateAjax(
@@ -201,6 +206,7 @@ async function createFormat() {
 					ClassD : WIKI_SHORUI_FORMAT_KB.in.index
 					, ClassE : logId
 					, ClassG : soukoKb
+					, ClassY : orderId
 				}
 				, NumHash= {}
 				, DateHash= {}
@@ -231,6 +237,8 @@ async function createFormat() {
 		// 出庫倉庫ごとに分割
 		let soukoList = utilDivide2DArray(shippedData, COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO))
 		let response = await Promise.all(soukoList.map(async record => {
+			// 発注管理ID
+			let orderId = record[0][COLUMN_INDEX_ORDER.indexOf(ISSUE_ID_ORDER)]
 			// 出庫倉庫を倉庫ｺｰﾄﾞに変換
 			let soukoKb = convertSoukoValueToIndex(record[0][COLUMN_INDEX_ORDER.indexOf(OUT_SOUKO)])
 			return utilCreateAjax(
@@ -239,6 +247,7 @@ async function createFormat() {
 					ClassD : WIKI_SHORUI_FORMAT_KB.out.index
 					, ClassE : logId
 					, ClassG : soukoKb
+					, ClassY : orderId
 				}
 				, NumHash= {}
 				, DateHash= {}

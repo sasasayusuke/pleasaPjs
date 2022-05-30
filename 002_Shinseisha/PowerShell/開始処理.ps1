@@ -8,20 +8,20 @@ Param(
     $ver = "1.1"
 
     # テーブルID
-    $TABLE_ID_STATUS_TABLE  = 332041
-    $TABLE_ID_STATUS_LOG    = 332040
+    $TABLE_ID_STATUS_TABLE  = 797739
+    $TABLE_ID_STATUS_LOG    = 797743
 
     # プロセスID
     #在庫数同期＆発注管理チケット作成
-    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 332758
+    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 798225
     #SMILE連携
-    $PROCESS_ID_SMILE_RENKEI            = 332755
+    $PROCESS_ID_SMILE_RENKEI            = 798224
     #月次出荷実績登録
-    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 332754
+    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 798223
     #仕入先マスタ同期
-    $PROCESS_ID_SHIIRESAKI_DOUKI        = 332757
+    $PROCESS_ID_SHIIRESAKI_DOUKI        = 798226
     #商品マスタ同期
-    $PROCESS_ID_SHOUHIN_DOUKI           = 332756
+    $PROCESS_ID_SHOUHIN_DOUKI           = 798227
 
     switch ($processId) {
         $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET {
@@ -127,7 +127,6 @@ Param(
     }
 
     $post = Invoke-RestMethod @params
-
 
     if ($post.StatusCode -ne 200) {
         return 6
