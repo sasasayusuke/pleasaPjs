@@ -508,3 +508,46 @@ function utilExportAjax (tableId, columns, filters, over = false, header = true,
 		)
 	})
 }
+
+/**
+ * ユーザー取得APIを呼び出す関数です。
+ *
+ * @param {Array}     userIds 取得UserId
+ * @param {Function}  addFunc trueなら読取専用 falseなら読取解除
+ */
+function utilExportUserAjax (userIds, addFunc) {
+  let users
+  if (Array.isArray(userIds)) {
+    users = userIds
+  } else {
+    users = [userIds]
+  }
+	return new Promise((resolve, reject) => {
+		$.ajax({
+			type: "POST",
+			url: "/api/users/get",
+			contentType: 'application/json',
+			data:JSON.stringify({
+				"ApiVersion": 1.1,
+				"View": {
+          "ColumnFilterHash": {
+            "UserId" : JSON.stringify(users)
+          }
+				}
+			})
+		}).then(
+			function (result) {
+        if (addFunc && typeof addFunc === 'function') {
+          // 渡されたオブジェクトが関数なら実行する
+          addFunc(data)
+        }
+				// 正常終了
+				resolve(result);
+			},
+			function () {
+				// エラー
+				reject()
+			}
+		)
+	})
+}

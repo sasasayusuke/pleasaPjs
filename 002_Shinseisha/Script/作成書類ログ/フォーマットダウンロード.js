@@ -47,6 +47,8 @@ async function download(id) {
         , addFunc = ""
     )
 
+    let userCodeJson = await utilExportUserAjax($p.userId())
+    let userCode = userCodeJson.Response.Data[0].UserCode
     let inputData = utilConvertCsvTo2D(utilGetControl("取込情報"))
     let inputHeader = inputData.shift()
     let today = utilGetDate("", "YYYYMMDD")
@@ -139,7 +141,7 @@ async function download(id) {
             // 仕入先名２
             data.push("")
             // 担当者ｺｰﾄﾞ
-            data.push("13")
+            data.push(userCode)
             // 買掛区分
             data.push(utilGetControl("買掛区分_発注"))
             // 取引区分
