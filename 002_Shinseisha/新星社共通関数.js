@@ -463,7 +463,7 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
  * @param {Boolean}   over trueなら超過分のみ取得
  * @param {Boolean}   header trueならheaderも取得
  * @param {String}    type csv か jsonを選択
- * @param {Function}  addFunc trueなら読取専用 falseなら読取解除
+ * @param {Function}  addFunc 最後に実行したい関数
  */
 function utilExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
   let col = []
@@ -513,7 +513,7 @@ function utilExportAjax (tableId, columns, filters, over = false, header = true,
  * ユーザー取得APIを呼び出す関数です。
  *
  * @param {Array}     userIds 取得UserId
- * @param {Function}  addFunc trueなら読取専用 falseなら読取解除
+ * @param {Function}  addFunc 最後に実行したい関数
  */
 function utilExportUserAjax (userIds, addFunc) {
   let users
