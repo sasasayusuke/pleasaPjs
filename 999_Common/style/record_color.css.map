@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAEA,AACC,EADC,AAAA,SAAS,AACT,OAAO,CAAC;EACR,gBAAgB,EAAC,OAAO;CACxB;;AAHF,AAIC,EAJC,AAAA,SAAS,AAIT,QAAQ,CAAA;EACR,gBAAgB,EAAC,OAAO;CACxB",
-    "sources": [
-        "record_color.scss"
-    ],
-    "names": [],
-    "file": "record_color.css"
-}

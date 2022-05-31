@@ -1,12 +1,14 @@
-
 Param(
     [Int] $processId,
     [Int] $logId,
     [string] $logMessage = "",
     [boolean] $errorFlg = $False
-
 )
 
+Add-Type -AssemblyName "System.Web"
+$error.Clear()
+
+trap [Net.WebException] { continue; }
 try{
     $now = Get-Date -Format "yyyy/MM/dd HH:mm:ss"
     $key = "503b75c454115189579d41958da552068703cc4692cc0dbca3ecbe1a94a57bcaae26c7a6cd9af2a1fe946649b17da6d57a2c2aba09068294c39e627187b46adf"
@@ -48,28 +50,30 @@ try{
         }
     }
 
-
-# 実行ログのレコード更新
-    $params = @{
-        Uri = "https://shinseisha.sdt-autolabo.com/api/items/"+ $logId +"/update"
-        Method = "POST"
-        Body = @{
-            ApiVersion = $ver
-            ApiKey = $key
-            ClassHash = @{
-                ClassB = $status
-            }
-            DateHash = @{
-                DateB = $now
-            }
-            DescriptionHash = @{
-                DescriptionA = $logMessage
-            }
-        } | ConvertTo-Json
-        ContentType = 'application/json'
+    # 実行ログのレコード更新
+    $Uri = "https://shinseisha.sdt-autolabo.com/api/items/"+ $logId +"/update"
+    $Method = "POST"
+    $json = @{
+        ApiVersion = $ver
+        ApiKey = $key
+        ClassHash = @{
+            ClassB = $status
+        }
+        DateHash = @{
+            DateB = $now
+        }
+        DescriptionHash = @{
+            DescriptionA = $logMessage
+        }
     }
 
-    $post = Invoke-RestMethod @params
+
+    $requestBody = $json | ConvertTo-Json -Depth 2
+
+    $convertBody = [System.Text.Encoding]::UTF8.GetBytes($requestBody)
+
+    $post = Invoke-RestMethod -Uri $Uri -ContentType "application/json" -Method $Method -Body ${convertBody}
+
     if ($post.StatusCode -ne 200) {
         return 1
     }
