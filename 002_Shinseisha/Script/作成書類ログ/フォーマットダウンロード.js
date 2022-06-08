@@ -73,7 +73,7 @@ async function download(id) {
     utilDownloadCsv(utilConvert2DToCsv(data), name + '_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
     function getOrderFormat() {
-        if (JSON.stringify(inputHeader) !== JSON.stringify(["ID", "発注仕入先ｺｰﾄﾞ", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス", "発注仕入先ｺｰﾄﾞ×入庫倉庫"])) {
+        if (JSON.stringify(inputHeader) !== JSON.stringify(["ID", "発注仕入先ｺｰﾄﾞ", "単位", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス", "発注仕入先ｺｰﾄﾞ×入庫倉庫"])) {
             console.log(inputHeader)
             utilSetMessage(message = "取込情報項目の入力内容が不正です。", type = ERROR)
         }
@@ -161,7 +161,7 @@ async function download(id) {
             // 数量
             data.push(line[inputHeader.indexOf("発注数量")])
             // 数量単位
-            data.push("")
+            data.push(line[inputHeader.indexOf("単位")])
             // 単価
             data.push(line[inputHeader.indexOf("標準仕入単価")])
             // 金額
@@ -276,7 +276,7 @@ async function download(id) {
             //数量
             data.push(line[inputHeader.indexOf("発注数量")])
             //数量単位
-            data.push("")
+            data.push(line[inputHeader.indexOf("単位")])
             //単価
             data.push(utilGetControl("単価_入出庫"))
             //金額

@@ -22,7 +22,7 @@ function addDownloadButton() {
     console.log('addDownloadButton');
     if (document.getElementById("ExcelDownload") == null) {
         $("#MainCommands button:last-child").after(
-            $('<button id="ExcelDownload" onclick="downloadExcel();" data-action="Update" data-method="put" class="validate ">合計請求明細書出力</button>').button(
+            $('<button id="ExcelDownload" onclick="downloadExcel();" data-action="Update" data-method="put" class="validate ">先行依頼書出力</button>').button(
                 { icon: 'ui-icon-disk' }
             )
         );
@@ -92,7 +92,6 @@ async function getExcel(guid, filename) {
     const res = await axios.get(URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" });
     const data = new Uint8Array(res.data);
     const workbook = new ExcelJS.Workbook();
-    //const filename = "車輛管理表"
 
     await workbook.xlsx.load(data);
     const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME);
@@ -100,7 +99,6 @@ async function getExcel(guid, filename) {
     console.log('"[' + $p.selectedIds() + ']"')
 
     worksheet.name = filename
-    //    workbook.removeWorksheet(settingsheet.id)
 
     $p.apiGet({
         'id': $p.siteId(),

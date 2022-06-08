@@ -4,6 +4,7 @@ async function createFormat() {
 	const COLUMN_INDEX_ORDER = [
 		ISSUE_ID_ORDER
 		, MAKER_CODE
+		, ORDER_UNIT
 		, SHOUHIN_CODE
 		, SHOUHIN_NAME
 		, HYOUJUN_SHIIRE_TANKA
@@ -14,6 +15,7 @@ async function createFormat() {
 	] = [
 		"IssueId"
 		, "ClassA~" + TABLE_ID_SHOUHIN + ",Class099"// 発注仕入先ｺｰﾄﾞ
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",ClassG"// 発注単位
 		, "ClassA"
 		, "ClassA~" + TABLE_ID_SHOUHIN + ",DescriptionA"// 商品名
 		, "ClassA~" + TABLE_ID_SHOUHIN + ",Num018"// 標準仕入単価
