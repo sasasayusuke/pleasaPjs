@@ -8,21 +8,20 @@ Param(
     $ver = "1.1"
 
     # テーブルID
-    $TABLE_ID_STATUS_TABLE  = 797739
-    $TABLE_ID_STATUS_LOG    = 797743
+    $TABLE_ID_STATUS_TABLE  = 1190125
+    $TABLE_ID_STATUS_LOG    = 1190127
 
     # プロセスID
     #在庫数同期＆発注管理チケット作成
-    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 798225
+    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 1190295
     #SMILE連携
-    $PROCESS_ID_SMILE_RENKEI            = 798224
+    $PROCESS_ID_SMILE_RENKEI            = 1190298
     #月次出荷実績登録
-    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 798223
+    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 1190299
     #仕入先マスタ同期
-    $PROCESS_ID_SHIIRESAKI_DOUKI        = 798226
+    $PROCESS_ID_SHIIRESAKI_DOUKI        = 1190296
     #商品マスタ同期
-    $PROCESS_ID_SHOUHIN_DOUKI           = 798227
-
+    $PROCESS_ID_SHOUHIN_DOUKI           = 1190297
     switch ($processId) {
         $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET {
             ##$processTitle = "在庫数同期＆発注管理チケット作成"
