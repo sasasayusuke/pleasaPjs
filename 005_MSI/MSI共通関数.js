@@ -393,7 +393,7 @@ function utilGetControl (label) {
 /**
  * 登録APIを呼び出す関数です。
  */
-function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
+function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, status = "0", addFunc) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
@@ -401,6 +401,7 @@ function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, Desc
 			contentType: 'application/json',
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
+        Status: status,
         ClassHash,
         NumHash,
         DateHash,
@@ -427,7 +428,7 @@ function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, Desc
 /**
  * 更新APIを呼び出す関数です。
  */
-function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
+function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, status = "0", addFunc) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
@@ -435,6 +436,7 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
 			contentType: 'application/json',
 			data:JSON.stringify({
 				"ApiVersion": 1.1,
+        Status: status,
         ClassHash,
         NumHash,
         DateHash,

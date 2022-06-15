@@ -1,8 +1,6 @@
-const SETTING_SHEET_NAME = "setting"
-const TEMPLATE_SHEET_NAME = "template"
-const URL = "https://ssj-pleasanterdev-sv.sdt-test.work"
-const FORMAT_TABLE_ID = 32430
-const FORMAT_ID = "1"
+//const URL = "https://ssj-pleasanterdev-sv.sdt-test.work"
+//const FORMAT_TABLE_ID = 32430
+//const FORMAT_ID = "1"
 
 var div = document.getElementById('MainCommandsContainer');
 var mo = new MutationObserver(function() {
@@ -89,7 +87,7 @@ function downloadExcel() {
 
 async function getExcel(guid, filename) {
 
-    const res = await axios.get(URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" });
+    const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" });
     const data = new Uint8Array(res.data);
     const workbook = new ExcelJS.Workbook();
 

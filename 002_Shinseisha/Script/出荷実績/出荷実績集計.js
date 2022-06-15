@@ -64,8 +64,8 @@ async function sumAchievement() {
 
 	let date = new Date()
 	let now = utilGetDate(date,'YYYY-MM-DD')
-	// ３５０日後（閾値集計反映期間のデフォルト値）
-	let after = utilGetDate(date.setDate(date.getDate() + 350), 'YYYY-MM-DD')
+	// 380日後（閾値集計反映期間のデフォルト値）
+	let after = utilGetDate(date.setDate(date.getDate() + 380), 'YYYY-MM-DD')
 
 	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI

@@ -9,6 +9,8 @@ async function download(id) {
         "ClassA"
 		, "DescriptionA"
 	]
+    const order_headers = ["ID", "発注仕入先ｺｰﾄﾞ", "単位", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス", "発注仕入先ｺｰﾄﾞ×入庫倉庫"]
+    const inout_headers = ["ID", "発注仕入先ｺｰﾄﾞ", "単位", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス"]
 
     let ans = window.confirm("フォーマットダウンロードを開始しますか?")
 	if (!ans) {
@@ -73,7 +75,7 @@ async function download(id) {
     utilDownloadCsv(utilConvert2DToCsv(data), name + '_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
     function getOrderFormat() {
-        if (JSON.stringify(inputHeader) !== JSON.stringify(["ID", "発注仕入先ｺｰﾄﾞ", "単位", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス", "発注仕入先ｺｰﾄﾞ×入庫倉庫"])) {
+        if (JSON.stringify(inputHeader) !== JSON.stringify(order_headers)) {
             console.log(inputHeader)
             utilSetMessage(message = "取込情報項目の入力内容が不正です。", type = ERROR)
         }
@@ -220,7 +222,7 @@ async function download(id) {
         return outputData
     }
     function getInOutFormat() {
-        if (JSON.stringify(inputHeader) !== JSON.stringify(["ID", "発注仕入先ｺｰﾄﾞ", "商品ｺｰﾄﾞ", "商品名", "標準仕入単価", "入庫倉庫", "出庫倉庫", "発注数量", "連携ステータス"])) {
+        if (JSON.stringify(inputHeader) !== JSON.stringify(inout_headers)) {
             console.log(inputHeader)
             utilSetMessage(message = "取込情報項目の入力内容が不正です。", type = ERROR)
         }
