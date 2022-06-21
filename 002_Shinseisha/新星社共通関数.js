@@ -370,6 +370,14 @@ function utilQuerySelector (selector, all = false, dom) {
 }
 
 /**
+ * 入力されたラベルのIDを返却する。
+ * @param {String} label ラベル
+ */
+function utilGetId (label) {
+  return $p.tableName() + "_" + $p.getColumnName(label)
+}
+
+/**
  * 入力されたラベルに一致する項目を読取専用に変更または解除する。
  * @param {String} label ラベル
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除

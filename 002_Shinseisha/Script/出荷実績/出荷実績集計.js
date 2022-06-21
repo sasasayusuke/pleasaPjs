@@ -3,9 +3,9 @@ const COLUMN_INDEX_ACHIEVEMENT = [
 	SHOUHIN_CODE_A
 	, YEAR
 	, MONTH
-	, KYUSHU_SHUKKA_SUURYOU
-	, KANTO_SHUKKA_SUURYOU
-	, HOKKAIDO_SHUKKA_SUURYOU
+	, SHUKKA_SUURYOU_KYUSHU
+	, SHUKKA_SUURYOU_KANTO
+	, SHUKKA_SUURYOU_HOKKAIDO
 ] = [
 	$p.getColumnName("商品ｺｰﾄﾞ")
 	, $p.getColumnName("年")
@@ -63,14 +63,15 @@ async function sumAchievement() {
 	}
 
 	let date = new Date()
-	let now = utilGetDate(date,'YYYY-MM-DD')
-	// 380日後（閾値集計反映期間のデフォルト値）
-	let after = utilGetDate(date.setDate(date.getDate() + 380), 'YYYY-MM-DD')
+	// 15日前（計測期間過ぎてから15日までは取得する）
+	let before = utilGetDate(date.setDate(date.getDate() - 15), 'YYYY-MM-DD')
+	// 365日後（閾値集計反映期間のデフォルト値）
+	let after = utilGetDate(date.setDate(date.getDate() + 365), 'YYYY-MM-DD')
 
 	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
-		, {"DateA": `["${now}, ${after}"]`}
+		, {"DateA": `["${before}, ${after}"]`}
 	)
 
 	let data = extractData(achievements.Response.Content)
@@ -133,7 +134,7 @@ async function sumAchievement() {
 			let record = []
 			let count = codes.length
 			record.push(codes[0][COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A)])
-			for (let place of [KYUSHU_SHUKKA_SUURYOU, KANTO_SHUKKA_SUURYOU, HOKKAIDO_SHUKKA_SUURYOU]) {
+			for (let place of [SHUKKA_SUURYOU_KYUSHU, SHUKKA_SUURYOU_KANTO, SHUKKA_SUURYOU_HOKKAIDO]) {
 				let amounts = codes.map(item => +item[COLUMN_INDEX_ACHIEVEMENT.indexOf(place)])
 				// 直近12ヶ月分の出荷実績が12ヶ月分ある場合（12ヶ月の各倉庫在庫合計 - 各倉庫売上最大値 - 各倉庫売上最小値）
 				if (count >= 12) {

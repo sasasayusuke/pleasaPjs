@@ -39,7 +39,7 @@ $p.events.on_editor_load = function () {
     $('#Application').append(html)
     let status = utilGetControl('状況')
     // 納品待
-    if (status =="250") {
+    if (status =="200") {
         utilAddButton('openDialog', '納品', openDialog)
     }
 

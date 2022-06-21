@@ -3,11 +3,289 @@ $p.events.on_editor_load = function () {
     utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
 	utilQuerySelector(".ui-icon.ui-icon-clock.current-time", true).forEach(v => v.remove())
 	utilQuerySelector(".ui-icon.ui-icon-person.current-user", true).forEach(v => v.remove())
+	changeWarehouse()
+	document.getElementById(utilGetId("入庫倉庫")).onchange = changeWarehouse
 	controlReadOnly()
 	createFlow()
-
+	// 発注根拠色付け
+	Array.from(document.querySelectorAll('div.zangetsu'))
+		.filter(v => +v.querySelector('span').innerHTML <= 1)
+		.forEach(v => v.classList.add('red'))
 }
 
 $p.events.on_grid_load = function () {
 	utilAddButton('sumMove', '移動残集計', sumMove)
+	// セット秒ごとに実行
+    window.setInterval(function() {
+		// 発注根拠色付け
+		Array.from(document.querySelectorAll('td.zangetsu'))
+			.filter(v => +v.innerHTML <= 1)
+			.forEach(v => v.classList.add('red'))
+		let elemView = document.getElementById("ViewSelector")
+		let elemRecords = document.getElementsByClassName("AddRecord")
+		if (elemView.value !== "") return
+		if (elemRecords.length == 2) return
+		if (elemRecords.length > 2) {
+			// 追加ヘッダーの掃除
+			Array.from(elemRecords).forEach(v => v.remove())
+			Array.from(document.querySelectorAll("#Grid thead"))
+				.filter(v => v.innerHTML.replaceAll("\t", "").replaceAll("\n", "") == "")
+				.forEach(v => v.remove())
+		}
+		createHeader()
+    }, 100)
+}
+
+// 倉庫の変更
+function changeWarehouse () {
+	let tekiyou = +$p.getControl("適用区分").val()
+	let place = +$p.getControl("入庫倉庫").val()
+	if (tekiyou == WIKI_TEKIYOU_KB.move.index) {
+		if (place == WIKI_SOUKO_KB.kanto.index) {
+			$p.set($p.getControl('出庫倉庫'), WIKI_SOUKO_KB.kyushu.index)
+		} else if (place == WIKI_SOUKO_KB.kyushu.index) {
+			$p.set($p.getControl('出庫倉庫'), WIKI_SOUKO_KB.kanto.index)
+		} else {
+			$p.set($p.getControl('出庫倉庫'), "")
+		}
+	}
+}
+
+// フローチャートを作成
+function createFlow() {
+	let tekiyouKb = +utilGetControl('適用区分')
+	let status = utilGetControl('連携ステータス')
+    	// メーカー発注または倉庫間移動ではなければ終了
+	if (![WIKI_TEKIYOU_KB.order.index, WIKI_TEKIYOU_KB.move.index].includes(tekiyouKb)) return
+
+	let html = `
+		<div id="statusFlow" class="flow">
+		</div>
+		<style>
+			.flow {
+				margin: 0 auto 50px;
+			}
+			.flow .box.state {
+				background-color: red;
+				color: white;
+			}
+			.flow .box {
+				margin: 0 auto 33px;
+				width: 66%;
+				text-align: center;
+				padding: 10px;
+				border: 3px solid #326E93;
+				-webkit-border-radius: 5px;
+				border-radius: 5px;
+				position: relative;
+				font-weight: bold; /* テキストの指定 */
+				background-color: cornsilk
+			}
+			.flow .box:after {
+				border-top: 20px solid #FFC300;
+				border-left: 50px solid transparent;
+				border-right: 50px solid transparent;
+				content: "";
+				position: absolute;
+				bottom: -28px; /* 三角形の高さ＋ボックスのボーダーをマイナスに */
+				margin-left: -70px; /* 中央寄せに使用 */
+				left: 180px;
+			}
+
+			.flow .box:last-child:after {
+				border: none; /* 最後のボックスだけ三角形を表示しない */
+			}
+		</style>`
+	$("#CommentField").prepend(html)
+
+	let useStatus = []
+	if (tekiyouKb == WIKI_TEKIYOU_KB.order.index) {
+		useStatus = [
+			WIKI_STATUS_HACCHU_KANRI.waiting
+			, WIKI_STATUS_HACCHU_KANRI.confirmed
+			, WIKI_STATUS_HACCHU_KANRI.closed
+		]
+	} else if (tekiyouKb == WIKI_TEKIYOU_KB.move.index) {
+		useStatus = [
+			WIKI_STATUS_HACCHU_KANRI.waiting
+			, WIKI_STATUS_HACCHU_KANRI.preparing
+			, WIKI_STATUS_HACCHU_KANRI.shipped
+			, WIKI_STATUS_HACCHU_KANRI.moving
+			, WIKI_STATUS_HACCHU_KANRI.filled
+			, WIKI_STATUS_HACCHU_KANRI.closed
+		]
+	}
+	for (let stat of useStatus) {
+		let box = document.createElement("div")
+		box.classList.add("box")
+		box.innerHTML = stat.value
+		if (status == stat.value) box.classList.add("state")
+		document.getElementById("statusFlow").appendChild(box)
+	}
+}
+
+// 読み取り制御
+function controlReadOnly () {
+    let status = utilGetControl('連携ステータス')
+    switch (status) {
+        case WIKI_STATUS_HACCHU_KANRI.waiting.value:
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            // 新規作成でない場合は、商品ｺｰﾄﾞを読み取り専用にする。
+            if ($p.action() !== NEW) {
+                utilChangeReadOnly('商品ｺｰﾄﾞ')
+            }
+            break
+        case WIKI_STATUS_HACCHU_KANRI.confirmed.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        case WIKI_STATUS_HACCHU_KANRI.preparing.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+
+            break
+        case WIKI_STATUS_HACCHU_KANRI.shipped.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        case WIKI_STATUS_HACCHU_KANRI.moving.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        case WIKI_STATUS_HACCHU_KANRI.filled.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        case WIKI_STATUS_HACCHU_KANRI.closed.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('倉庫移動補充担当者')
+            utilChangeReadOnly('倉庫移動補充日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        case WIKI_STATUS_HACCHU_KANRI.error.value:
+            utilChangeReadOnly('商品ｺｰﾄﾞ')
+            utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('発注数量')
+            utilChangeReadOnly('出庫倉庫')
+            utilChangeReadOnly('適用区分')
+            utilChangeReadOnly('倉庫移動指示者')
+            utilChangeReadOnly('倉庫移動指示日')
+            utilChangeReadOnly('発注確認者')
+            utilChangeReadOnly('発注確認日')
+            utilChangeReadOnly('倉庫移動出荷承認者')
+            utilChangeReadOnly('倉庫移動出荷承認日')
+            utilChangeReadOnly('チケット作成者')
+            utilChangeReadOnly('チケット作成日')
+            break
+        default:
+            // その他のステータスの場合エラー
+            utilSetMessage("不正status", ERROR)
+            break
+    }
+
+}
+
+// 追加ヘッダーの作成
+function createHeader() {
+	html = `
+		<tr class="ui-widget-header AddRecord">
+			<th class="AddHeader" colspan="5"><div><span></span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>在庫数量</span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>残月</span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>1か月分在庫</span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>年間出荷実績</span></div></th>
+			<th class="AddHeader" colspan="2"><div><span>発注</span></div></th>
+		</tr>
+	`
+	$('#Grid thead').prepend(html)
 }

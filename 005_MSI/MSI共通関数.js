@@ -90,6 +90,13 @@ function utilAddButton (buttonId, label, clickFunc) {
   target.appendChild(elem)
 }
 
+/**
+ * 時刻を出力する関数です。
+ * @return {String} 空時刻
+ */
+function utilGetDateEmpty () {
+  return '1899-12-30T00:00:00'
+}
 
 /**
  * 時刻を出力する関数です。
@@ -370,16 +377,20 @@ function utilQuerySelector (selector, all = false, dom) {
 }
 
 /**
+ * 入力されたラベルのIDを返却する。
+ * @param {String} label ラベル
+ */
+function utilGetId (label) {
+  return $p.tableName() + "_" + $p.getColumnName(label)
+}
+
+/**
  * 入力されたラベルに一致する項目を読取専用に変更または解除する。
  * @param {String} label ラベル
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除
  */
 function utilChangeReadOnly (label, flg = true) {
   document.getElementById($p.tableName() + "_" + $p.getColumnName(label)).disabled = flg
-}
-
-function utilGetId (label) {
-  return $p.tableName() + "_" + $p.getColumnName(label)
 }
 
 /**

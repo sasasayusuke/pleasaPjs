@@ -47,7 +47,6 @@ var FORMAT = {
 }
 
 
-
 var NORMAL  = 'normal'
 var WARNING = 'warning'
 var ERROR   = 'error'

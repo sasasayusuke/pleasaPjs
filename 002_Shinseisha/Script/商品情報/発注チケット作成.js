@@ -9,22 +9,30 @@ const COLUMN_INDEX = [
 	, MINIMUM_LOT
 	, STATUS
 	, CHECK_KB
-	, KYUSHU_HACCHU_POINT
-	, KANTO_HACCHU_POINT
-	, HOKKAIDO_HACCHU_POINT
-	, ZENKOKU_HACCHU_POINT
+	, HACCHU_POINT_KYUSHU
+	, HACCHU_POINT_KANTO
+	, HACCHU_POINT_HOKKAIDO
+	, HACCHU_POINT_ZENKOKU
 	, TO_KYUSHU
 	, TO_KANTO
 	, TO_HOKKAIDO
 	, TO_ZENKOKU
-	, KYUSHU_ZAIKO
-	, KANTO_ZAIKO
-	, HOKKAIDO_ZAIKO
-	, ZENKOKU_ZAIKO
-	, KYUSHU_1M_ZAIKO
-	, KANTO_1M_ZAIKO
-	, HOKKAIDO_1M_ZAIKO
-	, ZENKOKU_1M_ZAIKO
+	, ZANGETSU_KYUSHU
+	, ZANGETSU_KANTO
+	, ZANGETSU_HOKKAIDO
+	, ZANGETSU_ZENKOKU
+	, ZAIKO_KYUSHU
+	, ZAIKO_KANTO
+	, ZAIKO_HOKKAIDO
+	, ZAIKO_ZENKOKU
+	, ZAIKO_KYUSHU_1M
+	, ZAIKO_KANTO_1M
+	, ZAIKO_HOKKAIDO_1M
+	, ZAIKO_ZENKOKU_1M
+	, JISSEKI_KYUSHU
+	, JISSEKI_KANTO
+	, JISSEKI_HOKKAIDO
+	, JISSEKI_ZENKOKU
 	, JISSEKI_KEISOKU_KIKAN
 ] = [
 	"ResultId"
@@ -44,15 +52,48 @@ const COLUMN_INDEX = [
 	, $p.getColumnName("関東まで")
 	, $p.getColumnName("北海道まで")
 	, $p.getColumnName("全国まで")
-	, $p.getColumnName("九州現在庫数量")
-	, $p.getColumnName("関東現在庫数量")
-	, $p.getColumnName("北海道現在庫数量")
-	, $p.getColumnName("全国現在庫数量")
+	, $p.getColumnName("九州残月表示")
+	, $p.getColumnName("関東残月表示")
+	, $p.getColumnName("北海道残月表示")
+	, $p.getColumnName("全国残月表示")
+	, $p.getColumnName("九州在庫数量")
+	, $p.getColumnName("関東在庫数量")
+	, $p.getColumnName("北海道在庫数量")
+	, $p.getColumnName("全国在庫数量")
 	, $p.getColumnName("九州一ヶ月分在庫")
 	, $p.getColumnName("関東一ヶ月分在庫")
 	, $p.getColumnName("北海道一ヶ月分在庫")
 	, $p.getColumnName("全国一ヶ月分在庫")
+	, $p.getColumnName("九州直近一年間出荷実績")
+	, $p.getColumnName("関東直近一年間出荷実績")
+	, $p.getColumnName("北海道直近一年間出荷実績")
+	, $p.getColumnName("全国直近一年間出荷実績")
 	, $p.getColumnName("出荷実績計測期間")
+]
+
+const OUTPUT_TICKET_COLUMN = [
+	"商品ｺｰﾄﾞ"
+	, "チケット作成日"
+	, "確認期日"
+	, "現在在庫数量_九州"
+	, "現在在庫数量_関東"
+	, "現在在庫数量_北海道"
+	, "現在在庫数量_合計"
+	, "残月_九州"
+	, "残月_関東"
+	, "残月_北海道"
+	, "残月_全体"
+	, "1か月分在庫_九州"
+	, "1か月分在庫_関東"
+	, "1か月分在庫_北海道"
+	, "1か月分在庫_全国"
+	, "年間出荷実績_九州"
+	, "年間出荷実績_関東"
+	, "年間出荷実績_北海道"
+	, "年間出荷実績_全国"
+	, "自動判定結果"
+	, "入庫倉庫"
+	, "発注数量"
 ]
 /**
  * 発注チケット作成をする関数です。
@@ -120,7 +161,7 @@ async function createOrderTicket() {
 		// 発注チケット作成処理
 		let ticketList = []
 		// ヘッダー情報入力
-		ticketList.push(["商品ｺｰﾄﾞ", "作成日", "確認期日", "入庫倉庫", "発注根拠", "発注数量"])
+		ticketList.push(OUTPUT_TICKET_COLUMN)
 		let date = new Date()
 		let now = utilGetDate(date)
 		let tommorow = utilGetDate(date.setDate(date.getDate() + 1))
@@ -128,20 +169,53 @@ async function createOrderTicket() {
 			let ticket = []
 			// 商品ｺｰﾄﾞ
 			ticket.push(r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)])
-			// 作成日
+			// チケット作成日
 			ticket.push(now)
-			// 確認期日(作成日から１日後)
+			// 確認期日(チケット作成日から１日後)
 			ticket.push(tommorow)
+			// 現在在庫数量_九州
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KYUSHU)])
+			// 現在在庫数量_関東
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KANTO)])
+			// 現在在庫数量_北海道
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_HOKKAIDO)])
+			// 現在在庫数量_全国
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_ZENKOKU)])
+			// 残月_九州
+			ticket.push(r[COLUMN_INDEX.indexOf(ZANGETSU_KYUSHU)])
+			// 残月_関東
+			ticket.push(r[COLUMN_INDEX.indexOf(ZANGETSU_KANTO)])
+			// 残月_北海道
+			ticket.push(r[COLUMN_INDEX.indexOf(ZANGETSU_HOKKAIDO)])
+			// 残月_全国
+			ticket.push(r[COLUMN_INDEX.indexOf(ZANGETSU_ZENKOKU)])
+			// 1か月分在庫_九州
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KYUSHU_1M)])
+			// 1か月分在庫_関東
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KANTO_1M)])
+			// 1か月分在庫_北海道
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_HOKKAIDO_1M)])
+			// 1か月分在庫_全国
+			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_ZENKOKU_1M)])
+			// 年間出荷実績_九州
+			ticket.push(r[COLUMN_INDEX.indexOf(JISSEKI_KYUSHU)])
+			// 年間出荷実績_関東
+			ticket.push(r[COLUMN_INDEX.indexOf(JISSEKI_KANTO)])
+			// 年間出荷実績_北海道
+			ticket.push(r[COLUMN_INDEX.indexOf(JISSEKI_HOKKAIDO)])
+			// 年間出荷実績_全国
+			ticket.push(r[COLUMN_INDEX.indexOf(JISSEKI_ZENKOKU)])
+			// 自動判定結果
+			ticket.push(getOrderReason(r))
 			// チェック区分　:　九州のみ
 			if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == WIKI_CHECK_KB.onlyKyushu.value) {
 				// 全国閾値がマイナス
 				if (r[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0) {
 					// 入庫倉庫：九州
 					ticket.push(WIKI_SOUKO_KB.kyushu.value)
-					// 発注根拠
-					ticket.push(getOrderReason(r))
 					// 発注数量
-					ticket.push(getOrderAmount(r[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticket.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HACCHU_POINT_ZENKOKU)], r[COLUMN_INDEX.indexOf(TO_ZENKOKU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+
 					ticketList.push(ticket)
 				}
 			// チェック区分　:　全国
@@ -151,10 +225,9 @@ async function createOrderTicket() {
 				if (r[COLUMN_INDEX.indexOf(TO_KYUSHU)] < 0) {
 					// 入庫倉庫：九州
 					ticketCopy.push(WIKI_SOUKO_KB.kyushu.value)
-					// 発注根拠
-					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KYUSHU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HACCHU_POINT_KYUSHU)], r[COLUMN_INDEX.indexOf(TO_KYUSHU)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
@@ -162,23 +235,21 @@ async function createOrderTicket() {
 				if (r[COLUMN_INDEX.indexOf(TO_KANTO)] < 0) {
 					// 入庫倉庫：関東
 					ticketCopy.push(WIKI_SOUKO_KB.kanto.value)
-					// 発注根拠
-					ticketCopy.push(getOrderReason(r))
 					// 発注数量
-					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_KANTO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HACCHU_POINT_KANTO)], r[COLUMN_INDEX.indexOf(TO_KANTO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+
 					ticketList.push(ticketCopy)
 				}
-				ticketCopy = Array.from(ticket)
-				// 北海道閾値がマイナス
-				if (r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)] < 0) {
-					// 入庫倉庫：北海道
-					ticketCopy.push(WIKI_SOUKO_KB.hokkaido.value)
-					// 発注根拠
-					ticketCopy.push(getOrderReason(r))
-					// 発注数量
-					ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
-					ticketList.push(ticketCopy)
-				}
+				//ticketCopy = Array.from(ticket)
+				// 北海道閾値がマイナス（現在は利用していない。）
+				//if (r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)] < 0) {
+				//	// 入庫倉庫：北海道
+				//	ticketCopy.push(WIKI_SOUKO_KB.hokkaido.value)
+				//	// 発注数量
+				//	ticketCopy.push(getOrderAmount(r[COLUMN_INDEX.indexOf(HACCHU_POINT_HOKKAIDO)], r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], r[COLUMN_INDEX.indexOf(MINIMUM_LOT)]))
+
+				//	ticketList.push(ticketCopy)
+				//}
 			} else {
 			// チェック区分　:　チェックしない　または　ブランク
 				continue
@@ -197,33 +268,9 @@ async function createOrderTicket() {
 	}
 
 	/**
-	 * 発注根拠を算出する関数です。
+	 * 自動判定結果を算出する関数です。
 	 */
 	function getOrderReason(record) {
-		let advice =
-`
-${record[COLUMN_INDEX.indexOf(JISSEKI_KEISOKU_KIKAN)] < 6 ? '新商品の可能性がある商品です。' : ''}
-${record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'}
-`
-
-		let reason =
-`
-現在在庫
-	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_ZAIKO)], 7)}
-
-1ヶ月分在庫
-	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_1M_ZAIKO)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_1M_ZAIKO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_1M_ZAIKO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_1M_ZAIKO)], 7)}
-
-発注点
-	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KYUSHU_HACCHU_POINT)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(KANTO_HACCHU_POINT)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(HOKKAIDO_HACCHU_POINT)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(ZENKOKU_HACCHU_POINT)], 7)}
-
-発注まで
-	九州 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_KYUSHU)], 7)}	関東 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_KANTO)], 7)}	北海道 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_HOKKAIDO)], 7)}	全国 : ${utilPaddingRight(record[COLUMN_INDEX.indexOf(TO_ZENKOKU)], 7)}
-
-リードタイム : ${record[COLUMN_INDEX.indexOf(LEAD_TIME)]}
-最小ロット　 : ${record[COLUMN_INDEX.indexOf(MINIMUM_LOT)]}
-`
-		return advice + reason
+		return record[COLUMN_INDEX.indexOf(JISSEKI_KEISOKU_KIKAN)] < 6 ? '新商品の可能性がある商品です。 ' : '' + record[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 ? '”メーカー発注”をしてください。' : '”メーカー発注”または”倉庫間移動”をしてください。'
 	}
-
 }
