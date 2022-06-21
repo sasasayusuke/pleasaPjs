@@ -62,16 +62,10 @@ async function sumAchievement() {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 
-	let date = new Date()
-	// 15日前（計測期間過ぎてから15日までは取得する）
-	let before = utilGetDate(date.setDate(date.getDate() - 15), 'YYYY-MM-DD')
-	// 365日後（閾値集計反映期間のデフォルト値）
-	let after = utilGetDate(date.setDate(date.getDate() + 365), 'YYYY-MM-DD')
-
 	let achievements = await utilExportAjax(
 		TABLE_ID_SHUKKA_JISSEKI
 		, COLUMN_INDEX_ACHIEVEMENT
-		, {"DateA": `["${before}, ${after}"]`}
+		, {"ClassB": `[${utilGetDate("","YYYY") - 1}, ${utilGetDate("","YYYY")}]`}
 	)
 
 	let data = extractData(achievements.Response.Content)
@@ -109,7 +103,7 @@ async function sumAchievement() {
 
 	// ヘッダ生成
 	table.unshift(["ID", ...header])
-	utilDownloadCsv(utilConvert2DToCsv(table), '出荷実績集計_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+	utilDownloadCsv(utilConvert2DToCsv(table), '出荷実績集計_' + utilGetDate("", "YYYY_MM_DD hh_mm_ss"))
 
 	/**
 	 * 出荷実績を抽出する関数です。
@@ -122,6 +116,22 @@ async function sumAchievement() {
 			utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。変数リストを確認してください。', type = ERROR)
 		}
 		records = records
+			// 直近一年間(先月から)　のデータを抽出
+			.filter(record => {
+				if (+utilGetDate("","MM") == 1) {
+					// 1月の場合は、去年のデータだけ抽出
+					return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == (utilGetDate("","YYYY") - 1)
+				} else {
+					// その他の月の場合
+					if (record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == utilGetDate("","YYYY")) {
+						// 今年のデータであれば、先月以前を抽出
+						return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(MONTH)] < utilGetDate("","MM")
+					} else if (record[COLUMN_INDEX_ACHIEVEMENT.indexOf(YEAR)] == (utilGetDate("","YYYY") - 1)) {
+						// 去年のデータであれば、今月以降を抽出
+						return record[COLUMN_INDEX_ACHIEVEMENT.indexOf(MONTH)] >= utilGetDate("","MM")
+					}
+				}
+			})
 		// 商品コードごとに分割
 		let shouhinList = utilDivide2DArray(records, COLUMN_INDEX_ACHIEVEMENT.indexOf(SHOUHIN_CODE_A))
 
