@@ -21,10 +21,12 @@ $p.events.on_grid_load = function () {
 
 window.onload = async function () {
     let elemView = document.getElementById("ViewSelector")
-    elemView.addEventListener('change', convertMaker, false)
+    elemView.addEventListener('change', function () {
+        window.setTimeout(convertMakers, 1000)
+    }, false)
     if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.crosstab.index) {
         // 確認待合計参照
-        convertMaker()
+        convertMakers()
     } else if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.president.index) {
         // 社長確認用
         // セット秒ごとに実行
@@ -312,7 +314,7 @@ function createHeader() {
 	$('#Grid thead').prepend(html)
 }
 
-function convertMaker() {
+function convertMakers() {
     document.querySelectorAll(".crosstab-row th").forEach(v => {
         let makerCode = v.innerHTML.split(" : ")[0]
         v.innerHTML = v.innerHTML.replace(makerCode, convertMakerCodeToMaker1(makerCode))
