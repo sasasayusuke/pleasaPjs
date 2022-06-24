@@ -40,7 +40,7 @@ $p.events.on_editor_load = function () {
     let status = utilGetControl('状況')
     // 納品待
     if (status =="200") {
-        utilAddButton('openDialog', '納品', openDialog)
+        utilAddButton('openDialog', openDialog, '納品')
     }
 
 }

@@ -1,9 +1,9 @@
 
 $p.events.on_editor_load = function () {
 	utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
-	utilAddButton('download', 'ダウンロード', download)
+	utilAddButton('download', download, 'ダウンロード')
 }
 
 $p.events.on_grid_load = function () {
-	utilAddButton('createFormat', 'フォーマット登録', createFormat)
+	utilAddButton('createFormat', createFormat, 'フォーマット登録', 'display:none;')
 }

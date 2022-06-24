@@ -4,5 +4,5 @@ $p.events.on_editor_load = function () {
 }
 
 $p.events.on_grid_load = function () {
-	utilAddButton('sumAchievement', '出荷実績集計', sumAchievement)
+	utilAddButton('sumAchievement', sumAchievement, '出荷実績集計')
 }

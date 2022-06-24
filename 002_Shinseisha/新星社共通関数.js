@@ -79,14 +79,14 @@ function utilRemoveElements (ids) {
  * @param {String} label ラベル
  * @param {function} clickFunc click時間数
  */
-function utilAddButton (buttonId, label, clickFunc) {
+function utilAddButton (buttonId, clickFunc, label, styleStr) {
 	let target = document.getElementById('MainCommands')
 	let elem = document.createElement('button')
 	elem.id = buttonId
 	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
 	elem.onclick = clickFunc
 	elem.innerText = label
-
+	elem.style = styleStr
   target.appendChild(elem)
 }
 

@@ -15,38 +15,40 @@ $p.events.on_editor_load = function () {
 }
 
 $p.events.on_grid_load = function () {
-	utilAddButton('bulkConfirm', '一括確認', bulkConfirm)
-	utilAddButton('sumMove', '移動残集計', sumMove)
+	utilAddButton('bulkConfirm', bulkConfirm, '一括確認')
+	utilAddButton('sumMove', sumMove, '移動残集計')
 }
 
 window.onload = async function () {
     let elemView = document.getElementById("ViewSelector")
-    elemView.addEventListener('change', function () {
+
+    // クリック後1秒後に仕入先名変換処理
+    elemView.addEventListener('change', function() {
         window.setTimeout(convertMakers, 1000)
     }, false)
-    if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.crosstab.index) {
-        // 確認待合計参照
-        convertMakers()
-    } else if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.president.index) {
+
+    // セット秒毎に実行
+    window.setInterval(function() {
+        if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.president.index) {
         // 社長確認用
-        // セット秒ごとに実行
-        window.setInterval(function() {
             // 発注根拠色付け
             Array.from(document.querySelectorAll('td.zangetsu'))
                 .filter(v => +v.innerHTML <= 1)
                 .forEach(v => v.classList.add('red'))
             let elemRecords = document.getElementsByClassName("AddRecord")
-            if (elemRecords.length == 2) return
-            if (elemRecords.length > 2) {
-                // 追加ヘッダーの掃除
+            let leng = elemRecords.length
+            // 追加ヘッダーの掃除
+            if (leng > 2) {
                 Array.from(elemRecords).forEach(v => v.remove())
                 Array.from(document.querySelectorAll("#Grid thead"))
                     .filter(v => v.innerHTML.replaceAll("\t", "").replaceAll("\n", "") == "")
                     .forEach(v => v.remove())
             }
-            createHeader()
-        }, 100)
-    }
+            if (leng != 2) createHeader()
+            // ヘッダー文言の置換
+            Array.from(document.querySelectorAll("tr.ui-widget-header span")).filter(v=>v.innerHTML.indexOf('注残数量') > 0).forEach(v => v.innerHTML = v.innerHTML.replace('注残数量', ''))
+        }
+    }, 100)
 
     // 仕入先ｺｰﾄﾞと仕入先名１変換用に取得
 	let makerCodes = await utilExportAjax(
@@ -54,6 +56,10 @@ window.onload = async function () {
 		, ["ClassA", "DescriptionA"]
 	)
 	MAKER_CODE_LIST = utilConvertCsvTo2D(makerCodes.Response.Content)
+    if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.crosstab.index) {
+        convertMakers()
+    }
+
 }
 
 // 倉庫の変更
@@ -307,7 +313,7 @@ function createHeader() {
 			<th class="AddHeader" colspan="4"><div><span>残月</span></div></th>
 			<th class="AddHeader" colspan="4"><div><span>1か月分在庫</span></div></th>
 			<th class="AddHeader" colspan="4"><div><span>年間出荷実績</span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>注残数量</span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>注残</span></div></th>
 			<th class="AddHeader" colspan="2"><div><span>発注</span></div></th>
 		</tr>
 	`

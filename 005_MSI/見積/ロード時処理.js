@@ -17,6 +17,6 @@ $p.events.on_editor_load = function () {
             document.head.appendChild(elm);
         }
     }
-    utilAddButton('estimate', '見積書作成', downloadExcel)
+    utilAddButton('estimate', downloadExcel, '見積書作成')
 
 }

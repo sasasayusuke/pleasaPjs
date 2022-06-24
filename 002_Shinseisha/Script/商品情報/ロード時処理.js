@@ -4,7 +4,7 @@ $p.events.on_editor_load = function () {
 }
 
 $p.events.on_grid_load = function () {
-	utilAddButton('createOrderTicket', '発注チケット作成', createOrderTicket)
+	utilAddButton('createOrderTicket', createOrderTicket, '発注チケット作成')
     window.setInterval(function() {
         Array.from(document.querySelectorAll('td.invalidation span'))
         .filter(v => v.classList.contains('ui-icon-circle-check'))
