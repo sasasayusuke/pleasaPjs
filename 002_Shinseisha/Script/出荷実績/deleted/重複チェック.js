@@ -56,7 +56,6 @@ async function checkDouble() {
 			, CheckHash = {
 				CheckA : check
 			}
-			, addFunc = ""
 		)
 
 		// タイトルを代入

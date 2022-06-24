@@ -431,20 +431,26 @@ function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, Desc
 /**
  * 更新APIを呼び出す関数です。
  */
-function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
+function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
+  let data = JSON.stringify({
+    "ApiVersion": 1.1,
+    Status,
+    ClassHash,
+    NumHash,
+    DateHash,
+    DescriptionHash,
+    CheckHash
+  })
+  if (!utilIsNull(Status)) {
+    delete data["Status"]
+  }
+
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
 			url: `/api/items/${recordId}/update`,
 			contentType: 'application/json',
-			data:JSON.stringify({
-				"ApiVersion": 1.1,
-        ClassHash,
-        NumHash,
-        DateHash,
-        DescriptionHash,
-        CheckHash
-			})
+			data: data
 		}).then(
 			function (result) {
         if (addFunc && typeof addFunc === 'function') {

@@ -31,6 +31,25 @@ var PROCESS_ID_SHIIRESAKI_DOUKI        = 1190296
 //商品マスタ同期
 var PROCESS_ID_SHOUHIN_DOUKI           = 1190297
 
+// 発注管理 ビュー
+var WIKI_STATUS_HACCHU_VIEW = {
+    warehouse: {
+        index: 1,
+        value: "倉庫担当者確認用",
+        label: "倉庫担当者確認用"
+    }
+    , crosstab: {
+        index: 2,
+        value: "確認待合計参照",
+        label: "確認待合計参照"
+    }
+    , president: {
+        index: 3,
+        value: "社長確認用",
+        label: "社長確認用"
+    }
+}
+
 // 仕入先情報 取引状態
 var WIKI_STATUS_TORIHIKI = {
     inprogress: {

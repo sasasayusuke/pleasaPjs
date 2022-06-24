@@ -1,3 +1,4 @@
+let MAKER_CODE_LIST
 
 $p.events.on_editor_load = function () {
     utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
@@ -14,26 +15,43 @@ $p.events.on_editor_load = function () {
 }
 
 $p.events.on_grid_load = function () {
+	utilAddButton('bulkConfirm', '一括確認', bulkConfirm)
 	utilAddButton('sumMove', '移動残集計', sumMove)
-	// セット秒ごとに実行
-    window.setInterval(function() {
-		// 発注根拠色付け
-		Array.from(document.querySelectorAll('td.zangetsu'))
-			.filter(v => +v.innerHTML <= 1)
-			.forEach(v => v.classList.add('red'))
-		let elemView = document.getElementById("ViewSelector")
-		let elemRecords = document.getElementsByClassName("AddRecord")
-		if (elemView.value !== "") return
-		if (elemRecords.length == 2) return
-		if (elemRecords.length > 2) {
-			// 追加ヘッダーの掃除
-			Array.from(elemRecords).forEach(v => v.remove())
-			Array.from(document.querySelectorAll("#Grid thead"))
-				.filter(v => v.innerHTML.replaceAll("\t", "").replaceAll("\n", "") == "")
-				.forEach(v => v.remove())
-		}
-		createHeader()
-    }, 100)
+}
+
+window.onload = async function () {
+    let elemView = document.getElementById("ViewSelector")
+    elemView.addEventListener('change', convertMaker, false)
+    if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.crosstab.index) {
+        // 確認待合計参照
+        convertMaker()
+    } else if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.president.index) {
+        // 社長確認用
+        // セット秒ごとに実行
+        window.setInterval(function() {
+            // 発注根拠色付け
+            Array.from(document.querySelectorAll('td.zangetsu'))
+                .filter(v => +v.innerHTML <= 1)
+                .forEach(v => v.classList.add('red'))
+            let elemRecords = document.getElementsByClassName("AddRecord")
+            if (elemRecords.length == 2) return
+            if (elemRecords.length > 2) {
+                // 追加ヘッダーの掃除
+                Array.from(elemRecords).forEach(v => v.remove())
+                Array.from(document.querySelectorAll("#Grid thead"))
+                    .filter(v => v.innerHTML.replaceAll("\t", "").replaceAll("\n", "") == "")
+                    .forEach(v => v.remove())
+            }
+            createHeader()
+        }, 100)
+    }
+
+    // 仕入先ｺｰﾄﾞと仕入先名１変換用に取得
+	let makerCodes = await utilExportAjax(
+		TABLE_ID_SHIIRESAKI
+		, ["ClassA", "DescriptionA"]
+	)
+	MAKER_CODE_LIST = utilConvertCsvTo2D(makerCodes.Response.Content)
 }
 
 // 倉庫の変更
@@ -129,6 +147,7 @@ function controlReadOnly () {
     let status = utilGetControl('連携ステータス')
     switch (status) {
         case WIKI_STATUS_HACCHU_KANRI.waiting.value:
+            utilChangeReadOnly('出庫倉庫')
             utilChangeReadOnly('適用区分')
             utilChangeReadOnly('倉庫移動指示者')
             utilChangeReadOnly('倉庫移動指示日')
@@ -149,6 +168,7 @@ function controlReadOnly () {
             utilChangeReadOnly('商品ｺｰﾄﾞ')
             utilChangeReadOnly('確認期日')
             utilChangeReadOnly('入庫倉庫')
+            utilChangeReadOnly('出庫倉庫')
             utilChangeReadOnly('発注数量')
             utilChangeReadOnly('出庫倉庫')
             utilChangeReadOnly('適用区分')
@@ -166,6 +186,7 @@ function controlReadOnly () {
         case WIKI_STATUS_HACCHU_KANRI.preparing.value:
             utilChangeReadOnly('商品ｺｰﾄﾞ')
             utilChangeReadOnly('確認期日')
+            utilChangeReadOnly('出庫倉庫')
             utilChangeReadOnly('適用区分')
             utilChangeReadOnly('倉庫移動指示者')
             utilChangeReadOnly('倉庫移動指示日')
@@ -284,8 +305,20 @@ function createHeader() {
 			<th class="AddHeader" colspan="4"><div><span>残月</span></div></th>
 			<th class="AddHeader" colspan="4"><div><span>1か月分在庫</span></div></th>
 			<th class="AddHeader" colspan="4"><div><span>年間出荷実績</span></div></th>
+			<th class="AddHeader" colspan="4"><div><span>注残数量</span></div></th>
 			<th class="AddHeader" colspan="2"><div><span>発注</span></div></th>
 		</tr>
 	`
 	$('#Grid thead').prepend(html)
+}
+
+function convertMaker() {
+    document.querySelectorAll(".crosstab-row th").forEach(v => {
+        let makerCode = v.innerHTML.split(" : ")[0]
+        v.innerHTML = v.innerHTML.replace(makerCode, convertMakerCodeToMaker1(makerCode))
+    })
+}
+
+function convertMakerCodeToMaker1(makerCode) {
+    return MAKER_CODE_LIST[MAKER_CODE_LIST.map(v => v[0]).indexOf(makerCode)][1]
 }

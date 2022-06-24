@@ -3,6 +3,7 @@ const COLUMN_INDEX = [
 	RESULT_ID
 	, SHOUHIN_CODE
 	, TORIHIKI_JOUTAI
+	, SHIIRE_TANKA
 	, HAIBAN
 	, HACCHUU_SHIIRESAKI_CODE
 	, LEAD_TIME
@@ -38,6 +39,7 @@ const COLUMN_INDEX = [
 	"ResultId"
 	, $p.getColumnName("商品ｺｰﾄﾞ")
 	, "Class099~" + TABLE_ID_SHIIRESAKI + ",Class074"
+	, $p.getColumnName("標準仕入単価")
 	, $p.getColumnName("廃番")
 	, $p.getColumnName("発注仕入先ｺｰﾄﾞ")
 	, $p.getColumnName("リードタイム")
@@ -75,6 +77,7 @@ const OUTPUT_TICKET_COLUMN = [
 	"商品ｺｰﾄﾞ"
 	, "チケット作成日"
 	, "確認期日"
+	, "仕入単価"
 	, "現在在庫数量_九州"
 	, "現在在庫数量_関東"
 	, "現在在庫数量_北海道"
@@ -173,6 +176,8 @@ async function createOrderTicket() {
 			ticket.push(now)
 			// 確認期日(チケット作成日から１日後)
 			ticket.push(tommorow)
+			// 仕入単価
+			ticket.push(r[COLUMN_INDEX.indexOf(SHIIRE_TANKA)])
 			// 現在在庫数量_九州
 			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KYUSHU)])
 			// 現在在庫数量_関東

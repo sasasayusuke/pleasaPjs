@@ -42,9 +42,11 @@ function clickFilled (n) {
 // 倉庫間移動 差し戻し処理
 function clickBackMoveWarehouses (n) {
     utilChangeReadOnly('適用区分', false)
+    utilChangeReadOnly('出庫倉庫', false)
     utilChangeReadOnly('倉庫移動指示者', false)
     utilChangeReadOnly('倉庫移動指示日', false)
     $p.set($p.getControl('適用区分'),'')
+    $p.set($p.getControl('出庫倉庫'),'')
     $p.set($p.getControl('倉庫移動指示者'),'')
     $p.set($p.getControl('倉庫移動指示日'),'')
     $p.execProcess(n)

@@ -46,7 +46,6 @@ async function download(id) {
         , CheckHash = {
             CheckA : false
         }
-        , addFunc = ""
     )
 
     let userCodeJson = await utilExportUserAjax($p.userId())
@@ -268,9 +267,9 @@ async function download(id) {
             //入出庫区分
             data.push(shoruiFormatKb)
             //取引区分
-            data.push(utilGetControl("取引区分_発注"))
+            data.push(utilGetControl("取引区分_入出庫"))
             //取引区分属性
-            data.push(utilGetControl("取引区分属性_発注"))
+            data.push(utilGetControl("取引区分属性_入出庫"))
             //倉庫ｺｰﾄﾞ
             data.push(soukoKb)
             //商品ｺｰﾄﾞ
