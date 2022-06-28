@@ -75,9 +75,10 @@ const COLUMN_INDEX = [
 
 const OUTPUT_TICKET_COLUMN = [
 	"商品ｺｰﾄﾞ"
+	, "自動"
 	, "チケット作成日"
 	, "確認期日"
-	, "仕入単価"
+	, "標準仕入単価"
 	, "現在在庫数量_九州"
 	, "現在在庫数量_関東"
 	, "現在在庫数量_北海道"
@@ -114,6 +115,7 @@ async function createOrderTicket() {
 	let records = await utilExportAjax(
 		TABLE_ID_SHOUHIN
 		, COLUMN_INDEX
+		, {"ResultId": `[${$p.selectedIds().join()}]`}
 	)
 
 	records = utilConvertCsvTo2D(records.Response.Content)
@@ -123,7 +125,8 @@ async function createOrderTicket() {
 		utilSetMessage(message = 'スクリプトのリンク先が壊れている可能性があります。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 
-	utilDownloadCsv(extractData(records), '発注チケット作成_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
+	let data = extractData(records)
+	utilDownloadCsv(data, '発注チケット作成_' + utilGetDate(date = "", format = "YYYY_MM_DD hh_mm_ss"))
 
 
 	/**
@@ -172,11 +175,13 @@ async function createOrderTicket() {
 			let ticket = []
 			// 商品ｺｰﾄﾞ
 			ticket.push(r[COLUMN_INDEX.indexOf(SHOUHIN_CODE)])
+			// 自動
+			ticket.push(1)
 			// チケット作成日
 			ticket.push(now)
 			// 確認期日(チケット作成日から１日後)
 			ticket.push(tommorow)
-			// 仕入単価
+			// 標準仕入単価
 			ticket.push(r[COLUMN_INDEX.indexOf(SHIIRE_TANKA)])
 			// 現在在庫数量_九州
 			ticket.push(r[COLUMN_INDEX.indexOf(ZAIKO_KYUSHU)])

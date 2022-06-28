@@ -91,7 +91,7 @@ function utilRemoveElements (ids) {
 }
 
 /**
- * 時刻を出力する関数です。
+ * 空時刻を出力する関数です。
  * @return {String} 空時刻
  */
 function utilGetDateEmpty () {

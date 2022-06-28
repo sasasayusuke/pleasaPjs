@@ -13,16 +13,16 @@ async function createFormat() {
 		, HACCHUU_SUURYOU
 		, STATUS
 	] = [
-		"IssueId"
-		, "ClassA~" + TABLE_ID_SHOUHIN + ",Class099"// 発注仕入先ｺｰﾄﾞ
-		, "ClassA~" + TABLE_ID_SHOUHIN + ",ClassG"// 発注単位
-		, "ClassA"
-		, "ClassA~" + TABLE_ID_SHOUHIN + ",DescriptionA"// 商品名
-		, "ClassA~" + TABLE_ID_SHOUHIN + ",Num018"// 標準仕入単価
-		, "ClassF"
-		, "ClassG"
-		, "NumA"
-		, "Status"
+		"IssueId" // ID
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",Class099" // 発注仕入先ｺｰﾄﾞ
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",ClassG" // 発注単位
+		, "ClassA" // 商品ｺｰﾄﾞ
+		, "ClassA~" + TABLE_ID_SHOUHIN + ",DescriptionA" // 商品名
+		, "NumB" // 標準仕入単価
+		, "ClassF" // 入庫倉庫
+		, "ClassG" // 出庫倉庫
+		, "NumA" // 発注数量
+		, "Status" // 発注管理ステータス
 	]
 
 	// RPA実行ログテーブル

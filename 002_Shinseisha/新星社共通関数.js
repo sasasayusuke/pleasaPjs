@@ -90,9 +90,18 @@ function utilAddButton (buttonId, clickFunc, label, styleStr) {
   target.appendChild(elem)
 }
 
+/**
+ * 空時刻を出力する関数です。
+ * @return {String} 空時刻
+ */
+function utilGetDateEmpty () {
+  return '1899-12-30T00:00:00'
+}
 
 /**
  * 時刻を出力する関数です。
+ *
+ *
  * @param {date} date 日付型
  * @param {String} format フォーマット
  *

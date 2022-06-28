@@ -21,15 +21,15 @@ try{
     }
     # プロセスID
     #在庫数同期＆発注管理チケット作成
-    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 1190295
+    $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 1869924
     #SMILE連携
-    $PROCESS_ID_SMILE_RENKEI            = 1190298
+    $PROCESS_ID_SMILE_RENKEI            = 1869923
     #月次出荷実績登録
-    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 1190299
+    $PROCESS_ID_SHUKKA_JISSEKI_TOUROKU  = 1869927
     #仕入先マスタ同期
-    $PROCESS_ID_SHIIRESAKI_DOUKI        = 1190296
+    $PROCESS_ID_SHIIRESAKI_DOUKI        = 1869926
     #商品マスタ同期
-    $PROCESS_ID_SHOUHIN_DOUKI           = 1190297
+    $PROCESS_ID_SHOUHIN_DOUKI           = 1869925
     switch ($processId) {
         $PROCESS_ID_ZAIKO_DOUKI_AND_TICKET {
             ##$processTitle = "在庫数同期＆発注管理チケット作成"

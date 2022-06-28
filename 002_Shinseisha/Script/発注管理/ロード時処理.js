@@ -17,6 +17,20 @@ $p.events.on_editor_load = function () {
 $p.events.on_grid_load = function () {
 	utilAddButton('bulkConfirm', bulkConfirm, '一括確認')
 	utilAddButton('sumMove', sumMove, '移動残集計')
+
+    html = `
+        <div id="confirmDialog" class="dialog" title="一括確認">
+            <p id="messageDialog" class="message-dialog"></p>
+            <div class="command-center">
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="executeBulk(${WIKI_TEKIYOU_KB.order.index});" data-icon="ui-icon-disk"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-button-icon-space"> </span>メーカー発注</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="executeBulk(${WIKI_TEKIYOU_KB.move.index});" data-icon="ui-icon-disk"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-button-icon-space"> </span>倉庫間移動</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
+            </div>
+        </div>
+    `
+
+    $('#Application').append(html)
+
 }
 
 window.onload = async function () {
@@ -309,12 +323,12 @@ function createHeader() {
 	html = `
 		<tr class="ui-widget-header AddRecord">
 			<th class="AddHeader" colspan="5"><div><span></span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>在庫数量</span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>残月</span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>1か月分在庫</span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>年間出荷実績</span></div></th>
-			<th class="AddHeader" colspan="4"><div><span>注残</span></div></th>
-			<th class="AddHeader" colspan="2"><div><span>発注</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>在庫数量</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>残月</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>1か月分在庫</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>年間出荷実績</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>注残</span></div></th>
+			<th class="AddHeader" colspan="3"><div><span>発注</span></div></th>
 		</tr>
 	`
 	$('#Grid thead').prepend(html)

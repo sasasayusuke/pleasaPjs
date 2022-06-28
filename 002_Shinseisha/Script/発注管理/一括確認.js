@@ -19,8 +19,7 @@ async function bulkConfirm() {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
 	if (utilIsNull($p.selectedIds())) {
-		utilSetMessage(message = '確認待ちのレコードを選択してください。', type = WARNING)
-		return
+		utilSetMessage(message = '確認待ちのレコードを選択してください。', type = ERROR)
 	}
 	let records = await utilExportAjax(
 		TABLE_ID_HACCHU_KANRI
@@ -38,30 +37,31 @@ async function bulkConfirm() {
 		return sum + +elem[COLUMN_INDEX_CONFIRM.indexOf(KINGAKU_CONFIRM)]
 	}, 0)
 	if (cnt !== records.length) {
-		utilSetMessage(message = '確認待ちではないレコードが混在しています。', type = WARNING)
-		return
+		utilSetMessage(message = '確認待ちではないレコードが混在しています。', type = ERROR)
 	}
-	let ans = window.confirm(`${cnt}件のレコードを確認済にしてよろしいでしょうか？　合計金額：${val.toLocaleString()}円`)
-	if (!ans) {
-		console.log('確認済にしてよろしいでしょうか？ : Noを押下しました。')
-		return
-	}
-	console.log('確認済にしてよろしいでしょうか？ : Yesを押下しました。')
+	document.getElementById("messageDialog").innerHTML = `${cnt}件のレコードを一括確認してよろしいでしょうか？　合計金額：${val.toLocaleString()}円`
+	openConfirmDialog()
+}
+
+async function executeBulk(i) {
+	$p.closeDialog($('#confirmDialog'));
 
 	await Promise.all(waitRecords.map(async record => {
 		return utilUpdateAjax(
 			record[COLUMN_INDEX_CONFIRM.indexOf(ISSUE_ID_CONFIRM)]
 			, ClassHash = {
-				ClassD : WIKI_TEKIYOU_KB.order.index
-				, ClassE : WIKI_TEKIYOU_KB.order.index
+				ClassD : i
+				, ClassE : i == WIKI_TEKIYOU_KB.order.index ? $p.userId() : 0
+				, ClassH : i == WIKI_TEKIYOU_KB.move.index ? $p.userId() : 0
 			}
 			, NumHash= {}
 			, DateHash= {
-				DateB : utilGetDate()
+				DateB : i == WIKI_TEKIYOU_KB.order.index ? utilGetDate() : utilGetDateEmpty()
+				, DateD : i == WIKI_TEKIYOU_KB.move.index ? utilGetDate() : utilGetDateEmpty()
 			}
 			, DescriptionHash= {}
 			, CheckHash = {}
-			, Status = WIKI_STATUS_HACCHU_KANRI.confirmed.index
+			, Status = i == WIKI_TEKIYOU_KB.order.index ? WIKI_STATUS_HACCHU_KANRI.confirmed.index : WIKI_STATUS_HACCHU_KANRI.preparing.index
 		)
 	}))
 	let finalAns = window.confirm('更新が完了しました。画面をリロードしますがよろしいでしょうか?')
@@ -70,3 +70,15 @@ async function bulkConfirm() {
 		location.reload(false)
 	}
 }
+
+function openConfirmDialog() {
+    $('#SendTo').val("")
+    $('#SendToPerson').val("")
+    $('#SendToAddress').val("")
+    $("#confirmDialog").dialog({
+        modal: !0,
+        width: "450px",
+        resizable: !1
+    })
+}
+
