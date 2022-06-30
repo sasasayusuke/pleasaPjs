@@ -4,16 +4,13 @@ $p.events.on_editor_load = function () {
     utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
 	utilQuerySelector(".ui-icon.ui-icon-clock.current-time", true).forEach(v => v.remove())
 	utilQuerySelector(".ui-icon.ui-icon-person.current-user", true).forEach(v => v.remove())
-	changeWarehouse()
-	document.getElementById(utilGetId("入庫倉庫")).onchange = changeWarehouse
-	controlReadOnly()
+	controlStatuses()
 	createFlow()
 	// 発注根拠色付け
 	Array.from(document.querySelectorAll('div.zangetsu'))
 		.filter(v => +v.querySelector('span').innerHTML <= 1)
 		.forEach(v => v.classList.add('red'))
 }
-
 $p.events.on_grid_load = function () {
 	utilAddButton('bulkConfirm', bulkConfirm, '一括確認')
 	utilAddButton('sumMove', sumMove, '移動残集計')
@@ -32,10 +29,23 @@ $p.events.on_grid_load = function () {
     $('#Application').append(html)
 
 }
+$p.events.on_crosstab_load = async function () {
+    utilHideElements(['ReduceViewFilters', 'Aggregations', 'ViewFilters'])
+    // 仕入先ｺｰﾄﾞと仕入先名１変換用に取得
+	let makerCodes = await utilExportAjax(
+		TABLE_ID_SHIIRESAKI
+		, ["ClassA", "DescriptionA"]
+	)
+	MAKER_CODE_LIST = utilConvertCsvTo2D(makerCodes.Response.Content)
 
-window.onload = async function () {
+    convertMakers()
+}
+
+window.onload = function () {
+
     let elemView = document.getElementById("ViewSelector")
 
+    if (utilIsNull(elemView)) return
     // クリック後1秒後に仕入先名変換処理
     elemView.addEventListener('change', function() {
         window.setTimeout(convertMakers, 1000)
@@ -63,17 +73,27 @@ window.onload = async function () {
             Array.from(document.querySelectorAll("tr.ui-widget-header span")).filter(v=>v.innerHTML.indexOf('注残数量') > 0).forEach(v => v.innerHTML = v.innerHTML.replace('注残数量', ''))
         }
     }, 100)
+}
 
-    // 仕入先ｺｰﾄﾞと仕入先名１変換用に取得
-	let makerCodes = await utilExportAjax(
-		TABLE_ID_SHIIRESAKI
-		, ["ClassA", "DescriptionA"]
-	)
-	MAKER_CODE_LIST = utilConvertCsvTo2D(makerCodes.Response.Content)
-    if (+elemView.value == WIKI_STATUS_HACCHU_VIEW.crosstab.index) {
-        convertMakers()
-    }
+// 商品コードの変更
+function changeItem () {
+    $p.apiGet({
+        'id': $(`[name=${utilGetId("商品ｺｰﾄﾞ")}]`).val(),
+        'done': function (data) {
+            let unitPrice = data.Response.Data[0].Num018
+            if (unitPrice <= 0) {
+                utilSetMessage("この商品の標準仕入単価が０です。商品情報を確認してください。", WARNING)
+            }
+            $p.set($p.getControl('標準仕入単価'), unitPrice)
 
+        },
+        'fail': function (data) {
+            console.log('通信が失敗しました。')
+        },
+        'always': function (data) {
+            console.log('通信が完了しました。')
+        }
+    })
 }
 
 // 倉庫の変更
@@ -164,160 +184,6 @@ function createFlow() {
 	}
 }
 
-// 読み取り制御
-function controlReadOnly () {
-    let status = utilGetControl('連携ステータス')
-    switch (status) {
-        case WIKI_STATUS_HACCHU_KANRI.waiting.value:
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            // 新規作成でない場合は、商品ｺｰﾄﾞを読み取り専用にする。
-            if ($p.action() !== NEW) {
-                utilChangeReadOnly('商品ｺｰﾄﾞ')
-            }
-            break
-        case WIKI_STATUS_HACCHU_KANRI.confirmed.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        case WIKI_STATUS_HACCHU_KANRI.preparing.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-
-            break
-        case WIKI_STATUS_HACCHU_KANRI.shipped.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        case WIKI_STATUS_HACCHU_KANRI.moving.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        case WIKI_STATUS_HACCHU_KANRI.filled.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        case WIKI_STATUS_HACCHU_KANRI.closed.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('倉庫移動補充担当者')
-            utilChangeReadOnly('倉庫移動補充日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        case WIKI_STATUS_HACCHU_KANRI.error.value:
-            utilChangeReadOnly('商品ｺｰﾄﾞ')
-            utilChangeReadOnly('確認期日')
-            utilChangeReadOnly('入庫倉庫')
-            utilChangeReadOnly('発注数量')
-            utilChangeReadOnly('出庫倉庫')
-            utilChangeReadOnly('適用区分')
-            utilChangeReadOnly('倉庫移動指示者')
-            utilChangeReadOnly('倉庫移動指示日')
-            utilChangeReadOnly('発注確認者')
-            utilChangeReadOnly('発注確認日')
-            utilChangeReadOnly('倉庫移動出荷承認者')
-            utilChangeReadOnly('倉庫移動出荷承認日')
-            utilChangeReadOnly('チケット作成者')
-            utilChangeReadOnly('チケット作成日')
-            break
-        default:
-            // その他のステータスの場合エラー
-            utilSetMessage("不正status", ERROR)
-            break
-    }
-
-}
-
 // 追加ヘッダーの作成
 function createHeader() {
 	html = `
@@ -337,10 +203,7 @@ function createHeader() {
 function convertMakers() {
     document.querySelectorAll(".crosstab-row th").forEach(v => {
         let makerCode = v.innerHTML.split(" : ")[0]
-        v.innerHTML = v.innerHTML.replace(makerCode, convertMakerCodeToMaker1(makerCode))
+        v.innerHTML = v.innerHTML.replace(makerCode, MAKER_CODE_LIST[MAKER_CODE_LIST.map(v => v[0]).indexOf(makerCode)][1])
     })
 }
 
-function convertMakerCodeToMaker1(makerCode) {
-    return MAKER_CODE_LIST[MAKER_CODE_LIST.map(v => v[0]).indexOf(makerCode)][1]
-}

@@ -2,13 +2,15 @@
 const COLUMN_INDEX_CONFIRM = [
 	ISSUE_ID_CONFIRM
 	, SHOUHIN_CODE_CONFIRM
-	, IN_SOUKO_CONFIRM
+	, MINIMUM_LOT_CONFIRM
+	, ORDER_NUMBER_CONFIRM
 	, KINGAKU_CONFIRM
 	, STATUS_CONFIRM
 ] = [
 	"IssueId"
 	, $p.getColumnName("商品ｺｰﾄﾞ")
-	, $p.getColumnName("入庫倉庫")
+	, "ClassA~" + TABLE_ID_SHOUHIN + ",Num039"
+	, $p.getColumnName("発注数量")
 	, $p.getColumnName("金額")
 	, $p.getColumnName("連携ステータス")
 ]
@@ -43,9 +45,20 @@ async function bulkConfirm() {
 	openConfirmDialog()
 }
 
+
 async function executeBulk(i) {
 	$p.closeDialog($('#confirmDialog'));
-
+	//最小ロット数の倍数チェック(メーカー発注の時)
+	if (i == WIKI_TEKIYOU_KB.order.index) {
+		let checkRecords = waitRecords.filter(v => {
+			let orderNumber = v[COLUMN_INDEX_CONFIRM.indexOf(ORDER_NUMBER_CONFIRM)]
+			let minimumLot = v[COLUMN_INDEX_CONFIRM.indexOf(MINIMUM_LOT_CONFIRM)]
+			return ((orderNumber %  minimumLot) == 0)
+		})
+		if (waitRecords.length !== checkRecords.length) {
+			utilSetMessage(message = `発注数量が、最小ロット数の倍数ではないレコードが混在しています`, type = ERROR)
+		}
+	}
 	await Promise.all(waitRecords.map(async record => {
 		return utilUpdateAjax(
 			record[COLUMN_INDEX_CONFIRM.indexOf(ISSUE_ID_CONFIRM)]

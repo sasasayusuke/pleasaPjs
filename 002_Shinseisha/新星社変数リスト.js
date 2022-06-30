@@ -31,22 +31,33 @@ var PROCESS_ID_SHIIRESAKI_DOUKI        = 1869926
 //商品マスタ同期
 var PROCESS_ID_SHOUHIN_DOUKI           = 1869925
 
+// 商品情報 ビュー
+var WIKI_STATUS_SHOUHIN_VIEW = {
+    basic: {
+        index: 7,
+        value: "基本情報",
+        label: "倉庫担当者確認用"
+    }
+    , president: {
+        index: 8,
+        value: "社長確認用",
+        label: "社長確認用"
+    }
+}
+
 // 発注管理 ビュー
 var WIKI_STATUS_HACCHU_VIEW = {
     warehouse: {
         index: 1,
         value: "倉庫担当者確認用",
-        label: "倉庫担当者確認用"
     }
     , crosstab: {
         index: 2,
         value: "確認待合計参照",
-        label: "確認待合計参照"
     }
     , president: {
         index: 3,
         value: "社長確認用",
-        label: "社長確認用"
     }
 }
 
@@ -242,12 +253,29 @@ var WIKI_TEKIYOU_KB  = {
 }
 
 
-//在庫品種別
-//1,シート
-//2,メディア
-//3,パネル
-//4,飾りビス
-//5,小物
+// 商品情報 在庫品種別
+var WIKI_ZAIKOHIN_KB  = {
+    sheet: {
+        index: 1,
+        value: "シート",
+    }
+    , media: {
+        index: 2,
+        value: "メディア",
+    }
+    , panel: {
+        index: 3,
+        value: "パネル",
+    }
+    , bis: {
+        index: 4,
+        value: "飾りビス",
+    }
+    , small: {
+        index: 5,
+        value: "小物",
+    }
+}
 
 
 var NORMAL  = 'normal'

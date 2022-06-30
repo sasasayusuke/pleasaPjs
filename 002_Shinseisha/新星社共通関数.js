@@ -70,7 +70,15 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
  * @param {Array} ids 削除ID
  */
 function utilRemoveElements (ids) {
-  ids.forEach(v => document.getElementById(v).remove())
+  ids.filter(v => !utilIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+}
+/**
+ * 指定されたIDを持つHTMLエレメントを表示・非表示を切り替える関数です。
+ * @param {Array} ids 削除ID
+ * @param {Array} flg 表示・非表示
+ */
+function utilHideElements (ids, flg = true) {
+  ids.filter(v => !utilIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
 }
 
 /**
