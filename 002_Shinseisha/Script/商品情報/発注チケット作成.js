@@ -112,6 +112,7 @@ async function createOrderTicket() {
 	if ($p.siteId() !== TABLE_ID_SHOUHIN) {
 		utilSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', type = ERROR)
 	}
+
 	let records = await utilExportAjax(
 		TABLE_ID_SHOUHIN
 		, COLUMN_INDEX
@@ -133,6 +134,9 @@ async function createOrderTicket() {
 	 * レコードを抽出する関数です。
 	 */
 	function extractData(records) {
+		// trueなら手動発注 falseなら自動発注
+		let selected = !utilIsNull($p.selectedIds())
+
 		records = records
 			// 取引状態　:　取引中
 			.filter(record => record[COLUMN_INDEX.indexOf(TORIHIKI_JOUTAI)] == WIKI_STATUS_TORIHIKI.inprogress.value)
@@ -219,8 +223,8 @@ async function createOrderTicket() {
 			ticket.push(getOrderReason(r))
 			// チェック区分　:　九州のみ
 			if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == WIKI_CHECK_KB.onlyKyushu.value) {
-				// 全国閾値がマイナス
-				if (r[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0) {
+				// 全国閾値がマイナス または 手動発注
+				if (r[COLUMN_INDEX.indexOf(TO_ZENKOKU)] < 0 || selected) {
 					// 入庫倉庫：九州
 					ticket.push(WIKI_SOUKO_KB.kyushu.value)
 					// 発注数量
@@ -231,8 +235,8 @@ async function createOrderTicket() {
 			// チェック区分　:　全国
 			} else if (r[COLUMN_INDEX.indexOf(CHECK_KB)] == WIKI_CHECK_KB.all.value) {
 				let ticketCopy = Array.from(ticket)
-				// 九州閾値がマイナス
-				if (r[COLUMN_INDEX.indexOf(TO_KYUSHU)] < 0) {
+				// 九州閾値がマイナス または 手動発注
+				if (r[COLUMN_INDEX.indexOf(TO_KYUSHU)] < 0 || selected) {
 					// 入庫倉庫：九州
 					ticketCopy.push(WIKI_SOUKO_KB.kyushu.value)
 					// 発注数量
@@ -241,8 +245,8 @@ async function createOrderTicket() {
 					ticketList.push(ticketCopy)
 				}
 				ticketCopy = Array.from(ticket)
-				// 関東閾値がマイナス
-				if (r[COLUMN_INDEX.indexOf(TO_KANTO)] < 0) {
+				// 関東閾値がマイナス または 手動発注
+				if (r[COLUMN_INDEX.indexOf(TO_KANTO)] < 0 || selected) {
 					// 入庫倉庫：関東
 					ticketCopy.push(WIKI_SOUKO_KB.kanto.value)
 					// 発注数量
@@ -251,8 +255,8 @@ async function createOrderTicket() {
 					ticketList.push(ticketCopy)
 				}
 				//ticketCopy = Array.from(ticket)
-				// 北海道閾値がマイナス（現在は利用していない。）
-				//if (r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)] < 0) {
+				// 北海道閾値がマイナス または 手動発注（現在は利用していない。）
+				//if (r[COLUMN_INDEX.indexOf(TO_HOKKAIDO)] < 0 || selected) {
 				//	// 入庫倉庫：北海道
 				//	ticketCopy.push(WIKI_SOUKO_KB.hokkaido.value)
 				//	// 発注数量
@@ -272,9 +276,10 @@ async function createOrderTicket() {
 	/**
 	 * 発注数量を算出する関数です。
 	 * ( = （ 発注点 - 発注まで） を 超える最小ロットの倍数)
+	 * 　但し、下限値を最小ロットとする。
 	 */
 	function getOrderAmount(orderPoint, toOrder, minimumLot) {
-		return Math.ceil((orderPoint - toOrder) / minimumLot) * minimumLot
+		return Math.max(Math.ceil((orderPoint - toOrder) / minimumLot) * minimumLot, minimumLot)
 	}
 
 	/**

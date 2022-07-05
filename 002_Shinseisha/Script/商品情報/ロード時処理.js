@@ -23,7 +23,7 @@ window.onload = function () {
 
     // セット秒毎に実行
     window.setInterval(function() {
-        if (+elemView.value == WIKI_STATUS_SHOUHIN_VIEW.president.index) {
+        if (+elemView.value == VIEW_SHOUHIN.president.index) {
         // 社長確認用
             // 発注根拠色付け
             Array.from(document.querySelectorAll('td.zangetsu'))

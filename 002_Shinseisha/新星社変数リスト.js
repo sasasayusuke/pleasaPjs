@@ -31,22 +31,33 @@ var PROCESS_ID_SHIIRESAKI_DOUKI        = 1869926
 //商品マスタ同期
 var PROCESS_ID_SHOUHIN_DOUKI           = 1869925
 
+
+// グループID
+
+//サイト管理者
+var GROUP_ID_ADMIN      = 1
+//社長
+var GROUP_ID_PRESIDENT  = 2
+//九州配送センター
+var GROUP_ID_KYUSHU     = 3
+//関東配送センター
+var GROUP_ID_KANTO      = 4
+
+
 // 商品情報 ビュー
-var WIKI_STATUS_SHOUHIN_VIEW = {
+var VIEW_SHOUHIN = {
     basic: {
         index: 7,
         value: "基本情報",
-        label: "倉庫担当者確認用"
     }
     , president: {
         index: 8,
         value: "社長確認用",
-        label: "社長確認用"
     }
 }
 
 // 発注管理 ビュー
-var WIKI_STATUS_HACCHU_VIEW = {
+var VIEW_HACCHU_KANRI = {
     warehouse: {
         index: 1,
         value: "倉庫担当者確認用",
