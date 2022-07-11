@@ -1,3 +1,4 @@
+var version = 1
 
 /**
  * Null判定する関数です。

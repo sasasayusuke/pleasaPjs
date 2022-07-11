@@ -1,17 +1,14 @@
 let MAKER_CODE_LIST
 
 $p.events.on_editor_load = function () {
-    utilRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
+    utilRemoveElements(['NewMenuContainer', 'OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
 	utilQuerySelector(".ui-icon.ui-icon-clock.current-time", true).forEach(v => v.remove())
 	utilQuerySelector(".ui-icon.ui-icon-person.current-user", true).forEach(v => v.remove())
 	controlStatuses()
 	createFlow()
-	// 発注根拠色付け
-	Array.from(document.querySelectorAll('div.zangetsu'))
-		.filter(v => +v.querySelector('span').innerHTML <= 1)
-		.forEach(v => v.classList.add('red'))
 }
 $p.events.on_grid_load = function () {
+    utilRemoveElements(['NewMenuContainer'])
 	utilAddButton('bulkConfirm', bulkConfirm, '一括確認')
 	utilAddButton('sumMove', sumMove, '移動残集計')
 
@@ -80,11 +77,62 @@ function changeItem () {
     $p.apiGet({
         'id': $(`[name=${utilGetId("商品ｺｰﾄﾞ")}]`).val(),
         'done': function (data) {
-            let unitPrice = data.Response.Data[0].Num018
-            if (unitPrice <= 0) {
+            if (data.Response.Data[0].Num018 <= 0) {
                 utilSetMessage("この商品の標準仕入単価が０です。商品情報を確認してください。", WARNING)
             }
-            $p.set($p.getControl('標準仕入単価'), unitPrice)
+            $p.set($p.getControl('標準仕入単価'), data.Response.Data[0].Num018)
+
+			utilChangeReadOnly('現在在庫数量_九州', false)
+            utilChangeReadOnly('現在在庫数量_関東', false)
+            utilChangeReadOnly('現在在庫数量_北海道', false)
+			utilChangeReadOnly('現在在庫数量_合計', false)
+            utilChangeReadOnly('残月_九州', false)
+            utilChangeReadOnly('残月_関東', false)
+			utilChangeReadOnly('残月_北海道', false)
+            utilChangeReadOnly('残月_全体', false)
+            utilChangeReadOnly('1か月分在庫_九州', false)
+			utilChangeReadOnly('1か月分在庫_関東', false)
+            utilChangeReadOnly('1か月分在庫_北海道', false)
+            utilChangeReadOnly('1か月分在庫_全国', false)
+			utilChangeReadOnly('年間出荷実績_九州', false)
+            utilChangeReadOnly('年間出荷実績_関東', false)
+            utilChangeReadOnly('年間出荷実績_北海道', false)
+			utilChangeReadOnly('年間出荷実績_全国', false)
+
+			$p.set($p.getControl('現在在庫数量_九州'), data.Response.Data[0].NumB)
+			$p.set($p.getControl('現在在庫数量_関東'), data.Response.Data[0].NumC)
+			$p.set($p.getControl('現在在庫数量_北海道'), data.Response.Data[0].NumD)
+			$p.set($p.getControl('現在在庫数量_合計'), data.Response.Data[0].NumE)
+			$p.set($p.getControl('残月_九州'), data.Response.Data[0].NumN)
+			$p.set($p.getControl('残月_関東'), data.Response.Data[0].NumO)
+			$p.set($p.getControl('残月_北海道'), data.Response.Data[0].NumP)
+			$p.set($p.getControl('残月_全体'), data.Response.Data[0].NumQ)
+			$p.set($p.getControl('1か月分在庫_九州'), data.Response.Data[0].NumR)
+			$p.set($p.getControl('1か月分在庫_関東'), data.Response.Data[0].NumS)
+			$p.set($p.getControl('1か月分在庫_北海道'), data.Response.Data[0].NumT)
+			$p.set($p.getControl('1か月分在庫_全国'), data.Response.Data[0].NumU)
+			$p.set($p.getControl('年間出荷実績_九州'), data.Response.Data[0].NumZ)
+			$p.set($p.getControl('年間出荷実績_関東'), data.Response.Data[0].Num001)
+			$p.set($p.getControl('年間出荷実績_北海道'), data.Response.Data[0].Num002)
+			$p.set($p.getControl('年間出荷実績_全国'), data.Response.Data[0].Num003)
+
+			utilChangeReadOnly('現在在庫数量_九州')
+            utilChangeReadOnly('現在在庫数量_関東')
+            utilChangeReadOnly('現在在庫数量_北海道')
+			utilChangeReadOnly('現在在庫数量_合計')
+            utilChangeReadOnly('残月_九州')
+            utilChangeReadOnly('残月_関東')
+			utilChangeReadOnly('残月_北海道')
+            utilChangeReadOnly('残月_全体')
+            utilChangeReadOnly('1か月分在庫_九州')
+			utilChangeReadOnly('1か月分在庫_関東')
+            utilChangeReadOnly('1か月分在庫_北海道')
+            utilChangeReadOnly('1か月分在庫_全国')
+			utilChangeReadOnly('年間出荷実績_九州')
+            utilChangeReadOnly('年間出荷実績_関東')
+            utilChangeReadOnly('年間出荷実績_北海道')
+			utilChangeReadOnly('年間出荷実績_全国')
+
 
         },
         'fail': function (data) {
