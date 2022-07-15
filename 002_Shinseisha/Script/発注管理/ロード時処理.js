@@ -50,7 +50,9 @@ window.onload = function () {
 
     // セット秒毎に実行
     window.setInterval(function() {
-        if (+elemView.value == VIEW_HACCHU_KANRI.president.index) {
+		let viewIndex = +elemView.value
+		// 色付けとヘッダーの追加を有効にするビュー
+        if ([VIEW_HACCHU_KANRI.president.index, VIEW_HACCHU_KANRI.confirm.index].includes(viewIndex)) {
         // 社長確認用
             // 発注根拠色付け
             Array.from(document.querySelectorAll('td.zangetsu'))
@@ -65,7 +67,7 @@ window.onload = function () {
                     .filter(v => v.innerHTML.replaceAll("\t", "").replaceAll("\n", "") == "")
                     .forEach(v => v.remove())
             }
-            if (leng != 2) createHeader()
+            if (leng != 2) createHeader(viewIndex)
             // ヘッダー文言の置換
             Array.from(document.querySelectorAll("tr.ui-widget-header span")).filter(v=>v.innerHTML.indexOf('注残数量') > 0).forEach(v => v.innerHTML = v.innerHTML.replace('注残数量', ''))
         }
@@ -230,22 +232,6 @@ function createFlow() {
 		if (status == stat.value) box.classList.add("state")
 		document.getElementById("statusFlow").appendChild(box)
 	}
-}
-
-// 追加ヘッダーの作成
-function createHeader() {
-	html = `
-		<tr class="ui-widget-header AddRecord">
-			<th class="AddHeader" colspan="5"><div><span></span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>在庫数量</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>残月</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>1か月分在庫</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>年間出荷実績</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>注残</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>発注</span></div></th>
-		</tr>
-	`
-	$('#Grid thead').prepend(html)
 }
 
 function convertMakers() {

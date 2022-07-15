@@ -6,7 +6,7 @@ var version = 2
  *
  * @return {boolean} 判定結果
  */
-function utilIsNull (obj) {
+function commonIsNull (obj) {
   if (Array.isArray(obj)) {
     return obj.filter(v => v !== '').length == 0
   } else {
@@ -22,7 +22,7 @@ function utilIsNull (obj) {
  *
  * @return {String} 加工された文字列
  */
-function utilSetMessage (message = '', type = NORMAL, clear = true) {
+function commonSetMessage (message = '', type = NORMAL, clear = true) {
   if (clear) {
     $p.clearMessage()
   }
@@ -70,16 +70,16 @@ function utilSetMessage (message = '', type = NORMAL, clear = true) {
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
  * @param {Array} ids 削除ID
  */
-function utilRemoveElements (ids) {
-  ids.filter(v => !utilIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+function commonRemoveElements (ids) {
+  ids.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
 }
 /**
  * 指定されたIDを持つHTMLエレメントを表示・非表示を切り替える関数です。
  * @param {Array} ids 削除ID
  * @param {Array} flg 表示・非表示
  */
-function utilHideElements (ids, flg = true) {
-  ids.filter(v => !utilIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
+function commonHideElements (ids, flg = true) {
+  ids.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
 }
 
 /**
@@ -88,7 +88,7 @@ function utilHideElements (ids, flg = true) {
  * @param {String} label ラベル
  * @param {function} clickFunc click時間数
  */
-function utilAddButton (buttonId, clickFunc, label, styleStr) {
+function commonAddButton (buttonId, clickFunc, label, styleStr) {
 	let target = document.getElementById('MainCommands')
 	let elem = document.createElement('button')
 	elem.id = buttonId
@@ -103,7 +103,7 @@ function utilAddButton (buttonId, clickFunc, label, styleStr) {
  * 空時刻を出力する関数です。
  * @return {String} 空時刻
  */
-function utilGetDateEmpty () {
+function commonGetDateEmpty () {
   return '1899-12-30T00:00:00'
 }
 
@@ -120,21 +120,21 @@ function utilGetDateEmpty () {
  *            ⇓
  *    '2022-04-18'
  */
-function utilGetDate (date, format) {
-  if (typeof date === 'undefined' || utilIsNull(date)) {
+function commonGetDate (date, format) {
+  if (typeof date === 'undefined' || commonIsNull(date)) {
     date = new Date()
   }
-  if (typeof format === 'undefined' || utilIsNull(format)) {
+  if (typeof format === 'undefined' || commonIsNull(format)) {
     format = 'YYYY-MM-DDThh:mm:ss'
   }
   date = new Date(date)
   return format
-    .replace(/YYYY/, utilPaddingLeft(date.getFullYear(), 4))
-    .replace(/MM/, utilPaddingLeft(date.getMonth() + 1, 2))
-    .replace(/DD/, utilPaddingLeft(date.getDate(), 2))
-    .replace(/hh/, utilPaddingLeft(date.getHours(), 2))
-    .replace(/mm/, utilPaddingLeft(date.getMinutes(), 2))
-    .replace(/ss/, utilPaddingLeft(date.getSeconds(), 2))
+    .replace(/YYYY/, commonPaddingLeft(date.getFullYear(), 4))
+    .replace(/MM/, commonPaddingLeft(date.getMonth() + 1, 2))
+    .replace(/DD/, commonPaddingLeft(date.getDate(), 2))
+    .replace(/hh/, commonPaddingLeft(date.getHours(), 2))
+    .replace(/mm/, commonPaddingLeft(date.getMinutes(), 2))
+    .replace(/ss/, commonPaddingLeft(date.getSeconds(), 2))
 
 }
 
@@ -145,7 +145,7 @@ function utilGetDate (date, format) {
  * @param {String} char パディング文字
  * @return {String} パディングされた文字列
  */
-function utilPaddingLeft (str, size = 1, char = '0') {
+function commonPaddingLeft (str, size = 1, char = '0') {
   if (char.length !== 1) {
     console.log("1文字ではないです。")
   }
@@ -159,7 +159,7 @@ function utilPaddingLeft (str, size = 1, char = '0') {
  * @param {String} char パディング文字
  * @return {String} パディングされた文字列
  */
-function utilPaddingRight (str, size = 1, char = ' ') {
+function commonPaddingRight (str, size = 1, char = ' ') {
   if (char.length !== 1) {
     console.log("1文字ではないです。")
   }
@@ -171,7 +171,7 @@ function utilPaddingRight (str, size = 1, char = ' ') {
  * @param {String} csvStr csv文字列
  * @param {String} title ファイル名
  */
-function utilDownloadCsv (csvStr, title = 'test') {
+function commonDownloadCsv (csvStr, title = 'test') {
 
   // a要素を作成する
   const ele = document.createElement('a')
@@ -201,7 +201,7 @@ function utilDownloadCsv (csvStr, title = 'test') {
  *            ⇓
  * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
  */
-function utilConvert2DToCsv (d2array) {
+function commonConvert2DToCsv (d2array) {
   // csvDataに出力方法を追加
   let csvOutput = 'data:text/csvcharset=utf-8,'
   let csvData = csvOutput
@@ -226,10 +226,10 @@ function utilConvert2DToCsv (d2array) {
  *      ['7', '8', '56'],
  *     ]
  */
-function utilConvertCsvTo2D (csvData) {
+function commonConvertCsvTo2D (csvData) {
   // csvDataに出力方法を追加
   let csvOutput = 'data:text/csvcharset=utf-8,'
-  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !utilIsNull(r))
+  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !commonIsNull(r))
 }
 
 /**
@@ -252,11 +252,11 @@ function utilConvertCsvTo2D (csvData) {
  *     　　　　 ["SC144S",2900,9696,"SC144S","SC144L","2",true],
  *     　　　　 ["SC147S",1476,9144,"SC147S","SC147L","20",false]]
  */
-function utilJoinLeft (arr1, arr2, val = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
+function commonJoinLeft (arr1, arr2, val = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
   let size = arr2[0].length
   return arr1.map(v => {
     let tmpArr = arr2.find(w => v[arr1KeyIndex] == w[arr2KeyIndex])
-    if (utilIsNull(tmpArr)) {
+    if (commonIsNull(tmpArr)) {
       return v.concat(Array(size).fill(val))
     } else {
       return v.concat(tmpArr)
@@ -280,7 +280,7 @@ function utilJoinLeft (arr1, arr2, val = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) 
  *      ['1', '1', '1', '1'],
  * ]
  */
-function utilGenerate2DArray (m, n, val = 0) {
+function commonGenerate2DArray (m, n, val = 0) {
   return [...Array(m)].map(_ => Array(n).fill(val))
 }
 
@@ -306,12 +306,12 @@ function utilGenerate2DArray (m, n, val = 0) {
  *                ,["74057", "47", 10, 10, 10]]
  *
  */
-function utilAddColumn (d2array, n, val = 0) {
+function commonAddColumn (d2array, n, val = 0) {
   let m = d2array.length
-  let arr = utilGenerate2DArray(m, n, val)
+  let arr = commonGenerate2DArray(m, n, val)
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      if (!utilIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
+      if (!commonIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
     }
   }
   return arr
@@ -327,7 +327,7 @@ function utilAddColumn (d2array, n, val = 0) {
  *                             ⇓
  * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
  */
-function utilDivideArray (array) {
+function commonDivideArray (array) {
   return [...new Set(array)].map(x => Array(array.filter(y => y == x).length).fill(x))
 }
 
@@ -351,7 +351,7 @@ function utilDivideArray (array) {
  *   ,[["74058","25","*IEH36*","九州倉庫","","100","確認済"],["74063","25","TESTYP-30B-2*","九州倉庫","関東倉庫","24","補充済"]]]
  */
 
-function utilDivide2DArray(d2array, index) {
+function commonDivide2DArray(d2array, index) {
   let list = []
   let codes = []
   let tmp = ""
@@ -365,7 +365,7 @@ function utilDivide2DArray(d2array, index) {
     tmp = arr[index]
   }
   list.push(codes)
-  return list.filter(v => !utilIsNull(v))
+  return list.filter(v => !commonIsNull(v))
 }
 
 /**
@@ -376,8 +376,8 @@ function utilDivide2DArray(d2array, index) {
  *
  * @return {Array} HTMLエレメント
  */
-function utilQuerySelector (selector, all = false, dom) {
-  if (typeof dom === 'undefined' || utilIsNull(dom)) {
+function commonQuerySelector (selector, all = false, dom) {
+  if (typeof dom === 'undefined' || commonIsNull(dom)) {
     dom = document
   }
   if (all) {
@@ -391,7 +391,7 @@ function utilQuerySelector (selector, all = false, dom) {
  * 入力されたラベルのIDを返却する。
  * @param {String} label ラベル
  */
-function utilGetId (label) {
+function commonGetId (label) {
   return $p.tableName() + "_" + $p.getColumnName(label)
 }
 
@@ -400,7 +400,7 @@ function utilGetId (label) {
  * @param {String} label ラベル
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除
  */
-function utilChangeReadOnly (label, flg = true) {
+function commonChangeReadOnly (label, flg = true) {
   document.getElementById($p.tableName() + "_" + $p.getColumnName(label)).disabled = flg
 }
 
@@ -408,14 +408,14 @@ function utilChangeReadOnly (label, flg = true) {
  * 入力されたラベルに一致する項目の値を返却する。（エディタから読取専用にしないと正常動作しない場合があります。）
  * @param {String} label ラベル
  */
-function utilGetControl (label) {
-    return utilIsNull($p.getControl(label).val()) ? $p.getControl(label)[0].innerHTML : $p.getControl(label).val()
+function commonGetControl (label) {
+    return commonIsNull($p.getControl(label).val()) ? $p.getControl(label)[0].innerHTML : $p.getControl(label).val()
 }
 
 /**
  * 登録APIを呼び出す関数です。
  */
-function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
+function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
@@ -449,7 +449,7 @@ function utilCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, Desc
 /**
  * 更新APIを呼び出す関数です。
  */
-function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
+function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
   let data = JSON.stringify({
     "ApiVersion": 1.1,
     Status,
@@ -459,7 +459,7 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
     DescriptionHash,
     CheckHash
   })
-  if (!utilIsNull(Status)) {
+  if (!commonIsNull(Status)) {
     delete data["Status"]
   }
 
@@ -497,10 +497,10 @@ function utilUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, Des
  * @param {String}    type csv か jsonを選択
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function utilExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
+function commonExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
   let col = []
   columns.forEach(v => col.push({"ColumnName" : v}))
-  if (utilIsNull(filters)) {
+  if (commonIsNull(filters)) {
     filters = {}
   }
 
@@ -547,7 +547,7 @@ function utilExportAjax (tableId, columns, filters, over = false, header = true,
  * @param {Array}     userIds 取得UserId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function utilExportUserAjax (userIds, addFunc) {
+function commonExportUserAjax (userIds, addFunc) {
   let users
   if (Array.isArray(userIds)) {
     users = userIds
@@ -590,7 +590,7 @@ function utilExportUserAjax (userIds, addFunc) {
  * @param {Array}     groupIds 取得GroupId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function utilExportGroupAjax (groupIds, addFunc) {
+function commonExportGroupAjax (groupIds, addFunc) {
   let groups
   if (Array.isArray(groupIds)) {
     groups = groupIds

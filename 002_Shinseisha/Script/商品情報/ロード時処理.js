@@ -23,7 +23,7 @@ window.onload = function () {
 
     // セット秒毎に実行
     window.setInterval(function() {
-        if (+elemView.value == VIEW_SHOUHIN.president.index) {
+        if (+elemView.value == VIEW_SHOUHIN.confirm.index) {
         // 社長確認用
             // 発注根拠色付け
             Array.from(document.querySelectorAll('td.zangetsu'))
@@ -43,17 +43,3 @@ window.onload = function () {
     }, 100)
 }
 
-// 追加ヘッダーの作成
-function createHeader() {
-	html = `
-		<tr class="ui-widget-header AddRecord">
-			<th class="AddHeader" colspan="4"><div><span></span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>在庫数量</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>残月</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>1か月分在庫</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>年間出荷実績</span></div></th>
-			<th class="AddHeader" colspan="3"><div><span>注残</span></div></th>
-		</tr>
-	`
-	$('#Grid thead').prepend(html)
-}

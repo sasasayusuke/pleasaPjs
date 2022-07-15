@@ -50,9 +50,9 @@ var VIEW_SHOUHIN = {
         index: 7,
         value: "基本情報",
     }
-    , president: {
+    , confirm: {
         index: 8,
-        value: "社長確認用",
+        value: "商品確認用",
     }
 }
 
@@ -69,6 +69,10 @@ var VIEW_HACCHU_KANRI = {
     , president: {
         index: 3,
         value: "社長確認用",
+    }
+    , confirm: {
+        index: 4,
+        value: "発注確認用",
     }
 }
 
