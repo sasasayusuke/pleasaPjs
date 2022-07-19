@@ -1,5 +1,10 @@
 var version = 2
 
+var NORMAL  = 'normal'
+var WARNING = 'warning'
+var ERROR   = 'error'
+var NEW     = 'new'
+
 /**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
@@ -369,30 +374,14 @@ function commonDivide2DArray(d2array, index) {
 }
 
 /**
- * querySelectorを利用してHTMLエレメントを返却、複数取得した場合はNodeListをArrayに変換してから返却
- * @param {Array} selector セレクタ
- * @param {Array} all 複数返却
- * @param {Array} dom 親DOM
- *
- * @return {Array} HTMLエレメント
- */
-function commonQuerySelector (selector, all = false, dom) {
-  if (typeof dom === 'undefined' || commonIsNull(dom)) {
-    dom = document
-  }
-  if (all) {
-    // NodeListをArrayに変換してから返却
-    return Array.from(dom.querySelectorAll(selector))
-  }
-  return dom.querySelector(selector)
-}
-
-/**
  * 入力されたラベルのIDを返却する。
  * @param {String} label ラベル
  */
-function commonGetId (label) {
-  return $p.tableName() + "_" + $p.getColumnName(label)
+function commonGetId (label, prefix = true, suffix = false) {
+  let id = $p.getColumnName(label)
+  id = prefix ? $p.tableName() + "_" + id : id
+  id = suffix ? id + "Field" : id
+  return id
 }
 
 /**
@@ -405,30 +394,57 @@ function commonChangeReadOnly (label, flg = true) {
 }
 
 /**
- * 入力されたラベルに一致する項目の値を返却する。（エディタから読取専用にしないと正常動作しない場合があります。）
+ * 入力されたラベルに一致する項目の選択した値を返却する。
  * @param {String} label ラベル
  */
-function commonGetControl (label) {
-    return commonIsNull($p.getControl(label).val()) ? $p.getControl(label)[0].innerHTML : $p.getControl(label).val()
+function commonGetVal (label, flg = false) {
+  // 選択系
+  let value = $p.getControl($p.getColumnName(label)).children(':selected').text()
+  if (commonIsNull(value)) {
+    // 選択系 読み取り専用
+    value = $p.getControl($p.getColumnName(label))[0].innerHTML
+    if (commonIsNull(value)) {
+      // 選択系以外
+      value = $p.getControl($p.getColumnName(label)).val()
+    }
+
+  }
+  return value
+}
+
+/**
+ * 入力されたラベルに一致する項目の選択した値を入力する。
+ * @param {String} label ラベル
+ * @param {object} value 値
+ */
+function commonSetVal (label, value) {
+  // 選択系
+  $p.set($p.getControl(label), value)
 }
 
 /**
  * 登録APIを呼び出す関数です。
  */
-function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, addFunc) {
-	return new Promise((resolve, reject) => {
+function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
+  let data = JSON.stringify({
+    "ApiVersion": 1.1,
+    Status,
+    ClassHash,
+    NumHash,
+    DateHash,
+    DescriptionHash,
+    CheckHash
+  })
+  if (!commonIsNull(Status)) {
+    delete data["Status"]
+  }
+
+  return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
 			url: `/api/items/${tableId}/create`,
 			contentType: 'application/json',
-			data:JSON.stringify({
-				"ApiVersion": 1.1,
-        ClassHash,
-        NumHash,
-        DateHash,
-        DescriptionHash,
-        CheckHash
-			})
+			data: data
 		}).then(
 			function (result) {
         if (addFunc && typeof addFunc === 'function') {

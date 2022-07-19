@@ -14,12 +14,12 @@ function clickConfirmedDelivery (n) {
     $p.execProcess(n)
 }
 
-// 補充押下処理
+// 検収押下処理
 function clickAccepted (n) {
     $p.execProcess(n)
 }
 
-// 倉庫間移動 差し戻し処理
+// 入金確認押下処理
 function clickclosed (n) {
     $p.execProcess(n)
 }
