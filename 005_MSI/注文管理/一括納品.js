@@ -60,7 +60,7 @@ async function executeBulk() {
 			, {}
 			, {}
 			, {}
-			, WIKI_STATUS_ORDER_CONTROL.shipped.value
+			, WIKI_STATUS_ORDER_CONTROL.shipped.index
 		)
 	}))
 	let finalAns = window.confirm('更新が完了しました。画面をリロードしますがよろしいでしょうか?')
