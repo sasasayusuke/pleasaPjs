@@ -1,4 +1,4 @@
-var version = 2
+var version = 3
 
 var NORMAL  = 'normal'
 var WARNING = 'warning'
@@ -59,7 +59,6 @@ function commonSetMessage (message = '', type = NORMAL, clear = true) {
         })
       )
       throw new Error(message)
-    break
     default:
       $p.setMessage(
         '#Message',
@@ -76,7 +75,14 @@ function commonSetMessage (message = '', type = NORMAL, clear = true) {
  * @param {Array} ids 削除ID
  */
 function commonRemoveElements (ids) {
-  ids.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+  let elems = []
+  if (Array.isArray(ids)) {
+    elems = ids
+  } else {
+    elems = [ids]
+  }
+
+  elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
 }
 /**
  * 指定されたIDを持つHTMLエレメントを表示・非表示を切り替える関数です。
@@ -84,7 +90,14 @@ function commonRemoveElements (ids) {
  * @param {Array} flg 表示・非表示
  */
 function commonHideElements (ids, flg = true) {
-  ids.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
+  let elems = []
+  if (Array.isArray(ids)) {
+    elems = ids
+  } else {
+    elems = [ids]
+  }
+
+  elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
 }
 
 /**
@@ -397,12 +410,12 @@ function commonChangeReadOnly (label, flg = true) {
  * 入力されたラベルに一致する項目の選択した値を返却する。
  * @param {String} label ラベル
  */
-function commonGetVal (label, flg = false) {
+function commonGetVal (label, flg = true) {
   // 選択系
-  let value = $p.getControl($p.getColumnName(label)).children(':selected').text()
+  let value = flg ? $p.getControl($p.getColumnName(label)).children(':selected').text() : $p.getControl($p.getColumnName(label)).children(':selected').val()
   if (commonIsNull(value)) {
     // 選択系 読み取り専用
-    value = $p.getControl($p.getColumnName(label))[0].innerHTML
+    value = flg ? $p.getControl($p.getColumnName(label))[0].innerHTML : $p.getControl($p.getColumnName(label)).attr('data-value')
     if (commonIsNull(value)) {
       // 選択系以外
       value = $p.getControl($p.getColumnName(label)).val()
@@ -425,10 +438,11 @@ function commonSetVal (label, value) {
 /**
  * 登録APIを呼び出す関数です。
  */
-function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
+function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
     "ApiVersion": 1.1,
     Status,
+    Comments,
     ClassHash,
     NumHash,
     DateHash,
@@ -437,6 +451,9 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
   })
   if (!commonIsNull(Status)) {
     delete data["Status"]
+  }
+  if (!commonIsNull(Comments)) {
+    delete data["Comments"]
   }
 
   return new Promise((resolve, reject) => {
@@ -465,10 +482,11 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
 /**
  * 更新APIを呼び出す関数です。
  */
-function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, addFunc) {
+function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
     "ApiVersion": 1.1,
     Status,
+    Comments,
     ClassHash,
     NumHash,
     DateHash,
@@ -477,6 +495,9 @@ function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, D
   })
   if (!commonIsNull(Status)) {
     delete data["Status"]
+  }
+  if (!commonIsNull(Comments)) {
+    delete data["Comments"]
   }
 
 	return new Promise((resolve, reject) => {
@@ -564,7 +585,7 @@ function commonExportAjax (tableId, columns, filters, over = false, header = tru
  * @param {Function}  addFunc 最後に実行したい関数
  */
 function commonExportUserAjax (userIds, addFunc) {
-  let users
+  let users = []
   if (Array.isArray(userIds)) {
     users = userIds
   } else {
@@ -607,7 +628,7 @@ function commonExportUserAjax (userIds, addFunc) {
  * @param {Function}  addFunc 最後に実行したい関数
  */
 function commonExportGroupAjax (groupIds, addFunc) {
-  let groups
+  let groups = []
   if (Array.isArray(groupIds)) {
     groups = groupIds
   } else {

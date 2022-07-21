@@ -1,5 +1,6 @@
-// 各ステータス制御
-function controlStatuses () {
+
+$p.events.on_editor_load_arr.push(function (){
+    // 各ステータス制御
     let status = commonGetVal('注文ステータス')
     switch (status) {
         case WIKI_STATUS_ORDER_CONTROL.confirmedDelivery.value:
@@ -10,4 +11,4 @@ function controlStatuses () {
         //    commonSetMessage("不正status", ERROR)
         //    break
     }
-}
+})

@@ -107,10 +107,10 @@
   // 注文管理ステータス
   var WIKI_STATUS_ORDER_CONTROL = {
     announce: {
-        index: 100,
-        value: "注文内示",
-        label: "注文内示",
-        style: "status-new"
+      index: 100,
+      value: "注文内示",
+      label: "注文内示",
+      style: "status-new"
     }
     , receipt: {
         index: 200,
@@ -122,6 +122,12 @@
         index: 300,
         value: "納期確認中",
         label: "納期確認中",
+        style: "status-closed"
+    }
+    , adjustment: {
+        index: 350,
+        value: "前倒し調整中",
+        label: "前倒し調整中",
         style: "status-review"
     }
     , confirmedDelivery: {

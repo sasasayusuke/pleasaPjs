@@ -20,6 +20,6 @@ function clickAccepted (n) {
 }
 
 // 入金確認押下処理
-function clickclosed (n) {
+function clickClosed (n) {
     $p.execProcess(n)
 }
