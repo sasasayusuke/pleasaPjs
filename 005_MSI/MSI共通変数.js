@@ -1,4 +1,9 @@
-  var version = 1
+  var version = 2
+
+  var SETTING_SHEET_NAME = "setting"
+  var TEMPLATE_SHEET_NAME = "template"
+  var SERVER_URL = "https://mis-tech.sdt-autolabo.com/"
+
 
   // テーブル
   var TABLE = {
@@ -174,6 +179,35 @@
     },
   }
 
-  var SETTING_SHEET_NAME = "setting"
-  var TEMPLATE_SHEET_NAME = "template"
-  var SERVER_URL = "https://mis-tech.sdt-autolabo.com/"
+  // PKG種類
+  var WIKI_PKG_TYPE = {
+    CRYSTAL: {
+      name: 'CRYSTAL',
+      value: 1,
+    },
+    MEMS: {
+      name: 'MEMS',
+      value: 2,
+    },
+    SEMI: {
+      name: 'SEMI',
+      value: 3,
+    },
+    SENSOR: {
+      name: 'SENSOR',
+      value: 4,
+    },
+    CAPACITOR: {
+      name: 'CAPACITOR',
+      value: 5,
+    },
+    LD: {
+      name: 'LD',
+      value: 6,
+    },
+    OTHER: {
+      name: 'その他',
+      value: 9,
+    },
+  }
+

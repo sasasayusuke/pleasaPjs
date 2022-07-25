@@ -5,6 +5,21 @@ var WARNING = 'warning'
 var ERROR   = 'error'
 var NEW     = 'new'
 
+
+// 各画面ロード時に実行するメソッドを格納する
+$p.events.on_grid_load_arr = []
+$p.events.on_editor_load_arr = []
+
+// 格納したメソッドを実行するメソッド
+$p.events.on_grid_load = function () {
+  console.log("$p.events.on_grid_load!!!")
+  $p.events.on_grid_load_arr.forEach(func => func())
+}
+$p.events.on_editor_load = function () {
+  console.log("$p.events.on_editor_load!!!")
+  $p.events.on_editor_load_arr.forEach(func => func())
+}
+
 /**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
@@ -69,6 +84,25 @@ function commonSetMessage (message = '', type = NORMAL, clear = true) {
       )
   }
 }
+/**
+ * 分類項目のある値を選択したときのみ、表示。
+ * @param {String} className 分類項目
+ * @param {String} dispName 表示制御項目
+ * @param {String} value 分類選択値
+ */
+function commonDisplayClass(className, dispName, value) {
+  if (commonGetVal(className) == value) {
+      // その他を選択したとき
+      // PKG詳細を表示化
+      commonHideElements(commonGetId(dispName, true, true), false)
+  } else {
+      // PKG詳細の値を消去して非表示化
+      // 非表示化
+      commonHideElements(commonGetId(dispName, true, true))
+      commonSetVal(dispName, "")
+  }
+}
+
 
 /**
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
@@ -469,11 +503,11 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
           addFunc(data)
         }
 				// 正常終了
-				resolve(result);
+				resolve(result)
 			},
 			function () {
 				// エラー
-				reject();
+				reject()
 			}
 		)
 	})
@@ -513,11 +547,11 @@ function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, D
           addFunc(data)
         }
 				// 正常終了
-				resolve(result);
+				resolve(result)
 			},
 			function () {
 				// エラー
-				reject();
+				reject()
 			}
 		)
 	})
@@ -568,7 +602,7 @@ function commonExportAjax (tableId, columns, filters, over = false, header = tru
           addFunc(data)
         }
 				// 正常終了
-				resolve(result);
+				resolve(result)
 			},
 			function () {
 				// エラー
@@ -611,7 +645,7 @@ function commonExportUserAjax (userIds, addFunc) {
           addFunc(data)
         }
 				// 正常終了
-				resolve(result);
+				resolve(result)
 			},
 			function () {
 				// エラー
@@ -654,7 +688,7 @@ function commonExportGroupAjax (groupIds, addFunc) {
           addFunc(data)
         }
 				// 正常終了
-				resolve(result);
+				resolve(result)
 			},
 			function () {
 				// エラー

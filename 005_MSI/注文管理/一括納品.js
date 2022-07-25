@@ -4,11 +4,11 @@ const COLUMN_INDEX_ORDER = [
 	, STATUS_ORDER = $p.getColumnName("注文ステータス")
 ]
 
-$p.events.on_grid_load = function () {
-	commonAddButton('bulkDelivery', bulkDelivery, '一括納品')
+$p.events.on_grid_load_arr.push(function () {
+	commonAddButton('bulkDelivery', bulkDelivery, '請求番号発行')
 
     html = `
-        <div id="confirmDialog" class="dialog" title="一括納品">
+        <div id="confirmDialog" class="dialog" title="請求番号発行">
             <p id="messageDialog" class="message-dialog"></p>
             <div class="command-center">
             <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="executeBulk();" data-icon="ui-icon-disk"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-button-icon-space"> </span>納品</button>
@@ -19,7 +19,7 @@ $p.events.on_grid_load = function () {
 
     $('#Application').append(html)
 
-}
+})
 
 async function bulkDelivery() {
 	$p.clearMessage()
