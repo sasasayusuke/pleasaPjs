@@ -1,53 +1,45 @@
-displayCurrencyClass()
-
+$p.events.on_editor_load_arr.push(function () {
+    // 不要項目削除
+    commonRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
+    f1()
+    f2()
+})
 
 // 通貨区分によっての表示制御
-function displayCurrencyClass () {
-    if (commonGetVal("通貨区分") == WIKI_CURRENCY_CLASS.JPY.name) {
-        // 円の場合
-
-        // 非表示化
-        let hiddenIds = ["レート", "単価＄", "金額＄"].map(v => commonGetId(v, true, true))
-        commonHideElements(hiddenIds)
-    } else if ((commonGetVal("通貨区分") == WIKI_CURRENCY_CLASS.USD.name)) {
-        // ドルの場合
-
+let class1 = '通貨区分'
+let disp1 = ['レート', '単価＄', '金額＄']
+let target1 = '単価'
+let f1 = function () {
+    commonDisplayClass(class1, disp1, WIKI_CURRENCY_CLASS.USD.name, function() {
         // 読み取り専用に変更
-        commonChangeReadOnly('単価')
-        // 単価＄変更時、単価へ反映
-        document.getElementById(commonGetId("単価＄")).onchange = function () {
-            commonSetVal("単価", Math.ceil(commonGetVal("レート") * commonGetVal("単価＄")))
+        commonChangeReadOnly(target1)
+        // 単価＄変更時、単価へ反映するchangeイベントを登録
+        if ($p.getControl($p.getColumnName(disp1[1]))) {
+            $p.on('change', $p.getColumnName(disp1[1]), function () {
+                // 単価の設定（単価＄ * レート）
+                commonSetVal(target1, Math.ceil(commonGetVal(disp1[0]).replace(',', '') * commonGetVal(disp1[1]).replace(',', '')))
+            })
         }
+    })
+}
+
+
+// 会社区分によっての表示制御
+let class2 = '会社区分'
+let disp2 = ['代理店名', 'コミッション率', 'エンドユーザ']
+let f2 = function () {
+    // 代理店選択時
+    if (commonGetVal(class2) == WIKI_COMPANY_CLASS.AGENCY.name) {
+        // '代理店名', 'コミッション率'を非表示化
+        disp2.filter(v => v != 'エンドユーザ').forEach(v => commonHideElements(commonGetId(v, true, true)))
+    // 顧客（代理店経由）選択時
+    } else if (commonGetVal(class2) == WIKI_COMPANY_CLASS.CUSTOMER_VIA_AGENCY.name) {
+        // 'エンドユーザ'を非表示化
+        disp2.filter(v => v == 'エンドユーザ').forEach(v => commonHideElements(commonGetId(v, true, true)))
     } else {
-        commonSetMessage ("通貨区分が不正です。", ERROR)
+        // '代理店名', 'コミッション率', 'エンドユーザ'を非表示化
+        disp2.forEach(v => commonHideElements(commonGetId(v, true, true)))
     }
 }
 
 
-
-
-//// 仕入先注文希望納期によっての表示制御
-//function displayDeliveryDate () {
-//    if (commonGetVal("仕入先注文希望納期") == "日付") {
-//        // 日付の場合
-//        // 表示化
-//        commonHideElements(commonGetId("日付", true, true), false)
-//    } else {
-//        // 非表示化
-//        commonHideElements(commonGetId("日付", true, true))
-//        commonSetVal("日付", "")
-//    }
-//}
-
-//// 納入区分によっての表示制御
-//function displayDeliveryClass () {
-//    if (commonGetVal("納入区分") == "仕入先直送") {
-//        // 日付の場合
-//        // 表示化
-//        commonHideElements(commonGetId("納入先：直送", true, true))
-//        commonSetVal("納入先：直送", "")
-//    } else {
-//        // 非表示化
-//        commonHideElements(commonGetId("納入先：直送", true, true), false)
-//    }
-//}

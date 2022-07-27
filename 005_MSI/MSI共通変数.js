@@ -40,7 +40,7 @@
       name: "個人情報",
     }
     , ESTIMATION_BOOK: {
-      index: 9,
+      index: 21036,
       name: "見積台帳",
     }
     , PRODUCT_INFO: {

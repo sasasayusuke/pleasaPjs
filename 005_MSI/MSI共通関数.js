@@ -1,4 +1,4 @@
-var version = 3
+var version = 4
 
 var NORMAL  = 'normal'
 var WARNING = 'warning'
@@ -85,22 +85,46 @@ function commonSetMessage (message = '', type = NORMAL, clear = true) {
   }
 }
 /**
- * 分類項目のある値を選択したときのみ、表示。
+ * 分類項目の値を選択したときの表示制御。
  * @param {String} className 分類項目
- * @param {String} dispName 表示制御項目
- * @param {String} value 分類選択値
+ * @param {Array} labels 表示制御項目
+ * @param {String} value 指定値
+ * @param {String} value 指定値
+ * @param {String} value 指定値
+ *
  */
-function commonDisplayClass(className, dispName, value) {
-  if (commonGetVal(className) == value) {
-      // その他を選択したとき
-      // PKG詳細を表示化
-      commonHideElements(commonGetId(dispName, true, true), false)
+function commonDisplayClass(className, labels, value, successFunc, failureFunc) {
+  let elems = []
+  if (Array.isArray(labels)) {
+    elems = labels
   } else {
-      // PKG詳細の値を消去して非表示化
-      // 非表示化
-      commonHideElements(commonGetId(dispName, true, true))
-      commonSetVal(dispName, "")
+    elems = [labels]
   }
+
+  // 指定値を選択したとき
+  if (commonGetVal(className) == value) {
+      // 表示化
+      elems.forEach(v => commonHideElements(commonGetId(v, true, true), false))
+      if (successFunc && typeof successFunc === 'function') {
+        // 渡されたオブジェクトが関数なら実行する
+        successFunc()
+      }
+  } else {
+      // 非表示化 & 内容消去
+      elems.forEach(v => {
+        commonHideElements(commonGetId(v, true, true))
+        commonSetVal(v, "")
+      })
+      if (failureFunc && typeof failureFunc === 'function') {
+        // 渡されたオブジェクトが関数なら実行する
+        failureFunc()
+      }
+  }
+}
+
+function commonRemoveIcon (clock = false, person = false) {
+  if (clock) Array.from(document.querySelectorAll(".ui-icon.ui-icon-clock.current-time")).forEach(v => v.remove())
+  if (person)Array.from(document.querySelectorAll(".ui-icon.ui-icon-person.current-user")).forEach(v => v.remove())
 }
 
 
@@ -471,6 +495,16 @@ function commonSetVal (label, value) {
 
 /**
  * 登録APIを呼び出す関数です。
+ *
+ * @param {String}    tableId 登録テーブルID
+ * @param {Object}    ClassHash 登録分類項目
+ * @param {Object}    NumHash 登録数値項目
+ * @param {Object}    DateHash 登録日付項目
+ * @param {Object}    DescriptionHash 登録説明項目
+ * @param {Object}    CheckHash 登録チェック項目
+ * @param {String}    Status 登録ステータス
+ * @param {String}    Comments 登録コメント
+ * @param {Function}  addFunc 最後に実行したい関数
  */
 function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
@@ -515,6 +549,16 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
 
 /**
  * 更新APIを呼び出す関数です。
+ *
+ * @param {String}    recordId 更新レコードID
+ * @param {Object}    ClassHash 更新分類項目
+ * @param {Object}    NumHash 更新数値項目
+ * @param {Object}    DateHash 更新日付項目
+ * @param {Object}    DescriptionHash 更新説明項目
+ * @param {Object}    CheckHash 更新チェック項目
+ * @param {String}    Status 更新ステータス
+ * @param {String}    Comments 更新コメント
+ * @param {Function}  addFunc 最後に実行したい関数
  */
 function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({

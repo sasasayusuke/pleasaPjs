@@ -1,8 +1,9 @@
 
 var numArea = "numArea"
+var dialogId = "devideDeliveryDialog"
 $p.events.on_editor_load_arr.push(function () {
     html = `
-    <div id="deliveryDialog" class="dialog" title="納品">
+    <div id="${dialogId}" class="dialog" title="納品">
         <p class="message-dialog">納品する分だけ入力してください。</p>
         <div id="Results_NumField" class="field-normal both">
             <p class="field-label">
@@ -13,7 +14,7 @@ $p.events.on_editor_load_arr.push(function () {
             </div>
         </div>
         <div class="command-center">
-            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="delivery();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="devideDelivery();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
             <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
         </div>
     </div>
@@ -22,12 +23,11 @@ $p.events.on_editor_load_arr.push(function () {
 
 })
 
-function openDeliveryDialog() {
-    console.log("openDownloadDialog")
+function openDevideDeliveryDialog() {
     $('#SendTo').val("")
     $('#SendToPerson').val("")
     $('#SendToAddress').val("")
-    $("#deliveryDialog").dialog({
+    $("#" + dialogId).dialog({
         modal: !0,
         width: "500",
         height: "180",
@@ -35,11 +35,11 @@ function openDeliveryDialog() {
     })
 }
 
-async function delivery() {
+async function devideDelivery() {
     let volume = +commonGetVal("数量")
     let deliverVolume = +$('#' + numArea).val()
     if (isNaN(volume) || isNaN(deliverVolume) || deliverVolume >= volume || deliverVolume < 1) {
-        $p.closeDialog($('#deliveryDialog'))
+        $p.closeDialog($('#' + dialogId))
         commonSetMessage("入力数量が異常です。分納する量は1以上の数量より少ない整数を入力してください。", ERROR)
         return
     }
@@ -128,7 +128,7 @@ async function delivery() {
     for (let v of createItemList) {
         key = commonGetId(v, false)
         if (commonIsNull(key)) {
-            $p.closeDialog($('#deliveryDialog'))
+            $p.closeDialog($('#' + dialogId))
             commonSetMessage(v + "という項目が存在しません。スクリプトを確認してください。", ERROR)
         }
         if (key.includes("Class")) {
@@ -151,7 +151,7 @@ async function delivery() {
         , dateHash
         , descriptionHash
         , checkHash
-        , ""
+        , WIKI_STATUS_ORDER_CONTROL.confirmedDelivery.index // 納期確定
         , `
             ${SERVER_URL}items/${$p.id()}
             から ${deliverVolume} 個の分納が作成されました。
@@ -175,7 +175,7 @@ async function delivery() {
     )
     console.log(resultU)
 
-    $p.closeDialog($('#deliveryDialog'))
+    $p.closeDialog($('#' + dialogId))
     let finalAns = window.confirm(deliverVolume + '個分納されました画面をリロードしますがよろしいでしょうか?')
     if (finalAns) {
         // キャッシュからリロード
