@@ -7,7 +7,7 @@ const COLUMN_INDEX_ORDER = [
 $p.events.on_grid_load_arr.push(function () {
 	commonAddButton('bulkDelivery', bulkDelivery, '請求番号発行')
 
-    html = `
+    let html = `
         <div id="confirmDialog" class="dialog" title="請求番号発行">
             <p id="messageDialog" class="message-dialog"></p>
             <div class="command-center">
@@ -24,14 +24,14 @@ $p.events.on_grid_load_arr.push(function () {
 async function bulkDelivery() {
 	$p.clearMessage()
     let selects = $p.selectedIds()
-	if ($p.siteId() !== TABLE.ORDER_CONTROL.index) {
+	if ($p.siteId() !== TABLE_ID_ORDER_CONTROL_BOOK) {
 		commonSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', ERROR)
 	}
 	if (commonIsNull(selects)) {
 		commonSetMessage(message = '納期確定のレコードを選択してください。', ERROR)
 	}
 	let records = await commonExportAjax(
-		TABLE.ORDER_CONTROL.index
+		TABLE_ID_ORDER_CONTROL_BOOK
 		, COLUMN_INDEX_ORDER
 		, {"ResultId": `[${selects.join()}]`}
 		, false
@@ -60,7 +60,7 @@ async function executeBulk() {
 			, {}
 			, {}
 			, {}
-			, WIKI_STATUS_ORDER_CONTROL.shipped.index
+			, WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index // 納期確認中
 		)
 	}))
 	let finalAns = window.confirm('更新が完了しました。画面をリロードしますがよろしいでしょうか?')

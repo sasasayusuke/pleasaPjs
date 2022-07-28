@@ -4,11 +4,11 @@ const GRID_COLUMNS3 = ["Class181","Class182","Num177","Num178","Class183","Num17
 
 function downloadExcel() {
     $p.apiGet({
-        'id': TABLE.FORMAT.index,
+        'id': TABLE_ID_ORDER_CONTROL_BOOK,
         'data': {
             'View': {
                 'ColumnFilterHash': {
-                    "ClassA" : FORMAT.ESTIMATION.index
+                    "ClassA" : FORMAT_ID_ESTIMATION
                 }
             }
         },
@@ -17,7 +17,7 @@ function downloadExcel() {
             console.log(data.Response.Data);
             var res = data.Response.Data[0]
             console.log(JSON.parse(res.AttachmentsA)[0].Guid);
-            getExcel(JSON.parse(res.AttachmentsA)[0].Guid, FORMAT.ESTIMATION.value)
+            getExcel(JSON.parse(res.AttachmentsA)[0].Guid, "見積書フォーマット")
         },
         'fail': function (error) {
             console.log('通信が失敗しました。');

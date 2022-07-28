@@ -1,90 +1,69 @@
-  var version = 2
+  var version = 3
 
   var SETTING_SHEET_NAME = "setting"
   var TEMPLATE_SHEET_NAME = "template"
-  var SERVER_URL = "https://mis-tech.sdt-autolabo.com/"
+  var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
+
+/**
+ * テーブル情報
+ * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
+ *
+ */
+
+  //国番号マスタ
+  var TABLE_ID_COUNTRY_NO           = 12
+  //コミッション率マスタ
+  var TABLE_ID_COMMISSION_RATE      = 6
+  //エンドユーザマスタ
+  var TABLE_ID_END_USER             = 8
+  //インボイス番号マスタ
+  var TABLE_ID_INVOICE_NO           = 5
+  //会社区分
+  var TABLE_ID_COMPANY_CLASS        = 1809
+  //会社情報
+  var TABLE_ID_COMPANY_INFO         = 15
+  //事業所情報
+  var TABLE_ID_OFFICE_INFO          = 3319
+  //個人情報
+  var TABLE_ID_PERSON_INFO          = 4
+  //見積台帳
+  var TABLE_ID_ESTIMATION_BOOK      = 21036
+  //製品情報
+  var TABLE_ID_PRODUCT_INFO         = 10
+  //注文管理台帳
+  var TABLE_ID_ORDER_CONTROL_BOOK   = 34288//11
+  //先行依頼台帳
+  var TABLE_ID_REQUEST_BOOK         = 34289//13
+  //仕入先注文台帳
+  var TABLE_ID_SUPPLIER_ORDER_BOOK  = 17
+  //請求書台帳
+  var TABLE_ID_INVOICE_BOOK         = 14
+  //エクセルフォーマット
+  var TABLE_ID_EXCEL_FORMAT         = 7
+  //注文台帳入力フォーム
+  var TABLE_ID_ORDER_INPUT_FORM     = 1756
 
 
-  // テーブル
-  var TABLE = {
-    COUNTRY_NO: {
-        index: 12,
-        name: "国番号マスタ",
-    }
-    , COMMISSION_RATE: {
-        index: 6,
-        name: "コミッション率マスタ",
-    }
-    , END_USER: {
-      index: 8,
-      name: "エンドユーザマスタ",
-    }
-    , INVOICE_NO: {
-      index: 5,
-      name: "インボイス番号マスタ",
-    }
-    , COMPANY_CLASS: {
-      index: 1809,
-      name: "会社区分",
-    }
-    , COMPANY_INFO: {
-      index: 15,
-      name: "会社情報",
-    }
-    , OFFICE_INFO: {
-      index: 3319,
-      name: "事業所情報",
-    }
-    , PERSON_INFO: {
-      index: 4,
-      name: "個人情報",
-    }
-    , ESTIMATION_BOOK: {
-      index: 21036,
-      name: "見積台帳",
-    }
-    , PRODUCT_INFO: {
-      index: 10,
-      name: "製品情報",
-    }
-    , ORDER_CONTROL: {
-      index: 11,
-      name: "注文管理",
-    }
-    , REQUEST_BOOK: {
-      index: 13,
-      name: "先行依頼台帳",
-    }
-    , SUPPLIER_ORDER_BOOK: {
-      index: 17,
-      name: "仕入先注文台帳",
-    }
-    , INVOICE_BOOK: {
-      index: 14,
-      name: "請求書台帳",
-    }
-    , EXCEL_FORMAT: {
-      index: 7,
-      name: "エクセルフォーマット",
-    }
-    , ORDER_INPUT_FORM: {
-      index: 1756,
-      name: "注文台帳入力フォーム",
-    }
-  }
+  // 先行依頼書フォーマット
+  var FORMAT_ID_REQUEST = "01"
+  // 見積書フォーマット
+  var FORMAT_ID_ESTIMATION = "02"
 
-  // フォーマット
-  var FORMAT = {
-    REQUEST: {
+  // 注文区分
+  var WIKI_ORDER_CLASS = {
+    existing_product: {
+      index: 0,
+      name: "自社既存品",
+    },
+    new_product: {
       index: 1,
-      name: "先行依頼書",
-    }
-    , ESTIMATION: {
-        index: 2,
-        name: "見積書",
+      name: "自社新規開発品",
+    },
+    other_company_product: {
+      index: 2,
+      name: "他社製品",
     }
   }
-
   // 会社区分
   var WIKI_COMPANY_CLASS = {
     MSI: {

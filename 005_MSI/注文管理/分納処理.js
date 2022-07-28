@@ -2,15 +2,15 @@
 var numArea = "numArea"
 var dialogId = "devideDeliveryDialog"
 $p.events.on_editor_load_arr.push(function () {
-    html = `
+    let html = `
     <div id="${dialogId}" class="dialog" title="納品">
-        <p class="message-dialog">納品する分だけ入力してください。</p>
+        <p style="text-align: center;">納品する分だけ入力してください。</p>
         <div id="Results_NumField" class="field-normal both">
-            <p class="field-label">
+            <p class="field-label" style="">
                 <label for="${numArea}">納品個数</label>
             </p><div class="field-control">
             <div class="container-normal">
-                <input id="${numArea}" name="${numArea}" class="control-textbox valid" type="text" value=${commonGetVal("数量")} placeholder="納品個数" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                <input id="${numArea}" name="${numArea}" class="control-textbox valid" type="text" value="" placeholder="納品個数" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
             </div>
         </div>
         <div class="command-center">
@@ -145,15 +145,15 @@ async function devideDelivery() {
     }
 
     let resultC = await commonCreateAjax(
-        TABLE.ORDER_CONTROL.index
+        TABLE_ID_ORDER_CONTROL_BOOK
         , classHash
         , numHash
         , dateHash
         , descriptionHash
         , checkHash
-        , WIKI_STATUS_ORDER_CONTROL.confirmedDelivery.index // 納期確定
+        , commonGetVal("注文ステータス", false)
         , `
-            ${SERVER_URL}items/${$p.id()}
+            ${SERVER_URL}/items/${$p.id()}
             から ${deliverVolume} 個の分納が作成されました。
         `
     )
@@ -167,9 +167,9 @@ async function devideDelivery() {
         , {}
         , {}
         , {}
-        , ""
+        , commonGetVal("注文ステータス", false)
         , `
-            ${SERVER_URL}items/${resultC.Id}
+            ${SERVER_URL}/items/${resultC.Id}
             へ ${deliverVolume} 個の分納を作成しました。
         `
     )

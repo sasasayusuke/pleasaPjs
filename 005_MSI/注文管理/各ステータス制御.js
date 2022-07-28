@@ -6,6 +6,7 @@ let readOnlyItemsAfterCheckingDelivery = [
     , "数量"
     , "数量単位(日)"
     , "単価"
+    , "単価＄"
 ]
 let readOnlyItemsAfterClose = [
     ...readOnlyItemsAfterCheckingDelivery

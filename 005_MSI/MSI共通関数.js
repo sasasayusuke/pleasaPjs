@@ -445,6 +445,14 @@ function commonDivide2DArray(d2array, index) {
 }
 
 /**
+ * 文字列配列内の重複項目を削除する
+ * @param {array} arr 文字列配列
+ */
+function commonUniqueArray(arr) {
+  return arr.filter((element, index) => arr.indexOf(element) === index)
+}
+
+/**
  * 入力されたラベルのIDを返却する。
  * @param {String} label ラベル
  */
