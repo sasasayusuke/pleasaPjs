@@ -22,13 +22,13 @@ $p.events.on_grid_load_arr.push(function() {
     }
 })
 
-async function getSelectedData(culumns, selects, id = $p.siteId()) {
+async function getSelectedData(culumns, selects, id = $p.siteId(), displayValue = true) {
     return $p.apiGet({
         'id': id,
         'data': {
             'View': {
                 'ApiDataType': "KeyValues",
-                'ApiColumnValueDisplayType': "DisplayValue",
+                'ApiColumnValueDisplayType': displayValue ? "DisplayValue" : "Value",
                 'GridColumns': culumns,
                 'ColumnFilterHash': {
                     'ResultId': '[' + selects + ']',
@@ -43,41 +43,6 @@ async function getSelectedData(culumns, selects, id = $p.siteId()) {
         }
     })
 }
-
-async function getSelectedDiplayValue() {
-    let retValue = await $p.apiGet({
-        'id': $p.siteId(),
-        'data': {
-            'View': {
-                'ColumnFilterHash': {
-                    'ResultId': '[' + $p.selectedIds() + ']',
-                },
-            }
-        },
-    })
-    var res = retValue.Response.Data[0]
-    let colArr = []
-    for (let key in res) {
-        colArr.push(key)
-    }
-    return $p.apiGet({
-        'id': $p.siteId(),
-        'data': {
-            'View': {
-                'ApiDataType': "KeyValues",
-                'ApiColumnValueDisplayType': "DisplayValue",
-                'GridColumns': colArr,
-                'ColumnFilterHash': {
-                    'ResultId': '[' + $p.selectedIds() + ']',
-                },
-                'ColumnSorterHash': {
-                    'ClassB': 'asc'
-                }
-            }
-        },
-    })
-}
-
 
 async function editParentRecord(targetID, workbook, filename) {
     const fileBuffer = await workbook.xlsx.writeBuffer()
@@ -118,15 +83,12 @@ async function editParentRecord(targetID, workbook, filename) {
     })
 }
 
-async function editSelectedRecord(className, parentID) {
+async function editSelectedRecord(data) {
     $p.selectedIds().forEach((elem, index) => {
         console.log(`${index}: ${elem}`)
         $p.apiUpdate({
             'id': elem,
-            data: {
-                [className]: parentID,
-                Status: 300,
-            },
+            data: data,
             'done': function (data) {
                 console.log('通信が成功しました。')
             },
@@ -140,7 +102,7 @@ async function editSelectedRecord(className, parentID) {
     })
 }
 
-function downloadExcel(formatId) {
+async function downloadExcel(formatId) {
     return $p.apiGet({
         'id': TABLE_ID_EXCEL_FORMAT,
         'data': {
@@ -167,6 +129,45 @@ function downloadExcel(formatId) {
             console.log('通信が完了しました。')
         }
     })
+}
+
+
+async function createParentRecord(tableId, data) {
+    return $p.apiCreate({
+        id: tableId,
+        data: data,
+        'done': function (data) {
+            console.log('通信が成功しました。');
+            console.log(data);
+        },
+        'fail': function (error) {
+            console.log('通信が失敗しました。');
+        },
+        'always': function (data) {
+            console.log('通信が完了しました。');
+        }
+    });
+}
+
+function cell(address, worksheet) {
+    let row = ""
+    let col = ""
+    for (let i = 0; i < address.length; i++) {
+        if (isNaN(address[i])) {
+            col += address[i]
+        } else {
+            row = address.slice(i)
+            break
+        }
+    }
+    if (isNaN(row)) {
+        console.log(`addressに${address}が入力されました。`)
+        commonSetMessage("adress不正", ERROR)
+    }
+    let rowNo = +row
+    let colNo = commonConvertAto1(col)
+
+    return worksheet.getRow(rowNo).getCell(colNo)
 }
 
 async function outputXlsx(workbook, filename) {

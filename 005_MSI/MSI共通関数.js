@@ -309,6 +309,25 @@ function commonConvertCsvTo2D (csvData) {
 }
 
 /**
+ * アルファベットのみの文字列を数値に変換する
+ * @param {String} str
+ *
+ * @return {Number} 数値変換値
+ * 例. A  ⇒ 1
+ *     Z  ⇒ 26
+ *     AA ⇒ 27
+ */
+function commonConvertAto1(str) {
+  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  let count = 0
+  for (let i = 0; i < str.length; i++) {
+      j = str.length - i - 1
+      count = count + (alphabet.indexOf(str.toUpperCase()[j]) + 1) * (alphabet.length ** i)
+  }
+  return count
+}
+
+/**
  * 2次元配列 * 2次元配列 で left join する関数です。(比較する行はuniqueにしてください。)
  * @param {Array} arr1 2次元配列
  * @param {Array} arr2 2次元配列
@@ -749,3 +768,58 @@ function commonExportGroupAjax (groupIds, addFunc) {
 		)
 	})
 }
+
+///**
+// * レコード複製を行う関数です。
+// *
+// * @param {String}    tableId 登録テーブルID
+// * @param {String}    recordId 複製対象レコードID
+// * @param {Object}    ClassHash 登録分類項目
+// * @param {Object}    NumHash 登録数値項目
+// * @param {Object}    DateHash 登録日付項目
+// * @param {Object}    DescriptionHash 登録説明項目
+// * @param {Object}    CheckHash 登録チェック項目
+// * @param {String}    Status 登録ステータス
+// * @param {String}    Comments 登録コメント
+// * @param {Function}  addFunc 最後に実行したい関数
+// */
+//function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
+//  let data = JSON.stringify({
+//    "ApiVersion": 1.1,
+//    Status,
+//    Comments,
+//    ClassHash,
+//    NumHash,
+//    DateHash,
+//    DescriptionHash,
+//    CheckHash
+//  })
+//  if (!commonIsNull(Status)) {
+//    delete data["Status"]
+//  }
+//  if (!commonIsNull(Comments)) {
+//    delete data["Comments"]
+//  }
+
+//  return new Promise((resolve, reject) => {
+//		$.ajax({
+//			type: "POST",
+//			url: `/api/items/${tableId}/create`,
+//			contentType: 'application/json',
+//			data: data
+//		}).then(
+//			function (result) {
+//        if (addFunc && typeof addFunc === 'function') {
+//          // 渡されたオブジェクトが関数なら実行する
+//          addFunc(data)
+//        }
+//				// 正常終了
+//				resolve(result)
+//			},
+//			function () {
+//				// エラー
+//				reject()
+//			}
+//		)
+//	})
+//}

@@ -1,7 +1,7 @@
 
-const requestDialogId = "requestExcelDownloadDialog"
-const requestTargetgetDate = "requestTargetgetDate"
-const requestRemarks = "requestRemarks"
+let requestDialogId = "requestExcelDownloadDialog"
+let requestTargetgetDate = "requestTargetgetDate"
+let requestRemarks = "requestRemarks"
 
 $p.events.on_grid_load_arr.push(function () {
     let html = `
@@ -55,54 +55,66 @@ function openRequestExcelDownloadDialog() {
     })
 }
 
-
-
-
-async function downloadRequestExcel() {
+async function downloadRequestExcel(flg = true) {
+    // ダイアログをクローズ
+    $p.closeDialog($('#' + requestDialogId));
 
     // 帳票フォーマットを検索
     let retDownloadExcel
     try {
-        retDownloadExcel = await downloadExcel(FORMAT_ID_ESTIMATION)
+        retDownloadExcel = await downloadExcel(FORMAT_ID_REQUEST)
     } catch (err) {
         console.log(err)
-        commonSetMessage("帳票ダウンロードエラー１", WARNING)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー１", ERROR)
         return false
     }
     if (retDownloadExcel.Response.TotalCount !== 1) {
         return false
     }
+    // 帳票を格納
+    let exc = retDownloadExcel.Response.Data[0]
 
     // 先行依頼書台帳にデータを新規作成
     let retCreateParentRecord
-    try {
-        retCreateParentRecord = await createParentRecord()
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("帳票ダウンロードエラー２", WARNING)
-        return false
+    let createData = {
+        "ClassB": selectedData.value[0][ORDER_CLASS], // 04.注文区分
+        "DateA": formatYYYYMMDD(new Date()), // 04.先行依頼書作成日
+        "DateB": $('#' + requestTargetgetDate).val(), // 04.先行依頼書回答希望日
+        "DescriptionA": $('#' + requestRemarks).val() // 04.先行依頼書備考
     }
-    // 作成されたレコードのIDを取得
-    let targetID = retCreateParentRecord.Id
-    try {
-        // 選択した注文管理レコードを更新
-        await editSelectedRecord(commonGetId("MiS注番", false), targetID)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("帳票ダウンロードエラー３", WARNING)
-        return false
-    }
-    // 先行依頼書台帳にデータを新規作成
-    let retCreateExcel
-    // 帳票を作成
-    var res = retDownloadExcel.Response.Data[0]
 
     try {
-        retCreateExcel = await createExcel(JSON.parse(res.AttachmentsA)[0].Guid, res.ClassC)
+        retCreateParentRecord = await createParentRecord(TABLE_ID_REQUEST_BOOK, createData)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー２", ERROR)
+        return false
+    }
+
+    // 作成されたレコードのIDを取得
+    let targetID = retCreateParentRecord.Id
+    let updateData = {
+        Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+        , [commonGetId("MiS注番", false)]: targetID
+    }
+
+    try {
+        // 選択した注文管理レコードを更新
+        await editSelectedRecord(updateData)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー３", ERROR)
+        return false
+    }
+
+    // 帳票を作成
+    let retCreateExcel
+    try {
+        retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
         console.log(retCreateExcel)
     } catch (err) {
         console.log(err)
-        commonSetMessage("帳票ダウンロードエラー４", WARNING)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー４", ERROR)
         return false
     }
 
@@ -111,7 +123,7 @@ async function downloadRequestExcel() {
         await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
     } catch (err) {
         console.log(err)
-        commonSetMessage("帳票ダウンロードエラー５", WARNING)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー５", ERROR)
         return false
     }
 
@@ -120,37 +132,20 @@ async function downloadRequestExcel() {
         await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
     } catch (err) {
         console.log(err)
-        commonSetMessage("帳票ダウンロードエラー６", WARNING)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー６", ERROR)
         return false
     }
 
-    // ダイアログをクローズ
-    $p.closeDialog($('#' + requestDialogId));
-
-    // メッセージを表示
-    commonSetMessage("エクセルファイルを出力しました。", SUCCESS)
-
-
-    function createParentRecord() {
-        const today = new Date();
-        return $p.apiCreate({
-            id: TABLE_ID_REQUEST_BOOK,
-            data: {
-                "DateA": formatYYYYMMDD(today),
-                "DateB": $('#' + requestTargetgetDate).val(),
-                "DescriptionA": $('#' + requestRemarks).val()
-            },
-            'done': function (data) {
-                console.log('通信が成功しました。');
-                console.log(data);
-            },
-            'fail': function (error) {
-                console.log('通信が失敗しました。');
-            },
-            'always': function (data) {
-                console.log('通信が完了しました。');
-            }
-        });
+    // 終了する
+    if (flg) {
+        let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
+        if (finalAns) {
+            // キャッシュからリロード
+            location.reload(false)
+        }
+    // そのまま別依頼書作成を続行する
+    } else {
+        return targetID
     }
 
     async function createExcel(guid, filename) {
@@ -158,46 +153,44 @@ async function downloadRequestExcel() {
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" });
         const data = new Uint8Array(res.data);
         const workbook = new ExcelJS.Workbook();
-        const today = new Date();
 
         await workbook.xlsx.load(data);
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME);
-
         worksheet.name = filename
-        let retSelectedDiplayValue = await getSelectedDiplayValue()
-        const resSelectedDiplayValue = retSelectedDiplayValue.Response.Data
 
-        worksheet.getRow(24).getCell(8).value = $('#' + requestTargetgetDate).val() //回答希望日
-        worksheet.getRow(25).getCell(8).value = $('#' + requestRemarks).val() //備考
-        worksheet.getRow(3).getCell(8).value = resSelectedDiplayValue[0]["顧客名（契約先）"] //顧客名
-        worksheet.getRow(4).getCell(8).value = resSelectedDiplayValue[0]["事業所名"] //事業所名
-        worksheet.getRow(5).getCell(8).value = resSelectedDiplayValue[0]["エンドユーザ"] //エンドユーザ
-        worksheet.getRow(6).getCell(8).value = resSelectedDiplayValue[0]["代理店名"] //代理店
-        worksheet.getRow(5).getCell(83).value = resSelectedDiplayValue[0]["MiS注番"] //MiS注番
-        worksheet.getRow(4).getCell(83).value = formatYYYYMMDD(today) //作成日
+        let rec = await getSelectedData(["ClassA"] ,targetID, TABLE_ID_REQUEST_BOOK)
+        let misNo = rec.Response.Data[0]["MiS注番"]
+
+        cell("H24", worksheet).value = $('#' + requestTargetgetDate).val() //回答希望日
+        cell("H25", worksheet).value = $('#' + requestRemarks).val() //備考
+        cell("H3", worksheet).value  = selectedData.display[0][CUSTOMER] //顧客名
+        cell("H4", worksheet).value  = selectedData.display[0][OFFICE] //事業所名
+        cell("H5", worksheet).value  = selectedData.display[0][ENDUSER] //エンドユーザ
+        cell("H6", worksheet).value  = selectedData.display[0][AGENT] //代理店
+        cell("CE5", worksheet).value = misNo //MiS注番
+        cell("CE4", worksheet).value = formatYYYYMMDD(new Date()) //作成日
 
         let rowNumber = 9
-        for (let index in resSelectedDiplayValue) {
-            let record = resSelectedDiplayValue[index]
-            worksheet.getRow(rowNumber).getCell(2).value = record["営業担当者"]
-            worksheet.getRow(rowNumber).getCell(8).value = record["注文管理番号"]
-            worksheet.getRow(rowNumber).getCell(16).value = record["顧客名（契約先）"]
-            worksheet.getRow(rowNumber).getCell(21).value = record["品名"]
-            worksheet.getRow(rowNumber).getCell(26).value = record["型番"]
-            worksheet.getRow(rowNumber).getCell(34).value = record["数量"]
-            worksheet.getRow(rowNumber).getCell(38).value = record["単価"]
-            worksheet.getRow(rowNumber).getCell(42).value = record["金額"]
-            worksheet.getRow(rowNumber).getCell(47).value = record["コミッション率"]
-            worksheet.getRow(rowNumber).getCell(53).value = record["客先注文番号"]
-            worksheet.getRow(rowNumber).getCell(63).value = record["先行依頼希望納期"]
-            worksheet.getRow(rowNumber).getCell(67).value = record["回答納期"]
-            worksheet.getRow(rowNumber).getCell(71).value = record["連絡事項"]
-            rowNumber = rowNumber + 1
+        for (let record of selectedData.display) {
+            cell("B" + rowNumber, worksheet).value   = record[SALES_MAN] //　営業担当者
+            cell("H" + rowNumber, worksheet).value   = record[CH_NO] //　注文管理番号
+            cell("P" + rowNumber, worksheet).value   = record[CUSTOMER] //顧客名
+            cell("U" + rowNumber, worksheet).value   = record[ITEM_NAME] //　品名
+            cell("Z" + rowNumber, worksheet).value   = record[MODEL_NO] //　型番
+            cell("AH" + rowNumber, worksheet).value  = record[VOLUME] //　数量
+            cell("AL" + rowNumber, worksheet).value  = record[UNIT_PRICE] //　単価
+            cell("AP" + rowNumber, worksheet).value  = record[PRICE] //　金額
+            cell("AU" + rowNumber, worksheet).value  = record[COMMISSION] //　コミッション率
+            cell("BA" + rowNumber, worksheet).value  = record[CUSTOMER_CH_NO] //　客先注文番号
+            cell("BK" + rowNumber, worksheet).value  = record[CUSTOMER_LIMIT] //　顧客希望納期
+            cell("BO" + rowNumber, worksheet).value  = record[ANSWER_LIMIT] //　回答納期
+            cell("BS" + rowNumber, worksheet).value  = record[INFORMATION] //　連絡事項
+            rowNumber++
         }
 
         // Force workbook calculation on load
         workbook.calcProperties.fullCalcOnLoad = true;
 
-        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+        return { workbook: workbook, filename: filename + getNow() + ".xlsx" }
     }
 }

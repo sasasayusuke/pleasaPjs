@@ -1,80 +1,108 @@
 
 
 const supplierDialogId = "supplierExcelDownloadDialog"
-const supplierTargetgetDate = "supplierTargetgetDate"
+const supplierTarget = "supplierTarget"
+const supplierDate = "supplierDate"
 const supplierRemarks = "supplierRemarks"
+const supplierPrint = "supplierPrint"
+const supplierRequestTargetgetDate = "supplierRequestTargetgetDate"
+const supplierRequestRemarks = "supplierRequestRemarks"
 
+let x1 = "国内向け円建"
+let x2 = "海外向け円建"
+let x3 = "海外向けドル建"
 
 $p.events.on_grid_load_arr.push(function () {
 
     let html = `
-        <div id="${supplierDialogId}" class="dialog" title="仕入先注文書出力">
+        <div id="${supplierDialogId}" class="dialog" title="先行依頼書&仕入先注文書出力">
             <div class="field-normal">
-                <p class="field-label"><label for="TargetDate">仕入先希望納期</label></p>
+                <p class="field-label"><label for="${supplierRequestTargetgetDate}">回答希望日</label></p>
                 <div class="field-control">
                     <div class="container-normal">
-                        <select id="Results_Class017" name="Results_Class017" class="control-dropdown">
-                            <option value="">&nbsp;</option>
-                            <option value="ASAP">ASAP</option>
-                            <option value="日付">日付</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div id="Results_DateMField" class="field-normal" style="">
-                <p class="field-label">
-                    <label for="Results_DateM">納入日付</label>
-                </p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <input id="Results_DateM" name="Results_DateM" class="control-textbox datepicker applied"
-                        type="text" value="" placeholder="納入日付" autocomplete="off" data-format="Y/m/d" data-validate-date="1" data-step="10">
+                        <input id="${supplierRequestTargetgetDate}" name="${supplierRequestTargetgetDate}" class="control-textbox datepicker valid" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
                         <div class="ui-icon ui-icon-clock current-time">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="Results_Class002Field" class="field-normal both">
-                <p class="field-label">
-                    <label for="Results_Class002">納入区分</label>
-                </p>
+            <div class="field-markdown">
+                <p class="field-label"><label for="${supplierRequestRemarks}">備考</label></p>
                 <div class="field-control">
                     <div class="container-normal">
-                        <select id="Results_Class002" name="Results_Class002" class="control-dropdown valid" aria-invalid="false">
-                            <option value="" selected="selected">&nbsp;</option>
-                            <option value="MiS">MiS</option>
-                            <option value="仕入先直送">仕入先直送</option>
+                        <div id="${supplierRequestRemarks}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestRemarks}'));" style="">
+                            <pre><br></pre>
+                        </div>
+                        <div id="${supplierRequestRemarks}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestRemarks}'));">
+                        </div>
+                        <textarea id="${supplierRequestRemarks}" name="${supplierRequestRemarks}" class="control-markdown applied" placeholder="備考" style="height: 100px; display: none;">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-normal">
+                <p class="field-label"><label for="${supplierTarget}">希望納期</label></p>
+                <div class="field-control">
+                    <div class="container-normal">
+                        <select id="${supplierTarget}" name="${supplierTarget}" class="control-dropdown" onchange="displayControlAsap()">
+                            <option value="">&nbsp;</option>
+                            <option value="${WIKI_DELIVERY_LIMIT.ASAP.name}">${WIKI_DELIVERY_LIMIT.ASAP.name}</option>
+                            <option value="${WIKI_DELIVERY_LIMIT.DATE.name}">${WIKI_DELIVERY_LIMIT.DATE.name}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <div id="Results_DescriptionDField" class="field-markdown">
+            <div id="${supplierDate}Field" class="field-normal" style="">
+                <p class="field-label"><label for="${supplierDate}">納入日付</label></p>
+                <div class="field-control">
+                    <div class="container-normal">
+                        <input id="${supplierDate}" name="${supplierDate}" class="control-textbox datepicker valid" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
+                        <div class="ui-icon ui-icon-clock current-time">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="${supplierRemarks}Field" class="field-markdown">
                 <p class="field-label">
-                    <label for="Results_DescriptionD">納入先：直送</label>
+                    <label for="${supplierRemarks}">納入先：直送</label>
                 </p>
                 <div class="field-control">
                     <div class="container-normal">
-                        <div id="Results_DescriptionD.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#Results_DescriptionD'));"><pre><br></pre>
+                        <div id="${supplierRemarks}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRemarks}'));"><pre><br></pre>
                         </div>
-                        <div id="Results_DescriptionD.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#Results_DescriptionD'));">
+                        <div id="${supplierRemarks}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRemarks}'));">
                         </div>
-                        <textarea id="Results_DescriptionD" name="Results_DescriptionD" class="control-markdown upload-image applied" placeholder="納入先：直送" style="height: 100px; display: none;">
+                        <textarea id="${supplierRemarks}" name="${supplierRemarks}" class="control-markdown upload-image applied" placeholder="納入先：直送" style="height: 100px; display: none;">
                         </textarea>
-                        <div class="ui-icon ui-icon-image button-upload-image" onclick="$p.selectImage('Results_DescriptionD');">
+                        <div class="ui-icon ui-icon-image button-upload-image" onclick="$p.selectImage('${supplierRemarks}');">
                         </div>
-                        <div class="ui-icon ui-icon-video" onclick="$p.openVideo('Results_DescriptionD');">
+                        <div class="ui-icon ui-icon-video" onclick="$p.openVideo('${supplierRemarks}');">
                         </div>
-                        <input id="Results_DescriptionD.upload-image-file" name="Results_DescriptionD.upload-image-file" class="hidden upload-image-file" type="file" accept="image/*" data-id="Results_DescriptionD">
+                        <input id="${supplierRemarks}.upload-image-file" name="${supplierRemarks}.upload-image-file" class="hidden upload-image-file" type="file" accept="image/*" data-id="${supplierRemarks}">
+                    </div>
+                </div>
+            </div>
+            <div class="field-normal">
+            <p class="field-label"><label for="${supplierPrint}">出力仕入先注文形式</label></p>
+                <div class="field-control">
+                    <div class="container-normal">
+                        <select id="${supplierPrint}" name="${supplierPrint}" class="control-dropdown">
+                            <option value="">&nbsp;</option>
+                            <option value="${x1}">${x1}</option>
+                            <option value="${x2}">${x2}</option>
+                            <option value="${x3}">${x3}</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
             <p class="message-dialog"></p>
             <div class="command-center">
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="main();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
+                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
                 <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
             </div>
         </div>
@@ -84,7 +112,31 @@ $p.events.on_grid_load_arr.push(function () {
 
 })
 
+function displayControlAsap() {
+    // 納入日付　表示制御
+    if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
+        // 表示化
+        commonHideElements(supplierDate + "Field", false)
+    } else {
+        commonHideElements(supplierDate + "Field")
+        document.getElementById(supplierDate).value = ""
+    }
+}
+function displayControlDirect() {
+    // 納入先：直送　表示制御
+    if (selectedData.display[0][DELIVERY_CLASS] == WIKI_DELIVERY_CLASS.DIRECT.name) {
+        // 表示化
+        commonHideElements(supplierRemarks + "Field", false)
+    } else {
+        commonHideElements(supplierRemarks + "Field")
+        document.getElementById(supplierRemarks).value = ""
+    }
+}
+
 function openSupplierExcelDownloadDialog() {
+
+    displayControlAsap()
+    displayControlDirect()
     $('#SendTo').val("")
     $('#SendToPerson').val("")
     $('#SendToAddress').val("")
@@ -95,168 +147,172 @@ function openSupplierExcelDownloadDialog() {
     })
 }
 
-async function main() {
-
-    async function getTotalData(){
-        return $p.apiGet({
-            'id': $p.siteId(),
-            'data': {
-                'View': {
-                'ApiDataType': "KeyValues",
-                'ApiColumnValueDisplayType': "DisplayValue",
-                'GridColumns': [
-                        "NumF", // 金額
-                        "ClassV", //仕入先会社名
-            ],
-            'ColumnFilterHash': {
-                'ResultId': '[' + $p.selectedIds() + ']',
-            },
-    }
-    },
-        'done': function (data) {
-            console.log('通信が成功しました。');
-            console.log(data.Response.Data);
-            var res = data.Response.Data
-            return res
-        }
-        })
-    }
-const GetTotalSelectedData = await getTotalData();
-
-    let index = 0
-    let total = 0
-    for (const elem of GetTotalSelectedData.Response.Data){
-
-        total += GetTotalSelectedData.Response.Data[index]["金額"]
-
-     index++
+async function downloadSupplierExcel() {
+    // ダイアログをクローズ
+    $p.closeDialog($('#' + supplierDialogId));
+    let formatId = ""
+    if ($('#' + supplierPrint).val() == x1) {
+        formatId = FORMAT_ID_SUPPLIER
+    } else if ($('#' + supplierPrint).val() == x2) {
+        formatId = FORMAT_ID_SUPPLIER_FOREIGN_JPY
+    } else if ($('#' + supplierPrint).val() == x3) {
+        formatId = FORMAT_ID_SUPPLIER_FOREIGN_USD
+    } else {
+        commonSetMessage("出力仕入先注文形式を選択してください", WARNING)
+        return false
 
     }
+
+    requestTargetgetDate = supplierRequestTargetgetDate
+    requestRemarks = supplierRequestRemarks
+    let reqId = await downloadRequestExcel(false)
 
     // 帳票フォーマットを検索
     let retDownloadExcel
     try {
-        retDownloadExcel = await downloadExcel()
+        retDownloadExcel = await downloadExcel(formatId)
     } catch (err) {
         console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR)
         return false
     }
     if (retDownloadExcel.Response.TotalCount !== 1) {
         return false
     }
+    // 帳票を格納
+    let exc = retDownloadExcel.Response.Data[0]
 
     // 仕入先注文書台帳にデータを新規作成
     let retCreateParentRecord
+    let today = formatYYYYMMDD(new Date())
+    let total = selectedData.display.reduce((sum, elem) => {
+        return sum + elem[PRICE]
+    }, 0)
+    let totalUsd = selectedData.display.reduce((sum, elem) => {
+        return sum + elem[PRICE_USD]
+    }, 0)
+
+    createData = {
+        "DateA": today,
+        "ClassB": selectedData.display[0][SUPPLIER], //07.仕入先会社名
+        "ClassC": total, //07.合計金額
+        "ClassE": $('#' + supplierTarget).val(), //07.希望納期（ASAP,日付）
+        "DateB": $('#' + supplierDate).val(), //07.日付
+        "DescriptionA": $('#' + supplierRemarks).val(), //07.納品先
+    }
+
     try {
-        retCreateParentRecord = await createParentRecord(total, GetTotalSelectedData.Response.Data[0]["仕入先"]) //引数は何個でも指定できます。
+        retCreateParentRecord = await createParentRecord(TABLE_ID_SUPPLIER_ORDER_BOOK, createData)
     } catch (err) {
         console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR)
         return false
     }
+
     // 作成されたレコードのIDを取得
     let targetID = retCreateParentRecord.Id
 
+    updateData = {
+            Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+            , [commonGetId("仕入先注文番号", false)]: targetID
+            , [commonGetId("注文日", false)]: today
+    }
+
+    try {
     // 選択した注文管理レコードを更新
-    await editSelectedRecord("ClassW", targetID)
+        await editSelectedRecord(updateData)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR)
+        return false
+    }
 
     // 帳票を作成
-    var res = retDownloadExcel.Response.Data[0]
-    let retCreateExcel = await createExcel(JSON.parse(res.AttachmentsA)[0].Guid, res.ClassC)
-    console.log(retCreateExcel)
+    let retCreateExcel
+    try {
+        retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR)
+        return false
+    }
 
-    // 仕入先注文書台帳に帳票を添付
-    await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
+    try {
+        // 仕入先注文書台帳に帳票を添付
+        await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR)
+        return false
+    }
 
-    // ファイルをダウンロード
-    await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
+    try {
+        // ファイルをダウンロード
+        await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR)
+        return false
+    }
 
-    // ダイアログをクローズ
-    $p.closeDialog($('#' + supplierDialogId));
+    let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
+	if (finalAns) {
+		// キャッシュからリロード
+		location.reload(false)
+	}
 
-    // メッセージを表示
-    $p.setMessage('#Message', JSON.stringify({
-        Css: 'alert-success',
-        Text: 'エクセルファイルを出力しました。'
-    }));
-}
+    async function createExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
 
 
-function createParentRecord(Total, Company) {  //Total、Companyとして、引数で持ってくる
-    const today = new Date();
-    return $p.apiCreate({
-        id: ORDER_FORM_FOR_SUPPLIERS_ID,
-        data: {
-            "DateA": formatYYYYMMDD(today),
-            "ClassA": $('#Results_ClassW').val(), //07.仕入先注文台帳番号
-            "ClassB": Company, //07.仕入先会社名
-            "ClassC": Total, //07.合計金額
-            "ClassE": $('#Results_Class017').val(), //07.希望納期（ASAP,日付）
-            "DescriptionA": $('#Results_DescriptionD').val(), //07.納品先
-            "DateB": $('#Results_DateM').val(), //07.日付
-            //"DescriptionA": $('#Remarks').val()
 
-        },
-        'done': function (data) {
-            console.log('通信が成功しました。');
-            console.log(data);
-        },
-        'fail': function (error) {
-            console.log('通信が失敗しました。');
-        },
-        'always': function (data) {
-            console.log('通信が完了しました。');
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+        worksheet.name = filename
+
+        let recS = await getSelectedData(["ClassA"] ,targetID, TABLE_ID_SUPPLIER_ORDER_BOOK)
+        let siNo = recS.Response.Data[0]["仕入先注文台帳番号"]
+
+        let recC = await getSelectedData(["DescriptionB"] ,selectedData.value[0][SUPPLIER], TABLE_ID_COMPANY_INFO)
+        let paymentTerm = recC.Response.Data[0]["条件"]
+
+        let recR = await getSelectedData(["ClassA"] ,reqId, TABLE_ID_REQUEST_BOOK)
+        let misNo = recR.Response.Data[0]["MiS注番"]
+
+
+        cell("Y4", worksheet).value = today.split("/")[0] // 注文年
+        cell("AB4", worksheet).value = today.split("/")[1] // 注文月
+        cell("AD4", worksheet).value = today.split("/")[2] // 注文日
+        cell("Z5", worksheet).value = siNo //仕入先注文台帳番号
+        cell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
+        cell("G13", worksheet).value = total //合計
+        cell("G15", worksheet).value = paymentTerm //支払条件
+        // ASA
+        if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
+            cell("G17", worksheet).value = $('#' + supplierDate).val()
+        } else {
+            cell("G17", worksheet).value = $('#' + supplierTarget).val()
         }
-    });
-}
 
+        cell("C32", worksheet).value = $('#' + supplierRemarks).val() //納品先
+        cell("AB35", worksheet).value = misNo //MiS注番
 
+        let rowNumber = 20
+        for (let record of selectedData.display) {
+            cell("C" + rowNumber, worksheet).value = record[MODEL_NO]
+            cell("K" + rowNumber, worksheet).value = record[VOLUME]
+            cell("N" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            cell("Q" + rowNumber, worksheet).value = record[PRICE]
+            cell("T" + rowNumber, worksheet).value = record[SUPPLIER_REMARK]
+            rowNumber = rowNumber + 1
+        }
 
-async function createExcel(guid, filename) {
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
 
-    const res = await axios.get(URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" });
-    const data = new Uint8Array(res.data);
-    const workbook = new ExcelJS.Workbook();
-
-    await workbook.xlsx.load(data);
-    const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME);
-
-    console.log('"[' + $p.selectedIds() + ']"')
-
-    worksheet.name = filename
-    let retSelectedDiplayValue = await getSelectedDiplayValue()
-    const resSelectedDiplayValue = retSelectedDiplayValue.Response.Data
-
-    worksheet.getRow(4).getCell(25).value = resSelectedDiplayValue[0]["注文日"] //注文日
-    worksheet.getRow(5).getCell(25).value = resSelectedDiplayValue[0]["注文番号"] //仕入先注文台帳番号
-    worksheet.getRow(5).getCell(2).value = resSelectedDiplayValue[0]["仕入先"] //仕入先
-    //worksheet.getRow(13).getCell(7).value = resSelectedDiplayValue[0]["金額"] //金額
-    worksheet.getRow(15).getCell(7).value = resSelectedDiplayValue[0]["支払条件"] //支払条件
-
-    if(retSelectedDiplayValue.Response.Data[0]["仕入先希望納期"] == "ASAP"){
-
-        worksheet.getRow(17).getCell(7).value = $('#Results_Class017').val() //希望納期 (ASAPのみ入れたい)
-
-    }else(retSelectedDiplayValue.Response.Data[0]["仕入先希望納期"] == "日付");{
-
-        worksheet.getRow(17).getCell(7).value = $('#Results_DateM').val() //日付
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
     }
-    worksheet.getRow(32).getCell(3).value = $('#Results_DescriptionD').val() //納品先
-    worksheet.getRow(35).getCell(28).value = resSelectedDiplayValue[0]["MiS注番"] //MiS注番
-
-    let rowNumber = 20
-    for (let index in resSelectedDiplayValue) {
-        let record = resSelectedDiplayValue[index]
-        worksheet.getRow(rowNumber).getCell(3).value = record["型番"]
-        worksheet.getRow(rowNumber).getCell(11).value = record["数量"]
-        worksheet.getRow(rowNumber).getCell(14).value = record["単価"]
-        worksheet.getRow(rowNumber).getCell(17).value = record["金額"]
-        worksheet.getRow(rowNumber).getCell(20).value = record["仕入先注文備考"]
-        rowNumber = rowNumber + 1
-    }
-
-    // Force workbook calculation on load
-    workbook.calcProperties.fullCalcOnLoad = true;
-
-    return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
 }
-

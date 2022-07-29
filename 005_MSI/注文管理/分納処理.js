@@ -75,7 +75,6 @@ async function devideDelivery() {
     // 先行依頼書タブ
         , "MiS注番"
         , "MiS営業"
-        , "先行依頼注文番号"
         , "顧客希望納期"
         , "回答納期"
         , "連絡事項"

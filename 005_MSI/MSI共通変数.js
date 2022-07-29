@@ -31,9 +31,9 @@
   //製品情報
   var TABLE_ID_PRODUCT_INFO         = 10
   //注文管理台帳
-  var TABLE_ID_ORDER_CONTROL_BOOK   = 34288//11
+  var TABLE_ID_ORDER_CONTROL_BOOK   = 11
   //先行依頼台帳
-  var TABLE_ID_REQUEST_BOOK         = 34289//13
+  var TABLE_ID_REQUEST_BOOK         = 13
   //仕入先注文台帳
   var TABLE_ID_SUPPLIER_ORDER_BOOK  = 17
   //請求書台帳
@@ -44,10 +44,16 @@
   var TABLE_ID_ORDER_INPUT_FORM     = 1756
 
 
-  // 先行依頼書フォーマット
-  var FORMAT_ID_REQUEST = "01"
   // 見積書フォーマット
-  var FORMAT_ID_ESTIMATION = "02"
+  var FORMAT_ID_ESTIMATION              = "01"
+  // 先行依頼書フォーマット
+  var FORMAT_ID_REQUEST                 = "02"
+  // 仕入先注文フォーマット
+  var FORMAT_ID_SUPPLIER                = "08"
+  // 海外用仕入先向け注文書(JPY)フォーマット
+  var FORMAT_ID_SUPPLIER_FOREIGN_JPY    = "14"
+  // 海外用仕入先向け注文書(USD)フォーマット
+  var FORMAT_ID_SUPPLIER_FOREIGN_USD    = "15"
 
   // 注文区分
   var WIKI_ORDER_CLASS = {
@@ -64,6 +70,13 @@
       name: "他社製品",
     }
   }
+  function convertOrderClassNameToIndex(name) {
+    for (let v of Object.keys(WIKI_ORDER_CLASS)) {
+        if (WIKI_ORDER_CLASS[v].name == name) {
+            return WIKI_ORDER_CLASS[v].index
+        }
+    }
+}
   // 会社区分
   var WIKI_COMPANY_CLASS = {
     MSI: {
@@ -190,3 +203,26 @@
     },
   }
 
+  // 希望納期
+  var WIKI_DELIVERY_LIMIT = {
+    ASAP: {
+      name: 'ASAP',
+      value: 1,
+    },
+    DATE: {
+      name: '日付',
+      value: 2,
+    },
+  }
+
+  // 納入区分
+  var WIKI_DELIVERY_CLASS = {
+    MIS: {
+      name: 'MiS',
+      value: 1,
+    },
+    DIRECT : {
+      name: '仕入先直送',
+      value: 2,
+    },
+  }
