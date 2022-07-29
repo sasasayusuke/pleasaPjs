@@ -44,7 +44,7 @@ async function getSelectedData(culumns, selects, id = $p.siteId(), displayValue 
     })
 }
 
-async function editParentRecord(targetID, workbook, filename) {
+async function editParentRecord(targetID, className, workbook, filename) {
     const fileBuffer = await workbook.xlsx.writeBuffer()
     const base64 = arrayBufferToBase64(fileBuffer)
 
@@ -53,7 +53,7 @@ async function editParentRecord(targetID, workbook, filename) {
     let JSONdata = {
         "ApiVersion": 1.1,
         "AttachmentsHash": {
-            "AttachmentsA": [
+            [className]: [
                 {
                     "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "Name": filename,

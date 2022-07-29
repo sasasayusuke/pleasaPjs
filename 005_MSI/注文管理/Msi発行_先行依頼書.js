@@ -55,32 +55,37 @@ function openRequestExcelDownloadDialog() {
     })
 }
 
-async function downloadRequestExcel(flg = true) {
-    // ダイアログをクローズ
-    $p.closeDialog($('#' + requestDialogId));
-
-    // 帳票フォーマットを検索
-    let retDownloadExcel
-    try {
-        retDownloadExcel = await downloadExcel(FORMAT_ID_REQUEST)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("先行依頼書:帳票ダウンロードエラー１", ERROR)
-        return false
-    }
-    if (retDownloadExcel.Response.TotalCount !== 1) {
-        return false
-    }
+async function downloadRequestExcel(finishFlg = true, printFlg = true) {
     // 帳票を格納
-    let exc = retDownloadExcel.Response.Data[0]
-
+    let exc = {}
     // 先行依頼書台帳にデータを新規作成
-    let retCreateParentRecord
+    let retCreateParentRecord = {}
     let createData = {
         "ClassB": selectedData.value[0][ORDER_CLASS], // 04.注文区分
-        "DateA": formatYYYYMMDD(new Date()), // 04.先行依頼書作成日
-        "DateB": $('#' + requestTargetgetDate).val(), // 04.先行依頼書回答希望日
-        "DescriptionA": $('#' + requestRemarks).val() // 04.先行依頼書備考
+    }
+    if (printFlg) {
+        // ダイアログをクローズ
+        $p.closeDialog($('#' + requestDialogId));
+
+        // 帳票フォーマットを検索
+        let retDownloadExcel
+        try {
+            retDownloadExcel = await downloadExcel(FORMAT_ID_REQUEST)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("先行依頼書:帳票ダウンロードエラー１", ERROR)
+            return false
+        }
+        if (retDownloadExcel.Response.TotalCount !== 1) {
+            return false
+        }
+
+        // 帳票を格納
+        exc = retDownloadExcel.Response.Data[0]
+        createData["DateA"] = formatYYYYMMDD(new Date()), // 04.先行依頼書作成日
+        createData["DateB"] = $('#' + requestTargetgetDate).val(), // 04.先行依頼書回答希望日
+        createData["DescriptionA"] = $('#' + requestRemarks).val() // 04.先行依頼書備考
+
     }
 
     try {
@@ -90,55 +95,57 @@ async function downloadRequestExcel(flg = true) {
         commonSetMessage("先行依頼書:帳票ダウンロードエラー２", ERROR)
         return false
     }
+    let targetID = ""
+    if (printFlg) {
+        // 作成されたレコードのIDを取得
+        targetID = retCreateParentRecord.Id
+        let updateData = {
+            Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+            , [commonGetId("MiS注番", false)]: targetID
+        }
 
-    // 作成されたレコードのIDを取得
-    let targetID = retCreateParentRecord.Id
-    let updateData = {
-        Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-        , [commonGetId("MiS注番", false)]: targetID
-    }
+        try {
+            // 選択した注文管理レコードを更新
+            await editSelectedRecord(updateData)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("先行依頼書:帳票ダウンロードエラー３", ERROR)
+            return false
+        }
 
-    try {
-        // 選択した注文管理レコードを更新
-        await editSelectedRecord(updateData)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("先行依頼書:帳票ダウンロードエラー３", ERROR)
-        return false
-    }
+        // 帳票を作成
+        let retCreateExcel
+        try {
+            retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
+            console.log(retCreateExcel)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("先行依頼書:帳票ダウンロードエラー４", ERROR)
+            return false
+        }
 
-    // 帳票を作成
-    let retCreateExcel
-    try {
-        retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
-        console.log(retCreateExcel)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("先行依頼書:帳票ダウンロードエラー４", ERROR)
-        return false
-    }
+        try {
+                // 選考依頼書台帳に帳票を添付
+            await editParentRecord(targetID, "AttachmentsA", retCreateExcel.workbook, retCreateExcel.filename)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("先行依頼書:帳票ダウンロードエラー５", ERROR)
+            return false
+        }
 
-    try {
-            // 選考依頼書台帳に帳票を添付
-        await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("先行依頼書:帳票ダウンロードエラー５", ERROR)
-        return false
-    }
-
-    try {
-        // ファイルをダウンロード
-        await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("先行依頼書:帳票ダウンロードエラー６", ERROR)
-        return false
+        try {
+            // ファイルをダウンロード
+            await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("先行依頼書:帳票ダウンロードエラー６", ERROR)
+            return false
+        }
     }
 
     // 終了する
-    if (flg) {
-        let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
+    if (finishFlg) {
+        let finalAns = window.confirm(`更新${printFlg ? "と帳票出力" : ""}が完了しました。画面をリロードしますがよろしいでしょうか?`)
         if (finalAns) {
             // キャッシュからリロード
             location.reload(false)

@@ -150,13 +150,18 @@ function openSupplierExcelDownloadDialog() {
 async function downloadSupplierExcel() {
     // ダイアログをクローズ
     $p.closeDialog($('#' + supplierDialogId));
-    let formatId = ""
+    let printId = ""
+    let usdFlg = false
+    let foreignFlg = false
     if ($('#' + supplierPrint).val() == x1) {
-        formatId = FORMAT_ID_SUPPLIER
+        printId = FORMAT_ID_SUPPLIER
     } else if ($('#' + supplierPrint).val() == x2) {
-        formatId = FORMAT_ID_SUPPLIER_FOREIGN_JPY
+        printId = FORMAT_ID_SUPPLIER_FOREIGN_JPY
+        foreignFlg = true
     } else if ($('#' + supplierPrint).val() == x3) {
-        formatId = FORMAT_ID_SUPPLIER_FOREIGN_USD
+        printId = FORMAT_ID_SUPPLIER_FOREIGN_USD
+        usdFlg = true
+        foreignFlg = true
     } else {
         commonSetMessage("出力仕入先注文形式を選択してください", WARNING)
         return false
@@ -168,31 +173,26 @@ async function downloadSupplierExcel() {
     let reqId = await downloadRequestExcel(false)
 
     // 帳票フォーマットを検索
-    let retDownloadExcel
-    try {
-        retDownloadExcel = await downloadExcel(formatId)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR)
-        return false
-    }
-    if (retDownloadExcel.Response.TotalCount !== 1) {
-        return false
-    }
-    // 帳票を格納
-    let exc = retDownloadExcel.Response.Data[0]
+    let retDownloadExcel = {}
+     // 帳票を格納
+    let exc = {}
 
     // 仕入先注文書台帳にデータを新規作成
-    let retCreateParentRecord
+    let retCreateParentRecord ={}
+
+
+    // 帳票を作成
+    let retCreateExcel = {}
+
     let today = formatYYYYMMDD(new Date())
+    // 合計金額
     let total = selectedData.display.reduce((sum, elem) => {
-        return sum + elem[PRICE]
-    }, 0)
-    let totalUsd = selectedData.display.reduce((sum, elem) => {
-        return sum + elem[PRICE_USD]
+        return sum + (elem[usdFlg ? "原価＄" : "原価"] * elem[VOLUME])
     }, 0)
 
-    createData = {
+    let targetID = ""
+
+    let createData = {
         "DateA": today,
         "ClassB": selectedData.display[0][SUPPLIER], //07.仕入先会社名
         "ClassC": total, //07.合計金額
@@ -205,56 +205,68 @@ async function downloadSupplierExcel() {
         retCreateParentRecord = await createParentRecord(TABLE_ID_SUPPLIER_ORDER_BOOK, createData)
     } catch (err) {
         console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR)
         return false
     }
 
-    // 作成されたレコードのIDを取得
-    let targetID = retCreateParentRecord.Id
+    for (let formatId of [FORMAT_ID_SUPPLIER, FORMAT_ID_SUPPLIER_FOREIGN_JPY, FORMAT_ID_SUPPLIER_FOREIGN_USD]) {
+        try {
+            retDownloadExcel = await downloadExcel(formatId)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR)
+            return false
+        }
+        if (retDownloadExcel.Response.TotalCount !== 1) {
+            return false
+        }
+        // 帳票を格納
+        exc = retDownloadExcel.Response.Data[0]
 
-    updateData = {
-            Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-            , [commonGetId("仕入先注文番号", false)]: targetID
-            , [commonGetId("注文日", false)]: today
+        // 作成されたレコードのIDを取得
+        targetID = retCreateParentRecord.Id
+
+        let updateData = {
+                Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+                , [commonGetId("仕入先注文番号", false)]: targetID
+                , [commonGetId("注文日", false)]: today
+        }
+
+        try {
+        // 選択した注文管理レコードを更新
+            await editSelectedRecord(updateData)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR)
+            return false
+        }
+
+        try {
+            retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR)
+            return false
+        }
+
+        try {
+            // 仕入先注文書台帳に帳票を添付
+            await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR)
+            return false
+        }
+        if (formatId == printId)
+        try {
+            // ファイルをダウンロード
+            await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR)
+            return false
+        }
     }
-
-    try {
-    // 選択した注文管理レコードを更新
-        await editSelectedRecord(updateData)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR)
-        return false
-    }
-
-    // 帳票を作成
-    let retCreateExcel
-    try {
-        retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR)
-        return false
-    }
-
-    try {
-        // 仕入先注文書台帳に帳票を添付
-        await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR)
-        return false
-    }
-
-    try {
-        // ファイルをダウンロード
-        await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
-    } catch (err) {
-        console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR)
-        return false
-    }
-
     let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
 	if (finalAns) {
 		// キャッシュからリロード
@@ -276,9 +288,6 @@ async function downloadSupplierExcel() {
         let recS = await getSelectedData(["ClassA"] ,targetID, TABLE_ID_SUPPLIER_ORDER_BOOK)
         let siNo = recS.Response.Data[0]["仕入先注文台帳番号"]
 
-        let recC = await getSelectedData(["DescriptionB"] ,selectedData.value[0][SUPPLIER], TABLE_ID_COMPANY_INFO)
-        let paymentTerm = recC.Response.Data[0]["条件"]
-
         let recR = await getSelectedData(["ClassA"] ,reqId, TABLE_ID_REQUEST_BOOK)
         let misNo = recR.Response.Data[0]["MiS注番"]
 
@@ -289,7 +298,7 @@ async function downloadSupplierExcel() {
         cell("Z5", worksheet).value = siNo //仕入先注文台帳番号
         cell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
         cell("G13", worksheet).value = total //合計
-        cell("G15", worksheet).value = paymentTerm //支払条件
+        cell("G15", worksheet).value = selectedData.display[0]["条件"] //支払条件
         // ASA
         if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
             cell("G17", worksheet).value = $('#' + supplierDate).val()
@@ -302,11 +311,11 @@ async function downloadSupplierExcel() {
 
         let rowNumber = 20
         for (let record of selectedData.display) {
-            cell("C" + rowNumber, worksheet).value = record[MODEL_NO]
-            cell("K" + rowNumber, worksheet).value = record[VOLUME]
-            cell("N" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            cell("Q" + rowNumber, worksheet).value = record[PRICE]
-            cell("T" + rowNumber, worksheet).value = record[SUPPLIER_REMARK]
+            cell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
+            cell("K" + rowNumber, worksheet).value = record[VOLUME] //数量
+            cell("N" + rowNumber, worksheet).value = record[usdFlg ? "原価＄" : "原価"] //単価
+            cell("Q" + rowNumber, worksheet).value = record[VOLUME] * record[usdFlg ? "原価＄" : "原価"] //金額
+            cell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
             rowNumber = rowNumber + 1
         }
 

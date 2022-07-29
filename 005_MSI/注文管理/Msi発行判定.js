@@ -30,35 +30,37 @@ const COLS = [
     , ANSWER_LIMIT      = "回答納期"
     , INFORMATION       = "連絡事項"
     , SUPPLIER_REMARK   = "仕入先注文備考"
-
-
-
 ]
 
 async function preCheck() {
+    $p.clearMessage()
+    colIds = COLS.map(v => commonGetId(v, false))
     // 定義した項目が存在しない場合
-    if (COLS.map(v => commonGetId(v, false)).some(v => commonIsNull(v))) {
+    if (colIds.some(v => commonIsNull(v))) {
         commonSetMessage("定義した項目が存在しません。スクリプトを確認してください。", ERROR)
     }
+    // 別テーブルから取得する項目を追加
+    colIds = [
+        ...colIds
+        , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumA"
+        , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumC"
+        , commonGetId(SUPPLIER, false) + "~" + TABLE_ID_COMPANY_INFO + ",DescriptionB"
+    ]
+
     let selects = $p.selectedIds()
     if (selects.length === 0) {
         commonSetMessage("データが選択されていません。", WARNING)
         return false
     }
 
-    if (selects.length > 15) {
-        commonSetMessage("選択するデータは15件以下にしてください。", WARNING)
-        return false
-    }
-
-    let tmp = await getSelectedData(COLS.map(v => commonGetId(v, false)), selects)
+    let tmp = await getSelectedData(colIds, selects)
     selectedData.display = tmp.Response.Data
-    tmp = await getSelectedData(COLS.map(v => commonGetId(v, false)), selects, $p.siteId(), false)
+    tmp = await getSelectedData(colIds, selects, $p.siteId(), false)
     selectedData.value = tmp.Response.Data
 
     // 選択レコードのステータスチェック（注文内示または注文書受領）
     if (commonUniqueArray([...selectedData.display.map(v => v[ORDER_STATUS]), WIKI_STATUS_ORDER_CONTROL.announce.value, WIKI_STATUS_ORDER_CONTROL.receipt.value]).length > 2) {
-        commonSetMessage("選択したデータにMiS注番が発行済みのものが含まれます。出力済みの先行依頼書を再出力する場合は先行依頼書台帳テーブルから添付ファイルをダウンロードしてください。", WARNING)
+        commonSetMessage("選択したデータにMiS注番が発行済みのものが含まれます。\r\n出力済みの先行依頼書を再出力する場合は先行依頼書台帳テーブルから添付ファイルをダウンロードしてください。", WARNING)
         return false
     }
 
@@ -82,18 +84,37 @@ async function preCheck() {
     // 全「注文区分」が一致してるので1行目から取得
     // 自社既存品フロー
     if (selectedData.display[0][ORDER_CLASS] == WIKI_ORDER_CLASS.existing_product.name) {
+        // 選択件数チェック
+        if (selects.length > 15) {
+            commonSetMessage("選択するデータは15件以下にしてください。", WARNING)
+            return false
+        }
+
         openRequestExcelDownloadDialog(selectedData)
+
     // 自社新規開発品フロー
     } else if (selectedData.display[0][ORDER_CLASS] == WIKI_ORDER_CLASS.new_product.name) {
+        let ans = window.confirm('Misを発行してよろしいですか？\r\n先行依頼書、開発依頼書は作成されません。')
+        if (ans) {
+            // 帳票なしで注番取得
+            downloadRequestExcel(true, false)
+        }
 
     // 他社製品フロー
     } else if (selectedData.display[0][ORDER_CLASS] == WIKI_ORDER_CLASS.other_company_product.name) {
+        // 選択件数チェック
+        if (selects.length > 10) {
+            commonSetMessage("選択するデータは15件以下にしてください。", WARNING)
+            return false
+        }
+
         // 選択レコードの項目一致チェック
         if (commonUniqueArray([...selectedData.display.map(v => v[SUPPLIER] + v[DELIVERY_CLASS])]).length > 1) {
             commonSetMessage("仕入先注文を作成するには「仕入先」「納入区分」が一致したレコードを選択してください。", WARNING)
             return false
         }
         openSupplierExcelDownloadDialog(selectedData)
+
     // 不正区分
     } else {
         commonSetMessage("選択したレコードの注文区分が不正な値です。", ERROR)
