@@ -1,7 +1,10 @@
+let scriptLoaded = false
 $p.events.on_grid_load_arr.push(function() {
+    // 2重ロード制御
+    if (scriptLoaded) return
+
     // js読み込み
     const scripts = [
-        "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
         "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js",
     ]
@@ -15,6 +18,7 @@ $p.events.on_grid_load_arr.push(function() {
             var elm = document.createElement('script')
             elm.text = request.responseText
             document.head.appendChild(elm)
+            scriptLoaded = true
         } else {
             // その他のステータスの場合エラー
             commonSetMessage("帳票スクリプト読み込みエラー", ERROR)

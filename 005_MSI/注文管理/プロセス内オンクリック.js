@@ -23,3 +23,11 @@ function clickAccepted (n) {
 function clickClosed (n) {
     $p.execProcess(n)
 }
+function clickBackAdjustment (n) {
+    let ans = window.confirm('前倒し調整を依頼しますか？')
+    if (ans) {
+        commonChangeReadOnly('確定納期日', false)
+        commonSetVal('確定納期日', "")
+        $p.execProcess(n)
+    }
+}

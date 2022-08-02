@@ -95,23 +95,23 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
         commonSetMessage("先行依頼書:帳票ダウンロードエラー２", ERROR)
         return false
     }
-    let targetID = ""
-    if (printFlg) {
-        // 作成されたレコードのIDを取得
-        targetID = retCreateParentRecord.Id
-        let updateData = {
-            Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-            , [commonGetId("MiS注番", false)]: targetID
-        }
 
-        try {
-            // 選択した注文管理レコードを更新
-            await editSelectedRecord(updateData)
-        } catch (err) {
-            console.log(err)
-            commonSetMessage("先行依頼書:帳票ダウンロードエラー３", ERROR)
-            return false
-        }
+    // 作成されたレコードのIDを取得
+    let targetID = retCreateParentRecord.Id
+    let updateData = {
+        Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+        , [commonGetId("MiS注番", false)]: targetID
+    }
+
+    try {
+        // 選択した注文管理レコードを更新
+        await editSelectedRecord(updateData)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("先行依頼書:帳票ダウンロードエラー３", ERROR)
+        return false
+    }
+    if (printFlg) {
 
         // 帳票を作成
         let retCreateExcel

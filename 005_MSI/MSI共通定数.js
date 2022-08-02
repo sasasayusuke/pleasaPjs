@@ -10,50 +10,83 @@
  *
  */
 
-  //国番号マスタ
-  var TABLE_ID_COUNTRY_NO           = 12
-  //コミッション率マスタ
-  var TABLE_ID_COMMISSION_RATE      = 6
-  //エンドユーザマスタ
-  var TABLE_ID_END_USER             = 8
-  //インボイス番号マスタ
-  var TABLE_ID_INVOICE_NO           = 5
-  //会社区分
-  var TABLE_ID_COMPANY_CLASS        = 1809
-  //会社情報
-  var TABLE_ID_COMPANY_INFO         = 15
-  //事業所情報
-  var TABLE_ID_OFFICE_INFO          = 3319
-  //個人情報
-  var TABLE_ID_PERSON_INFO          = 4
-  //見積台帳
-  var TABLE_ID_ESTIMATION_BOOK      = 21036
-  //製品情報
-  var TABLE_ID_PRODUCT_INFO         = 10
-  //注文管理台帳
-  var TABLE_ID_ORDER_CONTROL_BOOK   = 11
-  //先行依頼台帳
-  var TABLE_ID_REQUEST_BOOK         = 13
-  //仕入先注文台帳
-  var TABLE_ID_SUPPLIER_ORDER_BOOK  = 17
-  //請求書台帳
-  var TABLE_ID_INVOICE_BOOK         = 14
-  //エクセルフォーマット
-  var TABLE_ID_EXCEL_FORMAT         = 7
-  //注文台帳入力フォーム
-  var TABLE_ID_ORDER_INPUT_FORM     = 1756
+  var TABLE = [
+    //国番号マスタ
+    TABLE_ID_COUNTRY_NO             = 12
+    //コミッション率マスタ
+    , TABLE_ID_COMMISSION_RATE      = 6
+    //エンドユーザマスタ
+    , TABLE_ID_END_USER             = 8
+    //インボイス番号マスタ
+    , TABLE_ID_INVOICE_NO           = 5
+    //会社区分
+    , TABLE_ID_COMPANY_CLASS        = 1809
+    //会社情報
+    , TABLE_ID_COMPANY_INFO         = 15
+    //事業所情報
+    , TABLE_ID_OFFICE_INFO          = 3319
+    //個人情報
+    , TABLE_ID_PERSON_INFO          = 4
+    //見積台帳
+    , TABLE_ID_ESTIMATION_BOOK      = 21036
+    //製品情報
+    , TABLE_ID_PRODUCT_INFO         = 10
+    //注文管理台帳
+    , TABLE_ID_ORDER_CONTROL_BOOK   = 11
+    //先行依頼台帳
+    , TABLE_ID_REQUEST_BOOK         = 13
+    //仕入先注文台帳
+    , TABLE_ID_SUPPLIER_ORDER_BOOK  = 17
+    //請求書台帳
+    , TABLE_ID_CLAIM_BOOK           = 14
+    //エクセルフォーマット
+    , TABLE_ID_EXCEL_FORMAT         = 7
+    //注文台帳入力フォーム
+    , TABLE_ID_ORDER_INPUT_FORM     = 1756
+  ]
 
+  var FORMAT = [
+    // 見積書フォーマット
+    FORMAT_ID_ESTIMATION                = "01"
+    // 先行依頼書フォーマット
+    , FORMAT_ID_REQUEST                 = "02"
+    // 請求書フォーマット
+    , FORMAT_ID_CLAIM                   = "04"
+    // 請求書フォーマット
+    , FORMAT_ID_CLAIM_STORAGE           = "05"
+    // 納品書フォーマット
+    , FORMAT_ID_DELIVERY                = "06"
+    // 受領書注文フォーマット
+    , FORMAT_ID_RECEIPT                 = "07"
+    // 仕入先注文フォーマット
+    , FORMAT_ID_SUPPLIER                = "08"
+    // DestinationListフォーマット
+    , FORMAT_ID_DISTINATION             = "09"
+    // Invoiceフォーマット
+    , FORMAT_ID_INVOICE                 = "10"
+    // PackingListフォーマット
+    , FORMAT_ID_PACKING                 = "11"
+    // 海外用仕入先向け注文書(JPY)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_JPY    = "14"
+    // 海外用仕入先向け注文書(USD)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_USD    = "15"
+  ]
 
-  // 見積書フォーマット
-  var FORMAT_ID_ESTIMATION              = "01"
-  // 先行依頼書フォーマット
-  var FORMAT_ID_REQUEST                 = "02"
-  // 仕入先注文フォーマット
-  var FORMAT_ID_SUPPLIER                = "08"
-  // 海外用仕入先向け注文書(JPY)フォーマット
-  var FORMAT_ID_SUPPLIER_FOREIGN_JPY    = "14"
-  // 海外用仕入先向け注文書(USD)フォーマット
-  var FORMAT_ID_SUPPLIER_FOREIGN_USD    = "15"
+  // 注文管理 ビュー
+var VIEW_ORDER_CONTROL = {
+  sale: {
+      index: 1,
+      value: "営業担当者用",
+  }
+  , development: {
+      index: 2,
+      value: "開発担当者用",
+  }
+  , destination: {
+      index: 3,
+      value: "DestitationList用",
+  }
+}
 
   // 注文区分
   var WIKI_ORDER_CLASS = {

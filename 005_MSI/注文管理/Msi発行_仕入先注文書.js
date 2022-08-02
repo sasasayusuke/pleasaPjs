@@ -179,8 +179,6 @@ async function downloadSupplierExcel() {
 
     // 仕入先注文書台帳にデータを新規作成
     let retCreateParentRecord ={}
-
-
     // 帳票を作成
     let retCreateExcel = {}
 
@@ -250,8 +248,16 @@ async function downloadSupplierExcel() {
         }
 
         try {
+            let att = ""
+            if (formatId == FORMAT_ID_SUPPLIER) {
+                att = "AttachmentsA"
+            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_JPY) {
+                att = "AttachmentsB"
+            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_USD) {
+                att = "AttachmentsC"
+            }
             // 仕入先注文書台帳に帳票を添付
-            await editParentRecord(targetID, retCreateExcel.workbook, retCreateExcel.filename)
+            await editParentRecord(targetID, att, retCreateExcel.workbook, retCreateExcel.filename)
         } catch (err) {
             console.log(err)
             commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR)
@@ -299,7 +305,7 @@ async function downloadSupplierExcel() {
         cell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
         cell("G13", worksheet).value = total //合計
         cell("G15", worksheet).value = selectedData.display[0]["条件"] //支払条件
-        // ASA
+        // 納入区分が日付だったら納入日付を入力
         if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
             cell("G17", worksheet).value = $('#' + supplierDate).val()
         } else {
@@ -312,9 +318,11 @@ async function downloadSupplierExcel() {
         let rowNumber = 20
         for (let record of selectedData.display) {
             cell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
-            cell("K" + rowNumber, worksheet).value = record[VOLUME] //数量
-            cell("N" + rowNumber, worksheet).value = record[usdFlg ? "原価＄" : "原価"] //単価
-            cell("Q" + rowNumber, worksheet).value = record[VOLUME] * record[usdFlg ? "原価＄" : "原価"] //金額
+            let volume = record[VOLUME]
+            let unit = record[usdFlg ? "原価＄" : "原価"]
+            cell("K" + rowNumber, worksheet).value = volume //数量
+            cell("N" + rowNumber, worksheet).value = unit //単価
+            cell("Q" + rowNumber, worksheet).value = volume * unit //金額
             cell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
             rowNumber = rowNumber + 1
         }

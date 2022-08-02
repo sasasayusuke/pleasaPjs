@@ -24,9 +24,6 @@ $p.events.on_grid_load_arr.push(function () {
 async function bulkDelivery() {
 	$p.clearMessage()
     let selects = $p.selectedIds()
-	if ($p.siteId() !== TABLE_ID_ORDER_CONTROL_BOOK) {
-		commonSetMessage(message = 'テーブルIDを修正してください。スクリプトタブから変数リストを確認してください。', ERROR)
-	}
 	if (commonIsNull(selects)) {
 		commonSetMessage(message = '納期確定のレコードを選択してください。', ERROR)
 	}

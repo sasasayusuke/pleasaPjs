@@ -20,6 +20,12 @@ $p.events.on_editor_load = function () {
   $p.events.on_editor_load_arr.forEach(func => func())
 }
 
+$p.events.on_grid_load_arr.push(function () {
+  if (!TABLE.includes($p.siteId())) {
+		commonSetMessage(message = "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。", type = ERROR)
+	}
+})
+
 /**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
@@ -305,7 +311,7 @@ function commonConvert2DToCsv (d2array) {
 function commonConvertCsvTo2D (csvData) {
   // csvDataに出力方法を追加
   let csvOutput = 'data:text/csvcharset=utf-8,'
-  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !commonIsNull(r))
+  return csvData.replace(csvOutput, '').split(/"\n"/).map(r => JSON.parse(`[${r}]`)).filter(r => !commonIsNull(r))
 }
 
 /**
@@ -488,7 +494,7 @@ function commonGetId (label, prefix = true, suffix = false) {
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除
  */
 function commonChangeReadOnly (label, flg = true) {
-  document.getElementById($p.tableName() + "_" + $p.getColumnName(label)).disabled = flg
+  document.getElementById(commonGetId(label)).disabled = flg
 }
 
 /**
