@@ -1,4 +1,5 @@
 var version = 4
+var api_version = 1.1
 
 var NORMAL  = 'normal'
 var WARNING = 'warning'
@@ -311,7 +312,7 @@ function commonConvert2DToCsv (d2array) {
 function commonConvertCsvTo2D (csvData) {
   // csvDataに出力方法を追加
   let csvOutput = 'data:text/csvcharset=utf-8,'
-  return csvData.replace(csvOutput, '').split(/"\n"/).map(r => JSON.parse(`[${r}]`)).filter(r => !commonIsNull(r))
+  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r}]`)).filter(r => !commonIsNull(r))
 }
 
 /**
@@ -474,7 +475,7 @@ function commonDivide2DArray(d2array, index) {
  * @param {array} arr 文字列配列
  */
 function commonUniqueArray(arr) {
-  return arr.filter((element, index) => arr.indexOf(element) === index)
+  return arr.filter((elem, index) => arr.indexOf(elem) === index)
 }
 
 /**
@@ -541,7 +542,7 @@ function commonSetVal (label, value) {
  */
 function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
-    "ApiVersion": 1.1,
+    "ApiVersion": api_version,
     Status,
     Comments,
     ClassHash,
@@ -595,7 +596,7 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
  */
 function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
-    "ApiVersion": 1.1,
+    "ApiVersion": api_version,
     Status,
     Comments,
     ClassHash,
@@ -651,27 +652,28 @@ function commonExportAjax (tableId, columns, filters, over = false, header = tru
   if (commonIsNull(filters)) {
     filters = {}
   }
+  let data = JSON.stringify({
+    "ApiVersion": api_version,
+    "Export": {
+      "Columns": col,
+      "Header": header,
+      "Type": type
+    },
+    "View": {
+      "Overdue": over,
+      "ColumnSorterHash": {
+        "ResultId": "asc"
+      },
+      "ColumnFilterHash": filters
+    }
+  })
 
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
 			url: `/api/items/${tableId}/export`,
 			contentType: 'application/json',
-			data:JSON.stringify({
-				"ApiVersion": 1.1,
-				"Export": {
-					"Columns": col,
-					"Header": header,
-					"Type": type
-				},
-				"View": {
-          "Overdue": over,
-					"ColumnSorterHash": {
-						"ResultId": "asc"
-					},
-          "ColumnFilterHash": filters
-				}
-			})
+			data: data
 		}).then(
 			function (result) {
         if (addFunc && typeof addFunc === 'function') {
@@ -702,19 +704,20 @@ function commonExportUserAjax (userIds, addFunc) {
   } else {
     users = [userIds]
   }
+  let data = JSON.stringify({
+    "ApiVersion": api_version,
+    "View": {
+      "ColumnFilterHash": {
+        "UserId" : JSON.stringify(users)
+      }
+    }
+  })
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
 			url: "/api/users/get",
 			contentType: 'application/json',
-			data:JSON.stringify({
-				"ApiVersion": 1.1,
-				"View": {
-          "ColumnFilterHash": {
-            "UserId" : JSON.stringify(users)
-          }
-				}
-			})
+			data: data
 		}).then(
 			function (result) {
         if (addFunc && typeof addFunc === 'function') {
@@ -745,19 +748,20 @@ function commonExportGroupAjax (groupIds, addFunc) {
   } else {
     groups = [groupIds]
   }
+  let data = JSON.stringify({
+    "ApiVersion": api_version,
+    "View": {
+      "ColumnFilterHash": {
+        "GroupId" : JSON.stringify(groups)
+      }
+    }
+  })
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			type: "POST",
 			url: "/api/groups/get",
 			contentType: 'application/json',
-			data:JSON.stringify({
-				"ApiVersion": 1.1,
-				"View": {
-          "ColumnFilterHash": {
-            "GroupId" : JSON.stringify(groups)
-          }
-				}
-			})
+			data: data
 		}).then(
 			function (result) {
         if (addFunc && typeof addFunc === 'function') {
@@ -791,7 +795,7 @@ function commonExportGroupAjax (groupIds, addFunc) {
 // */
 //function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
 //  let data = JSON.stringify({
-//    "ApiVersion": 1.1,
+//    "ApiVersion": api_version,
 //    Status,
 //    Comments,
 //    ClassHash,

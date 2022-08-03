@@ -12,7 +12,7 @@ let readOnlyItemsAfterCheckingDelivery = [
 // 出荷済以降読み込み制御項目
 let readOnlyItemsAfterconfirmedDelivery = [
     ...readOnlyItemsAfterCheckingDelivery
-    , "確定納期日"
+    , "入荷日"
 
 ]
     // 出荷済以降読み込み制御項目
