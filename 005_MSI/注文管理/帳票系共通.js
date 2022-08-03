@@ -21,70 +21,30 @@ $p.events.on_grid_load_arr.push(function() {
             scriptLoaded = true
         } else {
             // その他のステータスの場合エラー
-            commonSetMessage("帳票スクリプト読み込みエラー", ERROR)
+            commonSetMessage("帳票スクリプト読み込みエラー", ERROR, true)
         }
     }
 })
 
-async function getSelectedData(culumns, selects, id = $p.siteId(), displayValue = true) {
-    return $p.apiGet({
-        'id': id,
-        'data': {
-            'View': {
-                'ApiDataType': "KeyValues",
-                'ApiColumnValueDisplayType': displayValue ? "DisplayValue" : "Value",
-                'GridColumns': culumns,
-                'ColumnFilterHash': {
-                    'ResultId': '[' + selects + ']',
-                },
-            }
-        },
-        'done': function (data) {
-            var res = data.Response.Data
-            //console.log('通信が成功しました。')
-            //console.log(res)
-            return res
-        }
-    })
-}
-
-async function editParentRecord(targetID, className, workbook, filename) {
-    const fileBuffer = await workbook.xlsx.writeBuffer()
-    const base64 = arrayBufferToBase64(fileBuffer)
-
-    let url = SERVER_URL + "/api/items/" + String(targetID) + "/update"
-    let method_name = "POST"
-    let JSONdata = {
-        "ApiVersion": 1.1,
-        "AttachmentsHash": {
-            [className]: [
-                {
-                    "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "Name": filename,
-                    "Base64": base64
-                }
-            ]
+function getCell(address, worksheet) {
+    let row = ""
+    let col = ""
+    for (let i = 0; i < address.length; i++) {
+        if (isNaN(address[i])) {
+            col += address[i]
+        } else {
+            row = address.slice(i)
+            break
         }
     }
-    $.ajax({
-        type: method_name,
-        url: url,
-        data: JSON.stringify(JSONdata),
-        //contentType: 'application/json',
-        contentType: 'application/json',
-        dataType: 'json',
-        scriptCharset: 'utf-8',
-        success: function (data) {
-            // Success
-            console.log("success")
-            console.log(JSON.stringify(data))
-        },
-        error: function (data) {
-            // Error
-            console.log("error")
-            console.log(JSON.stringify(data))
-        }
-    })
+    if (isNaN(row)) {
+        console.log(`addressに${address}が入力されました。`)
+        commonSetMessage("adress不正", ERROR, true)
+    }
+    let rowNo = +row
+    let colNo = commonConvertAto1(col)
+
+    return worksheet.getRow(rowNo).getCell(colNo)
 }
 
 async function editSelectedRecord(data) {
@@ -151,27 +111,6 @@ async function createParentRecord(tableId, data) {
             console.log('通信が完了しました。');
         }
     });
-}
-
-function cell(address, worksheet) {
-    let row = ""
-    let col = ""
-    for (let i = 0; i < address.length; i++) {
-        if (isNaN(address[i])) {
-            col += address[i]
-        } else {
-            row = address.slice(i)
-            break
-        }
-    }
-    if (isNaN(row)) {
-        console.log(`addressに${address}が入力されました。`)
-        commonSetMessage("adress不正", ERROR)
-    }
-    let rowNo = +row
-    let colNo = commonConvertAto1(col)
-
-    return worksheet.getRow(rowNo).getCell(colNo)
 }
 
 async function outputXlsx(workbook, filename) {

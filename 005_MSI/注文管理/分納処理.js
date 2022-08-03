@@ -73,7 +73,7 @@ async function devideDelivery() {
         , "単価＄"
         , "金額＄"
     // 先行依頼書タブ
-        , "MiS注番"
+        , "MiS番号"
         , "MiS営業"
         , "顧客希望納期"
         , "回答納期"
@@ -128,7 +128,7 @@ async function devideDelivery() {
         key = commonGetId(v, false)
         if (commonIsNull(key)) {
             $p.closeDialog($('#' + dialogId))
-            commonSetMessage(v + "という項目が存在しません。スクリプトを確認してください。", ERROR)
+            commonSetMessage(v + "という項目が存在しません。スクリプトを確認してください。", ERROR, true)
         }
         if (key.includes("Class")) {
             classHash[key] = commonGetVal(v, false)

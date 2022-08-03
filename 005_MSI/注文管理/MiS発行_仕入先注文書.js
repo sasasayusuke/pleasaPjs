@@ -5,9 +5,11 @@ const supplierTarget = "supplierTarget"
 const supplierDate = "supplierDate"
 const supplierRemarks = "supplierRemarks"
 const supplierPrint = "supplierPrint"
-const supplierRequestTargetgetDate = "supplierRequestTargetgetDate"
-const supplierRequestRemarks = "supplierRequestRemarks"
+const supplierRequestMemo1 = "supplierRequestMemo1"
+const supplierRequestMemo2 = "supplierRequestMemo2"
 
+let supplierData = {}
+let suppliers = []
 let x1 = "国内向け円建"
 let x2 = "海外向け円建"
 let x3 = "海外向けドル建"
@@ -16,27 +18,31 @@ $p.events.on_grid_load_arr.push(function () {
 
     let html = `
         <div id="${supplierDialogId}" class="dialog" title="先行依頼書&仕入先注文書出力">
-            <div class="field-normal">
-                <p class="field-label"><label for="${supplierRequestTargetgetDate}">回答希望日</label></p>
+            <div class="field-markdown">
+                <p class="field-label"><label for="${supplierRequestMemo1}">MEMO1</label></p>
                 <div class="field-control">
                     <div class="container-normal">
-                        <input id="${supplierRequestTargetgetDate}" name="${supplierRequestTargetgetDate}" class="control-textbox datepicker valid" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
-                        <div class="ui-icon ui-icon-clock current-time">
+                        <div id="${supplierRequestMemo1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestMemo1}'));" style="">
+                            <pre><br></pre>
                         </div>
+                        <div id="${supplierRequestMemo1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestMemo1}'));">
+                        </div>
+                        <textarea id="${supplierRequestMemo1}" name="${supplierRequestMemo1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
+                        </textarea>
                     </div>
                 </div>
             </div>
 
             <div class="field-markdown">
-                <p class="field-label"><label for="${supplierRequestRemarks}">備考</label></p>
+                <p class="field-label"><label for="${supplierRequestMemo2}">MEMO2</label></p>
                 <div class="field-control">
                     <div class="container-normal">
-                        <div id="${supplierRequestRemarks}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestRemarks}'));" style="">
+                        <div id="${supplierRequestMemo2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestMemo2}'));" style="">
                             <pre><br></pre>
                         </div>
-                        <div id="${supplierRequestRemarks}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestRemarks}'));">
+                        <div id="${supplierRequestMemo2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestMemo2}'));">
                         </div>
-                        <textarea id="${supplierRequestRemarks}" name="${supplierRequestRemarks}" class="control-markdown applied" placeholder="備考" style="height: 100px; display: none;">
+                        <textarea id="${supplierRequestMemo2}" name="${supplierRequestMemo2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
                         </textarea>
                     </div>
                 </div>
@@ -134,7 +140,6 @@ function displayControlDirect() {
 }
 
 function openSupplierExcelDownloadDialog() {
-
     displayControlAsap()
     displayControlDirect()
     $('#SendTo').val("")
@@ -149,7 +154,7 @@ function openSupplierExcelDownloadDialog() {
 
 async function downloadSupplierExcel() {
     // ダイアログをクローズ
-    $p.closeDialog($('#' + supplierDialogId));
+    $p.closeDialog($('#' + supplierDialogId))
     let printId = ""
     let usdFlg = false
     let foreignFlg = false
@@ -168,8 +173,8 @@ async function downloadSupplierExcel() {
 
     }
 
-    requestTargetgetDate = supplierRequestTargetgetDate
-    requestRemarks = supplierRequestRemarks
+    requestMemo1 = supplierRequestMemo1
+    requestMemo2 = supplierRequestMemo2
     let reqId = await downloadRequestExcel(false)
 
     // 帳票フォーマットを検索
@@ -203,7 +208,7 @@ async function downloadSupplierExcel() {
         retCreateParentRecord = await createParentRecord(TABLE_ID_SUPPLIER_ORDER_BOOK, createData)
     } catch (err) {
         console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR)
+        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR, true)
         return false
     }
 
@@ -212,7 +217,7 @@ async function downloadSupplierExcel() {
             retDownloadExcel = await downloadExcel(formatId)
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR, true)
             return false
         }
         if (retDownloadExcel.Response.TotalCount !== 1) {
@@ -235,7 +240,7 @@ async function downloadSupplierExcel() {
             await editSelectedRecord(updateData)
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
             return false
         }
 
@@ -243,7 +248,7 @@ async function downloadSupplierExcel() {
             retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR, true)
             return false
         }
 
@@ -257,19 +262,19 @@ async function downloadSupplierExcel() {
                 att = "AttachmentsC"
             }
             // 仕入先注文書台帳に帳票を添付
-            await editParentRecord(targetID, att, retCreateExcel.workbook, retCreateExcel.filename)
+            await commonUpdateAttachment(targetID, att, retCreateExcel.workbook, retCreateExcel.filename)
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR, true)
             return false
         }
         if (formatId == printId)
         try {
             // ファイルをダウンロード
-            await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename);
+            await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename)
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
             return false
         }
     }
@@ -291,39 +296,49 @@ async function downloadSupplierExcel() {
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
         worksheet.name = filename
 
-        let recS = await getSelectedData(["ClassA"] ,targetID, TABLE_ID_SUPPLIER_ORDER_BOOK)
+        let recS = await commonGetData(
+            ["ClassA"]
+            , {"ResultId": `[${targetID}]`}
+            , false
+            , TABLE_ID_SUPPLIER_ORDER_BOOK
+        )
         let siNo = recS.Response.Data[0]["仕入先注文台帳番号"]
 
-        let recR = await getSelectedData(["ClassA"] ,reqId, TABLE_ID_REQUEST_BOOK)
-        let misNo = recR.Response.Data[0]["MiS注番"]
+        let recR = await commonGetData(
+            ["ClassA"]
+            , {"ResultId": `[${reqId}]`}
+            , false
+            , TABLE_ID_REQUEST_BOOK
+        )
+        let misNo = recR.Response.Data[0]["MiS番号"]
 
 
-        cell("Y4", worksheet).value = today.split("/")[0] // 注文年
-        cell("AB4", worksheet).value = today.split("/")[1] // 注文月
-        cell("AD4", worksheet).value = today.split("/")[2] // 注文日
-        cell("Z5", worksheet).value = siNo //仕入先注文台帳番号
-        cell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
-        cell("G13", worksheet).value = total //合計
-        cell("G15", worksheet).value = selectedData.display[0]["条件"] //支払条件
+        getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
+        getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
+        getCell("AD4", worksheet).value = today.split("/")[2] // 注文日
+        getCell("Z5", worksheet).value = siNo //仕入先注文台帳番号
+        getCell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
+        getCell("G13", worksheet).value = total //合計
+        getCell("G15", worksheet).value = selectedData.display[0]["条件"] //支払条件
         // 納入区分が日付だったら納入日付を入力
         if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
-            cell("G17", worksheet).value = $('#' + supplierDate).val()
+            getCell("G17", worksheet).value = $('#' + supplierDate).val()
         } else {
-            cell("G17", worksheet).value = $('#' + supplierTarget).val()
+            getCell("G17", worksheet).value = $('#' + supplierTarget).val()
         }
 
-        cell("C32", worksheet).value = $('#' + supplierRemarks).val() //納品先
-        cell("AB35", worksheet).value = misNo //MiS注番
+        getCell("C32", worksheet).value = $('#' + supplierRemarks).val() //納品先
+        getCell("AB35", worksheet).value = misNo //MiS番号
 
         let rowNumber = 20
         for (let record of selectedData.display) {
-            cell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
+            getCell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
             let volume = record[VOLUME]
             let unit = record[usdFlg ? "原価＄" : "原価"]
-            cell("K" + rowNumber, worksheet).value = volume //数量
-            cell("N" + rowNumber, worksheet).value = unit //単価
-            cell("Q" + rowNumber, worksheet).value = volume * unit //金額
-            cell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
+            getCell("K" + rowNumber, worksheet).value = volume //数量
+            getCell("N" + rowNumber, worksheet).value = unit //単価
+            getCell("Q" + rowNumber, worksheet).value = volume * unit //金額
+            getCell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
             rowNumber = rowNumber + 1
         }
 

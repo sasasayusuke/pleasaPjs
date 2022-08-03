@@ -12,33 +12,31 @@
 
   var TABLE = [
     //国番号マスタ
-    TABLE_ID_COUNTRY_NO             = 12
+    TABLE_ID_COUNTRY_NO             = 53705//12
     //コミッション率マスタ
-    , TABLE_ID_COMMISSION_RATE      = 6
+    , TABLE_ID_COMMISSION_RATE      = 53708//6
     //エンドユーザマスタ
-    , TABLE_ID_END_USER             = 8
+    , TABLE_ID_END_USER             = 53707//8
     //インボイス番号マスタ
-    , TABLE_ID_INVOICE_NO           = 5
+    , TABLE_ID_INVOICE_NO           = 53698//5
     //会社区分
-    , TABLE_ID_COMPANY_CLASS        = 1809
+    , TABLE_ID_COMPANY_CLASS        = 53706//1809
     //会社情報
-    , TABLE_ID_COMPANY_INFO         = 15
+    , TABLE_ID_COMPANY_INFO         = 53703//15
     //事業所情報
-    , TABLE_ID_OFFICE_INFO          = 3319
-    //個人情報
-    , TABLE_ID_PERSON_INFO          = 4
+    , TABLE_ID_OFFICE_INFO          = 53702//3319
     //見積台帳
-    , TABLE_ID_ESTIMATION_BOOK      = 21036
+    , TABLE_ID_ESTIMATION_BOOK      = 53695//21036
     //製品情報
-    , TABLE_ID_PRODUCT_INFO         = 10
+    , TABLE_ID_PRODUCT_INFO         = 53704//10
     //注文管理台帳
-    , TABLE_ID_ORDER_CONTROL_BOOK   = 11
+    , TABLE_ID_ORDER_CONTROL_BOOK   = 53696//11
     //先行依頼台帳
-    , TABLE_ID_REQUEST_BOOK         = 13
+    , TABLE_ID_REQUEST_BOOK         = 53709//13
     //仕入先注文台帳
-    , TABLE_ID_SUPPLIER_ORDER_BOOK  = 17
+    , TABLE_ID_SUPPLIER_ORDER_BOOK  = 53700//17
     //請求書台帳
-    , TABLE_ID_CLAIM_BOOK           = 14
+    , TABLE_ID_CLAIM_BOOK           = 53699//14
     //エクセルフォーマット
     , TABLE_ID_EXCEL_FORMAT         = 7
     //注文台帳入力フォーム

@@ -1,11 +1,12 @@
-var version = 4
+var version = 5
 var api_version = 1.1
 
-var NORMAL  = 'normal'
-var WARNING = 'warning'
-var ERROR   = 'error'
+var NORMAL  = 100
+var WARNING = 500
+var ERROR   = 900
 var NEW     = 'new'
 
+var TABLE_ID_MESSAGE_LOG = 57349
 
 // 各画面ロード時に実行するメソッドを格納する
 $p.events.on_grid_load_arr = []
@@ -45,50 +46,68 @@ function commonIsNull (obj) {
  * Plesanterメッセージを利用する関数です。
  * @param {String} message メッセージ内容
  * @param {String} type 深刻度
- * @param {boolean} clear メッセージを消す
+ * @param {boolean} log ログを登録
+ * @param {String} name 呼び出しスクリプト名
+ * @param {boolean} set ブラウザメッセージを出す
  *
- * @return {String} 加工された文字列
  */
-function commonSetMessage (message = '', type = NORMAL, clear = true) {
-  if (clear) {
-    $p.clearMessage()
+async function commonSetMessage (message = '', type = NORMAL, log = false, set = true, description = "") {
+  $p.clearMessage()
+  if (log) {
+    commonCreateAjax(
+      TABLE_ID_MESSAGE_LOG
+      , {
+        ClassA: $p.id()
+      }
+      , {}
+      , {}
+      , {
+        DescriptionA: message
+        , DescriptionB: JSON.stringify(description)
+
+      }
+      , {}
+      , type
+    )
   }
-  switch (type) {
-    case NORMAL:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-success',
-          Text: message
-        })
-      )
-    break
-    case WARNING:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-warning',
-          Text: message
-        })
-      )
-    break
-    case ERROR:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-error',
-          Text: message
-        })
-      )
-      throw new Error(message)
-    default:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-error',
-          Text: 'message type が不正です。'
-        })
-      )
+  if (set) {
+    switch (type) {
+      case NORMAL:
+        $p.setMessage(
+          '#Message',
+          JSON.stringify({
+            Css: 'alert-success',
+            Text: message
+          })
+        )
+      break
+      case WARNING:
+        $p.setMessage(
+          '#Message',
+          JSON.stringify({
+            Css: 'alert-warning',
+            Text: message
+          })
+        )
+      break
+      case ERROR:
+        $p.setMessage(
+          '#Message',
+          JSON.stringify({
+            Css: 'alert-error',
+            Text: message
+          })
+        )
+        throw new Error(message)
+      default:
+        $p.setMessage(
+          '#Message',
+          JSON.stringify({
+            Css: 'alert-error',
+            Text: 'message type が不正です。'
+          })
+        )
+    }
   }
 }
 /**
@@ -501,13 +520,14 @@ function commonChangeReadOnly (label, flg = true) {
 /**
  * 入力されたラベルに一致する項目の選択した値を返却する。
  * @param {String} label ラベル
+ * @param {String} flg true: value false: text
  */
-function commonGetVal (label, flg = true) {
+function commonGetVal (label, valueFlg = false) {
   // 選択系
-  let value = flg ? $p.getControl($p.getColumnName(label)).children(':selected').text() : $p.getControl($p.getColumnName(label)).children(':selected').val()
+  let value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
   if (commonIsNull(value)) {
     // 選択系 読み取り専用
-    value = flg ? $p.getControl($p.getColumnName(label))[0].innerHTML : $p.getControl($p.getColumnName(label)).attr('data-value')
+    value = valueFlg ? $p.getControl($p.getColumnName(label)).attr('data-value') : $p.getControl($p.getColumnName(label))[0].innerHTML
     if (commonIsNull(value)) {
       // 選択系以外
       value = $p.getControl($p.getColumnName(label)).val()
@@ -528,6 +548,40 @@ function commonSetVal (label, value) {
 }
 
 /**
+ * 取得APIを呼び出す関数です。
+ *
+ * @param {Array}     culumns 取得列
+ * @param {Object}    filters フィルター条件
+ * @param {Object}    valueFlg value値
+ * @param {Object}    id テーブルID
+ * @param {Function}  addFunc 最後に実行したい関数
+ */
+async function commonGetData(culumns, filters, valueFlg = true, id = $p.siteId(), addFunc) {
+  if (commonIsNull(filters)) {
+      filters = {}
+  }
+  return $p.apiGet({
+      'id': id,
+      'data': {
+          'View': {
+              'ApiDataType': "KeyValues",
+              'ApiColumnValueDisplayType': valueFlg ?  "Value" : "DisplayValue",
+              'GridColumns': culumns,
+              'ColumnFilterHash': filters,
+          }
+      },
+      'done': function (data) {
+        if (addFunc && typeof addFunc === 'function') {
+          // 渡されたオブジェクトが関数なら実行する
+          addFunc(data)
+        }
+
+          return data.Response.Data
+      }
+  })
+}
+
+/**
  * 登録APIを呼び出す関数です。
  *
  * @param {String}    tableId 登録テーブルID
@@ -540,7 +594,7 @@ function commonSetVal (label, value) {
  * @param {String}    Comments 登録コメント
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
+async function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
     "ApiVersion": api_version,
     Status,
@@ -594,7 +648,7 @@ function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, De
  * @param {String}    Comments 更新コメント
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
+async function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
   let data = JSON.stringify({
     "ApiVersion": api_version,
     Status,
@@ -636,7 +690,7 @@ function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, D
 }
 
 /**
- * 取得APIを呼び出す関数です。
+ * エクスポートAPIを呼び出す関数です。csv形式で取得
  *
  * @param {String}    tableId 取得テーブルID
  * @param {Array}     columns 取得列
@@ -646,7 +700,7 @@ function commonUpdateAjax(recordId, ClassHash = {}, NumHash= {}, DateHash= {}, D
  * @param {String}    type csv か jsonを選択
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
+async function commonExportAjax (tableId, columns, filters, over = false, header = true, type = "csv", addFunc) {
   let col = []
   columns.forEach(v => col.push({"ColumnName" : v}))
   if (commonIsNull(filters)) {
@@ -697,7 +751,7 @@ function commonExportAjax (tableId, columns, filters, over = false, header = tru
  * @param {Array}     userIds 取得UserId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonExportUserAjax (userIds, addFunc) {
+async function commonExportUserAjax (userIds, addFunc) {
   let users = []
   if (Array.isArray(userIds)) {
     users = userIds
@@ -741,7 +795,7 @@ function commonExportUserAjax (userIds, addFunc) {
  * @param {Array}     groupIds 取得GroupId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonExportGroupAjax (groupIds, addFunc) {
+async function commonExportGroupAjax (groupIds, addFunc) {
   let groups = []
   if (Array.isArray(groupIds)) {
     groups = groupIds
@@ -778,6 +832,46 @@ function commonExportGroupAjax (groupIds, addFunc) {
 		)
 	})
 }
+
+async function commonUpdateAttachment(targetID, className, workbook, filename) {
+  const fileBuffer = await workbook.xlsx.writeBuffer()
+  const base64 = arrayBufferToBase64(fileBuffer)
+
+  let url = SERVER_URL + "/api/items/" + String(targetID) + "/update"
+  let method_name = "POST"
+  let JSONdata = {
+      "ApiVersion": 1.1,
+      "AttachmentsHash": {
+          [className]: [
+              {
+                  "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                  "Name": filename,
+                  "Base64": base64
+              }
+          ]
+      }
+  }
+  $.ajax({
+      type: method_name,
+      url: url,
+      data: JSON.stringify(JSONdata),
+      //contentType: 'application/json',
+      contentType: 'application/json',
+      dataType: 'json',
+      scriptCharset: 'utf-8',
+      success: function (data) {
+          // Success
+          console.log("success")
+          console.log(JSON.stringify(data))
+      },
+      error: function (data) {
+          // Error
+          console.log("error")
+          console.log(JSON.stringify(data))
+      }
+  })
+}
+
 
 ///**
 // * レコード複製を行う関数です。

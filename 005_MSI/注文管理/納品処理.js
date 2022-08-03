@@ -1,6 +1,6 @@
 
 async function claimPreCheck() {
-    async function getSelectedData() {
+    async function commonGetData() {
         return $p.apiGet({
             'id': $p.siteId(),
             'data': {
@@ -47,7 +47,7 @@ async function claimPreCheck() {
             }
         })
     }
-    const selectedData = await getSelectedData();
+    const selectedData = await commonGetData();
 
     async function getCompanyID() {
         return $p.apiGet({
@@ -978,7 +978,7 @@ async function StorageClaimCreateExcel(guid, filename, paymentTerms) {
     for (let index in resClaimSelectedDiplayValue) {
         let record = resClaimSelectedDiplayValue[index]
         worksheet.getRow(rowNumber).getCell(2).value = record["客先注文番号"]
-        worksheet.getRow(rowNumber).getCell(5).value = record["MiS注番"]
+        worksheet.getRow(rowNumber).getCell(5).value = record["MiS番号"]
         worksheet.getRow(rowNumber).getCell(8).value = record["型番"]
         worksheet.getRow(rowNumber).getCell(16).value = record["数量"]
         worksheet.getRow(rowNumber).getCell(18).value = record["単価"]
