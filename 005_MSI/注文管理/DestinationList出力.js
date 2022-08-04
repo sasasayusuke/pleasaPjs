@@ -85,7 +85,6 @@ async function downloadDestitationExcel() {
             getCell("K" + rowNumber, worksheet).value = record["検査成績書要否"]
             getCell("L" + rowNumber, worksheet).value = record[ENDUSER]                       //  エンドユーザ
             getCell("M" + rowNumber, worksheet).value = record[SUPPLIER]                      //  仕入先
-            getCell("N" + rowNumber, worksheet).value = record[DELIVERY_CLASS]                //  納入区分
             rowNumber = rowNumber + 1
         }
 

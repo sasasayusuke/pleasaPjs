@@ -50,9 +50,6 @@ $p.events.on_grid_load_arr.push(function () {
 })
 
 function openRequestExcelDownloadDialog() {
-    $('#SendTo').val("")
-    $('#SendToPerson').val("")
-    $('#SendToAddress').val("")
     $("#" + requestDialogId).dialog({
         modal: !0,
         width: "520px",

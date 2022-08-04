@@ -45,7 +45,7 @@ var TABLE = [
   // メッセージログ（commonSetMessageで使用）
   , TABLE_ID_MESSAGE_LOG                    = 57349
   //エクセルフォーマット（downloadExcelで使用）
-  , TABLE_ID_EXCEL_FORMA                    = 7
+  , TABLE_ID_EXCEL_FORMAT                   = 7
 ]
 
 
@@ -211,8 +211,6 @@ function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId',
       document.getElementById(id).appendChild(boxDiv)
   }
 }
-
-
 
 /**
  * 分類項目の値を選択したときの表示制御。
@@ -936,46 +934,6 @@ async function commonExportGroupAjax (groupIds, addFunc) {
 		)
 	})
 }
-
-async function commonUpdateAttachment(targetID, className, workbook, filename) {
-  const fileBuffer = await workbook.xlsx.writeBuffer()
-  const base64 = arrayBufferToBase64(fileBuffer)
-
-  let url = SERVER_URL + "/api/items/" + String(targetID) + "/update"
-  let method_name = "POST"
-  let JSONdata = {
-      "ApiVersion": 1.1,
-      "AttachmentsHash": {
-          [className]: [
-              {
-                  "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                  "Name": filename,
-                  "Base64": base64
-              }
-          ]
-      }
-  }
-  $.ajax({
-      type: method_name,
-      url: url,
-      data: JSON.stringify(JSONdata),
-      //contentType: 'application/json',
-      contentType: 'application/json',
-      dataType: 'json',
-      scriptCharset: 'utf-8',
-      success: function (data) {
-          // Success
-          console.log("success")
-          console.log(JSON.stringify(data))
-      },
-      error: function (data) {
-          // Error
-          console.log("error")
-          console.log(JSON.stringify(data))
-      }
-  })
-}
-
 
 ///**
 // * レコード複製を行う関数です。

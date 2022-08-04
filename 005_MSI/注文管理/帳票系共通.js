@@ -11,7 +11,7 @@ var FORMAT = [
     // 請求書フォーマット
     , FORMAT_ID_CLAIM                       = "04"
     // 請求書フォーマット
-    , FORMAT_ID_CLAIM_STORAGE               = "05"
+    , FORMAT_ID_STORAGE_CLAIM               = "05"
     // 納品書フォーマット
     , FORMAT_ID_DELIVERY                    = "06"
     // 受領書注文フォーマット
@@ -97,6 +97,46 @@ async function editSelectedRecord(data) {
         })
     })
 }
+
+async function commonUpdateAttachment(targetID, className, workbook, filename) {
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    const base64 = arrayBufferToBase64(fileBuffer)
+
+    let url = `/api/items/${targetID}/update`
+    let method_name = "POST"
+    let JSONdata = {
+        "ApiVersion": 1.1,
+        "AttachmentsHash": {
+            [className]: [
+                {
+                    "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "Name": filename,
+                    "Base64": base64
+                }
+            ]
+        }
+    }
+    $.ajax({
+        type: method_name,
+        url: url,
+        data: JSON.stringify(JSONdata),
+        //contentType: 'application/json',
+        contentType: 'application/json',
+        dataType: 'json',
+        scriptCharset: 'utf-8',
+        success: function (data) {
+            // Success
+            console.log("success")
+            console.log(JSON.stringify(data))
+        },
+        error: function (data) {
+            // Error
+            console.log("error")
+            console.log(JSON.stringify(data))
+        }
+    })
+}
+
 
 async function downloadExcel(formatId) {
     return $p.apiGet({
