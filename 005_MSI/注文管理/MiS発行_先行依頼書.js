@@ -195,7 +195,7 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
                 if (record[DESTINATION].indexOf("国内") == 0) {
                     getCell("P" + rowNumber, worksheet).value   = record[DELIVERY_OFFICE] // 納品先事業所
                 } else if (record[DESTINATION].indexOf("海外") == 0) {
-                    getCell("P" + rowNumber, worksheet).value   = record[SEND_COUNTRY] // 送り先国名
+                    getCell("P" + rowNumber, worksheet).value   = record[DESTINATION_COUNTRY] // 送り先国名
                 }
             }
             getCell("U" + rowNumber, worksheet).value   = record[SUPPLIER] //　仕入先

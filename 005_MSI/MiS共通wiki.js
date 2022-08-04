@@ -1,77 +1,7 @@
   var version = 3
 
-  var SETTING_SHEET_NAME = "setting"
-  var TEMPLATE_SHEET_NAME = "template"
-  var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
-
-/**
- * テーブル情報
- * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
- *
- */
-
-  var TABLE = [
-    //国番号マスタ
-    TABLE_ID_COUNTRY_NO             = 53705//12
-    //コミッション率マスタ
-    , TABLE_ID_COMMISSION_RATE      = 53708//6
-    //エンドユーザマスタ
-    , TABLE_ID_END_USER             = 53707//8
-    //インボイス番号マスタ
-    , TABLE_ID_INVOICE_NO           = 53698//5
-    //会社区分
-    , TABLE_ID_COMPANY_CLASS        = 53706//1809
-    //会社情報
-    , TABLE_ID_COMPANY_INFO         = 53703//15
-    //事業所情報
-    , TABLE_ID_OFFICE_INFO          = 53702//3319
-    //見積台帳
-    , TABLE_ID_ESTIMATION_BOOK      = 53695//21036
-    //製品情報
-    , TABLE_ID_PRODUCT_INFO         = 53704//10
-    //注文管理台帳
-    , TABLE_ID_ORDER_CONTROL_BOOK   = 53696//11
-    //先行依頼台帳
-    , TABLE_ID_REQUEST_BOOK         = 53709//13
-    //仕入先注文台帳
-    , TABLE_ID_SUPPLIER_ORDER_BOOK  = 53700//17
-    //請求書台帳
-    , TABLE_ID_CLAIM_BOOK           = 53699//14
-    //エクセルフォーマット
-    , TABLE_ID_EXCEL_FORMAT         = 7
-    //注文台帳入力フォーム
-    , TABLE_ID_ORDER_INPUT_FORM     = 1756
-  ]
-
-  var FORMAT = [
-    // 見積書フォーマット
-    FORMAT_ID_ESTIMATION                = "01"
-    // 先行依頼書フォーマット
-    , FORMAT_ID_REQUEST                 = "02"
-    // 請求書フォーマット
-    , FORMAT_ID_CLAIM                   = "04"
-    // 請求書フォーマット
-    , FORMAT_ID_CLAIM_STORAGE           = "05"
-    // 納品書フォーマット
-    , FORMAT_ID_DELIVERY                = "06"
-    // 受領書注文フォーマット
-    , FORMAT_ID_RECEIPT                 = "07"
-    // 仕入先注文フォーマット
-    , FORMAT_ID_SUPPLIER                = "08"
-    // DestinationListフォーマット
-    , FORMAT_ID_DISTINATION             = "09"
-    // Invoiceフォーマット
-    , FORMAT_ID_INVOICE                 = "10"
-    // PackingListフォーマット
-    , FORMAT_ID_PACKING                 = "11"
-    // 海外用仕入先向け注文書(JPY)フォーマット
-    , FORMAT_ID_SUPPLIER_FOREIGN_JPY    = "14"
-    // 海外用仕入先向け注文書(USD)フォーマット
-    , FORMAT_ID_SUPPLIER_FOREIGN_USD    = "15"
-  ]
-
   // 注文管理 ビュー
-var VIEW_ORDER_CONTROL = {
+  var VIEW_ORDER_CONTROL = {
   sale: {
       index: 1,
       value: "営業担当者用",

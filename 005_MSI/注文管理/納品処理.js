@@ -1,5 +1,5 @@
 
-async function claimPreCheck() {
+async function preCheckClaim() {
     async function commonGetData() {
         return $p.apiGet({
             'id': $p.siteId(),

@@ -67,10 +67,10 @@ async function downloadDestitationExcel() {
             }
             if (record[DESTINATION].indexOf("国内") == 0) {
                 // 納品先が国内1.2.3.フリーの場合「納品先会社名」
-                destination = record[DELIVERY_DESTINATION]
+                destination = record[DELIVERY_COMPANY]
             } else if (record[DESTINATION].indexOf("海外") == 0) {
                 // 納品先が海外1.2.3.フリーの場合「送り先会社名」
-                destination = record[SEND_DESTINATION]
+                destination = record[DESTINATION_COMPANY]
             } else {
                 // メッセージを表示
                 commonSetMessage(`ID：${record["ID"]} 納品先に不正値が入力されています。`, ERROR, true)

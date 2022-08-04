@@ -1,12 +1,54 @@
 var version = 5
 var api_version = 1.1
 
+var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
+
 var NORMAL  = 100
 var WARNING = 500
 var ERROR   = 900
 var NEW     = 'new'
 
-var TABLE_ID_MESSAGE_LOG = 57349
+/**
+ * テーブル情報
+ * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
+ *
+ */
+var TABLE = [
+  //国番号マスタ
+  TABLE_ID_COUNTRY_NO                       = 53705//12
+  //コミッション率マスタ
+  , TABLE_ID_COMMISSION_RATE                = 53708//6
+  //エンドユーザマスタ
+  , TABLE_ID_END_USER                       = 53707//8
+  //インボイス番号マスタ
+  , TABLE_ID_INVOICE_NO                     = 53698//5
+  //会社区分
+  , TABLE_ID_COMPANY_CLASS                  = 53706//1809
+  //会社情報
+  , TABLE_ID_COMPANY_INFO                   = 53703//15
+  //事業所情報
+  , TABLE_ID_OFFICE_INFO                    = 53702//3319
+  //見積台帳
+  , TABLE_ID_ESTIMATION_BOOK                = 53695//21036
+  //製品情報
+  , TABLE_ID_PRODUCT_INFO                   = 53704//10
+  //注文管理台帳
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 53696//11
+  //先行依頼台帳
+  , TABLE_ID_REQUEST_BOOK                   = 53709//13
+  //仕入先注文台帳
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 53700//17
+  //請求書台帳
+  , TABLE_ID_CLAIM_BOOK                     = 53699//14
+  //注文台帳入力フォーム
+  , TABLE_ID_ORDER_INPUT_FORM               = 1756
+  // メッセージログ（commonSetMessageで使用）
+  , TABLE_ID_MESSAGE_LOG                    = 57349
+  //エクセルフォーマット（downloadExcelで使用）
+  , TABLE_ID_EXCEL_FORMA                    = 7
+]
+
+
 
 // 各画面ロード時に実行するメソッドを格納する
 $p.events.on_grid_load_arr = []
@@ -110,6 +152,68 @@ async function commonSetMessage (message = '', type = NORMAL, log = false, set =
     }
   }
 }
+
+/**
+ * 分類項目の値を選択したときの表示制御。
+ * @param {String} label ステータスラベル
+ * @param {Array} useStatus 利用ステータス
+ * @param {String} color 現状のステータスの色
+ * @param {String} id ID
+ * @param {String} boxClass クラス名
+ *
+ */
+function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId', boxClass = 'boxClass') {
+  let html = `
+      <div id="${id}" class="flow">
+      </div>
+      <style>
+          .flow {
+              margin: 0 auto 50px;
+          }
+          .flow .${boxClass}.${color} {
+              background-color: ${color};
+              color: white;
+          }
+          .flow .${boxClass} {
+              margin: 0 auto 33px;
+              width: 66%;
+              text-align: center;
+              padding: 10px;
+              border: 3px solid #326E93;
+              -webkit-border-radius: 5px;
+              border-radius: 5px;
+              position: relative;
+              font-weight: bold; /* テキストの指定 */
+              background-color: cornsilk
+          }
+          .flow .${boxClass}:after {
+              border-top: 20px solid #FFC300;
+              border-left: 50px solid transparent;
+              border-right: 50px solid transparent;
+              content: "";
+              position: absolute;
+              bottom: -28px; /* 三角形の高さ＋ボックスのボーダーをマイナスに */
+              margin-left: -100px; /* 中央寄せに使用 */
+              left: 180px;
+          }
+
+          .flow .${boxClass}:last-child:after {
+              border: none; /* 最後のボックスだけ三角形を表示しない */
+          }
+      </style>`
+  $("#CommentField").prepend(html)
+
+  for (let s of useStatus) {
+      let boxDiv = document.createElement("div")
+      boxDiv.classList.add(boxClass)
+      boxDiv.innerHTML = s.label
+      if (commonGetVal(label) == s.label) boxDiv.classList.add(color)
+      document.getElementById(id).appendChild(boxDiv)
+  }
+}
+
+
+
 /**
  * 分類項目の値を選択したときの表示制御。
  * @param {String} className 分類項目

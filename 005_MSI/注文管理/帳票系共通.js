@@ -1,3 +1,35 @@
+var version = 2
+
+var SETTING_SHEET_NAME = "setting"
+var TEMPLATE_SHEET_NAME = "template"
+
+var FORMAT = [
+    // 見積書フォーマット
+    FORMAT_ID_ESTIMATION                    = "01"
+    // 先行依頼書フォーマット
+    , FORMAT_ID_REQUEST                     = "02"
+    // 請求書フォーマット
+    , FORMAT_ID_CLAIM                       = "04"
+    // 請求書フォーマット
+    , FORMAT_ID_CLAIM_STORAGE               = "05"
+    // 納品書フォーマット
+    , FORMAT_ID_DELIVERY                    = "06"
+    // 受領書注文フォーマット
+    , FORMAT_ID_RECEIPT                     = "07"
+    // 仕入先注文フォーマット
+    , FORMAT_ID_SUPPLIER                    = "08"
+    // DestinationListフォーマット
+    , FORMAT_ID_DISTINATION                 = "09"
+    // Invoiceフォーマット
+    , FORMAT_ID_INVOICE                     = "10"
+    // PackingListフォーマット
+    , FORMAT_ID_PACKING                     = "11"
+    // 海外用仕入先向け注文書(JPY)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_JPY        = "14"
+    // 海外用仕入先向け注文書(USD)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_USD        = "15"
+]
+
 let scriptLoaded = false
 $p.events.on_grid_load_arr.push(function() {
     // 2重ロード制御
