@@ -7,7 +7,6 @@ let readOnlyItemsAfterCheckingDelivery = [
     , "単価"
     , "単価＄"
     , "仕入先注文備考"
-    , "納入区分"
 ]
 // 出荷済以降読み込み制御項目
 let readOnlyItemsAfterconfirmedDelivery = [

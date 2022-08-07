@@ -25,19 +25,39 @@ const COLS = [
     , ENDUSER               = "エンドユーザ"
     , AGENT                 = "代理店名"
     , CURRENCY_CLASS        = "通貨区分"
-    , DELIVERY_CLASS        = "納入区分"
     , DESTINATION           = "納品先"
+    // 国内情報
     , DELIVERY_COMPANY      = "納品先会社名"
-    , DESTINATION_COMPANY   = "送り先会社名"
-    , CLAIM_COMPANY         = "請求先会社名"
+    , DELIVERY_OFFICE       = "納品先事業所名"
+    , POST_CODE             = "郵便番号"
+    , ADDRESS               = "住所"
+    , MANAGER               = "担当者"
+    , PHONE_NO              = "電話番号"
+    , FAX_NO                = "FAX番号"
+    // 海外情報
+    , SOLD_TO               = "SOLD TO"
+    , SOLD_TO_ATTEN         = "SOLD TO ATTEN"
+    , SOLD_TO_ADDRESS       = "SOLD TO ADDRESS"
+    , SOLD_TO_TEL           = "SOLD TO TEL"
+    , SHIP_TO               = "SHIP TO"
+    , SHIP_TO_ATTEN         = "SHIP TO ATTEN"
+    , SHIP_TO_ADDRESS       = "SHIP TO ADDRESS"
+    , SHIP_TO_TEL           = "SHIP TO TEL"
+    , SHIP_FROM_COUNTRY     = "SHIP FROM Country"
+    , SHIP_TO_COUNTRY       = "SHIP TO Country"
+    , PAYMENT_TERM          = "Payment Terms"
+    , FORWARDER             = "Forwarder"
     // 帳票で使用する項目
-    , SALES_MAN             = "営業担当者"
+    , SALES_MANAGER         = "営業担当者"
     , CH_NO                 = "注文管理番号"
     , ITEM_NAME             = "品名"
     , MODEL_NO              = "型番"
     , VOLUME                = "数量"
     , UNIT_PRICE            = "単価"
     , PRICE                 = "金額"
+    , PRICE_USD             = "金額＄"
+    , SUB_TOTAL             = "小計"
+    , TAX_PRICE             = "税額"
     , COMMISSION            = "コミッション率"
     , MIS_NO                = "MiS番号"
     , CUSTOMER_CH_NO        = "客先注文番号"
@@ -46,19 +66,6 @@ const COLS = [
     , REQUEST_REMARK        = "先行依頼書備考"
     , SUPPLIER_REMARK       = "仕入先注文備考"
     , SCHEDULED_SHIP        = "出荷予定日"
-    , DELIVERY_OFFICE       = "納品先事業所名"
-    , DESTINATION_COUNTRY   = "送り先国名"
-    , SEND_COUNTRY          = "送り元国名"
-    , COURIER               = "宅配業者"
-    , MANAGER               = "担当者"
-    , SE_NO                 = "請求書番号"
-    , TAX_PRICE             = "税額"
-    , ADDRESS               = "住所"
-    , PHONE_NO              = "電話番号"
-    , CLAIM_ADDRESS         = "請求先住所"
-    , DESTINATION_ADDRESS   = "送り先住所"
-    , DESTINATION_PHONE_NO  = "送り先電話番号"
-    , PAYMENT_TERM          = "支払条件"
 
 
 ]
@@ -67,7 +74,8 @@ async function getData() {
     colIds = COLS.map(v => commonGetId(v, false))
     // 定義した項目が存在しない場合
     if (colIds.some(v => commonIsNull(v))) {
-        commonSetMessage("定義した項目が存在しません。スクリプトを確認してください。", ERROR, true)
+        commonSetMessage("定義した項目が存在しません。スクリプトを確認してください。", ERROR, true, true, colIds)
+        return false
     }
     // 別テーブルから取得する項目を追加
     colIds = [
@@ -112,40 +120,21 @@ async function preCheckMsi() {
         commonSetMessage("選択したデータにMiS番号が発行済みのものが含まれます。\r\n出力済みの先行依頼書を再出力する場合は先行依頼書台帳テーブルから添付ファイルをダウンロードしてください。", WARNING)
         return false
     }
-
-    // 選択レコードの「注文区分」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[ORDER_CLASS])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「注文区分」が一致したレコードを選択してください。", WARNING)
-        return false
-    }
-    // 選択レコードの「通貨区分」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[CURRENCY_CLASS])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「通貨区分」が一致したレコードを選択してください。", WARNING)
-        return false
-    }
-
-    // 選択レコードの「顧客名（契約先）」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[CUSTOMER])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「顧客名（契約先）」が一致したレコードを選択してください。", WARNING)
-        return false
-    }
-
-    // 選択レコードの「事業所名」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[OFFICE])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「事業所名」が一致したレコードを選択してください。", WARNING)
-        return false
-    }
-
-    // 選択レコードの「代理店名」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[AGENT])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「代理店名」が一致したレコードを選択してください。", WARNING)
-        return false
-    }
-
-    // 選択レコードの「エンドユーザ」項目一致チェック
-    if (commonUniqueArray([...selectedData.value.map(v => v[ENDUSER])]).length > 1) {
-        commonSetMessage("MiS番号を発行するには「エンドユーザ」が一致したレコードを選択してください。", WARNING)
-        return false
+    // 選択レコードの項目一致チェック
+    let checkItems = [
+        ORDER_CLASS         // 注文区分
+        , CURRENCY_CLASS    // 通貨区分
+        , CUSTOMER          // 顧客区分
+        , OFFICE            // 事業所
+        , AGENT             // 代理店
+        , ENDUSER           // エンドユーザー
+    ]
+    for (let item of checkItems) {
+        // 選択レコードの項目一致チェック
+        if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
+            commonSetMessage(`MiS番号を発行するには「${item}」が一致したレコードを選択してください。`, WARNING)
+            return false
+        }
     }
 
     // 全「注文区分」が一致してるので1行目から取得
@@ -160,7 +149,7 @@ async function preCheckMsi() {
         // 開始時ログ登録
         commonSetMessage('自社既存品フロー', NORMAL, true, false, selectedData)
 
-        openRequestExcelDownloadDialog(selectedData)
+        openRequestExcelDownloadDialog()
 
     // 自社新規開発品フロー
     } else if (selectedData.value[0][ORDER_CLASS] == WIKI_ORDER_CLASS.new_product.index) {
@@ -181,15 +170,10 @@ async function preCheckMsi() {
             return false
         }
 
-        // 選択レコードの「納入区分」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[DELIVERY_CLASS])]).length > 1) {
-            commonSetMessage("仕入先注文を作成するには「納入区分」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
         // 開始時ログ登録
         commonSetMessage('他社製品フロー', NORMAL, true, false, selectedData)
 
-        openSupplierExcelDownloadDialog(selectedData)
+        openSupplierExcelDownloadDialog()
 
     // 不正区分
     } else {
@@ -199,8 +183,13 @@ async function preCheckMsi() {
 
 async function preCheckDestination() {
     $p.clearMessage()
-    await getData()
     let selects = $p.selectedIds()
+    if (selects.length === 0) {
+        commonSetMessage("データが選択されていません。", WARNING)
+        return false
+    }
+
+    await getData()
 
     // 選択件数チェック
     let cnt = 150
@@ -221,13 +210,19 @@ async function preCheckDestination() {
         commonSetMessage(`納品先が入力されていません。納品先を入力したデータのみを選択してください。`, WARNING)
         return false
     }
+    commonSetMessage('DestinationList出力', NORMAL, true, false, selectedData)
     downloadDestitationExcel(selectedData)
 }
 
 async function preCheckClaim() {
     $p.clearMessage()
-    await getData()
     let selects = $p.selectedIds()
+    if (selects.length === 0) {
+        commonSetMessage("データが選択されていません。", WARNING)
+        return false
+    }
+
+    await getData()
 
     // 選択件数チェック
     let cnt = 15
@@ -247,93 +242,72 @@ async function preCheckClaim() {
         commonSetMessage(`納品先が入力されていません。納品先を入力したデータのみを選択してください。`, WARNING)
         return false
     }
+    // 伝票形式が未選択のものが存在
+    if (selectedData.display.map(v => v["伝票形式"]).some(v => commonIsNull(v))) {
+        commonSetMessage(`会社情報の伝票形式が入力されていません。伝票形式を入力したデータのみを選択してください。`, WARNING)
+        return false
+    }
 
     // 選択レコードの「納品先」項目一致チェック
     if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION])]).length > 1) {
         commonSetMessage("請求書を発行するには「納品先」が一致したレコードを選択してください。", WARNING)
         return false
     }
+    // 選択レコードの「顧客名（契約先）」項目一致チェック
+    if (commonUniqueArray([...selectedData.value.map(v => v[CUSTOMER])]).length > 1) {
+        commonSetMessage("請求書を発行するには「顧客名（契約先）」が一致したレコードを選択してください。", WARNING)
+        return false
+    }
 
     // 全「納品先」が一致してるので1行目から取得
     // 国内の場合
-    if (selectedData.value[0][DESTINATION].indexOf("国内") == 0) {
-        //// 選択レコードの「請求先会社名」項目一致チェック
-        //if (commonUniqueArray([...selectedData.value.map(v => v[DELIVERY_COMPANY])]).length > 1) {
-        //    commonSetMessage("請求書を発行するには「納品先会社名」が一致したレコードを選択してください。", WARNING)
-        //    return false
-        //}
-        //// 選択レコードの「請求先会社名」項目一致チェック
-        //if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_COMPANY])]).length > 1) {
-        //    commonSetMessage("請求書を発行するには「請求先会社名」が一致したレコードを選択してください。", WARNING)
-        //    return false
-        //}
-        //// 選択レコードの「請求先会社名」項目一致チェック
-        //if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_COMPANY])]).length > 1) {
-        //    commonSetMessage("請求書を発行するには「請求先会社名」が一致したレコードを選択してください。", WARNING)
-        //    return false
-        //}
-        //// 選択レコードの「請求先会社名」項目一致チェック
-        //if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_COMPANY])]).length > 1) {
-        //    commonSetMessage("請求書を発行するには「請求先会社名」が一致したレコードを選択してください。", WARNING)
-        //    return false
-        //}
-        //// 選択レコードの「請求先会社名」項目一致チェック
-        //if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_COMPANY])]).length > 1) {
-        //    commonSetMessage("請求書を発行するには「請求先会社名」が一致したレコードを選択してください。", WARNING)
-        //    return false
-        //}
+    if (selectedData.display[0][DESTINATION].indexOf("国内") == 0) {
+        // 選択レコードの項目一致チェック
+        let checkItems = [
+            DELIVERY_COMPANY
+            , DELIVERY_OFFICE
+            , POST_CODE
+            , ADDRESS
+            , MANAGER
+            , PHONE_NO
+            , FAX_NO
+        ]
+        for (let item of checkItems) {
+            // 選択レコードの項目一致チェック
+            if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
+                commonSetMessage(`請求書を発行するには、納品管理タブの国内納品先情報「${item}」が一致したレコードを選択してください。`, WARNING)
+                return false
+            }
+        }
+        downloadClaimExcel(false)
 
-    } else if (selectedData.value[0][DESTINATION].indexOf("海外") == 0) {
-        // 選択レコードの「請求先会社名」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_COMPANY])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「請求先会社名」が一致したレコードを選択してください。", WARNING)
-            return false
+    } else if (selectedData.display[0][DESTINATION].indexOf("海外") == 0) {
+        // 選択レコードの項目一致チェック
+        let checkItems = [
+            SOLD_TO
+            , SOLD_TO_ATTEN
+            , SOLD_TO_ADDRESS
+            , SOLD_TO_TEL
+            , SHIP_TO
+            , SHIP_TO_ATTEN
+            , SHIP_TO_ADDRESS
+            , SHIP_TO_TEL
+            , SHIP_FROM_COUNTRY
+            , SHIP_TO_COUNTRY
+            , PAYMENT_TERM
+            , FORWARDER
+        ]
+        for (let item of checkItems) {
+            // 選択レコードの項目一致チェック
+            if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
+                commonSetMessage(`請求書を発行するには、納品管理タブの海外納品先情報「${item}」が一致したレコードを選択してください。`, WARNING)
+                return false
+            }
         }
-        // 選択レコードの「請求先住所」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[CLAIM_ADDRESS])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「請求先住所」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「送り先会社名」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION_COMPANY])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「送り先会社名」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「送り先住所」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION_ADDRESS])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「送り先住所」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「送り先電話番号」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION_PHONE_NO])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「送り先電話番号」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「送り先国名」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION_COUNTRY])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「送り先国名」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「送り元国名」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[SEND_COUNTRY])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「送り元国名」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「宅配業者」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[COURIER])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「宅配業者」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
-        // 選択レコードの「支払条件」項目一致チェック
-        if (commonUniqueArray([...selectedData.value.map(v => v[PAYMENT_TERM])]).length > 1) {
-            commonSetMessage("請求書を発行するには、納品管理タブの海外納品先情報「支払条件」が一致したレコードを選択してください。", WARNING)
-            return false
-        }
+        downloadClaimExcel(true)
+
     } else {
         commonSetMessage(`納品先が不正です。`, ERROR)
         return false
     }
-
-    downloadClaimExcel()
-
 }

@@ -187,3 +187,15 @@
       value: 2,
     },
   }
+
+  // 伝票形式
+  var WIKI_VOUCHER_CLASS = {
+    PRIVATE: {
+      name: '専用伝票',
+      value: 1,
+    },
+    MIS : {
+      name: 'MiS',
+      value: 2,
+    },
+  }

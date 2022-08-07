@@ -97,6 +97,8 @@ function setSupplierModal() {
 	supplierIds.forEach(elem => {
 		let radioDiv = document.createElement('div')
 		let radioInput = document.createElement('input')
+        // 仕入先名
+        let elemName =  selectedData.display.filter(w => w["ID"] == selectedData.value.filter(v => v[SUPPLIER] == elem)[0]["ID"]) [0][SUPPLIER]
         let elemClass = sm + elem
 		radioInput.id = elem
 		radioInput.type = 'radio'
@@ -107,7 +109,7 @@ function setSupplierModal() {
 			Array.from(document.querySelectorAll(`div .${elemClass}.${sm}`)).forEach(w => w.hidden = false)
 		})
 		let radioLabel = document.createElement('label')
-		radioLabel.innerHTML = elem
+		radioLabel.innerHTML = elemName
 		radioLabel.htmlFor = elem
 		radioLabel.className = 'radio-label'
 		radioDiv.appendChild(radioInput)
@@ -232,9 +234,11 @@ async function downloadSupplierExcel() {
     requestMemo2 = srm2
     let today = formatYYYYMMDD(new Date())
     let total = 0
-    let reqId = await downloadRequestExcel(false)
 
+    let reqId = await downloadRequestExcel(false)
     let printId = ""
+    let supplierId = ""
+
     let usdFlg = false
     let foreignFlg = false
 
@@ -265,11 +269,9 @@ async function downloadSupplierExcel() {
 
 
         // 合計金額
-        let total = supplierData.reduce((sum, elem) => {
+        total = supplierData.reduce((sum, elem) => {
             return sum + (elem[usdFlg ? "原価＄" : "原価"] * elem[VOLUME])
         }, 0)
-
-        let targetID = ""
 
         let createData = {
             "DateA": today,
@@ -303,11 +305,11 @@ async function downloadSupplierExcel() {
             exc = retDownloadExcel.Response.Data[0]
 
             // 作成されたレコードのIDを取得
-            targetID = retCreateParentRecord.Id
+            supplierId = retCreateParentRecord.Id
 
             let updateData = {
                     Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-                    , [commonGetId("仕入先注文番号", false)]: targetID
+                    , [commonGetId("仕入先注文番号", false)]: supplierId
                     , [commonGetId("注文日", false)]: today
             }
 
@@ -321,7 +323,7 @@ async function downloadSupplierExcel() {
             }
 
             try {
-                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, targetID)
+                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, id)
             } catch (err) {
                 console.log(err)
                 commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR, true)
@@ -338,20 +340,21 @@ async function downloadSupplierExcel() {
                     att = "AttachmentsC"
                 }
                 // 仕入先注文書台帳に帳票を添付
-                await commonUpdateAttachment(targetID, att, retCreateExcel.workbook, retCreateExcel.filename)
+                await commonUpdateAttachment(supplierId, att, retCreateExcel.workbook, retCreateExcel.filename)
             } catch (err) {
                 console.log(err)
                 commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR, true)
                 return false
             }
-            if (formatId == printId)
-            try {
-                // ファイルをダウンロード
-                await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename)
-            } catch (err) {
-                console.log(err)
-                commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
-                return false
+            if (formatId == printId) {
+                try {
+                    // ファイルをダウンロード
+                    await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename)
+                } catch (err) {
+                    console.log(err)
+                    commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
+                    return false
+                }
             }
         }
     }
@@ -362,7 +365,7 @@ async function downloadSupplierExcel() {
 		location.reload(false)
 	}
 
-    async function createExcel(guid, filename, targetID) {
+    async function createExcel(guid, filename, companyId) {
 
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
@@ -374,7 +377,7 @@ async function downloadSupplierExcel() {
 
         let recS = await commonGetData(
             ["ClassA"]
-            , {"ResultId": `[${targetID}]`}
+            , {"ResultId": `[${supplierId}]`}
             , false
             , TABLE_ID_SUPPLIER_ORDER_BOOK
         )
@@ -388,6 +391,14 @@ async function downloadSupplierExcel() {
         )
         let misNo = recR.Response.Data[0]["MiS番号"]
 
+        let recC = await commonGetData(
+            ["DescriptionB"]
+            , {"ResultId": `[${companyId}]`}
+            , false
+            , TABLE_ID_COMPANY_INFO
+        )
+        let term = recC.Response.Data[0]["条件"]
+
 
         getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
         getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
@@ -395,7 +406,7 @@ async function downloadSupplierExcel() {
         getCell("Z5", worksheet).value = siNo //仕入先注文台帳番号
         getCell("B5", worksheet).value = supplierData[0][SUPPLIER] //仕入先
         getCell("G13", worksheet).value = total //合計
-        getCell("G15", worksheet).value = supplierData[0]["条件"] //支払条件
+        getCell("G15", worksheet).value = term //支払条件
         // 納入区分が日付だったら納入日付を入力
         if ($('#' + st).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
             getCell("G17", worksheet).value = $('#' + sd).val()

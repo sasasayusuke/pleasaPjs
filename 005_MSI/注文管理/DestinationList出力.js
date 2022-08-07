@@ -70,14 +70,14 @@ async function downloadDestitationExcel() {
                 destination = record[DELIVERY_COMPANY]
             } else if (record[DESTINATION].indexOf("海外") == 0) {
                 // 納品先が海外1.2.3.フリーの場合「送り先会社名」
-                destination = record[DESTINATION_COMPANY]
+                destination = record[SHIP_TO]
             } else {
                 // メッセージを表示
                 commonSetMessage(`ID：${record["ID"]} 納品先に不正値が入力されています。`, ERROR, true)
             }
 
             getCell("E" + rowNumber, worksheet).value = destination
-            getCell("F" + rowNumber, worksheet).value = record[COURIER]                       //  宅配業者
+            getCell("F" + rowNumber, worksheet).value = record[FORWARDER]                       //  宅配業者
             getCell("G" + rowNumber, worksheet).value = record[MODEL_NO]                      //  型番
             getCell("H" + rowNumber, worksheet).value = record[VOLUME]                        //  数量
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]                    //  単価

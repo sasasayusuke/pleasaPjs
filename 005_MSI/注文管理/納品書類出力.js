@@ -1,344 +1,471 @@
 
-
-const supplierDialogId = "supplierExcelDownloadDialog"
-const supplierTarget = "supplierTarget"
-const supplierDate = "supplierDate"
-const supplierRemarks = "supplierRemarks"
-const supplierPrint = "supplierPrint"
-const supplierRequestMemo1 = "supplierRequestMemo1"
-const supplierRequestMemo2 = "supplierRequestMemo2"
-
-let supplierData = {}
-let suppliers = []
-let x1 = "国内向け円建"
-let x2 = "海外向け円建"
-let x3 = "海外向けドル建"
-
-$p.events.on_grid_load_arr.push(function () {
-
-    let html = `
-        <div id="${supplierDialogId}" class="dialog" title="先行依頼書&仕入先注文書出力">
-            <div class="field-markdown">
-                <p class="field-label"><label for="${supplierRequestMemo1}">MEMO1</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${supplierRequestMemo1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestMemo1}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${supplierRequestMemo1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestMemo1}'));">
-                        </div>
-                        <textarea id="${supplierRequestMemo1}" name="${supplierRequestMemo1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field-markdown">
-                <p class="field-label"><label for="${supplierRequestMemo2}">MEMO2</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${supplierRequestMemo2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRequestMemo2}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${supplierRequestMemo2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRequestMemo2}'));">
-                        </div>
-                        <textarea id="${supplierRequestMemo2}" name="${supplierRequestMemo2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field-normal">
-                <p class="field-label"><label for="${supplierTarget}">希望納期</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <select id="${supplierTarget}" name="${supplierTarget}" class="control-dropdown" onchange="displayControlAsap()">
-                            <option value="">&nbsp;</option>
-                            <option value="${WIKI_DELIVERY_LIMIT.ASAP.name}">${WIKI_DELIVERY_LIMIT.ASAP.name}</option>
-                            <option value="${WIKI_DELIVERY_LIMIT.DATE.name}">${WIKI_DELIVERY_LIMIT.DATE.name}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div id="${supplierDate}Field" class="field-normal" style="">
-                <p class="field-label"><label for="${supplierDate}">納入日付</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <input id="${supplierDate}" name="${supplierDate}" class="control-textbox datepicker valid" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
-                        <div class="ui-icon ui-icon-clock current-time">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="${supplierRemarks}Field" class="field-markdown">
-                <p class="field-label">
-                    <label for="${supplierRemarks}">納入先：直送</label>
-                </p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${supplierRemarks}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${supplierRemarks}'));"><pre><br></pre>
-                        </div>
-                        <div id="${supplierRemarks}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${supplierRemarks}'));">
-                        </div>
-                        <textarea id="${supplierRemarks}" name="${supplierRemarks}" class="control-markdown upload-image applied" placeholder="納入先：直送" style="height: 100px; display: none;">
-                        </textarea>
-                        <div class="ui-icon ui-icon-image button-upload-image" onclick="$p.selectImage('${supplierRemarks}');">
-                        </div>
-                        <div class="ui-icon ui-icon-video" onclick="$p.openVideo('${supplierRemarks}');">
-                        </div>
-                        <input id="${supplierRemarks}.upload-image-file" name="${supplierRemarks}.upload-image-file" class="hidden upload-image-file" type="file" accept="image/*" data-id="${supplierRemarks}">
-                    </div>
-                </div>
-            </div>
-            <div class="field-normal">
-            <p class="field-label"><label for="${supplierPrint}">出力仕入先注文形式</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <select id="${supplierPrint}" name="${supplierPrint}" class="control-dropdown">
-                            <option value="">&nbsp;</option>
-                            <option value="${x1}">${x1}</option>
-                            <option value="${x2}">${x2}</option>
-                            <option value="${x3}">${x3}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <p class="message-dialog"></p>
-            <div class="command-center">
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
-            </div>
-        </div>
-`
-
-    $('#Application').append(html)
-
-})
-
-function displayControlAsap() {
-    // 納入日付　表示制御
-    if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
-        // 表示化
-        commonHideElements(supplierDate + "Field", false)
-    } else {
-        commonHideElements(supplierDate + "Field")
-        document.getElementById(supplierDate).value = ""
-    }
-}
-function displayControlDirect() {
-    // 納入先：直送　表示制御
-    if (selectedData.display[0][DELIVERY_CLASS] == WIKI_DELIVERY_CLASS.DIRECT.name) {
-        // 表示化
-        commonHideElements(supplierRemarks + "Field", false)
-    } else {
-        commonHideElements(supplierRemarks + "Field")
-        document.getElementById(supplierRemarks).value = ""
-    }
-}
-
-function openSupplierExcelDownloadDialog() {
-    displayControlAsap()
-    displayControlDirect()
-    $('#SendTo').val("")
-    $('#SendToPerson').val("")
-    $('#SendToAddress').val("")
-    $("#" + supplierDialogId).dialog({
-        modal: !0,
-        width: "520px",
-        resizable: !1
-    })
-}
-
-async function downloadSupplierExcel() {
-    // ダイアログをクローズ
-    $p.closeDialog($('#' + supplierDialogId))
-    let printId = ""
-    let usdFlg = false
-    let foreignFlg = false
-    if ($('#' + supplierPrint).val() == x1) {
-        printId = FORMAT_ID_SUPPLIER
-    } else if ($('#' + supplierPrint).val() == x2) {
-        printId = FORMAT_ID_SUPPLIER_FOREIGN_JPY
-        foreignFlg = true
-    } else if ($('#' + supplierPrint).val() == x3) {
-        printId = FORMAT_ID_SUPPLIER_FOREIGN_USD
-        usdFlg = true
-        foreignFlg = true
-    } else {
-        commonSetMessage("出力仕入先注文形式を選択してください", WARNING)
-        return false
-
-    }
-
-    requestMemo1 = supplierRequestMemo1
-    requestMemo2 = supplierRequestMemo2
-    let reqId = await downloadRequestExcel(false)
+// 国内ならfalse 海外ならtrue
+async function downloadClaimExcel(foreignFlg) {
 
     // 帳票フォーマットを検索
-    let retDownloadExcel = {}
-     // 帳票を格納
-    let exc = {}
+    let retClaimDownloadExcel
+    let retReceiptDowmloadExcel
+    let retDeliveryDowmloadExcel
+    let retStorageClaimDowmloadExcel
+    let retInvoiceDownloadExcel
+    let retPackingDownloadExcel
 
-    // 仕入先注文書台帳にデータを新規作成
-    let retCreateParentRecord ={}
-    // 帳票を作成
-    let retCreateExcel = {}
+    // 帳票を格納
+    let excClaim = {}
+    let excReceipt = {}
+    let excDelivery = {}
+    let excStorageClaim = {}
+    let excInvoice = {}
+    let excPacking = {}
+
+    let printClaimFlg = false
+    let printReceiptFlg = false
+    let printDeliveryFlg = false
+    let printStorageClaimFlg = false
+    let printInvoiceFlg = false
+    let printPackingFlg = false
 
     let today = formatYYYYMMDD(new Date())
+    let total = 0
+    let subTotal = 0
+    let taxPriceTotal = 0
+    let usdFlg = false
+    let createData = {}
+
+    let claimId = ""
+    let invoiceId = ""
+
+    let seNo = ""
+    let ivNo = ""
+
     // 合計金額
-    let total = selectedData.display.reduce((sum, elem) => {
-        return sum + (elem[usdFlg ? "原価＄" : "原価"] * elem[VOLUME])
+    total = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[usdFlg ? PRICE_USD : PRICE])
+    }, 0)
+    // 小計金額
+    subTotal = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[SUB_TOTAL])
+    }, 0)
+    // 合計金額
+    taxPriceTotal = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[TAX_PRICE])
     }, 0)
 
-    let targetID = ""
+    // 全「納品先」が一致してるので1行目から取得
+    // 国内の場合
+    if (!foreignFlg) {
+        // 全「顧客名（契約先）」が一致してるので1行目から取得
+        // 伝票形式がMiSだった場合
+        if (selectedData.display[0]["伝票形式"] == WIKI_VOUCHER_CLASS.MIS.name) {
+            // 請求書・納品書・受領書・請求書（保管用）
+            printClaimFlg = true
+            printReceiptFlg = true
+            printDeliveryFlg = true
+            printStorageClaimFlg = true
+            commonSetMessage('納品出力：国内MIS形式', NORMAL, true, false, selectedData)
 
-    let createData = {
-        "DateA": today,
-        "ClassB": selectedData.display[0][SUPPLIER], //07.仕入先会社名
-        "ClassC": total, //07.合計金額
-        "ClassE": $('#' + supplierTarget).val(), //07.希望納期（ASAP,日付）
-        "DateB": $('#' + supplierDate).val(), //07.日付
-        "DescriptionA": $('#' + supplierRemarks).val(), //07.納品先
+        } else if (selectedData.display[0]["伝票形式"] == WIKI_VOUCHER_CLASS.PRIVATE.name) {
+            // 請求書（保管用）のみ
+            printStorageClaimFlg = true
+            commonSetMessage('納品出力：国内専用伝票形式', NORMAL, true, false, selectedData)
+
+        } else {
+            commonSetMessage(`伝票形式が不正です。`, ERROR, true)
+            return false
+        }
+    // 海外の場合
+    } else {
+        if (selectedData.display[0]["伝票形式"] == WIKI_VOUCHER_CLASS.MIS.name) {
+            // INVOICE・PACKINGLIST・請求書（保管用）
+            printStorageClaimFlg = true
+            printInvoiceFlg = true
+            printPackingFlg = true
+            commonSetMessage('納品出力：海外MIS形式', NORMAL, true, false, selectedData)
+
+        } else if (selectedData.display[0]["伝票形式"] == WIKI_VOUCHER_CLASS.PRIVATE.name) {
+            // 請求書（保管用）のみ
+            printStorageClaimFlg = true
+            commonSetMessage('納品出力：海外専用伝票形式', NORMAL, true, false, selectedData)
+
+        } else {
+            commonSetMessage(`伝票形式が不正です。`, ERROR, true)
+            return false
+        }
     }
 
     try {
-        retCreateParentRecord = await createParentRecord(TABLE_ID_SUPPLIER_ORDER_BOOK, createData)
+        if (printClaimFlg) retClaimDownloadExcel = await downloadExcel(FORMAT_ID_CLAIM)
+        if (printReceiptFlg) retReceiptDowmloadExcel = await downloadExcel(FORMAT_ID_RECEIPT)
+        if (printDeliveryFlg) retDeliveryDowmloadExcel = await downloadExcel(FORMAT_ID_DELIVERY)
+        if (printStorageClaimFlg) retStorageClaimDowmloadExcel = await downloadExcel(FORMAT_ID_STORAGE_CLAIM)
+        if (printInvoiceFlg) retInvoiceDownloadExcel = await downloadExcel(FORMAT_ID_INVOICE)
+        if (printPackingFlg) retPackingDownloadExcel = await downloadExcel(FORMAT_ID_PACKING)
     } catch (err) {
         console.log(err)
-        commonSetMessage("仕入先注文書:帳票ダウンロードエラー１", ERROR, true)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー１", ERROR, true)
         return false
     }
 
-    for (let formatId of [FORMAT_ID_SUPPLIER, FORMAT_ID_SUPPLIER_FOREIGN_JPY, FORMAT_ID_SUPPLIER_FOREIGN_USD]) {
+    if (foreignFlg) {
         try {
-            retDownloadExcel = await downloadExcel(formatId)
+            // Invoice台帳にデータを新規作成（invoice番号発行）
+            let retCreateInvoiceParentRecord = await createParentRecord(TABLE_ID_INVOICE_NO, createData)
+            // 作成されたレコードのIDを取得
+            invoiceId = retCreateInvoiceParentRecord.Id
         } catch (err) {
             console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー２", ERROR, true)
-            return false
-        }
-        if (retDownloadExcel.Response.TotalCount !== 1) {
-            return false
-        }
-        // 帳票を格納
-        exc = retDownloadExcel.Response.Data[0]
-
-        // 作成されたレコードのIDを取得
-        targetID = retCreateParentRecord.Id
-
-        let updateData = {
-                Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-                , [commonGetId("仕入先注文番号", false)]: targetID
-                , [commonGetId("注文日", false)]: today
-        }
-
-        try {
-        // 選択した注文管理レコードを更新
-            await editSelectedRecord(updateData)
-        } catch (err) {
-            console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
-            return false
-        }
-
-        try {
-            retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC)
-        } catch (err) {
-            console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR, true)
-            return false
-        }
-
-        try {
-            let att = ""
-            if (formatId == FORMAT_ID_SUPPLIER) {
-                att = "AttachmentsA"
-            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_JPY) {
-                att = "AttachmentsB"
-            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_USD) {
-                att = "AttachmentsC"
-            }
-            // 仕入先注文書台帳に帳票を添付
-            await commonUpdateAttachment(targetID, att, retCreateExcel.workbook, retCreateExcel.filename)
-        } catch (err) {
-            console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR, true)
-            return false
-        }
-        if (formatId == printId)
-        try {
-            // ファイルをダウンロード
-            await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename)
-        } catch (err) {
-            console.log(err)
-            commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
+            commonSetMessage("納品書類発行:帳票ダウンロードエラー２", ERROR, true)
             return false
         }
     }
-    let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
-	if (finalAns) {
-		// キャッシュからリロード
-		location.reload(false)
-	}
+    try {
+        createData = {
+            "DateA": today,
+            "ClassB": invoiceId, // InvoiceNo
+            "ClassD": selectedData.value[0][CUSTOMER], // 請求先会社
+            "ClassG": selectedData.value[0][MANAGER], // 担当者
+            "NumC": subTotal, // 小計
+            "NumA": taxPriceTotal, // 税額
+            "NumB": total, // 合計金額
+            "DescriptionA": selectedData.value[0]["条件"], // 支払条件
+        }
 
-    async function createExcel(guid, filename) {
+        // 請求書台帳にデータを新規作成（請求書番号発行）
+        let retCreateClaimParentRecord = await createParentRecord(TABLE_ID_CLAIM_BOOK, createData)
+        // 作成されたレコードのIDを取得
+        claimId = retCreateClaimParentRecord.Id
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー３", ERROR, true)
+        return false
+    }
+
+    // 帳票を格納
+    if (printClaimFlg) excClaim = retClaimDownloadExcel.Response.Data[0]
+    if (printReceiptFlg) excReceipt = retReceiptDowmloadExcel.Response.Data[0]
+    if (printDeliveryFlg) excDelivery = retDeliveryDowmloadExcel.Response.Data[0]
+    if (printStorageClaimFlg) excStorageClaim = retStorageClaimDowmloadExcel.Response.Data[0]
+    if (printInvoiceFlg) excInvoice = retInvoiceDownloadExcel.Response.Data[0]
+    if (printPackingFlg) excPacking = retPackingDownloadExcel.Response.Data[0]
+
+    try {
+        let recC = await commonGetData(
+            ["ClassA"]
+            , {"ResultId": `[${claimId}]`}
+            , false
+            , TABLE_ID_CLAIM_BOOK
+        )
+        seNo = recC.Response.Data[0]["請求書番号"]
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー４", ERROR, true)
+        return false
+    }
+    if (foreignFlg) {
+        try {
+            let recI = await commonGetData(
+                ["ClassA"]
+                , {"ResultId": `[${invoiceId}]`}
+                , false
+                , TABLE_ID_INVOICE_NO
+            )
+            ivNo = recI.Response.Data[0]["InvoiceNo"]
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("納品書類発行:帳票ダウンロードエラー５", ERROR, true)
+            return false
+        }
+    }
+
+    // 帳票を作成
+    // 請求書・納品書・受領書・請求書（保管用）
+    let retCreateClaimExcel
+    let retCreateReceiptExcel
+    let retCreateDeliveryExcel
+    let retCreateStorageClaimExcel
+    let retCreateInvoiceExcel
+    let retCreatePackingExcel
+    try {
+        if (printClaimFlg) retCreateClaimExcel = await createClaimExcel(JSON.parse(excClaim.AttachmentsA)[0].Guid, excClaim.ClassC)
+        if (printReceiptFlg) retCreateReceiptExcel = await createReceiptExcel(JSON.parse(excReceipt.AttachmentsA)[0].Guid, excReceipt.ClassC)
+        if (printDeliveryFlg) retCreateDeliveryExcel = await createDeliveryExcel(JSON.parse(excDelivery.AttachmentsA)[0].Guid, excDelivery.ClassC)
+        if (printStorageClaimFlg) retCreateStorageClaimExcel = await createStorageClaimExcel(JSON.parse(excStorageClaim.AttachmentsA)[0].Guid, excStorageClaim.ClassC)
+        if (printInvoiceFlg) retCreateInvoiceExcel = await createInvoiceExcel(JSON.parse(excInvoice.AttachmentsA)[0].Guid, excInvoice.ClassC)
+        if (printPackingFlg) retCreatePackingExcel = await createPackingExcel(JSON.parse(excPacking.AttachmentsA)[0].Guid, excPacking.ClassC)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー６", ERROR, true)
+        return false
+    }
+
+    try {
+        // 請求書台帳に帳票を添付
+        if (printClaimFlg) await commonUpdateAttachment(claimId, "AttachmentsA", retCreateClaimExcel.workbook, retCreateClaimExcel.filename)
+        if (printReceiptFlg) await commonUpdateAttachment(claimId, "AttachmentsB", retCreateReceiptExcel.workbook, retCreateReceiptExcel.filename)
+        if (printDeliveryFlg) await commonUpdateAttachment(claimId, "AttachmentsC", retCreateDeliveryExcel.workbook, retCreateDeliveryExcel.filename)
+        if (printStorageClaimFlg) await commonUpdateAttachment(claimId, "AttachmentsD", retCreateStorageClaimExcel.workbook, retCreateStorageClaimExcel.filename)
+        if (printInvoiceFlg) await commonUpdateAttachment(claimId, "AttachmentsE", retCreateInvoiceExcel.workbook, retCreateInvoiceExcel.filename)
+        if (printPackingFlg) await commonUpdateAttachment(claimId, "AttachmentsF", retCreatePackingExcel.workbook, retCreatePackingExcel.filename)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー７", ERROR, true)
+        return false
+    }
+
+    try {
+        if (printClaimFlg) await outputXlsx(retCreateClaimExcel.workbook, retCreateClaimExcel.filename)
+        if (printReceiptFlg) await outputXlsx(retCreateReceiptExcel.workbook, retCreateReceiptExcel.filename)
+        if (printDeliveryFlg) await outputXlsx(retCreateDeliveryExcel.workbook, retCreateDeliveryExcel.filename)
+        if (printStorageClaimFlg) await outputXlsx(retCreateStorageClaimExcel.workbook, retCreateStorageClaimExcel.filename)
+        if (printInvoiceFlg) await outputXlsx(retCreateInvoiceExcel.workbook, retCreateInvoiceExcel.filename)
+        if (printPackingFlg) await outputXlsx(retCreatePackingExcel.workbook, retClPackingeateExcel.filename)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー８", ERROR, true)
+        return false
+    }
+
+    try {
+        // 選択した注文管理レコードを更新
+        updateData = {
+            Status: WIKI_STATUS_ORDER_CONTROL.shipped.index
+            , [commonGetId("請求書番号", false)]: claimId
+        }
+        // 選択した注文管理レコードを更新
+        await editSelectedRecord(updateData)
+    } catch (err) {
+        console.log(err)
+        commonSetMessage("納品書類発行:帳票ダウンロードエラー９", ERROR, true)
+        return false
+    }
+    // 画面リロード処理
+    let finalAns = window.confirm('画面をリロードします。よろしいでしょうか?')
+    if (finalAns) {
+        // キャッシュからリロード
+        location.reload(false)
+    };
+
+    // 請求書
+    async function createClaimExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
+        const today = new Date()
+
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
+        worksheet.name = filename
+
+        getCell("G12", worksheet).value = selectedData.display[0]["条件"]//支払条件
+        getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
+        getCell("W2", worksheet).value = formatYYYYMMDD(today) //請求日
+        getCell("W3", worksheet).value = seNo //請求書番号
+        getCell("V32", worksheet).value = taxPriceTotal //税額
+
+
+        let rowNumber = 16
+        for (let record of selectedData.display) {
+            getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
+            getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            rowNumber = rowNumber + 1
+        }
+
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
+
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+    }
+
+    // 請求書(保管用)
+    async function createStorageClaimExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
+        const today = new Date()
+
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
+        worksheet.name = filename
+
+        getCell("G11", worksheet).value = selectedData.display[0]["条件"] //支払条件
+        getCell("A4", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
+        getCell("W2", worksheet).value = formatYYYYMMDD(today) //請求日
+        getCell("W3", worksheet).value = seNo //請求書番号
+        getCell("V31", worksheet).value = taxPriceTotal //税額
+
+
+        let rowNumber = 15
+        for (let record of selectedData.display) {
+            getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
+            getCell("E" + rowNumber, worksheet).value = record[MIS_NO]
+            getCell("H" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("P" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            rowNumber = rowNumber + 1
+        }
+
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
+
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+    }
+
+    // 受領書
+    async function createReceiptExcel(guid, filename) {
 
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
         const workbook = new ExcelJS.Workbook()
 
-
-
         await workbook.xlsx.load(data)
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
         worksheet.name = filename
 
-        let recS = await commonGetData(
-            ["ClassA"]
-            , {"ResultId": `[${targetID}]`}
-            , false
-            , TABLE_ID_SUPPLIER_ORDER_BOOK
-        )
-        let siNo = recS.Response.Data[0]["仕入先注文台帳番号"]
-
-        let recR = await commonGetData(
-            ["ClassA"]
-            , {"ResultId": `[${reqId}]`}
-            , false
-            , TABLE_ID_REQUEST_BOOK
-        )
-        let misNo = recR.Response.Data[0]["MiS番号"]
-
-
-        getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
-        getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
-        getCell("AD4", worksheet).value = today.split("/")[2] // 注文日
-        getCell("Z5", worksheet).value = siNo //仕入先注文台帳番号
-        getCell("B5", worksheet).value = selectedData.display[0][SUPPLIER] //仕入先
-        getCell("G13", worksheet).value = total //合計
-        getCell("G15", worksheet).value = selectedData.display[0]["条件"] //支払条件
-        // 納入区分が日付だったら納入日付を入力
-        if ($('#' + supplierTarget).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
-            getCell("G17", worksheet).value = $('#' + supplierDate).val()
-        } else {
-            getCell("G17", worksheet).value = $('#' + supplierTarget).val()
-        }
-
-        getCell("C32", worksheet).value = $('#' + supplierRemarks).val() //納品先
-        getCell("AB35", worksheet).value = misNo //MiS番号
+        getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
+        getCell("R7", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
+        getCell("S8", worksheet).value = selectedData.display[0][POST_CODE] // 郵便番号
+        getCell("R9", worksheet).value = selectedData.display[0][ADDRESS] // 住所
+        getCell("R12", worksheet).value = selectedData.display[0][PHONE_NO] // 電話番号
+        getCell("G39", worksheet).value = seNo // 請求書番号
+        getCell("G40", worksheet).value = formatYYYYMMDD(today) // 納品日
+        getCell("V36", worksheet).value = taxPriceTotal // 税額
 
         let rowNumber = 20
         for (let record of selectedData.display) {
-            getCell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
-            let volume = record[VOLUME]
-            let unit = record[usdFlg ? "原価＄" : "原価"]
-            getCell("K" + rowNumber, worksheet).value = volume //数量
-            getCell("N" + rowNumber, worksheet).value = unit //単価
-            getCell("Q" + rowNumber, worksheet).value = volume * unit //金額
-            getCell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
+            getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
+            getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("N" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            rowNumber = rowNumber + 1
+        }
+
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
+
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+    }
+
+    // 納品書
+    async function createDeliveryExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
+
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
+        worksheet.name = filename
+
+        getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
+        getCell("W2", worksheet).value = formatYYYYMMDD(today) // 納品日
+        getCell("W3", worksheet).value = seNo // 請求書番号
+        getCell("V32", worksheet).value = taxPriceTotal // 税額
+        getCell("G12", worksheet).value = selectedData.display[0]["条件"] // 支払条件
+
+        let rowNumber = 16
+        for (let record of selectedData.display) {
+            getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
+            getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            rowNumber = rowNumber + 1
+        }
+
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
+
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+    }
+
+    // Invoice
+    async function createInvoiceExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
+        const today = new Date()
+
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
+        worksheet.name = filename
+
+        getCell("K6", worksheet).value = ivNo // InvoiceNo
+        getCell("K8", worksheet).value = formatYYYYMMDD(today)// 日付
+        getCell("C9", worksheet).value = selectedData.display[0][CLAIM_COMPANY] // 請求先会社名
+        getCell("C10", worksheet).value = selectedData.display[0][SOLD_TO_ADDRESS] // 請求書住所
+        getCell("D16", worksheet).value = selectedData.display[0]["請求先電話番号"] // 請求先電話番号
+        getCell("I9", worksheet).value = selectedData.display[0]["送り先会社名"] // 送り先会社名
+        getCell("I10", worksheet).value = selectedData.display[0]["送り先住所"] // 送り先住所
+        getCell("I16", worksheet).value = selectedData.display[0]["送り先電話番号"] // 送り先電話番号
+        getCell("B18", worksheet).value = selectedData.display[0]["送り元国名"]  // 送り元国名
+        getCell("B21", worksheet).value = selectedData.display[0]["送り先国名"]  // 送り先国名
+        getCell("G18", worksheet).value = selectedData.display[0]["宅配業者"]  // 宅配業者
+        getCell("G21", worksheet).value = selectedData.display[0]["支払条件"]  // 支払条件
+        getCell("B43", worksheet).value = selectedData.display[0]["備考"]  // 支払条件
+
+
+        let rowNumber = 26
+        for (let record of selectedData.display) {
+            getCell("C" + rowNumber, worksheet).value = record[ITEM_NAME]
+            getCell("E" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("G" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("N" + rowNumber, worksheet).value = record["数量単位(日)"]
+            getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]
+            getCell("K" + rowNumber, worksheet).value = record[PRICE]
+
+            rowNumber = rowNumber + 1
+        }
+
+        // Force workbook calculation on load
+        workbook.calcProperties.fullCalcOnLoad = true;
+
+        return { workbook: workbook, filename: filename + getNow() + `.xlsx` }
+    }
+
+    // Packing
+    async function createPackingExcel(guid, filename) {
+
+        const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
+        const data = new Uint8Array(res.data)
+        const workbook = new ExcelJS.Workbook()
+        const today = new Date()
+
+        await workbook.xlsx.load(data)
+        const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
+
+        worksheet.name = filename
+
+        getCell("K6", worksheet).value = ivNo // InvoiceNo
+        getCell("K8", worksheet).value = formatYYYYMMDD(today)// 日付
+        getCell("C9", worksheet).value = selectedData.display[0]["請求先会社名"] // 請求先会社名
+        getCell("C10", worksheet).value = selectedData.display[0]["請求先住所"] // 請求書住所
+        getCell("D16", worksheet).value = selectedData.display[0]["請求先電話番号"] // 請求先電話番号
+        getCell("I9", worksheet).value = selectedData.display[0]["送り先会社名"] // 送り先会社名
+        getCell("I10", worksheet).value = selectedData.display[0]["送り先住所"] // 送り先住所
+        getCell("I16", worksheet).value = selectedData.display[0]["送り先電話番号"] // 送り先電話番号
+        getCell("B18", worksheet).value = selectedData.display[0]["送り元国名"]  // 送り元国名
+        getCell("B21", worksheet).value = selectedData.display[0]["送り先国名"]  // 送り先国名
+        getCell("G18", worksheet).value = selectedData.display[0]["宅配業者"]  // 宅配業者
+        getCell("G21", worksheet).value = selectedData.display[0]["支払条件"]  // 支払条件
+
+        let rowNumber = 26
+        for (let record of selectedData.display) {
+            getCell("C" + rowNumber, worksheet).value = record[ITEM_NAME]
+            getCell("E" + rowNumber, worksheet).value = record[MODEL_NO]
+
             rowNumber = rowNumber + 1
         }
 
