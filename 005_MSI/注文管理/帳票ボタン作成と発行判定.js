@@ -47,11 +47,13 @@ const COLS = [
     , SHIP_TO_COUNTRY       = "SHIP TO Country"
     , PAYMENT_TERM          = "Payment Terms"
     , FORWARDER             = "Forwarder"
+    , FOREIGN_REMARK        = "海外情報備考"
     // 帳票で使用する項目
     , SALES_MANAGER         = "営業担当者"
     , CH_NO                 = "注文管理番号"
     , ITEM_NAME             = "品名"
     , MODEL_NO              = "型番"
+    , MEASURE               = "数量単位(日)"
     , VOLUME                = "数量"
     , UNIT_PRICE            = "単価"
     , PRICE                 = "金額"
@@ -259,6 +261,7 @@ async function preCheckClaim() {
         return false
     }
 
+    let foreignFlg = false
     // 全「納品先」が一致してるので1行目から取得
     // 国内の場合
     if (selectedData.display[0][DESTINATION].indexOf("国内") == 0) {
@@ -279,7 +282,6 @@ async function preCheckClaim() {
                 return false
             }
         }
-        downloadClaimExcel(false)
 
     } else if (selectedData.display[0][DESTINATION].indexOf("海外") == 0) {
         // 選択レコードの項目一致チェック
@@ -296,6 +298,7 @@ async function preCheckClaim() {
             , SHIP_TO_COUNTRY
             , PAYMENT_TERM
             , FORWARDER
+            , FOREIGN_REMARK
         ]
         for (let item of checkItems) {
             // 選択レコードの項目一致チェック
@@ -304,10 +307,18 @@ async function preCheckClaim() {
                 return false
             }
         }
-        downloadClaimExcel(true)
+        foreignFlg = true
 
     } else {
         commonSetMessage(`納品先が不正です。`, ERROR)
         return false
     }
+    let ans = window.confirm('請求書類を発行してよろしいですか？')
+    if (ans) {
+        // 開始時ログ登録
+        commonSetMessage(foreignFlg ? '請求書類出力(海外)' : '請求書類出力(国内)', NORMAL, true, false, selectedData)
+        // 帳票なしで注番取得
+        downloadClaimExcel(foreignFlg)
+    }
+
 }

@@ -79,8 +79,8 @@ function getCell(address, worksheet) {
     return worksheet.getRow(rowNo).getCell(colNo)
 }
 
-async function editSelectedRecord(data) {
-    $p.selectedIds().forEach((elem, index) => {
+async function editSelectedRecord(data, ids = $p.selectedIds()) {
+    ids.forEach((elem, index) => {
         console.log(`${index}: ${elem}`)
         $p.apiUpdate({
             'id': elem,

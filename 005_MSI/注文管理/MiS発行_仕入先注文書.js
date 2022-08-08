@@ -15,7 +15,7 @@ const ma = "menuArea"
 const sm = "supplierMenu"
 
 let supplierData = {}
-let supplierIds = []
+let suppliers = []
 let x1 = "国内向け円建"
 let x2 = "海外向け円建"
 let x3 = "海外向けドル建"
@@ -69,7 +69,7 @@ $p.events.on_grid_load_arr.push(function () {
 })
 
 function openSupplierExcelDownloadDialog() {
-    supplierIds = commonUniqueArray(selectedData.value.map(v => v[SUPPLIER]))
+    suppliers = commonUniqueArray(selectedData.value.map(v => v[SUPPLIER]))
     setSupplierModal()
     displayControlAsap()
     displayControlDirect()
@@ -94,7 +94,7 @@ function setSupplierModal() {
         area.removeChild(area.lastChild);
     }
 
-	supplierIds.forEach(elem => {
+	suppliers.forEach(elem => {
 		let radioDiv = document.createElement('div')
 		let radioInput = document.createElement('input')
         // 仕入先名
@@ -197,7 +197,7 @@ function setSupplierModal() {
 }
 
 function displayControlAsap() {
-    for (let id of supplierIds) {
+    for (let id of suppliers) {
         // 納入日付　表示制御
         if ($('#' + id + st).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
             // 表示化
@@ -210,7 +210,7 @@ function displayControlAsap() {
 
 }
 function displayControlDirect() {
-    for (let id of supplierIds) {
+    for (let id of suppliers) {
         // 納入先：直送　表示制御
         if ($('#' + id + sdc).val() == WIKI_DELIVERY_CLASS.DIRECT.name) {
             // 表示化
@@ -223,13 +223,14 @@ function displayControlDirect() {
 }
 
 async function downloadSupplierExcel() {
-    // ダイアログをクローズ
-    $p.closeDialog($('#' + sid))
     // すべての出力仕入先注文形式が入力されているか
-    if (!supplierIds.every(id => [x1, x2, x3].includes($('#' + id + sp).val()))) {
-        commonSetMessage("出力仕入先注文形式はすべて入力してください", WARNING, true)
+    if (!suppliers.every(id => [x1, x2, x3].includes($('#' + id + sp).val()))) {
+        alert("出力仕入先注文形式はすべて入力してください")
         return false
     }
+    // ダイアログをクローズ
+    $p.closeDialog($('#' + sid))
+
     requestMemo1 = srm1
     requestMemo2 = srm2
     let today = formatYYYYMMDD(new Date())
@@ -242,7 +243,7 @@ async function downloadSupplierExcel() {
     let usdFlg = false
     let foreignFlg = false
 
-    for (let id of supplierIds) {
+    for (let id of suppliers) {
         // display値データ変換
         supplierData = selectedData.display.filter(x => selectedData.value.filter(v => v[SUPPLIER] == id).map(w => w["ID"]).includes(x["ID"]))
 
@@ -278,6 +279,7 @@ async function downloadSupplierExcel() {
             "ClassB": supplierData[0][SUPPLIER], //07.仕入先会社名
             "ClassC": total, //07.合計金額
             "ClassE": $('#' + st).val(), //07.希望納期（ASAP,日付）
+            "ClassG": reqId,
             "DateB": $('#' + sd).val(), //07.日付
             "DescriptionA": $('#' + sr).val(), //07.納品先
         }
@@ -308,9 +310,8 @@ async function downloadSupplierExcel() {
             supplierId = retCreateParentRecord.Id
 
             let updateData = {
-                    Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-                    , [commonGetId("仕入先注文番号", false)]: supplierId
-                    , [commonGetId("注文日", false)]: today
+                Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+                , [commonGetId("注文日", false)]: today
             }
 
             try {

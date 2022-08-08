@@ -29,7 +29,6 @@ async function downloadClaimExcel(foreignFlg) {
     let total = 0
     let subTotal = 0
     let taxPriceTotal = 0
-    let usdFlg = false
     let createData = {}
 
     let claimId = ""
@@ -37,19 +36,6 @@ async function downloadClaimExcel(foreignFlg) {
 
     let seNo = ""
     let ivNo = ""
-
-    // 合計金額
-    total = selectedData.display.reduce((sum, elem) => {
-        return sum + (elem[usdFlg ? PRICE_USD : PRICE])
-    }, 0)
-    // 小計金額
-    subTotal = selectedData.display.reduce((sum, elem) => {
-        return sum + (elem[SUB_TOTAL])
-    }, 0)
-    // 合計金額
-    taxPriceTotal = selectedData.display.reduce((sum, elem) => {
-        return sum + (elem[TAX_PRICE])
-    }, 0)
 
     // 全「納品先」が一致してるので1行目から取得
     // 国内の場合
@@ -92,6 +78,20 @@ async function downloadClaimExcel(foreignFlg) {
             return false
         }
     }
+
+    // 合計金額
+    total = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[foreignFlg ? PRICE_USD : PRICE])
+    }, 0)
+    // 小計金額
+    subTotal = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[SUB_TOTAL])
+    }, 0)
+    // 合計金額
+    taxPriceTotal = selectedData.display.reduce((sum, elem) => {
+        return sum + (elem[TAX_PRICE])
+    }, 0)
+
 
     try {
         if (printClaimFlg) retClaimDownloadExcel = await downloadExcel(FORMAT_ID_CLAIM)
@@ -218,7 +218,7 @@ async function downloadClaimExcel(foreignFlg) {
         if (printDeliveryFlg) await outputXlsx(retCreateDeliveryExcel.workbook, retCreateDeliveryExcel.filename)
         if (printStorageClaimFlg) await outputXlsx(retCreateStorageClaimExcel.workbook, retCreateStorageClaimExcel.filename)
         if (printInvoiceFlg) await outputXlsx(retCreateInvoiceExcel.workbook, retCreateInvoiceExcel.filename)
-        if (printPackingFlg) await outputXlsx(retCreatePackingExcel.workbook, retClPackingeateExcel.filename)
+        if (printPackingFlg) await outputXlsx(retCreatePackingExcel.workbook, retCreatePackingExcel.filename)
     } catch (err) {
         console.log(err)
         commonSetMessage("納品書類発行:帳票ダウンロードエラー８", ERROR, true)
@@ -230,6 +230,7 @@ async function downloadClaimExcel(foreignFlg) {
         updateData = {
             Status: WIKI_STATUS_ORDER_CONTROL.shipped.index
             , [commonGetId("請求書番号", false)]: claimId
+            , [commonGetId("出荷完了日", false)]: today
         }
         // 選択した注文管理レコードを更新
         await editSelectedRecord(updateData)
@@ -251,7 +252,6 @@ async function downloadClaimExcel(foreignFlg) {
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
         const workbook = new ExcelJS.Workbook()
-        const today = new Date()
 
         await workbook.xlsx.load(data)
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
@@ -260,7 +260,7 @@ async function downloadClaimExcel(foreignFlg) {
 
         getCell("G12", worksheet).value = selectedData.display[0]["条件"]//支払条件
         getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
-        getCell("W2", worksheet).value = formatYYYYMMDD(today) //請求日
+        getCell("W2", worksheet).value = today //請求日
         getCell("W3", worksheet).value = seNo //請求書番号
         getCell("V32", worksheet).value = taxPriceTotal //税額
 
@@ -287,7 +287,6 @@ async function downloadClaimExcel(foreignFlg) {
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
         const workbook = new ExcelJS.Workbook()
-        const today = new Date()
 
         await workbook.xlsx.load(data)
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
@@ -296,7 +295,7 @@ async function downloadClaimExcel(foreignFlg) {
 
         getCell("G11", worksheet).value = selectedData.display[0]["条件"] //支払条件
         getCell("A4", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
-        getCell("W2", worksheet).value = formatYYYYMMDD(today) //請求日
+        getCell("W2", worksheet).value = today //請求日
         getCell("W3", worksheet).value = seNo //請求書番号
         getCell("V31", worksheet).value = taxPriceTotal //税額
 
@@ -336,7 +335,7 @@ async function downloadClaimExcel(foreignFlg) {
         getCell("R9", worksheet).value = selectedData.display[0][ADDRESS] // 住所
         getCell("R12", worksheet).value = selectedData.display[0][PHONE_NO] // 電話番号
         getCell("G39", worksheet).value = seNo // 請求書番号
-        getCell("G40", worksheet).value = formatYYYYMMDD(today) // 納品日
+        getCell("G40", worksheet).value = today // 納品日
         getCell("V36", worksheet).value = taxPriceTotal // 税額
 
         let rowNumber = 20
@@ -368,7 +367,7 @@ async function downloadClaimExcel(foreignFlg) {
         worksheet.name = filename
 
         getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
-        getCell("W2", worksheet).value = formatYYYYMMDD(today) // 納品日
+        getCell("W2", worksheet).value = today // 納品日
         getCell("W3", worksheet).value = seNo // 請求書番号
         getCell("V32", worksheet).value = taxPriceTotal // 税額
         getCell("G12", worksheet).value = selectedData.display[0]["条件"] // 支払条件
@@ -395,7 +394,6 @@ async function downloadClaimExcel(foreignFlg) {
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
         const workbook = new ExcelJS.Workbook()
-        const today = new Date()
 
         await workbook.xlsx.load(data)
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
@@ -403,18 +401,18 @@ async function downloadClaimExcel(foreignFlg) {
         worksheet.name = filename
 
         getCell("K6", worksheet).value = ivNo // InvoiceNo
-        getCell("K8", worksheet).value = formatYYYYMMDD(today)// 日付
-        getCell("C9", worksheet).value = selectedData.display[0][CLAIM_COMPANY] // 請求先会社名
-        getCell("C10", worksheet).value = selectedData.display[0][SOLD_TO_ADDRESS] // 請求書住所
-        getCell("D16", worksheet).value = selectedData.display[0]["請求先電話番号"] // 請求先電話番号
-        getCell("I9", worksheet).value = selectedData.display[0]["送り先会社名"] // 送り先会社名
-        getCell("I10", worksheet).value = selectedData.display[0]["送り先住所"] // 送り先住所
-        getCell("I16", worksheet).value = selectedData.display[0]["送り先電話番号"] // 送り先電話番号
-        getCell("B18", worksheet).value = selectedData.display[0]["送り元国名"]  // 送り元国名
-        getCell("B21", worksheet).value = selectedData.display[0]["送り先国名"]  // 送り先国名
-        getCell("G18", worksheet).value = selectedData.display[0]["宅配業者"]  // 宅配業者
-        getCell("G21", worksheet).value = selectedData.display[0]["支払条件"]  // 支払条件
-        getCell("B43", worksheet).value = selectedData.display[0]["備考"]  // 支払条件
+        getCell("K8", worksheet).value = today // 日付
+        getCell("C9", worksheet).value = selectedData.display[0][SOLD_TO]
+        getCell("C10", worksheet).value = selectedData.display[0][SOLD_TO_ADDRESS]
+        getCell("D16", worksheet).value = selectedData.display[0][SOLD_TO_TEL]
+        getCell("I9", worksheet).value = selectedData.display[0][SHIP_TO]
+        getCell("I10", worksheet).value = selectedData.display[0][SHIP_TO_ADDRESS]
+        getCell("I16", worksheet).value = selectedData.display[0][SHIP_TO_TEL]
+        getCell("B18", worksheet).value = selectedData.display[0][SHIP_FROM_COUNTRY]
+        getCell("B21", worksheet).value = selectedData.display[0][SHIP_TO_COUNTRY]
+        getCell("G18", worksheet).value = selectedData.display[0][FORWARDER]
+        getCell("G21", worksheet).value = selectedData.display[0][PAYMENT_TERM]
+        getCell("B43", worksheet).value = selectedData.display[0][FOREIGN_REMARK]
 
 
         let rowNumber = 26
@@ -422,7 +420,7 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("C" + rowNumber, worksheet).value = record[ITEM_NAME]
             getCell("E" + rowNumber, worksheet).value = record[MODEL_NO]
             getCell("G" + rowNumber, worksheet).value = record[VOLUME]
-            getCell("N" + rowNumber, worksheet).value = record["数量単位(日)"]
+            getCell("N" + rowNumber, worksheet).value = record[MEASURE]
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]
             getCell("K" + rowNumber, worksheet).value = record[PRICE]
 
@@ -441,7 +439,6 @@ async function downloadClaimExcel(foreignFlg) {
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
         const workbook = new ExcelJS.Workbook()
-        const today = new Date()
 
         await workbook.xlsx.load(data)
         const worksheet = workbook.getWorksheet(TEMPLATE_SHEET_NAME)
@@ -449,17 +446,17 @@ async function downloadClaimExcel(foreignFlg) {
         worksheet.name = filename
 
         getCell("K6", worksheet).value = ivNo // InvoiceNo
-        getCell("K8", worksheet).value = formatYYYYMMDD(today)// 日付
-        getCell("C9", worksheet).value = selectedData.display[0]["請求先会社名"] // 請求先会社名
-        getCell("C10", worksheet).value = selectedData.display[0]["請求先住所"] // 請求書住所
-        getCell("D16", worksheet).value = selectedData.display[0]["請求先電話番号"] // 請求先電話番号
-        getCell("I9", worksheet).value = selectedData.display[0]["送り先会社名"] // 送り先会社名
-        getCell("I10", worksheet).value = selectedData.display[0]["送り先住所"] // 送り先住所
-        getCell("I16", worksheet).value = selectedData.display[0]["送り先電話番号"] // 送り先電話番号
-        getCell("B18", worksheet).value = selectedData.display[0]["送り元国名"]  // 送り元国名
-        getCell("B21", worksheet).value = selectedData.display[0]["送り先国名"]  // 送り先国名
-        getCell("G18", worksheet).value = selectedData.display[0]["宅配業者"]  // 宅配業者
-        getCell("G21", worksheet).value = selectedData.display[0]["支払条件"]  // 支払条件
+        getCell("K8", worksheet).value = today // 日付
+        getCell("C9", worksheet).value = selectedData.display[0][SOLD_TO]
+        getCell("C10", worksheet).value = selectedData.display[0][SOLD_TO_ADDRESS]
+        getCell("D16", worksheet).value = selectedData.display[0][SOLD_TO_TEL]
+        getCell("I9", worksheet).value = selectedData.display[0][SHIP_TO]
+        getCell("I10", worksheet).value = selectedData.display[0][SHIP_TO_ADDRESS]
+        getCell("I16", worksheet).value = selectedData.display[0][SHIP_TO_TEL]
+        getCell("B18", worksheet).value = selectedData.display[0][SHIP_FROM_COUNTRY]
+        getCell("B21", worksheet).value = selectedData.display[0][SHIP_TO_COUNTRY]
+        getCell("G18", worksheet).value = selectedData.display[0][FORWARDER]
+        getCell("G21", worksheet).value = selectedData.display[0][PAYMENT_TERM]
 
         let rowNumber = 26
         for (let record of selectedData.display) {
