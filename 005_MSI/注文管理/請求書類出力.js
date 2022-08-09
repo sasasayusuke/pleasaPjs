@@ -412,12 +412,13 @@ async function downloadClaimExcel(foreignFlg) {
 
         let rowNumber = 26
         for (let record of selectedData.display) {
-            getCell("C" + rowNumber, worksheet).value = record[ITEM_NAME]
-            getCell("E" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("C" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("E" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("G" + rowNumber, worksheet).value = record[VOLUME]
-            getCell("N" + rowNumber, worksheet).value = record[MEASURE]
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]
             getCell("K" + rowNumber, worksheet).value = record[PRICE]
+            getCell("N" + rowNumber, worksheet).value = record[MEASURE]
+            getCell("O" + rowNumber, worksheet).value = record[ITEM_NAME]
 
             rowNumber = rowNumber + 1
         }
@@ -454,8 +455,11 @@ async function downloadClaimExcel(foreignFlg) {
 
         let rowNumber = 26
         for (let record of selectedData.display) {
-            getCell("C" + rowNumber, worksheet).value = record[ITEM_NAME]
-            getCell("E" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("C" + rowNumber, worksheet).value = record[MODEL_NO]
+            getCell("E" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
+            getCell("G" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("N" + rowNumber, worksheet).value = record[MEASURE]
+            getCell("O" + rowNumber, worksheet).value = record[ITEM_NAME]
 
             rowNumber = rowNumber + 1
         }

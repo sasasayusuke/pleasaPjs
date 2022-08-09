@@ -12,7 +12,9 @@ const sp = "supplierPrint"
 
 const mt = "menuTab"
 const ma = "menuArea"
+const rl = "radioLabel"
 const sm = "supplierMenu"
+const cm = "checkMessage"
 
 let supplierData = {}
 let suppliers = []
@@ -23,6 +25,9 @@ let x3 = "海外向けドル建"
 $p.events.on_grid_load_arr.push(function () {
     let htmlReq = `
         <div id="${sid}" class="dialog" title="先行依頼書&仕入先注文書出力">
+            <div class="section-fields-container" style="width: 95%">
+                <div><label class="field-section"><span></span>先行依頼書</label></div>
+            </div>
             <div class="field-markdown">
                 <p class="field-label"><label for="${srm1}">MEMO1</label></p>
                 <div class="field-control">
@@ -52,10 +57,15 @@ $p.events.on_grid_load_arr.push(function () {
                     </div>
                 </div>
             </div>
+            <div class="section-fields-container" style="width: 95%">
+                <div><label class="field-section"><span></span>仕入先注文</label></div>
+            </div>
             <div id='${mt}'>
             </div>
             <div id='${ma}'>
             </div>
+
+
 
             <p class="message-dialog"></p>
             <div class="command-center">
@@ -63,6 +73,7 @@ $p.events.on_grid_load_arr.push(function () {
                 <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
             </div>
         </div>
+
     `
     $('#Application').append(htmlReq)
 
@@ -95,6 +106,8 @@ function setSupplierModal() {
     }
 
 	suppliers.forEach(elem => {
+
+
 		let radioDiv = document.createElement('div')
 		let radioInput = document.createElement('input')
         // 仕入先名
@@ -109,6 +122,7 @@ function setSupplierModal() {
 			Array.from(document.querySelectorAll(`div .${elemClass}.${sm}`)).forEach(w => w.hidden = false)
 		})
 		let radioLabel = document.createElement('label')
+		radioLabel.id = rl + elem
 		radioLabel.innerHTML = elemName
 		radioLabel.htmlFor = elem
 		radioLabel.className = 'radio-label'
@@ -120,6 +134,7 @@ function setSupplierModal() {
         radioInput.style.position = 'relative'
         radioInput.style.top = '2px'
         radioInput.style.margin = '8px'
+
         let htmlSupp = `
             <div id="${elem + srid}" class="${elemClass + " " + sm}">
                 <div class="field-markdown">
@@ -187,6 +202,7 @@ function setSupplierModal() {
                                 <option value="${x2}">${x2}</option>
                                 <option value="${x3}">${x3}</option>
                             </select>
+                            <p id="${elem + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -197,6 +213,9 @@ function setSupplierModal() {
 
         area.append(menuDiv)
         Array.from(document.querySelectorAll('input[name="radio"]'))[0].click()
+
+        // datePicker 生成
+        $p.apply()
 	})
 }
 
@@ -227,8 +246,23 @@ function displayControlDirect() {
 }
 
 async function downloadSupplierExcel() {
+
     // すべての出力仕入先注文形式が入力されているか
-    if (!suppliers.every(id => [x1, x2, x3].includes($('#' + id + sp).val()))) {
+    let checkFlg = false
+
+    for (let id of suppliers) {
+        if ([x1, x2, x3].includes($('#' + id + sp).val())) {
+            document.getElementById(id + cm).style["visibility"] = 'hidden'
+            document.getElementById(rl + id).style["color"] = 'black'
+            document.getElementById(rl + id).style["font-weight"] = 'bold'
+        } else {
+            document.getElementById(id + cm).style["visibility"] = 'visible'
+            document.getElementById(rl + id).style["color"] = 'red'
+            document.getElementById(rl + id).style["font-weight"] = 'bolder'
+            checkFlg = true
+        }
+    }
+    if (checkFlg) {
         alert("すべての仕入先に対して、出力仕入先注文形式を入力してください")
         return false
     }
@@ -421,6 +455,11 @@ async function downloadSupplierExcel() {
             getCell("N" + rowNumber, worksheet).value = unit //単価
             getCell("Q" + rowNumber, worksheet).value = volume * unit //金額
             getCell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
+            if (usdFlg) {
+                getCell("AF" + rowNumber, worksheet).value = record[MEASURE]  //数量単位
+            } else {
+                getCell("M" + rowNumber, worksheet).value = record[MEASURE]  //数量単位
+            }
             rowNumber = rowNumber + 1
         }
 

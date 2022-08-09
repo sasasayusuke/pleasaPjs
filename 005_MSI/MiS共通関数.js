@@ -955,26 +955,25 @@ async function commonExportGroupAjax (groupIds, addFunc) {
  */
 function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
 
-  let classHash = {}
+  let clsHash = {}
   let numHash = {}
-  let dateHash = {}
-  let descriptionHash = {}
-  let checkHash = {}
+  let datHash = {}
+  let dscHash = {}
+  let chkHash = {}
 
   let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   for (let char of alphabet) {
-    let classKey = "Class" + char
+    let clsKey = "Class" + char
     let numKey = "Num" + char
-    let dateKey = "Date" + char
-    let descriptionKey = "Description" + char
-    let checkKey = "Check" + char
-    if (commonIsNull(commonGetVal("Class" + char, false))) {
-      classHash["Class" + char] = commonGetVal("Class" + char, false)
-    }
-    numHash["Num" + char]
-    dateHash["Date" + char]
-    descriptionHash["Description" + char]
-    checkHash["Check" + char]
+    let datKey = "Date" + char
+    let dscKey = "Description" + char
+    let chkKey = "Check" + char
+    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, false)
+    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey, false)
+    if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonGetVal(datKey, false)
+    if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey, false)
+    if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey, false)
+
   }
   let expand = 99
 

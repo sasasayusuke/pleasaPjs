@@ -6,6 +6,9 @@ let readOnlyItemsAfterCheckingDelivery = [
     , "数量単位(日)"
     , "単価"
     , "単価＄"
+    , "原価"
+    , "原価＄"
+    , "原価レート"
     , "仕入先注文備考"
 ]
 // 入荷確定以降読み込み制御項目
@@ -21,7 +24,7 @@ let readOnlyItemsAfterconfirmedDelivery = [
     ...readOnlyItemsAfterconfirmedArrival
     , "出荷予定日"
 ]
-    // 出荷済以降読み込み制御項目
+// 出荷済以降読み込み制御項目
 let readOnlyItemsAfterShipped = [
     ...readOnlyItemsAfterconfirmedDelivery
     , "出荷完了日"
@@ -40,18 +43,19 @@ let readOnlyItemsAfterShipped = [
 let readOnlyItemsAfterAccepted = [
     ...readOnlyItemsAfterShipped
     , "入金予定日"
-    , "請求月日"
 
 ]
 // 完了以降読み込み制御項目
 let readOnlyItemsAfterClose = [
     ...readOnlyItemsAfterAccepted
+    , "請求月日"
     , "営業担当者"
 ]
 
 $p.events.on_editor_load_arr.push(function (){
     // 各ステータス制御
     let status = commonGetVal('注文ステータス')
+
     switch(status) {
         // 注文内示
         case WIKI_STATUS_ORDER_CONTROL.announce.value:
