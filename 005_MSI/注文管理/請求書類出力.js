@@ -127,7 +127,6 @@ async function downloadClaimExcel(foreignFlg) {
             "NumC": subTotal, // 小計
             "NumA": taxPriceTotal, // 税額
             "NumB": total, // 合計金額
-            "DescriptionA": selectedData.value[0]["条件"], // 支払条件
         }
 
         // 請求書台帳にデータを新規作成（請求書番号発行）
@@ -258,7 +257,6 @@ async function downloadClaimExcel(foreignFlg) {
 
         worksheet.name = filename
 
-        getCell("G12", worksheet).value = selectedData.display[0]["条件"]//支払条件
         getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
         getCell("W2", worksheet).value = today //請求日
         getCell("W3", worksheet).value = seNo //請求書番号
@@ -293,7 +291,6 @@ async function downloadClaimExcel(foreignFlg) {
 
         worksheet.name = filename
 
-        getCell("G11", worksheet).value = selectedData.display[0]["条件"] //支払条件
         getCell("A4", worksheet).value = selectedData.display[0][CUSTOMER] //会社名
         getCell("W2", worksheet).value = today //請求日
         getCell("W3", worksheet).value = seNo //請求書番号
@@ -370,7 +367,6 @@ async function downloadClaimExcel(foreignFlg) {
         getCell("W2", worksheet).value = today // 納品日
         getCell("W3", worksheet).value = seNo // 請求書番号
         getCell("V32", worksheet).value = taxPriceTotal // 税額
-        getCell("G12", worksheet).value = selectedData.display[0]["条件"] // 支払条件
 
         let rowNumber = 16
         for (let record of selectedData.display) {
@@ -411,7 +407,6 @@ async function downloadClaimExcel(foreignFlg) {
         getCell("B18", worksheet).value = selectedData.display[0][SHIP_FROM_COUNTRY]
         getCell("B21", worksheet).value = selectedData.display[0][SHIP_TO_COUNTRY]
         getCell("G18", worksheet).value = selectedData.display[0][FORWARDER]
-        getCell("G21", worksheet).value = selectedData.display[0][PAYMENT_TERM]
         getCell("B43", worksheet).value = selectedData.display[0][FOREIGN_REMARK]
 
 
@@ -456,7 +451,6 @@ async function downloadClaimExcel(foreignFlg) {
         getCell("B18", worksheet).value = selectedData.display[0][SHIP_FROM_COUNTRY]
         getCell("B21", worksheet).value = selectedData.display[0][SHIP_TO_COUNTRY]
         getCell("G18", worksheet).value = selectedData.display[0][FORWARDER]
-        getCell("G21", worksheet).value = selectedData.display[0][PAYMENT_TERM]
 
         let rowNumber = 26
         for (let record of selectedData.display) {

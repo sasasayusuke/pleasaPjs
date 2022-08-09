@@ -8,16 +8,22 @@ let readOnlyItemsAfterCheckingDelivery = [
     , "単価＄"
     , "仕入先注文備考"
 ]
-// 出荷済以降読み込み制御項目
-let readOnlyItemsAfterconfirmedDelivery = [
+// 入荷確定以降読み込み制御項目
+let readOnlyItemsAfterconfirmedArrival = [
     ...readOnlyItemsAfterCheckingDelivery
+    , "顧客希望納期"
+    , "回答納期"
+    , "先行依頼書備考"
     , "入荷日"
-
+]
+// 納期確定以降読み込み制御項目
+let readOnlyItemsAfterconfirmedDelivery = [
+    ...readOnlyItemsAfterconfirmedArrival
+    , "出荷予定日"
 ]
     // 出荷済以降読み込み制御項目
 let readOnlyItemsAfterShipped = [
     ...readOnlyItemsAfterconfirmedDelivery
-    , "出荷予定日"
     , "出荷完了日"
     , "納品日"
     , "納品先"
@@ -62,6 +68,10 @@ $p.events.on_editor_load_arr.push(function (){
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
             readOnlyItemsAfterCheckingDelivery.forEach(v => commonChangeReadOnly(v))
             commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
+            break
+        // 入荷確定
+        case WIKI_STATUS_ORDER_CONTROL.confirmedArrival.value:
+            readOnlyItemsAfterconfirmedArrival.forEach(v => commonChangeReadOnly(v))
             break
         // 納期確定
         case WIKI_STATUS_ORDER_CONTROL.confirmedDelivery.value:

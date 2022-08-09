@@ -83,9 +83,15 @@
         style: "status-closed"
     }
     , adjustment: {
-        index: 350,
-        value: "前倒し調整中",
-        label: "前倒し調整中",
+      index: 350,
+      value: "前倒し調整中",
+      label: "前倒し調整中",
+      style: "status-review"
+    }
+    , confirmedArrival: {
+        index: 399,
+        value: "入荷確定",
+        label: "入荷確定",
         style: "status-review"
     }
     , confirmedDelivery: {

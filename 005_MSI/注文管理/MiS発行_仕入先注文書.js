@@ -98,7 +98,7 @@ function setSupplierModal() {
 		let radioDiv = document.createElement('div')
 		let radioInput = document.createElement('input')
         // 仕入先名
-        let elemName =  selectedData.display.filter(w => w["ID"] == selectedData.value.filter(v => v[SUPPLIER] == elem)[0]["ID"]) [0][SUPPLIER]
+        let elemName = selectedData.display.filter(w => w["ID"] == selectedData.value.filter(v => v[SUPPLIER] == elem)[0]["ID"]) [0][SUPPLIER]
         let elemClass = sm + elem
 		radioInput.id = elem
 		radioInput.type = 'radio'
@@ -115,7 +115,11 @@ function setSupplierModal() {
 		radioDiv.appendChild(radioInput)
 		radioDiv.appendChild(radioLabel)
 		target.appendChild(radioDiv)
-
+        target.style.margin = '10px 55px'
+        target.style.padding = '5px'
+        radioInput.style.position = 'relative'
+        radioInput.style.top = '2px'
+        radioInput.style.margin = '8px'
         let htmlSupp = `
             <div id="${elem + srid}" class="${elemClass + " " + sm}">
                 <div class="field-markdown">
@@ -136,7 +140,7 @@ function setSupplierModal() {
                     <p class="field-label"><label for="${elem + sd}">納入日付</label></p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <input id="${elem + sd}" name="${elem + sd}" class="control-textbox datepicker valid applied" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
+                            <input id="${elem + sd}" name="${elem + sd}" class="control-textbox datepicker valid" type="text" value="" placeholder="回答希望日" autocomplete="off" data-format="Y/m/d" data-step="10" tabindex="-1">
                             <div class="ui-icon ui-icon-clock current-time">
                             </div>
                         </div>
@@ -225,7 +229,7 @@ function displayControlDirect() {
 async function downloadSupplierExcel() {
     // すべての出力仕入先注文形式が入力されているか
     if (!suppliers.every(id => [x1, x2, x3].includes($('#' + id + sp).val()))) {
-        alert("出力仕入先注文形式はすべて入力してください")
+        alert("すべての仕入先に対して、出力仕入先注文形式を入力してください")
         return false
     }
     // ダイアログをクローズ
@@ -392,22 +396,12 @@ async function downloadSupplierExcel() {
         )
         let misNo = recR.Response.Data[0]["MiS番号"]
 
-        let recC = await commonGetData(
-            ["DescriptionB"]
-            , {"ResultId": `[${companyId}]`}
-            , false
-            , TABLE_ID_COMPANY_INFO
-        )
-        let term = recC.Response.Data[0]["条件"]
-
-
         getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
         getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
         getCell("AD4", worksheet).value = today.split("/")[2] // 注文日
         getCell("Z5", worksheet).value = siNo //仕入先注文台帳番号
         getCell("B5", worksheet).value = supplierData[0][SUPPLIER] //仕入先
         getCell("G13", worksheet).value = total //合計
-        getCell("G15", worksheet).value = term //支払条件
         // 納入区分が日付だったら納入日付を入力
         if ($('#' + st).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
             getCell("G17", worksheet).value = $('#' + sd).val()

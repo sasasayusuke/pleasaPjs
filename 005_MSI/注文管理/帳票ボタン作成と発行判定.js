@@ -45,7 +45,6 @@ const COLS = [
     , SHIP_TO_TEL           = "SHIP TO TEL"
     , SHIP_FROM_COUNTRY     = "SHIP FROM Country"
     , SHIP_TO_COUNTRY       = "SHIP TO Country"
-    , PAYMENT_TERM          = "Payment Terms"
     , FORWARDER             = "Forwarder"
     , FOREIGN_REMARK        = "海外情報備考"
     // 帳票で使用する項目
@@ -86,7 +85,6 @@ async function getData() {
         , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumA"                  //原価
         , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumC"                  //原価＄
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassI"                //伝票形式
-        , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",DescriptionB"          //条件
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassF"                //検査成績書要否
     ]
 
@@ -296,7 +294,6 @@ async function preCheckClaim() {
             , SHIP_TO_TEL
             , SHIP_FROM_COUNTRY
             , SHIP_TO_COUNTRY
-            , PAYMENT_TERM
             , FORWARDER
             , FOREIGN_REMARK
         ]

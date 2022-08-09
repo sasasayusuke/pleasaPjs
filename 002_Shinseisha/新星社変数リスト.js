@@ -21,7 +21,7 @@ var TABLE_ID_SHORUI_LOG         = 1866562
 // プロセスID
 
 //在庫数同期＆発注管理チケット作成
-var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 1869924
+var PROCESS_ID_ZAIKO_DOUKI_AND_TICKET  = 2225300
 //SMILE連携
 var PROCESS_ID_SMILE_RENKEI            = 1869923
 //月次出荷実績登録

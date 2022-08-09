@@ -1,15 +1,18 @@
 
-// メーカー発注押下処理
+// 注文書受領ボタン押下
 function clickReceipt (n) {
     $p.execProcess(n)
 }
 
-// 倉庫間移動押下処理
 function clickBackAnnounce (n) {
     $p.execProcess(n)
 }
 
-// 出荷承認押下処理
+// 入荷確定押下処理
+function clickConfirmedArrival (n) {
+    $p.execProcess(n)
+}
+// 出荷確定押下処理
 function clickConfirmedDelivery (n) {
     $p.execProcess(n)
 }
@@ -28,6 +31,9 @@ function clickBackAdjustment (n) {
     if (ans) {
         commonChangeReadOnly('入荷日', false)
         commonSetVal('入荷日', "")
+        commonChangeReadOnly('出荷予定日', false)
+        commonSetVal('出荷予定日', "")
         $p.execProcess(n)
     }
 }
+

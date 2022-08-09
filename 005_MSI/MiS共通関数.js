@@ -15,31 +15,31 @@ var NEW     = 'new'
  */
 var TABLE = [
   //国番号マスタ
-  TABLE_ID_COUNTRY_NO                       = 53705//12
+  TABLE_ID_COUNTRY_NO                       = 12
   //コミッション率マスタ
-  , TABLE_ID_COMMISSION_RATE                = 53708//6
+  , TABLE_ID_COMMISSION_RATE                = 6
   //エンドユーザマスタ
-  , TABLE_ID_END_USER                       = 53707//8
+  , TABLE_ID_END_USER                       = 8
   //インボイス番号マスタ
-  , TABLE_ID_INVOICE_NO                     = 53698//5
+  , TABLE_ID_INVOICE_NO                     = 5
   //会社区分
-  , TABLE_ID_COMPANY_CLASS                  = 53706//1809
+  , TABLE_ID_COMPANY_CLASS                  = 1809
   //会社情報
-  , TABLE_ID_COMPANY_INFO                   = 53703//15
+  , TABLE_ID_COMPANY_INFO                   = 15
   //事業所情報
-  , TABLE_ID_OFFICE_INFO                    = 53702//3319
+  , TABLE_ID_OFFICE_INFO                    = 3319
   //見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 53695//21036
+  , TABLE_ID_ESTIMATION_BOOK                = 21036
   //製品情報
-  , TABLE_ID_PRODUCT_INFO                   = 53704//10
+  , TABLE_ID_PRODUCT_INFO                   = 10
   //注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 53696//11
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 11
   //先行依頼台帳
-  , TABLE_ID_REQUEST_BOOK                   = 53709//13
+  , TABLE_ID_REQUEST_BOOK                   = 13
   //仕入先注文台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 53700//17
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 17
   //請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 53699//14
+  , TABLE_ID_CLAIM_BOOK                     = 14
   //注文台帳入力フォーム
   , TABLE_ID_ORDER_INPUT_FORM               = 1756
   // メッセージログ（commonSetMessageで使用）
@@ -142,13 +142,7 @@ async function commonSetMessage (message = '', type = NORMAL, log = false, set =
         )
         throw new Error(message)
       default:
-        $p.setMessage(
-          '#Message',
-          JSON.stringify({
-            Css: 'alert-error',
-            Text: 'message type が不正です。'
-          })
-        )
+        commonSetMessage("メッセージタイプが不正な値です。", ERROR, true, type)
     }
   }
 }
@@ -438,7 +432,7 @@ function commonConvertCsvTo2D (csvData) {
 
 /**
  * アルファベットのみの文字列を数値に変換する
- * @param {String} str
+ * @param {String} str アルファベット列
  *
  * @return {Number} 数値変換値
  * 例. A  ⇒ 1
@@ -616,6 +610,9 @@ function commonGetId (label, prefix = true, suffix = false) {
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除
  */
 function commonChangeReadOnly (label, flg = true) {
+  if (commonIsNull(document.getElementById(commonGetId(label)))) {
+    commonSetMessage("共通関数：ラベル不正。", ERROR, true, label)
+  }
   document.getElementById(commonGetId(label)).disabled = flg
 }
 
@@ -626,17 +623,23 @@ function commonChangeReadOnly (label, flg = true) {
  */
 function commonGetVal (label, valueFlg = false) {
   // 選択系
-  let value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
-  if (commonIsNull(value)) {
-    // 選択系 読み取り専用
-    value = valueFlg ? $p.getControl($p.getColumnName(label)).attr('data-value') : $p.getControl($p.getColumnName(label))[0].innerHTML
+  let value = ""
+  try {
+    value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
     if (commonIsNull(value)) {
-      // 選択系以外
-      value = $p.getControl($p.getColumnName(label)).val()
+      // 選択系 読み取り専用
+      value = valueFlg ? $p.getControl($p.getColumnName(label)).attr('data-value') : $p.getControl($p.getColumnName(label))[0].innerHTML
+      if (commonIsNull(value)) {
+        // 選択系以外
+        value = $p.getControl($p.getColumnName(label)).val()
+      }
     }
-
+  } catch (e) {
+    console.log(e)
+    value = ""
+  } finally {
+    return value
   }
-  return value
 }
 
 /**
@@ -697,6 +700,7 @@ async function commonGetData(culumns, filters, valueFlg = true, id = $p.siteId()
  * @param {Function}  addFunc 最後に実行したい関数
  */
 async function commonCreateAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
+
   let data = JSON.stringify({
     "ApiVersion": api_version,
     Status,
@@ -935,57 +939,83 @@ async function commonExportGroupAjax (groupIds, addFunc) {
 	})
 }
 
-///**
-// * レコード複製を行う関数です。
-// *
-// * @param {String}    tableId 登録テーブルID
-// * @param {String}    recordId 複製対象レコードID
-// * @param {Object}    ClassHash 登録分類項目
-// * @param {Object}    NumHash 登録数値項目
-// * @param {Object}    DateHash 登録日付項目
-// * @param {Object}    DescriptionHash 登録説明項目
-// * @param {Object}    CheckHash 登録チェック項目
-// * @param {String}    Status 登録ステータス
-// * @param {String}    Comments 登録コメント
-// * @param {Function}  addFunc 最後に実行したい関数
-// */
-//function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
-//  let data = JSON.stringify({
-//    "ApiVersion": api_version,
-//    Status,
-//    Comments,
-//    ClassHash,
-//    NumHash,
-//    DateHash,
-//    DescriptionHash,
-//    CheckHash
-//  })
-//  if (!commonIsNull(Status)) {
-//    delete data["Status"]
-//  }
-//  if (!commonIsNull(Comments)) {
-//    delete data["Comments"]
-//  }
+/**
+ * レコード複製を行う関数です。
+ *
+ * @param {String}    tableId 登録テーブルID
+ * @param {String}    recordId 複製対象レコードID
+ * @param {Object}    eliminateLabels 排除項目
+ * @param {Object}    NumHash 登録数値項目
+ * @param {Object}    DateHash 登録日付項目
+ * @param {Object}    DescriptionHash 登録説明項目
+ * @param {Object}    CheckHash 登録チェック項目
+ * @param {String}    Status 登録ステータス
+ * @param {String}    Comments 登録コメント
+ * @param {Function}  addFunc 最後に実行したい関数
+ */
+function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
 
-//  return new Promise((resolve, reject) => {
-//		$.ajax({
-//			type: "POST",
-//			url: `/api/items/${tableId}/create`,
-//			contentType: 'application/json',
-//			data: data
-//		}).then(
-//			function (result) {
-//        if (addFunc && typeof addFunc === 'function') {
-//          // 渡されたオブジェクトが関数なら実行する
-//          addFunc(data)
-//        }
-//				// 正常終了
-//				resolve(result)
-//			},
-//			function () {
-//				// エラー
-//				reject()
-//			}
-//		)
-//	})
-//}
+  let classHash = {}
+  let numHash = {}
+  let dateHash = {}
+  let descriptionHash = {}
+  let checkHash = {}
+
+  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  for (let char of alphabet) {
+    let classKey = "Class" + char
+    let numKey = "Num" + char
+    let dateKey = "Date" + char
+    let descriptionKey = "Description" + char
+    let checkKey = "Check" + char
+    if (commonIsNull(commonGetVal("Class" + char, false))) {
+      classHash["Class" + char] = commonGetVal("Class" + char, false)
+    }
+    numHash["Num" + char]
+    dateHash["Date" + char]
+    descriptionHash["Description" + char]
+    checkHash["Check" + char]
+  }
+  let expand = 99
+
+
+
+  let data = JSON.stringify({
+    "ApiVersion": api_version,
+    Status,
+    Comments,
+    ClassHash,
+    NumHash,
+    DateHash,
+    DescriptionHash,
+    CheckHash
+  })
+  if (!commonIsNull(Status)) {
+    delete data["Status"]
+  }
+  if (!commonIsNull(Comments)) {
+    delete data["Comments"]
+  }
+
+  return new Promise((resolve, reject) => {
+		$.ajax({
+			type: "POST",
+			url: `/api/items/${tableId}/create`,
+			contentType: 'application/json',
+			data: data
+		}).then(
+			function (result) {
+        if (addFunc && typeof addFunc === 'function') {
+          // 渡されたオブジェクトが関数なら実行する
+          addFunc(data)
+        }
+				// 正常終了
+				resolve(result)
+			},
+			function () {
+				// エラー
+				reject()
+			}
+		)
+	})
+}
