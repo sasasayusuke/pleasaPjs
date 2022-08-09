@@ -1,10 +1,14 @@
 
 var numArea = "numArea"
 var dialogId = "devideDeliveryDialog"
+let volume = +commonGetVal("数量")
 $p.events.on_editor_load_arr.push(function () {
     let html = `
     <div id="${dialogId}" class="dialog" title="納品">
-        <p style="text-align: center;">納品する分だけ入力してください。</p>
+        <p style="text-align: center;">
+            納品する分だけ入力してください。<br>
+            分納する量は1以上の${volume}より少ない整数を入力してください。<br>
+        </p>
         <div id="Results_NumField" class="field-normal both">
             <p class="field-label" style="">
                 <label for="${numArea}">納品個数</label>
@@ -24,9 +28,6 @@ $p.events.on_editor_load_arr.push(function () {
 })
 
 function openDevideDeliveryDialog() {
-    $('#SendTo').val("")
-    $('#SendToPerson').val("")
-    $('#SendToAddress').val("")
     $("#" + dialogId).dialog({
         modal: !0,
         width: "500",
@@ -36,120 +37,21 @@ function openDevideDeliveryDialog() {
 }
 
 async function devideDelivery() {
-    let volume = +commonGetVal("数量")
     let deliverVolume = +$('#' + numArea).val()
     if (isNaN(volume) || isNaN(deliverVolume) || deliverVolume >= volume || deliverVolume < 1) {
         $p.closeDialog($('#' + dialogId))
-        commonSetMessage("入力数量が異常です。分納する量は1以上の数量より少ない整数を入力してください。", ERROR)
+        commonSetMessage(`入力数量が異常です。分納する量は1以上の${volume}より少ない整数を入力してください。`, ERROR)
         return
     }
 
-    // 分割納品
-    let createItemList = [
-    // 全般タブ
-        "注文区分"
-        , "営業担当者"
-        , "受注年月日"
-        , "会社区分"
-        , "顧客名（契約先）"
-        , "事業所名"
-        , "代理店名"
-        , "コミッション率"
-        , "エンドユーザ"
-        , "MiS見積番号"
-        , "客先注文番号"
-        , "納入仕様書発行"
-        , "納入仕様書担当者"
-        , "型番"
-        , "品名"
-        , "通貨区分"
-        , "レート"
-        , "税率"
-        , "数量単位(日)"
-        , "単価"
-        , "金額"
-        , "小計"
-        , "税額"
-        , "単価＄"
-        , "金額＄"
-    // 先行依頼書タブ
-        , "MiS番号"
-        , "MiS営業"
-        , "顧客希望納期"
-        , "回答納期"
-        , "連絡事項"
-        , "先行依頼書備考"
-    // 仕入先注文タブ
-        , "仕入先"
-        , "注文日"
-        , "仕入先注文番号"
-        , "仕入先注文備考"
-    // 納品管理タブ
-        , "入荷日"
-        , "出荷予定日"
-        , "出荷完了日"
-        , "納品日"
-        , "納品先"
-        , "納品先会社名"
-        , "納品先事業所名"
-        , "郵便番号"
-        , "住所"
-        , "担当者"
-        , "電話番号"
-        , "FAX番号"
-        , "請求先会社名"
-        , "請求先担当者"
-        , "請求先住所"
-        , "請求先電話番号"
-        , "送り先会社名"
-        , "送り先担当者"
-        , "送り先住所"
-        , "送り先電話番号"
-        , "送り元国名"
-        , "送り先国名"
-        , "宅配業者"
-        , "支払条件"
-        , "アカウント番号"
-        , "海外情報備考"
-    // 請求管理タブ
-        , "請求書番号"
-        , "入金予定日"
-        , "請求月日"
-    ]
-    let classHash = {}
-    let numHash = {}
-    let dateHash = {}
-    let descriptionHash = {}
-    let checkHash = {}
-    numHash[commonGetId("数量", false)] = deliverVolume
+    let itemHash = {}
+    itemHash[$p.getColumnName("数量")] = deliverVolume
+    let deleteLabels = ["注文管理番号"]
 
-    for (let v of createItemList) {
-        key = commonGetId(v, false)
-        if (commonIsNull(key)) {
-            $p.closeDialog($('#' + dialogId))
-            commonSetMessage(v + "という項目が存在しません。スクリプトを確認してください。", ERROR, true)
-        }
-        if (key.includes("Class")) {
-            classHash[key] = commonGetVal(v, false)
-        } else if (key.includes("Num")) {
-            numHash[key] = commonGetVal(v)
-        } else if (key.includes("Date")) {
-            dateHash[key] = commonIsNull(commonGetVal(v)) ? commonGetDateEmpty() : commonGetVal(v)
-        } else if (key.includes("Description")) {
-            descriptionHash[key] = commonGetVal(v)
-        } else if (key.includes("Check")) {
-            checkHash[key] = commonGetVal(v)
-        }
-    }
-
-    let resultC = await commonCreateAjax(
-        TABLE_ID_ORDER_CONTROL_BOOK
-        , classHash
-        , numHash
-        , dateHash
-        , descriptionHash
-        , checkHash
-        , commonGetVal("注文ステータス", false)
+    let resultC = await commonCopyRecordAjax(
+        itemHash
+        , deleteLabels
+        , commonGetVal("注文ステータス", true)
         , `
             ${SERVER_URL}/items/${$p.id()}
             から ${deliverVolume} 個の分納が作成されました。
@@ -160,12 +62,12 @@ async function devideDelivery() {
         $p.id()
         , {}
         , {
-            [commonGetId("数量", false)]: volume - deliverVolume
+            [$p.getColumnName("数量")]: volume - deliverVolume
         }
         , {}
         , {}
         , {}
-        , commonGetVal("注文ステータス", false)
+        , commonGetVal("注文ステータス", true)
         , `
             ${SERVER_URL}/items/${resultC.Id}
             へ ${deliverVolume} 個の分納を作成しました。

@@ -276,7 +276,7 @@ async function downloadSupplierExcel() {
 
     let reqId = await downloadRequestExcel(false)
     let printId = ""
-    let supplierId = ""
+    let supOrderId = ""
 
     let usdFlg = false
     let foreignFlg = false
@@ -345,27 +345,13 @@ async function downloadSupplierExcel() {
             exc = retDownloadExcel.Response.Data[0]
 
             // 作成されたレコードのIDを取得
-            supplierId = retCreateParentRecord.Id
-
-            let updateData = {
-                Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
-                , [commonGetId("注文日", false)]: today
-            }
-
-            try {
-            // 選択した注文管理レコードを更新
-                await editSelectedRecord(updateData)
-            } catch (err) {
-                console.log(err)
-                commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
-                return false
-            }
+            supOrderId = retCreateParentRecord.Id
 
             try {
                 retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, id)
             } catch (err) {
                 console.log(err)
-                commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR, true)
+                commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
                 return false
             }
 
@@ -379,10 +365,10 @@ async function downloadSupplierExcel() {
                     att = "AttachmentsC"
                 }
                 // 仕入先注文書台帳に帳票を添付
-                await commonUpdateAttachment(supplierId, att, retCreateExcel.workbook, retCreateExcel.filename)
+                await commonUpdateAttachment(supOrderId, att, retCreateExcel.workbook, retCreateExcel.filename)
             } catch (err) {
                 console.log(err)
-                commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR, true)
+                commonSetMessage("仕入先注文書:帳票ダウンロードエラー４", ERROR, true)
                 return false
             }
             if (formatId == printId) {
@@ -391,10 +377,40 @@ async function downloadSupplierExcel() {
                     await outputXlsx(retCreateExcel.workbook, retCreateExcel.filename)
                 } catch (err) {
                     console.log(err)
-                    commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
+                    commonSetMessage("仕入先注文書:帳票ダウンロードエラー５", ERROR, true)
                     return false
                 }
             }
+        }
+
+        let updateData = {
+            Status: WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index
+            , [commonGetId("注文日", false)]: today
+        }
+
+        try {
+
+            // 選択した注文管理レコードを更新
+            await Promise.all(selectedData.value.filter(v => v[SUPPLIER] == id).map(async record => {
+
+                return commonUpdateAjax(
+                    record["ID"]
+                    , {
+                        [$p.getColumnName("仕入先注文番号")]: supOrderId
+                    }
+                    , {}
+                    , {
+                        [$p.getColumnName("注文日")]: today
+                    }
+                    , {}
+                    , {}
+                    , WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index // 納期確認中
+                )
+            }))
+        } catch (err) {
+            console.log(err)
+            commonSetMessage("仕入先注文書:帳票ダウンロードエラー６", ERROR, true)
+            return false
         }
     }
 
@@ -416,7 +432,7 @@ async function downloadSupplierExcel() {
 
         let recS = await commonGetData(
             ["ClassA"]
-            , {"ResultId": `[${supplierId}]`}
+            , {"ResultId": `[${supOrderId}]`}
             , false
             , TABLE_ID_SUPPLIER_ORDER_BOOK
         )

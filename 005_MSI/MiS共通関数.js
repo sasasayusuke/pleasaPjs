@@ -940,20 +940,16 @@ async function commonExportGroupAjax (groupIds, addFunc) {
 }
 
 /**
- * レコード複製を行う関数です。
+ * レコード複製を行う関数です。（編集画面で使用を想定）
  *
- * @param {String}    tableId 登録テーブルID
- * @param {String}    recordId 複製対象レコードID
- * @param {Object}    eliminateLabels 排除項目
- * @param {Object}    NumHash 登録数値項目
- * @param {Object}    DateHash 登録日付項目
- * @param {Object}    DescriptionHash 登録説明項目
- * @param {Object}    CheckHash 登録チェック項目
+ * @param {Object}    editItems 変更項目
+ * @param {Array}     deleteLabels 削除項目名
  * @param {String}    Status 登録ステータス
  * @param {String}    Comments 登録コメント
+ * @param {Number}    expand 最大拡張項目数
  * @param {Function}  addFunc 最後に実行したい関数
  */
-function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}, DescriptionHash= {}, CheckHash = {}, Status, Comments, addFunc) {
+async function commonCopyRecordAjax(editItems = {}, deleteLabels = [], Status, Comments, expand = 99, addFunc) {
 
   let clsHash = {}
   let numHash = {}
@@ -961,6 +957,7 @@ function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}
   let dscHash = {}
   let chkHash = {}
 
+  //項目Aから項目Z
   let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   for (let char of alphabet) {
     let clsKey = "Class" + char
@@ -968,53 +965,56 @@ function commonCopyRecordAjax(tableId, ClassHash = {}, NumHash= {}, DateHash= {}
     let datKey = "Date" + char
     let dscKey = "Description" + char
     let chkKey = "Check" + char
-    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, false)
-    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey, false)
-    if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonGetVal(datKey, false)
-    if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey, false)
-    if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey, false)
-
+    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, true)
+    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
+    if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+    if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)
+    if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey)
   }
-  let expand = 99
-
-
-
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    Status,
-    Comments,
-    ClassHash,
-    NumHash,
-    DateHash,
-    DescriptionHash,
-    CheckHash
-  })
-  if (!commonIsNull(Status)) {
-    delete data["Status"]
+  //項目001から項目099
+  for (let i = 1; i <= expand; i++) {
+    let clsKey = "Class" + commonPaddingLeft(i, 3)
+    let numKey = "Num" + commonPaddingLeft(i, 3)
+    let datKey = "Date" + commonPaddingLeft(i, 3)
+    let dscKey = "Description" + commonPaddingLeft(i, 3)
+    let chkKey = "Check" + commonPaddingLeft(i, 3)
+    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, true)
+    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
+    if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+    if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)
+    if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey)
   }
-  if (!commonIsNull(Comments)) {
-    delete data["Comments"]
+  // 変更項目を上書き
+  for (let key in editItems) {
+    if (key.includes("Class")) clsHash[key] = editItems[key]
+    else if (key.includes("Num")) numHash[key] = editItems[key]
+    else if (key.includes("Date")) datHash[key] = editItems[key]
+    else if (key.includes("Description")) dscHash[key] = editItems[key]
+    else if (key.includes("Check")) chkHash[key] = editItems[key]
+  }
+  // 不要項目を削除
+  for (let label of deleteLabels) {
+    let key = $p.getColumnName(label)
+    if (key.includes("Class"))  delete clsHash[key]
+    else if (key.includes("Num")) delete numHash[key]
+    else if (key.includes("Date")) delete datHash[key]
+    else if (key.includes("Description")) delete dscHash[key]
+    else if (key.includes("Check")) delete chkHash[key]
+  }
+  // ステータスを取得
+  if (commonIsNull(Status)) {
+    Status = commonGetVal("Status", true)
   }
 
-  return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: `/api/items/${tableId}/create`,
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
-        }
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+  return commonCreateAjax(
+    $p.siteId()
+    , clsHash
+    , numHash
+    , datHash
+    , dscHash
+    , chkHash
+    , Status
+    , Comments
+    , addFunc
+  )
 }
