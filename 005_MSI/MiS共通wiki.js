@@ -1,5 +1,7 @@
   var version = 3
 
+  var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
+
   // 注文管理 ビュー
   var VIEW_ORDER_CONTROL = {
   sale: {
@@ -41,23 +43,23 @@
   // 会社区分
   var WIKI_COMPANY_CLASS = {
     MSI: {
-      index: 1816,
+      index: 61501,
       name: "自社",
     },
     AGENCY: {
-      index: 1817,
+      index: 61500,
       name: "代理店",
     },
     CUSTOMER_VIA_AGENCY: {
-      index: 1818,
+      index: 61499,
       name: "顧客（代理店経由）",
     },
     CUSTOMER_DIRECT: {
-      index: 1819,
+      index: 61498,
       name: "顧客（直販）",
     },
     SUPPLIER: {
-      index: 1820,
+      index: 61497,
       name: "仕入先",
     }
   }
@@ -189,7 +191,7 @@
       value: 1,
     },
     DIRECT : {
-      name: '仕入先直送',
+      name: '直送',
       value: 2,
     },
   }

@@ -66,6 +66,7 @@ const COLS = [
     , ANSWER_LIMIT          = "回答納期"
     , REQUEST_REMARK        = "先行依頼書備考"
     , SUPPLIER_REMARK       = "仕入先注文備考"
+    , ARRIVAL_DAY           = "入荷日"
     , SCHEDULED_SHIP        = "出荷予定日"
 
 

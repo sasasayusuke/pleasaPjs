@@ -1,8 +1,6 @@
 var version = 5
 var api_version = 1.1
 
-var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
-
 var NORMAL  = 100
 var WARNING = 500
 var ERROR   = 900
@@ -14,37 +12,37 @@ var NEW     = 'new'
  *
  */
 var TABLE = [
-  //国番号マスタ
-  TABLE_ID_COUNTRY_NO                       = 12
-  //コミッション率マスタ
-  , TABLE_ID_COMMISSION_RATE                = 6
-  //エンドユーザマスタ
-  , TABLE_ID_END_USER                       = 8
-  //インボイス番号マスタ
-  , TABLE_ID_INVOICE_NO                     = 5
-  //会社区分
-  , TABLE_ID_COMPANY_CLASS                  = 1809
-  //会社情報
-  , TABLE_ID_COMPANY_INFO                   = 15
-  //事業所情報
-  , TABLE_ID_OFFICE_INFO                    = 3319
-  //見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 21036
-  //製品情報
-  , TABLE_ID_PRODUCT_INFO                   = 10
-  //注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 11
-  //先行依頼台帳
-  , TABLE_ID_REQUEST_BOOK                   = 13
-  //仕入先注文台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 17
-  //請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 14
-  //注文台帳入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 1756
+  //【01】見積台帳
+  , TABLE_ID_ESTIMATION_BOOK                = 61239
+  //【11】国番号
+  , TABLE_ID_COUNTRY_NO                     = 61244
+  //【17】コミッション率
+  , TABLE_ID_COMMISSION_RATE                = 61247
+  //【16】エンドユーザ
+  , TABLE_ID_END_USER                       = 61246
+  //【06】インボイス番号台帳
+  , TABLE_ID_INVOICE_NO                     = 61237
+  //【12】会社区分
+  , TABLE_ID_COMPANY_CLASS                  = 61245
+  //【13】会社
+  , TABLE_ID_COMPANY_INFO                   = 61242
+  //【14】事業所
+  , TABLE_ID_OFFICE_INFO                    = 61248
+  //【15】製品
+  , TABLE_ID_PRODUCT_INFO                   = 61243
+  //【03】注文管理台帳
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 61250
+  //【04】先行依頼書台帳
+  , TABLE_ID_REQUEST_BOOK                   = 61238
+  //【07】仕入先注文書台帳
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 61251
+  //【05】請求書台帳
+  , TABLE_ID_CLAIM_BOOK                     = 61249
+  //【02】注文入力フォーム
+  , TABLE_ID_ORDER_INPUT_FORM               = 61240
   // メッセージログ（commonSetMessageで使用）
   , TABLE_ID_MESSAGE_LOG                    = 57349
-  //エクセルフォーマット（downloadExcelで使用）
+  // エクセルフォーマット（downloadExcelで使用）
   , TABLE_ID_EXCEL_FORMAT                   = 7
 ]
 

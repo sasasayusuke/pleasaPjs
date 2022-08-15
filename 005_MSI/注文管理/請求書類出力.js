@@ -81,7 +81,8 @@ async function downloadClaimExcel(foreignFlg) {
 
     // 合計金額
     total = selectedData.display.reduce((sum, elem) => {
-        return sum + (elem[foreignFlg ? PRICE_USD : PRICE])
+    //   return sum + (elem[foreignFlg ? PRICE_USD : PRICE])
+            return sum + (elem[PRICE])
     }, 0)
     // 小計金額
     subTotal = selectedData.display.reduce((sum, elem) => {
@@ -268,8 +269,10 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
             getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("P" + rowNumber, worksheet).value = record[MEASURE]
             getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
+
             rowNumber = rowNumber + 1
         }
 
@@ -303,8 +306,9 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("E" + rowNumber, worksheet).value = record[MIS_NO]
             getCell("H" + rowNumber, worksheet).value = record[MODEL_NO]
             getCell("P" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("Q" + rowNumber, worksheet).value = record[MEASURE]
             getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
             rowNumber = rowNumber + 1
         }
 
@@ -327,10 +331,6 @@ async function downloadClaimExcel(foreignFlg) {
         worksheet.name = filename
 
         getCell("A5", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
-        getCell("R7", worksheet).value = selectedData.display[0][CUSTOMER] // 会社名
-        getCell("S8", worksheet).value = selectedData.display[0][POST_CODE] // 郵便番号
-        getCell("R9", worksheet).value = selectedData.display[0][ADDRESS] // 住所
-        getCell("R12", worksheet).value = selectedData.display[0][PHONE_NO] // 電話番号
         getCell("G39", worksheet).value = seNo // 請求書番号
         getCell("G40", worksheet).value = today // 納品日
         getCell("V36", worksheet).value = taxPriceTotal // 税額
@@ -339,9 +339,10 @@ async function downloadClaimExcel(foreignFlg) {
         for (let record of selectedData.display) {
             getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
-            getCell("N" + rowNumber, worksheet).value = record[MODEL_NO]
+                getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+                getCell("P" + rowNumber, worksheet).value = record[MEASURE]
             getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+                getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
             rowNumber = rowNumber + 1
         }
 
@@ -373,8 +374,9 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
             getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("P" + rowNumber, worksheet).value = record[MEASURE]
             getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            getCell("V" + rowNumber, worksheet).value = record[PRICE]
+            getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
             rowNumber = rowNumber + 1
         }
 
@@ -416,7 +418,7 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("E" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("G" + rowNumber, worksheet).value = record[VOLUME]
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]
-            getCell("K" + rowNumber, worksheet).value = record[PRICE]
+            getCell("K" + rowNumber, worksheet).value = record[SUB_TOTAL]
             getCell("N" + rowNumber, worksheet).value = record[MEASURE]
             getCell("O" + rowNumber, worksheet).value = record[ITEM_NAME]
 

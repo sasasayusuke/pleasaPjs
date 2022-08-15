@@ -77,7 +77,7 @@ async function downloadDestitationExcel() {
             }
 
             getCell("E" + rowNumber, worksheet).value = destination
-            getCell("F" + rowNumber, worksheet).value = record[FORWARDER]                       //  宅配業者
+            getCell("F" + rowNumber, worksheet).value = record[FORWARDER]                     //  宅配業者
             getCell("G" + rowNumber, worksheet).value = record[MODEL_NO]                      //  型番
             getCell("H" + rowNumber, worksheet).value = record[VOLUME]                        //  数量
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]                    //  単価
@@ -85,6 +85,8 @@ async function downloadDestitationExcel() {
             getCell("K" + rowNumber, worksheet).value = record["検査成績書要否"]
             getCell("L" + rowNumber, worksheet).value = record[ENDUSER]                       //  エンドユーザ
             getCell("M" + rowNumber, worksheet).value = record[SUPPLIER]                      //  仕入先
+            getCell("N" + rowNumber, worksheet).value = record[ARRIVAL_DAY]                   //  入荷日
+
             rowNumber = rowNumber + 1
         }
 

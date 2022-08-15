@@ -18,9 +18,15 @@ const cm = "checkMessage"
 
 let supplierData = {}
 let suppliers = []
+let suppDesiredDelivery = ""
+let suppDeliveryClass = ""
+let suppDeliveryDate = ""
+let suppDestination = ""
+
 let x1 = "国内向け円建"
 let x2 = "海外向け円建"
 let x3 = "海外向けドル建"
+
 
 $p.events.on_grid_load_arr.push(function () {
     let htmlReq = `
@@ -283,7 +289,8 @@ async function downloadSupplierExcel() {
 
     for (let id of suppliers) {
         // display値データ変換
-        supplierData = selectedData.display.filter(x => selectedData.value.filter(v => v[SUPPLIER] == id).map(w => w["ID"]).includes(x["ID"]))
+        supplierData.display = selectedData.display.filter(x => selectedData.value.filter(v => v[SUPPLIER] == id).map(w => w["ID"]).includes(x["ID"]))
+        supplierData.value = selectedData.value.filter(x => selectedData.value.filter(v => v[SUPPLIER] == id).map(w => w["ID"]).includes(x["ID"]))
 
         if ($('#' + id + sp).val() == x1) {
             printId = FORMAT_ID_SUPPLIER
@@ -306,20 +313,25 @@ async function downloadSupplierExcel() {
         // 帳票を作成
         let retCreateExcel = {}
 
+        suppDesiredDelivery = $('#' + id + st).val()
+        suppDeliveryClass = $('#' + id + sdc).val()
+        suppDeliveryDate = $('#' + id + sd).val()
+        suppDestination = $('#' + id + sr).val()
 
         // 合計金額
-        total = supplierData.reduce((sum, elem) => {
+        total = supplierData.display.reduce((sum, elem) => {
             return sum + (elem[usdFlg ? "原価＄" : "原価"] * elem[VOLUME])
         }, 0)
 
         let createData = {
             "DateA": today,
-            "ClassB": supplierData[0][SUPPLIER], //07.仕入先会社名
-            "ClassC": total, //07.合計金額
-            "ClassE": $('#' + st).val(), //07.希望納期（ASAP,日付）
-            "ClassG": reqId,
-            "DateB": $('#' + sd).val(), //07.日付
-            "DescriptionA": $('#' + sr).val(), //07.納品先
+            "ClassB": supplierData.value[0][SUPPLIER],  //07.仕入先会社名
+            "ClassC": total,                            //07.合計金額
+            "ClassE": suppDesiredDelivery,              //07.希望納期（ASAP,日付）
+            "ClassF": suppDeliveryClass,                //07.納入区分
+            "ClassG": reqId,                            //07.仕入先注文番号
+            "DateB": suppDeliveryDate,                  //07.納入日付
+            "DescriptionA": suppDestination,            //07.納品先
         }
 
         try {
@@ -348,7 +360,7 @@ async function downloadSupplierExcel() {
             supOrderId = retCreateParentRecord.Id
 
             try {
-                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, id)
+                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, foreignFlg)
             } catch (err) {
                 console.log(err)
                 commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
@@ -420,7 +432,7 @@ async function downloadSupplierExcel() {
 		location.reload(false)
 	}
 
-    async function createExcel(guid, filename, companyId) {
+    async function createExcel(guid, filename) {
 
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)
@@ -436,7 +448,7 @@ async function downloadSupplierExcel() {
             , false
             , TABLE_ID_SUPPLIER_ORDER_BOOK
         )
-        let siNo = recS.Response.Data[0]["仕入先注文台帳番号"]
+        let siNo = recS.Response.Data[0]["仕入先注文番号"]
 
         let recR = await commonGetData(
             ["ClassA"]
@@ -445,33 +457,37 @@ async function downloadSupplierExcel() {
             , TABLE_ID_REQUEST_BOOK
         )
         let misNo = recR.Response.Data[0]["MiS番号"]
-
-        getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
-        getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
-        getCell("AD4", worksheet).value = today.split("/")[2] // 注文日
-        getCell("Z5", worksheet).value = siNo //仕入先注文台帳番号
-        getCell("B5", worksheet).value = supplierData[0][SUPPLIER] //仕入先
-        getCell("G13", worksheet).value = total //合計
-        // 納入区分が日付だったら納入日付を入力
-        if ($('#' + st).val() == WIKI_DELIVERY_LIMIT.DATE.name) {
-            getCell("G17", worksheet).value = $('#' + sd).val()
+        if (foreignFlg) {
+            getCell("Y4", worksheet).value = today // 注文年月日
         } else {
-            getCell("G17", worksheet).value = $('#' + st).val()
+            getCell("Y4", worksheet).value = today.split("/")[0] // 注文年
+            getCell("AB4", worksheet).value = today.split("/")[1] // 注文月
+            getCell("AD4", worksheet).value = today.split("/")[2] // 注文日
         }
 
-        getCell("C32", worksheet).value = $('#' + sr).val() //納品先
+        getCell("Z5", worksheet).value = siNo //仕入先注文番号
+        getCell("B5", worksheet).value = supplierData.display[0][SUPPLIER] //仕入先
+        getCell("G13", worksheet).value = total //合計
+        // 納入区分が日付だったら納入日付を入力
+        if (suppDesiredDelivery == WIKI_DELIVERY_LIMIT.DATE.name) {
+            getCell("G17", worksheet).value = suppDeliveryDate
+        } else {
+            getCell("G17", worksheet).value = suppDesiredDelivery
+        }
+
+        getCell("C32", worksheet).value = suppDestination //納品先
         getCell("AB35", worksheet).value = misNo //MiS番号
 
         let rowNumber = 20
-        for (let record of supplierData) {
+        for (let record of supplierData.display) {
             getCell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
             let volume = record[VOLUME]
             let unit = record[usdFlg ? "原価＄" : "原価"]
             getCell("K" + rowNumber, worksheet).value = volume //数量
             getCell("N" + rowNumber, worksheet).value = unit //単価
             getCell("Q" + rowNumber, worksheet).value = volume * unit //金額
-            getCell("T" + rowNumber, worksheet).value = foreignFlg ? record[SUPPLIER_REMARK] : "" //仕入先備考
-            if (usdFlg) {
+            getCell("T" + rowNumber, worksheet).value = record[SUPPLIER_REMARK] //仕入先備考
+            if (foreignFlg) {
                 getCell("AF" + rowNumber, worksheet).value = record[MEASURE]  //数量単位
             } else {
                 getCell("M" + rowNumber, worksheet).value = record[MEASURE]  //数量単位
