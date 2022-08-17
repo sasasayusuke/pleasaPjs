@@ -1,4 +1,4 @@
-var version = 5
+var version = 6
 var api_version = 1.1
 
 var NORMAL  = 100
@@ -439,6 +439,17 @@ function commonConvertAto1(str) {
       count = count + (alphabet.indexOf(str.toUpperCase()[j]) + 1) * (alphabet.length ** i)
   }
   return count
+}
+
+/**
+ * カンマ区切り数列を数値に変換する
+ * @param {String} str カンマ区切り数列
+ *
+ * @return {Number} 数値変換値
+ * 例. "1,500"  ⇒ 1500
+ */
+function commonConvertCTo1(str) {
+  return +str.replace(',', '')
 }
 
 /**
@@ -976,7 +987,7 @@ async function commonCopyRecordAjax(editItems = {}, deleteLabels = [], Status, C
     let dscKey = "Description" + char
     let chkKey = "Check" + char
     if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonIsNull(commonGetVal(clsKey, true)) ? commonGetVal(clsKey) : commonGetVal(clsKey, true)
-    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
+    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonConvertCTo1(commonGetVal(numKey))
     if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
     if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)
     if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey)
@@ -989,7 +1000,7 @@ async function commonCopyRecordAjax(editItems = {}, deleteLabels = [], Status, C
     let dscKey = "Description" + commonPaddingLeft(i, 3)
     let chkKey = "Check" + commonPaddingLeft(i, 3)
     if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonIsNull(commonGetVal(clsKey, true)) ? commonGetVal(clsKey) : commonGetVal(clsKey, true)
-    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
+    if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonConvertCTo1(commonGetVal(numKey))
     if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
     if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)
     if (!commonIsNull(commonGetVal(chkKey))) chkHash[chkKey] = commonGetVal(chkKey)

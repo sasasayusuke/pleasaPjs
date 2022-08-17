@@ -299,7 +299,8 @@ async function downloadSupplierExcel() {
     requestMemo1 = srm1
     requestMemo2 = srm2
     let today = formatYYYYMMDD(new Date())
-    let total = 0
+    let totalJpy = 0
+    let totalUsd = 0
 
     let reqId = await downloadRequestExcel(false)
     let printId = ""
@@ -342,19 +343,25 @@ async function downloadSupplierExcel() {
         suppDestination = $('#' + id + sr).val()
 
         // 合計金額
-        total = supplierData.display.reduce((sum, elem) => {
-            return sum + (elem[usdFlg ? "原価＄" : "原価"] * elem[VOLUME])
+        totalJpy = supplierData.display.reduce((sum, elem) => {
+            return sum + (elem[COST_JPY] * elem[VOLUME])
+        }, 0)
+        // 合計金額＄
+        totalUsd = supplierData.display.reduce((sum, elem) => {
+            return sum + (elem[COST_USD] * elem[VOLUME])
         }, 0)
 
         let createData = {
             "DateA": today,
-            "ClassB": supplierData.value[0][SUPPLIER],  //07.仕入先会社名
-            "ClassC": total,                            //07.合計金額
-            "ClassE": suppDesiredDelivery,              //07.希望納期（ASAP,日付）
-            "ClassF": suppDeliveryClass,                //07.納入区分
-            "ClassG": reqId,                            //07.仕入先注文番号
-            "DateB": suppDeliveryDate,                  //07.納入日付
-            "DescriptionA": suppDestination,            //07.納品先
+            "NumA": totalJpy,                                   //07.合計金額
+            "NumB": totalUsd,                                   //07.合計金額＄
+            "ClassB": supplierData.value[0][SUPPLIER],          //07.仕入先会社名
+            "ClassC": supplierData.value[0][CURRENCY_CLASS],    //07.通貨区分
+            "ClassE": suppDesiredDelivery,                      //07.希望納期（ASAP,日付）
+            "ClassF": suppDeliveryClass,                        //07.納入区分
+            "ClassG": reqId,                                    //07.仕入先注文番号
+            "DateB": suppDeliveryDate,                          //07.納入日付
+            "DescriptionA": suppDestination,                    //07.納品先
         }
 
         try {
@@ -491,7 +498,7 @@ async function downloadSupplierExcel() {
 
         getCell("Z5", worksheet).value = siNo //仕入先注文番号
         getCell("B5", worksheet).value = supplierData.display[0][SUPPLIER] //仕入先
-        getCell("G13", worksheet).value = total //合計
+        getCell("G13", worksheet).value = usdFlg ? totalUsd : totalJpy //合計
         // 納入区分が日付だったら納入日付を入力
         if (suppDesiredDelivery == WIKI_DELIVERY_LIMIT.DATE.name) {
             getCell("G17", worksheet).value = suppDeliveryDate
@@ -506,7 +513,7 @@ async function downloadSupplierExcel() {
         for (let record of supplierData.display) {
             getCell("C" + rowNumber, worksheet).value = record[MODEL_NO] //型番
             let volume = record[VOLUME]
-            let unit = record[usdFlg ? "原価＄" : "原価"]
+            let unit = record[usdFlg ? COST_USD : COST_JPY]
             getCell("K" + rowNumber, worksheet).value = volume //数量
             getCell("N" + rowNumber, worksheet).value = unit //単価
             getCell("Q" + rowNumber, worksheet).value = volume * unit //金額

@@ -1,19 +1,8 @@
 
-// 納期確認中以降読み込み制御項目
-let readOnlyItemsAfterCheckingDelivery = [
-    "税率"
-    , "数量"
-    , "数量単位(日)"
-    , "単価"
-    , "単価＄"
-    , "原価"
-    , "原価＄"
-    , "原価レート"
-    , "仕入先注文備考"
-]
+
 // 入荷確定以降読み込み制御項目
 let readOnlyItemsAfterconfirmedArrival = [
-    ...readOnlyItemsAfterCheckingDelivery
+    "仕入先注文備考"
     , "顧客希望納期"
     , "回答納期"
     , "先行依頼書備考"
@@ -27,7 +16,6 @@ let readOnlyItemsAfterconfirmedDelivery = [
 // 出荷済以降読み込み制御項目
 let readOnlyItemsAfterShipped = [
     ...readOnlyItemsAfterconfirmedDelivery
-    , "出荷完了日"
     , "納品日"
     , "納品先"
     , "納品先会社名"
@@ -50,6 +38,16 @@ let readOnlyItemsAfterClose = [
     ...readOnlyItemsAfterAccepted
     , "請求月日"
     , "営業担当者"
+
+    , "税率"
+    , "数量"
+    , "数量単位(日)"
+    , "単価"
+    , "単価＄"
+    , "原価"
+    , "原価＄"
+    , "原価レート"
+
 ]
 
 $p.events.on_editor_load_arr.push(function (){
@@ -65,12 +63,10 @@ $p.events.on_editor_load_arr.push(function (){
             break
         // 納期確認中
         case WIKI_STATUS_ORDER_CONTROL.checkingDelivery.value:
-            readOnlyItemsAfterCheckingDelivery.forEach(v => commonChangeReadOnly(v))
             commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
             break
         // 前倒し調整中
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
-            readOnlyItemsAfterCheckingDelivery.forEach(v => commonChangeReadOnly(v))
             commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
             break
         // 入荷確定

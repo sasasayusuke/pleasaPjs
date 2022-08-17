@@ -83,7 +83,7 @@ async function downloadClaimExcel(foreignFlg) {
     // 合計金額
     total = selectedData.display.reduce((sum, elem) => {
     //   return sum + (elem[foreignFlg ? PRICE_USD : PRICE])
-            return sum + (elem[PRICE])
+        return sum + (elem[PRICE])
     }, 0)
     // 小計金額
     subTotal = selectedData.display.reduce((sum, elem) => {

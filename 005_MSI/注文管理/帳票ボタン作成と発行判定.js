@@ -59,6 +59,8 @@ const COLS = [
     , PRICE_USD             = "金額＄"
     , SUB_TOTAL             = "小計"
     , TAX_PRICE             = "税額"
+    , COST_JPY              = "原価"
+    , COST_USD              = "原価＄"
     , COMMISSION            = "コミッション率"
     , MIS_NO                = "MiS番号"
     , CUSTOMER_CH_NO        = "客先注文番号"
@@ -83,8 +85,6 @@ async function getData() {
     colIds = [
         , "ResultId"
         , ...colIds
-        , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumA"                  //原価
-        , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",NumC"                  //原価＄
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassI"                //伝票形式
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassF"                //検査成績書要否
     ]

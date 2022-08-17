@@ -17,7 +17,7 @@ let f1 = function () {
         if ($p.getControl($p.getColumnName(disp1[1]))) {
             $p.on('change', $p.getColumnName(disp1[1]), function () {
                 // 単価の設定（単価＄ * レート）
-                commonSetVal(target1, Math.ceil(commonGetVal(disp1[0]).replace(',', '') * commonGetVal(disp1[1]).replace(',', '')))
+                commonSetVal(target1, Math.ceil(commonConvertCTo1(commonGetVal(disp1[0])) * commonConvertCTo1(commonGetVal(disp1[1]))))
             })
         }
     })
