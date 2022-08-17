@@ -159,6 +159,7 @@ async function preCheckMsi() {
             // 開始時ログ登録
             commonSetMessage('自社新規開発品フロー', NORMAL, true, false, selectedData)
             // 帳票なしで注番取得
+            commonSetMessage("MiS番号発行中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
             downloadRequestExcel(true, false)
         }
 

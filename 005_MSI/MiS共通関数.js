@@ -13,33 +13,33 @@ var NEW     = 'new'
  */
 var TABLE = [
   //【01】見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 61239
-  //【11】国番号
-  , TABLE_ID_COUNTRY_NO                     = 61244
-  //【17】コミッション率
-  , TABLE_ID_COMMISSION_RATE                = 61247
-  //【16】エンドユーザ
-  , TABLE_ID_END_USER                       = 61246
-  //【06】インボイス番号台帳
-  , TABLE_ID_INVOICE_NO                     = 61237
-  //【12】会社区分
-  , TABLE_ID_COMPANY_CLASS                  = 61245
-  //【13】会社
-  , TABLE_ID_COMPANY_INFO                   = 61242
-  //【14】事業所
-  , TABLE_ID_OFFICE_INFO                    = 61248
-  //【15】製品
-  , TABLE_ID_PRODUCT_INFO                   = 61243
-  //【03】注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 61250
-  //【04】先行依頼書台帳
-  , TABLE_ID_REQUEST_BOOK                   = 61238
-  //【07】仕入先注文書台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 61251
-  //【05】請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 61249
+  , TABLE_ID_ESTIMATION_BOOK                = 64130
   //【02】注文入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 61240
+  , TABLE_ID_ORDER_INPUT_FORM               = 64118
+  //【03】注文管理台帳
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 64128
+  //【04】先行依頼書台帳
+  , TABLE_ID_REQUEST_BOOK                   = 64131
+  //【05】請求書台帳
+  , TABLE_ID_CLAIM_BOOK                     = 64129
+  //【06】インボイス番号台帳
+  , TABLE_ID_INVOICE_NO                     = 64117
+  //【07】仕入先注文書台帳
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 64132
+  //【11】国番号
+  , TABLE_ID_COUNTRY_NO                     = 64122
+  //【12】会社区分
+  , TABLE_ID_COMPANY_CLASS                  = 64123
+  //【13】会社
+  , TABLE_ID_COMPANY_INFO                   = 64120
+  //【14】事業所
+  , TABLE_ID_OFFICE_INFO                    = 64125
+  //【15】製品
+  , TABLE_ID_PRODUCT_INFO                   = 64121
+  //【16】エンドユーザ
+  , TABLE_ID_END_USER                       = 64126
+  //【17】コミッション率
+  , TABLE_ID_COMMISSION_RATE                = 64124
   // メッセージログ（commonSetMessageで使用）
   , TABLE_ID_MESSAGE_LOG                    = 57349
   // エクセルフォーマット（downloadExcelで使用）
@@ -241,12 +241,6 @@ function commonDisplayClass(className, labels, value, successFunc, failureFunc) 
       }
   }
 }
-
-function commonRemoveIcon (clock = false, person = false) {
-  if (clock) Array.from(document.querySelectorAll(".ui-icon.ui-icon-clock.current-time")).forEach(v => v.remove())
-  if (person)Array.from(document.querySelectorAll(".ui-icon.ui-icon-person.current-user")).forEach(v => v.remove())
-}
-
 
 /**
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
@@ -597,8 +591,12 @@ function commonUniqueArray(arr) {
  */
 function commonGetId (label, prefix = true, suffix = false) {
   let id = $p.getColumnName(label)
-  id = prefix ? $p.tableName() + "_" + id : id
-  id = suffix ? id + "Field" : id
+  if (commonIsNull(id)) {
+    commonSetMessage('共通関数commonGetId：ラベル不正。', ERROR, true, label)
+  } else {
+    id = prefix ? $p.tableName() + '_' + id : id
+    id = suffix ? id + 'Field' : id
+  }
   return id
 }
 
@@ -608,10 +606,24 @@ function commonGetId (label, prefix = true, suffix = false) {
  * @param {Boolean} flg trueなら読取専用 falseなら読取解除
  */
 function commonChangeReadOnly (label, flg = true) {
-  if (commonIsNull(document.getElementById(commonGetId(label)))) {
-    commonSetMessage("共通関数：ラベル不正。", ERROR, true, label)
+  let area = commonGetId(label)
+  let field = commonGetId(label, true, true)
+
+  if (commonIsNull(area)) {
+    commonSetMessage('共通関数commonChangeReadOnly：ラベル不正。', ERROR, true, label)
+  } else {
+    // 入力項目disable制御
+    document.getElementById(area).disabled = flg
+
+    // icon 表示制御
+    let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
+    for (let icon of icons) {
+      let target = document.getElementById(field).querySelector('.' + icon)
+      if (!commonIsNull(target)) {
+        target.style['visibility'] = flg ? 'hidden' : 'visible'
+      }
+    }
   }
-  document.getElementById(commonGetId(label)).disabled = flg
 }
 
 /**
@@ -963,7 +975,7 @@ async function commonCopyRecordAjax(editItems = {}, deleteLabels = [], Status, C
     let datKey = "Date" + char
     let dscKey = "Description" + char
     let chkKey = "Check" + char
-    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, true)
+    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonIsNull(commonGetVal(clsKey, true)) ? commonGetVal(clsKey) : commonGetVal(clsKey, true)
     if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
     if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
     if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)
@@ -976,7 +988,7 @@ async function commonCopyRecordAjax(editItems = {}, deleteLabels = [], Status, C
     let datKey = "Date" + commonPaddingLeft(i, 3)
     let dscKey = "Description" + commonPaddingLeft(i, 3)
     let chkKey = "Check" + commonPaddingLeft(i, 3)
-    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonGetVal(clsKey, true)
+    if (!commonIsNull(commonGetVal(clsKey))) clsHash[clsKey] = commonIsNull(commonGetVal(clsKey, true)) ? commonGetVal(clsKey) : commonGetVal(clsKey, true)
     if (!commonIsNull(commonGetVal(numKey))) numHash[numKey] = commonGetVal(numKey)
     if (!commonIsNull(commonGetVal(datKey))) datHash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
     if (!commonIsNull(commonGetVal(dscKey))) dscHash[dscKey] = commonGetVal(dscKey)

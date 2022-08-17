@@ -79,6 +79,7 @@ async function downloadClaimExcel(foreignFlg) {
         }
     }
 
+    commonSetMessage("請求書類作成中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
     // 合計金額
     total = selectedData.display.reduce((sum, elem) => {
     //   return sum + (elem[foreignFlg ? PRICE_USD : PRICE])
@@ -240,6 +241,7 @@ async function downloadClaimExcel(foreignFlg) {
         return false
     }
     // 画面リロード処理
+    $p.clearMessage()
     let finalAns = window.confirm('画面をリロードします。よろしいでしょうか?')
     if (finalAns) {
         // キャッシュからリロード

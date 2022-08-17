@@ -65,9 +65,11 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
     let createData = {
         "ClassB": selectedData.value[0][ORDER_CLASS], // 04.注文区分
     }
+
     if (printFlg) {
         // ダイアログをクローズ
         $p.closeDialog($('#' + requestDialogId));
+        commonSetMessage("先行依頼書作成中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
 
         // 帳票フォーマットを検索
         let retDownloadExcel
@@ -147,6 +149,7 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
 
     // 終了する
     if (finishFlg) {
+        $p.clearMessage()
         let finalAns = window.confirm(`更新${printFlg ? "と帳票出力" : ""}が完了しました。画面をリロードしますがよろしいでしょうか?`)
         if (finalAns) {
             // キャッシュからリロード

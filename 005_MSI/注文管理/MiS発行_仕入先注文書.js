@@ -71,8 +71,6 @@ $p.events.on_grid_load_arr.push(function () {
             <div id='${ma}'>
             </div>
 
-
-
             <p class="message-dialog"></p>
             <div class="command-center">
                 <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
@@ -112,8 +110,6 @@ function setSupplierModal() {
     }
 
 	suppliers.forEach(elem => {
-
-
 		let radioDiv = document.createElement('div')
 		let radioInput = document.createElement('input')
         // 仕入先名
@@ -153,6 +149,7 @@ function setSupplierModal() {
                                 <option value="${WIKI_DELIVERY_LIMIT.ASAP.name}">${WIKI_DELIVERY_LIMIT.ASAP.name}</option>
                                 <option value="${WIKI_DELIVERY_LIMIT.DATE.name}">${WIKI_DELIVERY_LIMIT.DATE.name}</option>
                             </select>
+                            <p id="${elem + st + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -178,6 +175,7 @@ function setSupplierModal() {
                                 <option value="${WIKI_DELIVERY_CLASS.MIS.name}">${WIKI_DELIVERY_CLASS.MIS.name}</option>
                                 <option value="${WIKI_DELIVERY_CLASS.DIRECT.name}">${WIKI_DELIVERY_CLASS.DIRECT.name}</option>
                             </select>
+                            <p id="${elem + sdc + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -208,7 +206,7 @@ function setSupplierModal() {
                                 <option value="${x2}">${x2}</option>
                                 <option value="${x3}">${x3}</option>
                             </select>
-                            <p id="${elem + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${elem + sp + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -253,23 +251,46 @@ function displayControlDirect() {
 
 async function downloadSupplierExcel() {
 
-    // すべての出力仕入先注文形式が入力されているか
-    let checkFlg = false
-
+    let alertFlg = false
+    // 入力チェック
     for (let id of suppliers) {
-        if ([x1, x2, x3].includes($('#' + id + sp).val())) {
-            document.getElementById(id + cm).style["visibility"] = 'hidden'
-            document.getElementById(rl + id).style["color"] = 'black'
-            document.getElementById(rl + id).style["font-weight"] = 'bold'
+        let checkFlg = false
+        // すべての希望納期が入力されているか
+        if ([WIKI_DELIVERY_LIMIT.ASAP.name, WIKI_DELIVERY_LIMIT.DATE.name].includes($('#' + id + st).val())) {
+            document.getElementById(id + st + cm).style["visibility"] = 'hidden'
         } else {
-            document.getElementById(id + cm).style["visibility"] = 'visible'
-            document.getElementById(rl + id).style["color"] = 'red'
-            document.getElementById(rl + id).style["font-weight"] = 'bolder'
+            document.getElementById(id + st + cm).style["visibility"] = 'visible'
             checkFlg = true
         }
+
+        // すべての納入区分が入力されているか
+        if ([WIKI_DELIVERY_CLASS.MIS.name, WIKI_DELIVERY_CLASS.DIRECT.name].includes($('#' + id + sdc).val())) {
+            document.getElementById(id + sdc + cm).style["visibility"] = 'hidden'
+        } else {
+            document.getElementById(id + sdc + cm).style["visibility"] = 'visible'
+            checkFlg = true
+        }
+
+        // すべての出力仕入先注文形式が入力されているか
+        if ([x1, x2, x3].includes($('#' + id + sp).val())) {
+            document.getElementById(id + sp + cm).style["visibility"] = 'hidden'
+        } else {
+            document.getElementById(id + sp + cm).style["visibility"] = 'visible'
+            checkFlg = true
+        }
+        // ラベルを赤くする
+        if (checkFlg) {
+            document.getElementById(rl + id).style["color"] = 'red'
+            document.getElementById(rl + id).style["font-weight"] = 'bolder'
+            alertFlg = checkFlg
+        } else {
+            document.getElementById(rl + id).style["color"] = 'black'
+            document.getElementById(rl + id).style["font-weight"] = 'bold'
+        }
     }
-    if (checkFlg) {
-        alert("すべての仕入先に対して、出力仕入先注文形式を入力してください")
+    // アラートメッセージ
+    if (alertFlg) {
+        alert("すべての仕入先に対して、必須項目を入力してください")
         return false
     }
     // ダイアログをクローズ
@@ -286,6 +307,8 @@ async function downloadSupplierExcel() {
 
     let usdFlg = false
     let foreignFlg = false
+
+    commonSetMessage("仕入先注文書作成中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
 
     for (let id of suppliers) {
         // display値データ変換
@@ -426,6 +449,7 @@ async function downloadSupplierExcel() {
         }
     }
 
+    $p.clearMessage()
     let finalAns = window.confirm('更新と帳票出力が完了しました。画面をリロードしますがよろしいでしょうか?')
 	if (finalAns) {
 		// キャッシュからリロード
