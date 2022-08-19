@@ -131,7 +131,6 @@ async function preCheckMsi() {
         , ENDUSER           // エンドユーザー
     ]
     for (let item of checkItems) {
-        // 選択レコードの項目一致チェック
         if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
             commonSetMessage(`MiS番号を発行するには「${item}」が一致したレコードを選択してください。`, WARNING)
             return false
@@ -249,6 +248,18 @@ async function preCheckClaim() {
         commonSetMessage(`会社情報の伝票形式が入力されていません。伝票形式を入力したデータのみを選択してください。`, WARNING)
         return false
     }
+    // 選択レコードの項目一致チェック
+    let checkItems = [
+        CURRENCY_CLASS
+        , DESTINATION
+        , CUSTOMER
+    ]
+    for (let item of checkItems) {
+        if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
+            commonSetMessage(`請求書を発行するには、納品管理タブの国内納品先情報「${item}」が一致したレコードを選択してください。`, WARNING)
+            return false
+        }
+    }
 
     // 選択レコードの「納品先」項目一致チェック
     if (commonUniqueArray([...selectedData.value.map(v => v[DESTINATION])]).length > 1) {
@@ -276,7 +287,6 @@ async function preCheckClaim() {
             , FAX_NO
         ]
         for (let item of checkItems) {
-            // 選択レコードの項目一致チェック
             if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
                 commonSetMessage(`請求書を発行するには、納品管理タブの国内納品先情報「${item}」が一致したレコードを選択してください。`, WARNING)
                 return false
@@ -300,7 +310,6 @@ async function preCheckClaim() {
             , FOREIGN_REMARK
         ]
         for (let item of checkItems) {
-            // 選択レコードの項目一致チェック
             if (commonUniqueArray([...selectedData.value.map(v => v[item])]).length > 1) {
                 commonSetMessage(`請求書を発行するには、納品管理タブの海外納品先情報「${item}」が一致したレコードを選択してください。`, WARNING)
                 return false

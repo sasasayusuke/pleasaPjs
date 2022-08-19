@@ -6,7 +6,7 @@ $p.events.on_editor_load_arr.push(function () {
     <div id="${dialogId}" class="dialog" title="納品">
         <p style="text-align: center;">
             納品する分だけ入力してください。<br>
-            分納する量は1以上の${VOLUME_AT_LOAD}より少ない整数を入力してください。<br>
+            分納する量は1以上の${atLoadVolume}より少ない整数を入力してください。<br>
         </p>
         <div id="Results_NumField" class="field-normal both">
             <p class="field-label" style="">
@@ -37,9 +37,9 @@ function openDevideDeliveryDialog() {
 
 async function devideDelivery() {
     let deliverVolume = +$('#' + numArea).val()
-    if (isNaN(VOLUME_AT_LOAD) || isNaN(deliverVolume) || deliverVolume >= VOLUME_AT_LOAD || deliverVolume < 1) {
+    if (isNaN(atLoadVolume) || isNaN(deliverVolume) || deliverVolume >= atLoadVolume || deliverVolume < 1) {
         $p.closeDialog($('#' + dialogId))
-        commonSetMessage(`入力数量が異常です。分納する量は1以上の${VOLUME_AT_LOAD}より少ない整数を入力してください。`, ERROR)
+        commonSetMessage(`入力数量が異常です。分納する量は1以上の${atLoadVolume}より少ない整数を入力してください。`, ERROR)
         return
     }
 
@@ -61,7 +61,7 @@ async function devideDelivery() {
         $p.id()
         , {}
         , {
-            [$p.getColumnName("数量")]: VOLUME_AT_LOAD - deliverVolume
+            [$p.getColumnName("数量")]: atLoadVolume - deliverVolume
         }
         , {}
         , {}

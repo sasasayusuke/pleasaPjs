@@ -18,6 +18,7 @@ let readOnlyItemsAfterShipped = [
     ...readOnlyItemsAfterconfirmedDelivery
     , "納品日"
     , "納品先"
+    // 納品先：国内
     , "納品先会社名"
     , "納品先事業所名"
     , "郵便番号"
@@ -25,6 +26,20 @@ let readOnlyItemsAfterShipped = [
     , "担当者"
     , "電話番号"
     , "FAX番号"
+    // 納品先：海外
+    , "SOLD TO"
+    , "SOLD TO ATTEN"
+    , "SOLD TO ADDRESS"
+    , "SOLD TO TEL"
+    , "SHIP TO"
+    , "SHIP TO ATTEN"
+    , "SHIP TO ADDRESS"
+    , "SHIP TO TEL"
+    , "SHIP FROM Country"
+    , "SHIP TO Country"
+    , "Forwarder"
+    , "アカウント番号"
+    , "海外情報備考"
 ]
 
 // 検収済以降読み込み制御項目

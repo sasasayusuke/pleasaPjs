@@ -306,8 +306,8 @@ async function downloadSupplierExcel() {
     let printId = ""
     let supOrderId = ""
 
-    let usdFlg = false
-    let foreignFlg = false
+    // let usdFlg = false
+    // let foreignFlg = false
 
     commonSetMessage("仕入先注文書作成中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
 
@@ -320,11 +320,11 @@ async function downloadSupplierExcel() {
             printId = FORMAT_ID_SUPPLIER
         } else if ($('#' + id + sp).val() == x2) {
             printId = FORMAT_ID_SUPPLIER_FOREIGN_JPY
-            foreignFlg = true
+            // foreignFlg = true
         } else if ($('#' + id + sp).val() == x3) {
             printId = FORMAT_ID_SUPPLIER_FOREIGN_USD
-            usdFlg = true
-            foreignFlg = true
+            // usdFlg = true
+            // foreignFlg = true
         }
 
         // 帳票フォーマットを検索
@@ -373,6 +373,20 @@ async function downloadSupplierExcel() {
         }
 
         for (let formatId of [FORMAT_ID_SUPPLIER, FORMAT_ID_SUPPLIER_FOREIGN_JPY, FORMAT_ID_SUPPLIER_FOREIGN_USD]) {
+            let att = ""
+            let usdFlg = false
+            let foreignFlg = false
+            if (formatId == FORMAT_ID_SUPPLIER) {
+                att = "AttachmentsA"
+            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_JPY) {
+                att = "AttachmentsB"
+                foreignFlg = true
+            } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_USD) {
+                att = "AttachmentsC"
+                usdFlg = true
+                foreignFlg = true
+            }
+
             try {
                 retDownloadExcel = await downloadExcel(formatId)
             } catch (err) {
@@ -390,7 +404,7 @@ async function downloadSupplierExcel() {
             supOrderId = retCreateParentRecord.Id
 
             try {
-                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, foreignFlg)
+                retCreateExcel = await createExcel(JSON.parse(exc.AttachmentsA)[0].Guid, exc.ClassC, usdFlg, foreignFlg)
             } catch (err) {
                 console.log(err)
                 commonSetMessage("仕入先注文書:帳票ダウンロードエラー３", ERROR, true)
@@ -398,14 +412,7 @@ async function downloadSupplierExcel() {
             }
 
             try {
-                let att = ""
-                if (formatId == FORMAT_ID_SUPPLIER) {
-                    att = "AttachmentsA"
-                } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_JPY) {
-                    att = "AttachmentsB"
-                } else if (formatId == FORMAT_ID_SUPPLIER_FOREIGN_USD) {
-                    att = "AttachmentsC"
-                }
+
                 // 仕入先注文書台帳に帳票を添付
                 await commonUpdateAttachment(supOrderId, att, retCreateExcel.workbook, retCreateExcel.filename)
             } catch (err) {
@@ -463,7 +470,7 @@ async function downloadSupplierExcel() {
 		location.reload(false)
 	}
 
-    async function createExcel(guid, filename) {
+    async function createExcel(guid, filename, usdFlg, foreignFlg) {
 
         const res = await axios.get(SERVER_URL + "/binaries/" + guid + "/download", { responseType: "arraybuffer" })
         const data = new Uint8Array(res.data)

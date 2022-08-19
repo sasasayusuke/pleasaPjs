@@ -155,6 +155,7 @@ async function commonSetMessage (message = '', type = NORMAL, log = false, set =
  *
  */
 function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId', boxClass = 'boxClass') {
+  if (commonIsNull(document.getElementById("CommentField"))) return
   let html = `
       <div id="${id}" class="flow">
       </div>

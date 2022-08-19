@@ -1,7 +1,9 @@
 
-let VOLUME_AT_LOAD = 0
-let COST_JPY_AT_LOAD = 0
-let COST_USD_AT_LOAD = 0
+let atLoadVolume = 0
+let atLoadCostJpy = 0
+let atLoadCostUsd = 0
+let atLoadUnit = 0
+let atLoadTaxRate = 0
 
 
 $p.events.on_grid_load_arr.push(function () {
@@ -17,7 +19,9 @@ $p.events.on_editor_load_arr.push(function () {
 		"注文ステータス"
 		, Object.keys(WIKI_STATUS_ORDER_CONTROL).map(v => WIKI_STATUS_ORDER_CONTROL[v])
 	)
-	VOLUME_AT_LOAD = commonConvertCTo1(commonGetVal("数量"))
-    COST_JPY_AT_LOAD = commonConvertCTo1(commonGetVal("原価"))
-    COST_USD_AT_LOAD = commonConvertCTo1(commonGetVal("原価＄"))
+	atLoadVolume = commonConvertCTo1(commonGetVal("数量"))
+    atLoadCostJpy = commonConvertCTo1(commonGetVal("原価"))
+    atLoadCostUsd = commonConvertCTo1(commonGetVal("原価＄"))
+	atLoadUnit = commonConvertCTo1(commonGetVal("単価"))
+	atLoadTaxRate = commonConvertCTo1(commonGetVal("税率"))
 })
