@@ -1,6 +1,4 @@
 $p.events.on_editor_load_arr.push(function () {
-    // 不要項目削除
-    commonRemoveElements(['OpenCopyDialogCommand', 'DeleteCommand', 'GoBack', 'EditOutgoingMail'])
     f1()
     f2()
 })

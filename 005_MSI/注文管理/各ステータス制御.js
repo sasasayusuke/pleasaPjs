@@ -4,7 +4,6 @@
 let readOnlyItemsAfterconfirmedArrival = [
     "仕入先注文備考"
     , "顧客希望納期"
-    , "回答納期"
     , "先行依頼書備考"
     , "入荷日"
 ]
@@ -51,7 +50,7 @@ let readOnlyItemsAfterAccepted = [
 // 完了以降読み込み制御項目
 let readOnlyItemsAfterClose = [
     ...readOnlyItemsAfterAccepted
-    , "請求月日"
+    , "入金完了日"
     , "営業担当者"
 
     , "税率"
@@ -70,17 +69,14 @@ $p.events.on_editor_load_arr.push(function (){
     let status = commonGetVal('注文ステータス')
 
     switch(status) {
-        // 注文内示
-        case WIKI_STATUS_ORDER_CONTROL.announce.value:
-            break
-        // 注文書受領
-        case WIKI_STATUS_ORDER_CONTROL.receipt.value:
+        // 先行手配
+        case WIKI_STATUS_ORDER_CONTROL.arrangement.value:
             break
         // 納期確認中
         case WIKI_STATUS_ORDER_CONTROL.checkingDelivery.value:
             commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
             break
-        // 前倒し調整中
+        // 納期再調整
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
             commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
             break
@@ -103,13 +99,12 @@ $p.events.on_editor_load_arr.push(function (){
         // 完了
         case WIKI_STATUS_ORDER_CONTROL.closed.value:
             readOnlyItemsAfterClose.forEach(v => commonChangeReadOnly(v))
-            commonRemoveElements(['UpdateCommand', 'Process_9'])
+            commonRemoveElements(['Process_9'])
             break
         // キャンセル
         case WIKI_STATUS_ORDER_CONTROL.cancel.value:
             readOnlyItemsAfterClose.forEach(v => commonChangeReadOnly(v))
-            commonRemoveElements(['UpdateCommand', 'Process_9'])
-
+            commonRemoveElements(['Process_9'])
             break
         default:
             // その他のステータスの場合エラー

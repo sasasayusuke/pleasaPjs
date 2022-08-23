@@ -12,17 +12,17 @@ function clickBackShipped (n) {
 
 // 完了 ⇒ 検収済み 差し戻し
 function clickBackAccepted (n) {
-    let ans = window.confirm('検収済みへ差し戻しますか？\n入力して頂いた請求月日は消去されます。')
+    let ans = window.confirm('検収済みへ差し戻しますか？\n入力して頂いた入金完了日は消去されます。')
     if (ans) {
-        commonChangeReadOnly('請求月日', false)
-        commonSetVal('請求月日', "")
+        commonChangeReadOnly('入金完了日', false)
+        commonSetVal('入金完了日', "")
         $p.execProcess(n)
     }
 }
 
-// 前倒し調整
+// 納期再調整
 function clickBackAdjustment (n) {
-    let ans = window.confirm('前倒し調整を依頼しますか？\n入力して頂いた入荷日と出荷予定日は消去されます。')
+    let ans = window.confirm('納期再調整をしますか？\n入力して頂いた入荷日と出荷予定日は消去されます。')
     if (ans) {
         commonChangeReadOnly('入荷日', false)
         commonSetVal('入荷日', "")

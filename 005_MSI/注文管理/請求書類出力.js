@@ -232,6 +232,7 @@ async function downloadClaimExcel(foreignFlg) {
             Status: WIKI_STATUS_ORDER_CONTROL.shipped.index
             , [commonGetId("請求書番号", false)]: claimId
             , [commonGetId("出荷完了日", false)]: today
+            , [commonGetId("請求月日", false)]: today
         }
         // 選択した注文管理レコードを更新
         await editSelectedRecord(updateData)
@@ -422,7 +423,7 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("I" + rowNumber, worksheet).value = record[UNIT_PRICE]
             getCell("K" + rowNumber, worksheet).value = record[SUB_TOTAL]
             getCell("N" + rowNumber, worksheet).value = record[MEASURE]
-            getCell("O" + rowNumber, worksheet).value = record[ITEM_NAME]
+            getCell("O" + rowNumber, worksheet).value = record["品名"]
 
             rowNumber = rowNumber + 1
         }
@@ -463,7 +464,7 @@ async function downloadClaimExcel(foreignFlg) {
             getCell("E" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("G" + rowNumber, worksheet).value = record[VOLUME]
             getCell("N" + rowNumber, worksheet).value = record[MEASURE]
-            getCell("O" + rowNumber, worksheet).value = record[ITEM_NAME]
+            getCell("O" + rowNumber, worksheet).value = record["品名"]
 
             rowNumber = rowNumber + 1
         }

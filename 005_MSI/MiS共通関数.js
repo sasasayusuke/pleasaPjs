@@ -6,6 +6,8 @@ var WARNING = 500
 var ERROR   = 900
 var NEW     = 'new'
 
+var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
+
 /**
  * テーブル情報
  * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
@@ -13,19 +15,19 @@ var NEW     = 'new'
  */
 var TABLE = [
   //【01】見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 64130
+  , TABLE_ID_ESTIMATION_BOOK                = 70707
   //【02】注文入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 64118
+  , TABLE_ID_ORDER_INPUT_FORM               = 70710
   //【03】注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 64128
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 70711
   //【04】先行依頼書台帳
-  , TABLE_ID_REQUEST_BOOK                   = 64131
+  , TABLE_ID_REQUEST_BOOK                   = 70706
   //【05】請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 64129
+  , TABLE_ID_CLAIM_BOOK                     = 70708
   //【06】インボイス番号台帳
-  , TABLE_ID_INVOICE_NO                     = 64117
+  , TABLE_ID_INVOICE_NO                     = 70705
   //【07】仕入先注文書台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 64132
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 70709
   //【11】国番号
   , TABLE_ID_COUNTRY_NO                     = 64122
   //【12】会社区分
@@ -86,15 +88,15 @@ function commonIsNull (obj) {
  * Plesanterメッセージを利用する関数です。
  * @param {String} message メッセージ内容
  * @param {String} type 深刻度
- * @param {boolean} log ログを登録
- * @param {String} name 呼び出しスクリプト名
+ * @param {boolean} leave ログを残す
  * @param {boolean} set ブラウザメッセージを出す
+ * @param {String} description 追記内容
  *
  */
-async function commonSetMessage (message = '', type = NORMAL, log = false, set = true, description = "") {
+async function commonSetMessage (message = '', type = NORMAL, leave = false, set = true, description = "") {
   $p.clearMessage()
-  if (log) {
-    commonCreateAjax(
+  if (leave) {
+    let log = await commonCreateAjax(
       TABLE_ID_MESSAGE_LOG
       , {
         ClassA: $p.id()
@@ -109,6 +111,8 @@ async function commonSetMessage (message = '', type = NORMAL, log = false, set =
       , {}
       , type
     )
+    console.log(`エラーログ：${SERVER_URL}/items/${log.Id}`)
+
   }
   if (set) {
     switch (type) {
@@ -140,7 +144,7 @@ async function commonSetMessage (message = '', type = NORMAL, log = false, set =
         )
         throw new Error(message)
       default:
-        commonSetMessage("メッセージタイプが不正な値です。", ERROR, true, type)
+        commonSetMessage(`メッセージタイプが不正な値です。`, ERROR, true, type)
     }
   }
 }

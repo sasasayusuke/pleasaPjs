@@ -55,8 +55,8 @@ async function downloadDestitationExcel() {
 
         let rowNumber = 2
         for (let record of selectedData.display) {
-            getCell("A" + rowNumber, worksheet).value = record[MIS_NO]                         // MiS番号
-            getCell("B" + rowNumber, worksheet).value = record[SCHEDULED_SHIP]                 // 出荷予定日
+            getCell("A" + rowNumber, worksheet).value = record[SCHEDULED_SHIP]                 // 出荷予定日
+            getCell("B" + rowNumber, worksheet).value = record[MIS_NO]                         // MiS番号
             getCell("C" + rowNumber, worksheet).value = record[CUSTOMER]                       // 顧客名（契約先）
             getCell("D" + rowNumber, worksheet).value = record[OFFICE]                         // 事業所名
 
@@ -86,6 +86,7 @@ async function downloadDestitationExcel() {
             getCell("L" + rowNumber, worksheet).value = record[ENDUSER]                       //  エンドユーザ
             getCell("M" + rowNumber, worksheet).value = record[SUPPLIER]                      //  仕入先
             getCell("N" + rowNumber, worksheet).value = record[ARRIVAL_DAY]                   //  入荷日
+            getCell("O" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]                //  客先注文番号
 
             rowNumber = rowNumber + 1
         }

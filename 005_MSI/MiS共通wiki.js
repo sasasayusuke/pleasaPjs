@@ -1,7 +1,5 @@
   var version = 3
 
-  var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
-
   // 注文管理 ビュー
   var VIEW_ORDER_CONTROL = {
   sale: {
@@ -66,17 +64,11 @@
 
   // 注文管理ステータス
   var WIKI_STATUS_ORDER_CONTROL = {
-    announce: {
+    arrangement: {
       index: 100,
-      value: "注文内示",
-      label: "注文内示",
+      value: "先行手配",
+      label: "先行手配",
       style: "status-new"
-    }
-    , receipt: {
-        index: 200,
-        value: "注文書受領",
-        label: "注文書受領",
-        style: "status-new"
     }
     , checkingDelivery: {
         index: 300,
@@ -86,8 +78,8 @@
     }
     , adjustment: {
       index: 350,
-      value: "前倒し調整中",
-      label: "前倒し調整中",
+      value: "納期再調整",
+      label: "納期再調整",
       style: "status-review"
     }
     , confirmedArrival: {

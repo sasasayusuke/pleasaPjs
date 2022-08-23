@@ -27,61 +27,58 @@ let x1 = "国内向け円建"
 let x2 = "海外向け円建"
 let x3 = "海外向けドル建"
 
-
-$p.events.on_grid_load_arr.push(function () {
-    let htmlReq = `
-        <div id="${sid}" class="dialog" title="先行依頼書&仕入先注文書出力">
-            <div class="section-fields-container" style="width: 95%">
-                <div><label class="field-section"><span></span>先行依頼書</label></div>
-            </div>
-            <div class="field-markdown">
-                <p class="field-label"><label for="${srm1}">MEMO1</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${srm1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm1}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${srm1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm1}'));">
-                        </div>
-                        <textarea id="${srm1}" name="${srm1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
-                        </textarea>
+let htmlSupp = `
+    <div id="${sid}" class="dialog" title="先行依頼書&仕入先注文書出力">
+        <div class="section-fields-container" style="width: 95%">
+            <div><label class="field-section"><span></span>先行依頼書</label></div>
+        </div>
+        <div class="field-markdown">
+            <p class="field-label"><label for="${srm1}">MEMO1</label></p>
+            <div class="field-control">
+                <div class="container-normal">
+                    <div id="${srm1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm1}'));" style="">
+                        <pre><br></pre>
                     </div>
-                </div>
-            </div>
-
-            <div class="field-markdown">
-                <p class="field-label"><label for="${srm2}">MEMO2</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${srm2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm2}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${srm2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm2}'));">
-                        </div>
-                        <textarea id="${srm2}" name="${srm2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
-                        </textarea>
+                    <div id="${srm1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm1}'));">
                     </div>
+                    <textarea id="${srm1}" name="${srm1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
+                    </textarea>
                 </div>
-            </div>
-            <div class="section-fields-container" style="width: 95%">
-                <div><label class="field-section"><span></span>仕入先注文</label></div>
-            </div>
-            <div id='${mt}'>
-            </div>
-            <div id='${ma}'>
-            </div>
-
-            <p class="message-dialog"></p>
-            <div class="command-center">
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
             </div>
         </div>
 
-    `
-    $('#Application').append(htmlReq)
+        <div class="field-markdown">
+            <p class="field-label"><label for="${srm2}">MEMO2</label></p>
+            <div class="field-control">
+                <div class="container-normal">
+                    <div id="${srm2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm2}'));" style="">
+                        <pre><br></pre>
+                    </div>
+                    <div id="${srm2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm2}'));">
+                    </div>
+                    <textarea id="${srm2}" name="${srm2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        <div class="section-fields-container" style="width: 95%">
+            <div><label class="field-section"><span></span>仕入先注文</label></div>
+        </div>
+        <div id='${mt}'>
+        </div>
+        <div id='${ma}'>
+        </div>
 
-})
+        <p class="message-dialog"></p>
+        <div class="command-center">
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
+        </div>
+    </div>
+
+`
+$('#Application').append(htmlSupp)
+
 
 function openSupplierExcelDownloadDialog() {
     suppliers = commonUniqueArray(selectedData.value.map(v => v[SUPPLIER]))
@@ -137,7 +134,7 @@ function setSupplierModal() {
         radioInput.style.top = '2px'
         radioInput.style.margin = '8px'
 
-        let htmlSupp = `
+        let htmlSuppChild = `
             <div id="${elem + srid}" class="${elemClass + " " + sm}">
                 <div class="field-markdown">
                     <div class="field-normal">
@@ -213,7 +210,7 @@ function setSupplierModal() {
             </div>
         `
         let menuDiv = document.createElement('div')
-        menuDiv.innerHTML = htmlSupp
+        menuDiv.innerHTML = htmlSuppChild
 
         area.append(menuDiv)
         Array.from(document.querySelectorAll('input[name="radio"]'))[0].click()

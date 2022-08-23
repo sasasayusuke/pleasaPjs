@@ -50,7 +50,6 @@ const COLS = [
     // 帳票で使用する項目
     , SALES_MANAGER         = "営業担当者"
     , CH_NO                 = "注文管理番号"
-    , ITEM_NAME             = "品名"
     , MODEL_NO              = "型番"
     , MEASURE               = "数量単位(日)"
     , VOLUME                = "数量"
@@ -65,7 +64,6 @@ const COLS = [
     , MIS_NO                = "MiS番号"
     , CUSTOMER_CH_NO        = "客先注文番号"
     , CUSTOMER_LIMIT        = "顧客希望納期"
-    , ANSWER_LIMIT          = "回答納期"
     , REQUEST_REMARK        = "先行依頼書備考"
     , SUPPLIER_REMARK       = "仕入先注文備考"
     , ARRIVAL_DAY           = "入荷日"
@@ -85,6 +83,7 @@ async function getData() {
     colIds = [
         , "ResultId"
         , ...colIds
+        , commonGetId(MODEL_NO, false) + "~" + TABLE_ID_PRODUCT_INFO + ",ClassF"                //品名
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassI"                //伝票形式
         , commonGetId(CUSTOMER, false) + "~" + TABLE_ID_COMPANY_INFO + ",ClassF"                //検査成績書要否
     ]
@@ -116,8 +115,8 @@ async function preCheckMsi() {
 
     await getData()
 
-    // 選択レコードのステータスチェック「注文内示」または「注文書受領」
-    if (commonUniqueArray([...selectedData.value.map(v => v[ORDER_STATUS]), WIKI_STATUS_ORDER_CONTROL.announce.index, WIKI_STATUS_ORDER_CONTROL.receipt.index]).length > 2) {
+    // 選択レコードのステータスチェック「先行手配」
+    if (commonUniqueArray([...selectedData.value.map(v => v[ORDER_STATUS]), WIKI_STATUS_ORDER_CONTROL.arrangement.index]).length > 1) {
         commonSetMessage("選択したデータにMiS番号が発行済みのものが含まれます。\r\n出力済みの先行依頼書を再出力する場合は先行依頼書台帳テーブルから添付ファイルをダウンロードしてください。", WARNING)
         return false
     }

@@ -3,51 +3,48 @@ let requestDialogId = "requestExcelDownloadDialog"
 let requestMemo1 = "requestMemo1"
 let requestMemo2 = "requestMemo2"
 
-$p.events.on_grid_load_arr.push(function () {
-    let html = `
-        <div id=${requestDialogId} class="dialog" title="先行依頼書出力">
+let htmlReq = `
+    <div id=${requestDialogId} class="dialog" title="先行依頼書出力">
 
-            <div class="field-markdown">
-                <p class="field-label"><label for="${requestMemo1}">MEMO1</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${requestMemo1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${requestMemo1}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${requestMemo1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${requestMemo1}'));">
-                        </div>
-                        <textarea id="${requestMemo1}" name="${requestMemo1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
-                        </textarea>
+        <div class="field-markdown">
+            <p class="field-label"><label for="${requestMemo1}">MEMO1</label></p>
+            <div class="field-control">
+                <div class="container-normal">
+                    <div id="${requestMemo1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${requestMemo1}'));" style="">
+                        <pre><br></pre>
                     </div>
-                </div>
-            </div>
-
-            <div class="field-markdown">
-                <p class="field-label"><label for="${requestMemo2}">MEMO2</label></p>
-                <div class="field-control">
-                    <div class="container-normal">
-                        <div id="${requestMemo2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${requestMemo2}'));" style="">
-                            <pre><br></pre>
-                        </div>
-                        <div id="${requestMemo2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${requestMemo2}'));">
-                        </div>
-                        <textarea id="${requestMemo2}" name="${requestMemo2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
-                        </textarea>
+                    <div id="${requestMemo1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${requestMemo1}'));">
                     </div>
+                    <textarea id="${requestMemo1}" name="${requestMemo1}" class="control-markdown applied" placeholder="MEMO1" style="height: 100px; display: none;">
+                    </textarea>
                 </div>
-            </div>
-
-            <p class="message-dialog"></p>
-            <div class="command-center">
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadRequestExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
-                <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
             </div>
         </div>
+
+        <div class="field-markdown">
+            <p class="field-label"><label for="${requestMemo2}">MEMO2</label></p>
+            <div class="field-control">
+                <div class="container-normal">
+                    <div id="${requestMemo2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${requestMemo2}'));" style="">
+                        <pre><br></pre>
+                    </div>
+                    <div id="${requestMemo2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${requestMemo2}'));">
+                    </div>
+                    <textarea id="${requestMemo2}" name="${requestMemo2}" class="control-markdown applied" placeholder="MEMO2" style="height: 100px; display: none;">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+
+        <p class="message-dialog"></p>
+        <div class="command-center">
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadRequestExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
+        </div>
+    </div>
 `
 
-    $('#Application').append(html)
-
-})
+    $('#Application').append(htmlReq)
 
 function openRequestExcelDownloadDialog() {
     $("#" + requestDialogId).dialog({
@@ -199,7 +196,7 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
                 }
             }
             getCell("U" + rowNumber, worksheet).value   = record[SUPPLIER] //　仕入先
-            getCell("Z" + rowNumber, worksheet).value   = record[ITEM_NAME] //　品名
+            getCell("Z" + rowNumber, worksheet).value   = record["品名"] //　品名
             getCell("AE" + rowNumber, worksheet).value   = record[MODEL_NO] //　型番
             getCell("AM" + rowNumber, worksheet).value  = record[VOLUME] //　数量
             getCell("AQ" + rowNumber, worksheet).value  = record[UNIT_PRICE] //　単価
@@ -207,8 +204,7 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
             getCell("AZ" + rowNumber, worksheet).value  = record[COMMISSION] //　コミッション率
             getCell("BF" + rowNumber, worksheet).value  = record[CUSTOMER_CH_NO] //　客先注文番号
             getCell("BL" + rowNumber, worksheet).value  = record[CUSTOMER_LIMIT] //　顧客希望納期
-            getCell("BP" + rowNumber, worksheet).value  = record[ANSWER_LIMIT] //　回答納期
-            getCell("BT" + rowNumber, worksheet).value  = record[REQUEST_REMARK] //　先行依頼備考
+            getCell("BP" + rowNumber, worksheet).value  = record[REQUEST_REMARK] //　先行依頼備考
             rowNumber++
         }
 
