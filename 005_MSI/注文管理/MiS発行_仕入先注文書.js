@@ -36,7 +36,7 @@ let htmlSupp = `
             <p class="field-label"><label for="${srm1}">MEMO1</label></p>
             <div class="field-control">
                 <div class="container-normal">
-                    <div id="${srm1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm1}'));" style="">
+                    <div id="${srm1}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm1}'));">
                         <pre><br></pre>
                     </div>
                     <div id="${srm1}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm1}'));">
@@ -51,7 +51,7 @@ let htmlSupp = `
             <p class="field-label"><label for="${srm2}">MEMO2</label></p>
             <div class="field-control">
                 <div class="container-normal">
-                    <div id="${srm2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm2}'));" style="">
+                    <div id="${srm2}.viewer" class="control-markup not-send" ondblclick="$p.editMarkdown($('#${srm2}'));">
                         <pre><br></pre>
                     </div>
                     <div id="${srm2}.editor" class="ui-icon ui-icon-pencil button-edit-markdown" onclick="$p.editMarkdown($('#${srm2}'));">
@@ -72,7 +72,7 @@ let htmlSupp = `
         <p class="message-dialog"></p>
         <div class="command-center">
             <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="downloadSupplierExcel();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
-            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>戻る</button>
         </div>
     </div>
 
@@ -151,7 +151,7 @@ function setSupplierModal() {
                     </div>
                 </div>
 
-                <div id="${elem + sd}Field" class="field-normal" style="">
+                <div id="${elem + sd}Field" class="field-normal">
                     <p class="field-label"><label for="${elem + sd}">納入日付</label></p>
                     <div class="field-control">
                         <div class="container-normal">

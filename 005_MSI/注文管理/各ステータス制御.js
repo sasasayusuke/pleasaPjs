@@ -1,5 +1,3 @@
-
-
 // 入荷確定以降読み込み制御項目
 let readOnlyItemsAfterconfirmedArrival = [
     "仕入先注文備考"
@@ -67,6 +65,7 @@ let readOnlyItemsAfterClose = [
 $p.events.on_editor_load_arr.push(function (){
     // 各ステータス制御
     let status = commonGetVal('注文ステータス')
+    let orderClass = commonGetVal('注文区分')
 
     switch(status) {
         // 先行手配
@@ -74,11 +73,19 @@ $p.events.on_editor_load_arr.push(function (){
             break
         // 納期確認中
         case WIKI_STATUS_ORDER_CONTROL.checkingDelivery.value:
-            commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
+            if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
+                commonAddButton('changeModel', openChangeModelDialog, '型番・仕入先・数量変更')
+            } else {
+                commonAddButton('splitDelivery', openSplitDeliveryDialog, '分納')
+            }
             break
         // 納期再調整
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
-            commonAddButton('divideDelivery', openDevideDeliveryDialog, '分納')
+            if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
+                commonAddButton('changeModel', openChangeModelDialog, '型番・仕入先・数量変更')
+            } else {
+                commonAddButton('splitDelivery', openSplitDeliveryDialog, '分納')
+            }
             break
         // 入荷確定
         case WIKI_STATUS_ORDER_CONTROL.confirmedArrival.value:

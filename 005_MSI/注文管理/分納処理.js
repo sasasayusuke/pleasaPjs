@@ -1,33 +1,33 @@
 
-var numArea = "numArea"
-var dialogId = "devideDeliveryDialog"
+var splitNumArea = "splitNumArea"
+var splitDialogId = "splitDeliveryDialog"
 $p.events.on_editor_load_arr.push(function () {
-    let html = `
-    <div id="${dialogId}" class="dialog" title="納品">
+    commonRemoveElements([splitDialogId])
+    let htmlDev = `
+    <div id="${splitDialogId}" class="dialog" title="納品">
         <p style="text-align: center;">
             納品する分だけ入力してください。<br>
             分納する量は1以上の${atLoadVolume}より少ない整数を入力してください。<br>
         </p>
         <div id="Results_NumField" class="field-normal both">
             <p class="field-label" style="">
-                <label for="${numArea}">納品個数</label>
+                <label for="${splitNumArea}">納品個数</label>
             </p><div class="field-control">
             <div class="container-normal">
-                <input id="${numArea}" name="${numArea}" class="control-textbox valid" type="text" value="" placeholder="納品個数" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                <input id="${splitNumArea}" name="${splitNumArea}" class="control-textbox valid" type="text" value="" placeholder="納品個数" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
             </div>
         </div>
         <div class="command-center">
-            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="devideDelivery();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
-            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>キャンセル</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="splitDelivery();" data-icon="ui-icon-disk" data-action="Import" data-method="post"><span class="ui-button-icon ui-icon ui-icon-disk"></span><span class="ui-icon-disk"> </span>作成</button>
+            <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>戻る</button>
         </div>
     </div>
     `
-    $('#Application').append(html)
-
+    $('#Application').append(htmlDev)
 })
 
-function openDevideDeliveryDialog() {
-    $("#" + dialogId).dialog({
+function openSplitDeliveryDialog() {
+    $("#" + splitDialogId).dialog({
         modal: !0,
         width: "500",
         height: "180",
@@ -35,10 +35,10 @@ function openDevideDeliveryDialog() {
     })
 }
 
-async function devideDelivery() {
-    let deliverVolume = +$('#' + numArea).val()
+async function splitDelivery() {
+    let deliverVolume = +$('#' + splitNumArea).val()
     if (isNaN(atLoadVolume) || isNaN(deliverVolume) || deliverVolume >= atLoadVolume || deliverVolume < 1) {
-        $p.closeDialog($('#' + dialogId))
+        $p.closeDialog($('#' + splitDialogId))
         commonSetMessage(`入力数量が異常です。分納する量は1以上の${atLoadVolume}より少ない整数を入力してください。`, ERROR)
         return
     }
@@ -74,7 +74,7 @@ async function devideDelivery() {
     )
     console.log(resultU)
 
-    $p.closeDialog($('#' + dialogId))
+    $p.closeDialog($('#' + splitDialogId))
     let finalAns = window.confirm(deliverVolume + '個分納されました画面をリロードしますがよろしいでしょうか?')
     if (finalAns) {
         // キャッシュからリロード
