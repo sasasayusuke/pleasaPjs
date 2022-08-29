@@ -74,17 +74,17 @@ $p.events.on_editor_load_arr.push(function (){
         // 納期確認中
         case WIKI_STATUS_ORDER_CONTROL.checkingDelivery.value:
             if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
-                commonAddButton('changeModel', openChangeModelDialog, '型番・仕入先・数量変更')
+                commonAddButton('patternButton', openPatternDialog, '型番・仕入先・数量変更')
             } else {
-                commonAddButton('splitDelivery', openSplitDeliveryDialog, '分納')
+                commonAddButton('splitDeliveryButton', openSplitDeliveryDialog, '分納')
             }
             break
         // 納期再調整
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
             if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
-                commonAddButton('changeModel', openChangeModelDialog, '型番・仕入先・数量変更')
+                commonAddButton('patternButton', openPatternDialog, '型番・仕入先・数量変更')
             } else {
-                commonAddButton('splitDelivery', openSplitDeliveryDialog, '分納')
+                commonAddButton('splitDeliveryButton', openSplitDeliveryDialog, '分納')
             }
             break
         // 入荷確定

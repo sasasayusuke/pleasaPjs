@@ -93,18 +93,15 @@ function openSupplierExcelDownloadDialog() {
 }
 
 function setSupplierModal() {
+    //ラジオ子要素削除
+    commonRemoveElementChilds(mt)
+    //モーダル子要素削除
+    commonRemoveElementChilds(ma)
+
     //ラジオ要素取得
 	let target = document.getElementById(mt)
-    //ラジオ子要素削除
-    while(target.lastChild){
-        target.removeChild(target.lastChild);
-    }
     //モーダル要素取得
 	let area = document.getElementById(ma)
-    //モーダル子要素削除
-    while(area.lastChild){
-        area.removeChild(area.lastChild);
-    }
 
 	suppliers.forEach(elem => {
 		let radioDiv = document.createElement('div')
@@ -354,6 +351,7 @@ async function downloadSupplierExcel() {
             "NumB": totalUsd,                                   //07.合計金額＄
             "ClassB": supplierData.value[0][SUPPLIER],          //07.仕入先会社名
             "ClassC": supplierData.value[0][CURRENCY_CLASS],    //07.通貨区分
+            "ClassD": supplierData.value[0][SUPPLIER],          //07.仕入先会社名ID
             "ClassE": suppDesiredDelivery,                      //07.希望納期（ASAP,日付）
             "ClassF": suppDeliveryClass,                        //07.納入区分
             "ClassG": reqId,                                    //07.仕入先注文番号
@@ -510,7 +508,13 @@ async function downloadSupplierExcel() {
             getCell("G17", worksheet).value = suppDesiredDelivery
         }
 
-        getCell("C32", worksheet).value = suppDestination //納品先
+        // 納入区分がMiSだったら納品先にMiS / 直送なら納入先：直送の値
+        if (suppDeliveryClass == WIKI_DELIVERY_CLASS.MIS.name) {
+            getCell("C32", worksheet).value = suppDeliveryClass
+        } else {
+            getCell("C32", worksheet).value = suppDestination //納品先
+        }
+
         getCell("AB35", worksheet).value = misNo //MiS番号
 
         let rowNumber = 20
