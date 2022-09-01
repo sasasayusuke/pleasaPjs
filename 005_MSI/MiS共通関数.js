@@ -4,7 +4,7 @@ var api_version = 1.1
 var NORMAL  = 100
 var WARNING = 500
 var ERROR   = 900
-var NEW     = 'new'
+var NEW     = -100
 
 var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
 
@@ -15,19 +15,19 @@ var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
  */
 var TABLE = [
   //【01】見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 70707
+  , TABLE_ID_ESTIMATION_BOOK                = 75298
   //【02】注文入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 70710
+  , TABLE_ID_ORDER_INPUT_FORM               = 75302
   //【03】注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 70711
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 75301
   //【04】先行依頼書台帳
-  , TABLE_ID_REQUEST_BOOK                   = 70706
+  , TABLE_ID_REQUEST_BOOK                   = 75296
   //【05】請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 70708
+  , TABLE_ID_CLAIM_BOOK                     = 75299
   //【06】インボイス番号台帳
-  , TABLE_ID_INVOICE_NO                     = 70705
+  , TABLE_ID_INVOICE_NO                     = 75297
   //【07】仕入先注文書台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 70709
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 75300
   //【11】国番号
   , TABLE_ID_COUNTRY_NO                     = 64122
   //【12】会社区分
@@ -261,6 +261,20 @@ function commonRemoveElements (ids) {
 
   elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
 }
+
+/**
+ * 指定されたIDを持つHTMLエレメントの子要素をすべて削除する関数です。
+ * @param {String} id 削除ID
+ */
+function commonRemoveElementChilds (id) {
+  //要素取得
+  let target = document.getElementById(id)
+  //子要素削除
+  while(target.lastChild) {
+      target.removeChild(target.lastChild)
+  }
+}
+
 /**
  * 指定されたIDを持つHTMLエレメントを表示・非表示を切り替える関数です。
  * @param {Array} ids 削除ID
