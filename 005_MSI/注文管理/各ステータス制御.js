@@ -1,19 +1,26 @@
+// 納期再調整以降読み込み制御項
+let readOnlyItemsAfterAdjustment = [
+    "仕入先注文備考"
+]
+
 // 入荷確定以降読み込み制御項目
 let readOnlyItemsAfterconfirmedArrival = [
-    "仕入先注文備考"
-    , "顧客希望納期"
-    , "先行依頼書備考"
+    ...readOnlyItemsAfterAdjustment
+    , "営業担当者"
+    , "納入仕様書発行"
+    , "納入仕様書担当者"
     , "入荷日"
 ]
 // 納期確定以降読み込み制御項目
 let readOnlyItemsAfterconfirmedDelivery = [
     ...readOnlyItemsAfterconfirmedArrival
     , "出荷予定日"
+    , "納品日"
 ]
 // 出荷済以降読み込み制御項目
 let readOnlyItemsAfterShipped = [
     ...readOnlyItemsAfterconfirmedDelivery
-    , "納品日"
+    , "先行依頼書備考"
     , "納品先"
     // 納品先：国内
     , "納品先会社名"
@@ -49,9 +56,14 @@ let readOnlyItemsAfterAccepted = [
 let readOnlyItemsAfterClose = [
     ...readOnlyItemsAfterAccepted
     , "入金完了日"
-    , "営業担当者"
+    , "客先注文番号"
+]
 
-    , "税率"
+let readOnlyItemsAfterCancel = [
+    ...readOnlyItemsAfterClose
+    , "コミッション率"
+    , "エンドユーザ"
+    , "レート"
     , "数量"
     , "数量単位(日)"
     , "単価"
@@ -59,13 +71,12 @@ let readOnlyItemsAfterClose = [
     , "原価"
     , "原価＄"
     , "原価レート"
-
+    , "客先注文番号"
 ]
 
 $p.events.on_editor_load_arr.push(function (){
     // 各ステータス制御
     let status = commonGetVal('注文ステータス')
-    let orderClass = commonGetVal('注文区分')
 
     switch(status) {
         // 先行手配
@@ -73,19 +84,10 @@ $p.events.on_editor_load_arr.push(function (){
             break
         // 納期確認中
         case WIKI_STATUS_ORDER_CONTROL.checkingDelivery.value:
-            if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
-                commonAddButton('patternButton', openPatternDialog, '型番・仕入先・数量変更')
-            } else {
-                commonAddButton('splitDeliveryButton', openSplitDeliveryDialog, '分納')
-            }
             break
         // 納期再調整
         case WIKI_STATUS_ORDER_CONTROL.adjustment.value:
-            if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
-                commonAddButton('patternButton', openPatternDialog, '型番・仕入先・数量変更')
-            } else {
-                commonAddButton('splitDeliveryButton', openSplitDeliveryDialog, '分納')
-            }
+            readOnlyItemsAfterAdjustment.forEach(v => commonChangeReadOnly(v))
             break
         // 入荷確定
         case WIKI_STATUS_ORDER_CONTROL.confirmedArrival.value:
@@ -110,7 +112,7 @@ $p.events.on_editor_load_arr.push(function (){
             break
         // キャンセル
         case WIKI_STATUS_ORDER_CONTROL.cancel.value:
-            readOnlyItemsAfterClose.forEach(v => commonChangeReadOnly(v))
+            readOnlyItemsAfterCancel.forEach(v => commonChangeReadOnly(v))
             commonRemoveElements(['Process_9'])
             break
         default:

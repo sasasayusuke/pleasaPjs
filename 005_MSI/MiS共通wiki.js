@@ -132,6 +132,46 @@
     },
   }
 
+  // 品名
+  var WIKI_ITEM_NAME = {
+    socket: {
+      name: 'ソケット',
+      value: 1,
+    },
+    substrate: {
+      name: '基板',
+      value: 2,
+    },
+    parts: {
+      name: '部品',
+      value: 3,
+    },
+    processed: {
+      name: '加工品',
+      value: 4,
+    },
+  }
+
+  // 数量単位
+  var WIKI_VOLUME_UNIT = {
+    ko: {
+      name: '個',
+      value: 1,
+    },
+    shiki: {
+      name: '式',
+      value: 2,
+    },
+    mai: {
+      name: '枚',
+      value: 3,
+    },
+    hon: {
+      name: '本',
+      value: 4,
+    },
+  }
+
   // PKG種類
   var WIKI_PKG_TYPE = {
     CRYSTAL: {
