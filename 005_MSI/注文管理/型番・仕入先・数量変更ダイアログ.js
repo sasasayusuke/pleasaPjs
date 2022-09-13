@@ -49,104 +49,104 @@ $p.events.on_editor_load_arr.push(async function () {
     let html = `
         <div id="${pdid}" class="dialog" title="型番・仕入先・数量変更">
             <div id="menuTab" style="margin: 10px 55px; padding: 5px;">
-                <div id="${patterns[patterns.indexOf(UPDATE_MODEL)]}Radio">
-                    <input id="${patterns[patterns.indexOf(UPDATE_MODEL)]}" type="radio" name="radio" value="${patterns[patterns.indexOf(UPDATE_MODEL)]}" style="position: relative; top: 2px; margin: 8px;">
-                    <label id="${patterns[patterns.indexOf(UPDATE_MODEL)]}Label" for="${patterns[patterns.indexOf(UPDATE_MODEL)]}" class="radio-label">型番を変更する</label>
+                <div id="${UPDATE_MODEL}Radio">
+                    <input id="${UPDATE_MODEL}" type="radio" name="radio" value="${UPDATE_MODEL}" style="position: relative; top: 2px; margin: 8px;">
+                    <label id="${UPDATE_MODEL}Label" for="${UPDATE_MODEL}" class="radio-label">型番を変更する</label>
                 </div>
-                <div id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}Radio">
-                    <input id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}" type="radio" name="radio" value="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}" style="position: relative; top: 2px; margin: 8px;">
-                    <label id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}Label" for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}" class="radio-label">仕入先を変更する</label>
+                <div id="${UPDATE_SUPPLIER}Radio">
+                    <input id="${UPDATE_SUPPLIER}" type="radio" name="radio" value="${UPDATE_SUPPLIER}" style="position: relative; top: 2px; margin: 8px;">
+                    <label id="${UPDATE_SUPPLIER}Label" for="${UPDATE_SUPPLIER}" class="radio-label">仕入先を変更する</label>
                 </div>
-                <div id="${patterns[patterns.indexOf(SPLIT_UNIT)]}Radio">
-                    <input id="${patterns[patterns.indexOf(SPLIT_UNIT)]}" type="radio" name="radio" value="${patterns[patterns.indexOf(SPLIT_UNIT)]}" style="position: relative; top: 2px; margin: 8px;">
-                    <label id="${patterns[patterns.indexOf(SPLIT_UNIT)]}Label" for="${patterns[patterns.indexOf(SPLIT_UNIT)]}" class="radio-label">単価ごとに数量を分割する</label>
+                <div id="${SPLIT_UNIT}Radio">
+                    <input id="${SPLIT_UNIT}" type="radio" name="radio" value="${SPLIT_UNIT}" style="position: relative; top: 2px; margin: 8px;">
+                    <label id="${SPLIT_UNIT}Label" for="${SPLIT_UNIT}" class="radio-label">単価ごとに数量を分割する</label>
                 </div>
-                <div id="${patterns[patterns.indexOf(SPLIT_COST)]}Radio">
-                    <input id="${patterns[patterns.indexOf(SPLIT_COST)]}" type="radio" name="radio" value="${patterns[patterns.indexOf(SPLIT_COST)]}" style="position: relative; top: 2px; margin: 8px;">
-                    <label id="${patterns[patterns.indexOf(SPLIT_COST)]}Label" for="${patterns[patterns.indexOf(SPLIT_COST)]}" class="radio-label">原価ごとに数量を分割する</label>
+                <div id="${SPLIT_COST}Radio">
+                    <input id="${SPLIT_COST}" type="radio" name="radio" value="${SPLIT_COST}" style="position: relative; top: 2px; margin: 8px;">
+                    <label id="${SPLIT_COST}Label" for="${SPLIT_COST}" class="radio-label">原価ごとに数量を分割する</label>
                 </div>
             </div>
 
-            <div id="${patterns[patterns.indexOf(UPDATE_MODEL)]}Area" class="${ap}">
+            <div id="${UPDATE_MODEL}Area" class="${ap}">
                 <div class="field-wide">
-                    <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + sm}">型番</label></p>
+                    <p class="field-label"><label for="${UPDATE_MODEL + sm}">型番</label></p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(UPDATE_MODEL)] + sm}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + sm}" class="control-dropdown" onchange="displayControlNewModel('${patterns[patterns.indexOf(UPDATE_MODEL)]}')">
+                            <select id="${UPDATE_MODEL + sm}" name="${UPDATE_MODEL + sm}" class="control-dropdown" onchange="displayControlNewModel('${UPDATE_MODEL}')">
                             </select>
-                            <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + sm + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${UPDATE_MODEL + sm + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
 
-                <div id=${patterns[patterns.indexOf(UPDATE_MODEL)] + anm}>
+                <div id=${UPDATE_MODEL + anm}>
 
                     <div class="field-wide">
                         <p class="field-label">
-                            <label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + im}">新規型番</label>
+                            <label for="${UPDATE_MODEL + im}">新規型番</label>
                         </p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <input id="${patterns[patterns.indexOf(UPDATE_MODEL)] + im}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + im}" class="control-textbox valid" type="text" value="" placeholder="新規型番">
+                                <input id="${UPDATE_MODEL + im}" name="${UPDATE_MODEL + im}" class="control-textbox valid" type="text" value="" placeholder="新規型番">
                             </div>
                         </div>
-                        <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + im + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                        <p id="${UPDATE_MODEL + im + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                     </div>
 
                     <div class="field-normal both">
-                        <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + sin}">品名</label></p>
+                        <p class="field-label"><label for="${UPDATE_MODEL + sin}">品名</label></p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <select id="${patterns[patterns.indexOf(UPDATE_MODEL)] + sin}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + sin}" class="control-dropdown">
+                                <select id="${UPDATE_MODEL + sin}" name="${UPDATE_MODEL + sin}" class="control-dropdown">
                                     <option value="">&nbsp;</option>
                                     <option value="${WIKI_ITEM_NAME.socket.name}">${WIKI_ITEM_NAME.socket.name}</option>
                                     <option value="${WIKI_ITEM_NAME.substrate.name}">${WIKI_ITEM_NAME.substrate.name}</option>
                                     <option value="${WIKI_ITEM_NAME.parts.name}">${WIKI_ITEM_NAME.parts.name}</option>
                                     <option value="${WIKI_ITEM_NAME.processed.name}">${WIKI_ITEM_NAME.processed.name}</option>
                                 </select>
-                                <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + sin + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                                <p id="${UPDATE_MODEL + sin + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="field-normal both">
-                        <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + svu}">数量単位</label></p>
+                        <p class="field-label"><label for="${UPDATE_MODEL + svu}">数量単位</label></p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <select id="${patterns[patterns.indexOf(UPDATE_MODEL)] + svu}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + svu}" class="control-dropdown">
+                                <select id="${UPDATE_MODEL + svu}" name="${UPDATE_MODEL + svu}" class="control-dropdown">
                                     <option value="">&nbsp;</option>
                                     <option value="${WIKI_VOLUME_UNIT.ko.name}">${WIKI_VOLUME_UNIT.ko.name}</option>
                                     <option value="${WIKI_VOLUME_UNIT.shiki.name}">${WIKI_VOLUME_UNIT.shiki.name}</option>
                                     <option value="${WIKI_VOLUME_UNIT.mai.name}">${WIKI_VOLUME_UNIT.mai.name}</option>
                                     <option value="${WIKI_VOLUME_UNIT.hon.name}">${WIKI_VOLUME_UNIT.hon.name}</option>
                                 </select>
-                                <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + svu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                                <p id="${UPDATE_MODEL + svu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="field-normal both">
                         <p class="field-label">
-                            <label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + icj}">原価</label>
+                            <label for="${UPDATE_MODEL + icj}">原価</label>
                         </p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <input id="${patterns[patterns.indexOf(UPDATE_MODEL)] + icj}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + icj}" class="control-textbox valid" type="text" value="${commonGetVal("原価")}" placeholder="原価" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                                <input id="${UPDATE_MODEL + icj}" name="${UPDATE_MODEL + icj}" class="control-textbox valid" type="text" value="${commonGetVal("原価")}" placeholder="原価" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                             </div>
                         </div>
-                        <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + icj + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                        <p id="${UPDATE_MODEL + icj + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                     </div>
 
                     <div class="field-normal">
                         <p class="field-label">
-                            <label for="${patterns[patterns.indexOf(UPDATE_MODEL)] + icu}">原価＄</label>
+                            <label for="${UPDATE_MODEL + icu}">原価＄</label>
                         </p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <input id="${patterns[patterns.indexOf(UPDATE_MODEL)] + icu}" name="${patterns[patterns.indexOf(UPDATE_MODEL)] + icu}" class="control-textbox valid" type="text" value="${commonGetVal("原価＄")}" placeholder="原価＄" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                                <input id="${UPDATE_MODEL + icu}" name="${UPDATE_MODEL + icu}" class="control-textbox valid" type="text" value="${commonGetVal("原価＄")}" placeholder="原価＄" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                             </div>
                         </div>
-                        <p id="${patterns[patterns.indexOf(UPDATE_MODEL)] + icu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                        <p id="${UPDATE_MODEL + icu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                     </div>
                 </div>
 
@@ -156,107 +156,107 @@ $p.events.on_editor_load_arr.push(async function () {
                 </div>
             </div>
 
-            <div id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}Area" class="${ap}">
+            <div id="${UPDATE_SUPPLIER}Area" class="${ap}">
                 <div class="field-wide">
-                    <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + ss}">仕入先</label></p>
+                    <p class="field-label"><label for="${UPDATE_SUPPLIER + ss}">仕入先</label></p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + ss}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + ss}" class="control-dropdown" onchange="displayControlSupplier('${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}')">
+                            <select id="${UPDATE_SUPPLIER + ss}" name="${UPDATE_SUPPLIER + ss}" class="control-dropdown" onchange="displayControlSupplier('${UPDATE_SUPPLIER}')">
                             </select>
-                            <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + ss + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${UPDATE_SUPPLIER + ss + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
 
-                <div id=${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + smp}>
+                <div id=${UPDATE_SUPPLIER + smp}>
                     <div class="field-wide">
-                        <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sm}">型番</label></p>
+                        <p class="field-label"><label for="${UPDATE_SUPPLIER + sm}">型番</label></p>
                         <div class="field-control">
                             <div class="container-normal">
-                                <select id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sm}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sm}" class="control-dropdown" onchange="displayControlNewModel('${patterns[patterns.indexOf(UPDATE_SUPPLIER)]}')">
+                                <select id="${UPDATE_SUPPLIER + sm}" name="${UPDATE_SUPPLIER + sm}" class="control-dropdown" onchange="displayControlNewModel('${UPDATE_SUPPLIER}')">
                                 </select>
-                                <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sm + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                                <p id="${UPDATE_SUPPLIER + sm + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                             </div>
                         </div>
                     </div>
 
-                    <div id=${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + anm}>
+                    <div id=${UPDATE_SUPPLIER + anm}>
                         <div class="field-wide">
                             <p class="field-label">
-                                <label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + im}">新規型番</label>
+                                <label for="${UPDATE_SUPPLIER + im}">新規型番</label>
                             </p>
                             <div class="field-control">
                                 <div class="container-normal">
-                                    <input id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + im}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + im}" class="control-textbox valid" type="text" value="" placeholder="新規型番">
+                                    <input id="${UPDATE_SUPPLIER + im}" name="${UPDATE_SUPPLIER + im}" class="control-textbox valid" type="text" value="" placeholder="新規型番">
                                 </div>
                             </div>
-                            <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + im + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${UPDATE_SUPPLIER + im + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
 
                         <div class="field-normal both">
-                            <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sin}">品名</label></p>
+                            <p class="field-label"><label for="${UPDATE_SUPPLIER + sin}">品名</label></p>
                             <div class="field-control">
                                 <div class="container-normal">
-                                    <select id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sin}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sin}" class="control-dropdown">
+                                    <select id="${UPDATE_SUPPLIER + sin}" name="${UPDATE_SUPPLIER + sin}" class="control-dropdown">
                                         <option value="">&nbsp;</option>
                                         <option value="${WIKI_ITEM_NAME.socket.name}">${WIKI_ITEM_NAME.socket.name}</option>
                                         <option value="${WIKI_ITEM_NAME.substrate.name}">${WIKI_ITEM_NAME.substrate.name}</option>
                                         <option value="${WIKI_ITEM_NAME.parts.name}">${WIKI_ITEM_NAME.parts.name}</option>
                                         <option value="${WIKI_ITEM_NAME.processed.name}">${WIKI_ITEM_NAME.processed.name}</option>
                                     </select>
-                                    <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sin + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                                    <p id="${UPDATE_SUPPLIER + sin + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="field-normal both">
-                            <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + svu}">数量単位</label></p>
+                            <p class="field-label"><label for="${UPDATE_SUPPLIER + svu}">数量単位</label></p>
                             <div class="field-control">
                                 <div class="container-normal">
-                                    <select id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + svu}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + svu}" class="control-dropdown">
+                                    <select id="${UPDATE_SUPPLIER + svu}" name="${UPDATE_SUPPLIER + svu}" class="control-dropdown">
                                         <option value="">&nbsp;</option>
                                         <option value="${WIKI_VOLUME_UNIT.ko.name}">${WIKI_VOLUME_UNIT.ko.name}</option>
                                         <option value="${WIKI_VOLUME_UNIT.shiki.name}">${WIKI_VOLUME_UNIT.shiki.name}</option>
                                         <option value="${WIKI_VOLUME_UNIT.mai.name}">${WIKI_VOLUME_UNIT.mai.name}</option>
                                         <option value="${WIKI_VOLUME_UNIT.hon.name}">${WIKI_VOLUME_UNIT.hon.name}</option>
                                     </select>
-                                    <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + svu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                                    <p id="${UPDATE_SUPPLIER + svu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="field-normal both">
                             <p class="field-label">
-                                <label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icj}">原価</label>
+                                <label for="${UPDATE_SUPPLIER + icj}">原価</label>
                             </p>
                             <div class="field-control">
                                 <div class="container-normal">
-                                    <input id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icj}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icj}" class="control-textbox valid" type="text" value="${commonGetVal("原価")}" placeholder="原価" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                                    <input id="${UPDATE_SUPPLIER + icj}" name="${UPDATE_SUPPLIER + icj}" class="control-textbox valid" type="text" value="${commonGetVal("原価")}" placeholder="原価" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                                 </div>
                             </div>
-                            <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icj + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${UPDATE_SUPPLIER + icj + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
 
                         <div class="field-normal">
                             <p class="field-label">
-                                <label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icu}">原価＄</label>
+                                <label for="${UPDATE_SUPPLIER + icu}">原価＄</label>
                             </p>
                             <div class="field-control">
                                 <div class="container-normal">
-                                    <input id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icu}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icu}" class="control-textbox valid" type="text" value="${commonGetVal("原価＄")}" placeholder="原価＄" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                                    <input id="${UPDATE_SUPPLIER + icu}" name="${UPDATE_SUPPLIER + icu}" class="control-textbox valid" type="text" value="${commonGetVal("原価＄")}" placeholder="原価＄" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                                 </div>
                             </div>
-                            <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + icu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${UPDATE_SUPPLIER + icu + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
+                    </div>
 
-                        <div class="field-normal ${sb}">
-                            <p class="field-label"><label for="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sb}">枝番</label></p>
-                            <div class="field-control">
-                                <div class="container-normal">
-                                    <select id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sb}" name="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sb}" class="control-dropdown">
-                                    </select>
-                                    <p id="${patterns[patterns.indexOf(UPDATE_SUPPLIER)] + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
-                                </div>
+                    <div class="field-normal ${sb}">
+                        <p class="field-label"><label for="${UPDATE_SUPPLIER + sb}">枝番</label></p>
+                        <div class="field-control">
+                            <div class="container-normal">
+                                <select id="${UPDATE_SUPPLIER + sb}" name="${UPDATE_SUPPLIER + sb}" class="control-dropdown">
+                                </select>
+                                <p id="${UPDATE_SUPPLIER + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                             </div>
                         </div>
                     </div>
@@ -268,7 +268,7 @@ $p.events.on_editor_load_arr.push(async function () {
                 </div>
             </div>
 
-            <div id="${patterns[patterns.indexOf(SPLIT_UNIT)]}Area" class="${ap}">
+            <div id="${SPLIT_UNIT}Area" class="${ap}">
                 <p style="text-align: center;">
                     分割する合計量が1以上の${atLoadVolume}以下になるように入力してください。<br>
                 </p>
@@ -278,40 +278,40 @@ $p.events.on_editor_load_arr.push(async function () {
                         <button id="plusIcon" class="button button-icon ui-button ui-corner-all ui-widget" onClick="addSplitUnit();">
                             <span class="ui-button-icon ui-icon ui-icon-circle-plus"></span>
                         </button>
-                        <label for="${patterns[patterns.indexOf(SPLIT_UNIT)] + sc}">通貨区分</label>
+                        <label for="${SPLIT_UNIT + sc}">通貨区分</label>
                     </p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(SPLIT_UNIT)] + sc}" name="${patterns[patterns.indexOf(SPLIT_UNIT)] + sc}" class="control-dropdown" onchange="displayControlCurrency('${patterns[patterns.indexOf(SPLIT_UNIT)]}')">
+                            <select id="${SPLIT_UNIT + sc}" name="${SPLIT_UNIT + sc}" class="control-dropdown" onchange="displayControlCurrency('${SPLIT_UNIT}')">
                                 <option value="${WIKI_CURRENCY_CLASS.JPY.name}">${WIKI_CURRENCY_CLASS.JPY.name}</option>
                                 <option value="${WIKI_CURRENCY_CLASS.USD.name}">${WIKI_CURRENCY_CLASS.USD.name}</option>
                             </select>
-                            <p id="${patterns[patterns.indexOf(SPLIT_UNIT)] + sc + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${SPLIT_UNIT + sc + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
 
-                <div id="${patterns[patterns.indexOf(SPLIT_UNIT)] + irp}" class="field-normal">
+                <div id="${SPLIT_UNIT + irp}" class="field-normal">
                     <p class="field-label">
-                        <label for="${patterns[patterns.indexOf(SPLIT_UNIT)] + ir}">レート</label>
+                        <label for="${SPLIT_UNIT + ir}">レート</label>
                     </p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <input id="${patterns[patterns.indexOf(SPLIT_UNIT)] + ir}" name="${patterns[patterns.indexOf(SPLIT_UNIT)] + ir}" class="control-textbox valid" type="text" value="${commonGetVal("レート")}" placeholder="レート" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                            <input id="${SPLIT_UNIT + ir}" name="${SPLIT_UNIT + ir}" class="control-textbox valid" type="text" value="${commonGetVal("レート")}" placeholder="レート" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                         </div>
                     </div>
-                    <p id="${patterns[patterns.indexOf(SPLIT_UNIT)] + ir + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                    <p id="${SPLIT_UNIT + ir + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                 </div>
 
                 <div id="${asu}"></div>
 
                 <div class="field-normal ${sb}">
-                    <p class="field-label"><label for="${patterns[patterns.indexOf(SPLIT_UNIT)] + sb}">枝番</label></p>
+                    <p class="field-label"><label for="${SPLIT_UNIT + sb}">枝番</label></p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(SPLIT_UNIT)] + sb}" name="${patterns[patterns.indexOf(SPLIT_UNIT)] + sb}" class="control-dropdown">
+                            <select id="${SPLIT_UNIT + sb}" name="${SPLIT_UNIT + sb}" class="control-dropdown">
                             </select>
-                            <p id="${patterns[patterns.indexOf(SPLIT_UNIT)] + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${SPLIT_UNIT + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -321,7 +321,7 @@ $p.events.on_editor_load_arr.push(async function () {
                     <button class="button button-icon ui-button ui-corner-all ui-widget applied" type="button" onclick="$p.closeDialog($(this));" data-icon="ui-icon-cancel"><span class="ui-button-icon ui-icon ui-icon-cancel"></span><span class="ui-button-icon-space"> </span>戻る</button>
                 </div>
             </div>
-            <div id="${patterns[patterns.indexOf(SPLIT_COST)]}Area" class="${ap}">
+            <div id="${SPLIT_COST}Area" class="${ap}">
                 <p style="text-align: center;">
                     分割する合計量が1以上の${atLoadVolume}以下になるように入力してください。<br>
                 </p>
@@ -331,40 +331,40 @@ $p.events.on_editor_load_arr.push(async function () {
                         <button id="plusIcon" class="button button-icon ui-button ui-corner-all ui-widget" onClick="addSplitCost();">
                             <span class="ui-button-icon ui-icon ui-icon-circle-plus"></span>
                         </button>
-                        <label for="${patterns[patterns.indexOf(SPLIT_COST)] + sc}">仕入先通貨区分</label>
+                        <label for="${SPLIT_COST + sc}">仕入先通貨区分</label>
                     </p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(SPLIT_COST)] + sc}" name="${patterns[patterns.indexOf(SPLIT_COST)] + sc}" class="control-dropdown" onchange="displayControlCurrency('${patterns[patterns.indexOf(SPLIT_COST)]}')">
+                            <select id="${SPLIT_COST + sc}" name="${SPLIT_COST + sc}" class="control-dropdown" onchange="displayControlCurrency('${SPLIT_COST}')">
                                 <option value="${WIKI_CURRENCY_CLASS.JPY.name}">${WIKI_CURRENCY_CLASS.JPY.name}</option>
                                 <option value="${WIKI_CURRENCY_CLASS.USD.name}">${WIKI_CURRENCY_CLASS.USD.name}</option>
                             </select>
-                            <p id="${patterns[patterns.indexOf(SPLIT_COST)] + sc + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${SPLIT_COST + sc + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
 
-                <div id="${patterns[patterns.indexOf(SPLIT_COST)] + irp}" class="field-normal">
+                <div id="${SPLIT_COST + irp}" class="field-normal">
                     <p class="field-label">
-                        <label for="${patterns[patterns.indexOf(SPLIT_COST)] + ir}">原価レート</label>
+                        <label for="${SPLIT_COST + ir}">原価レート</label>
                     </p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <input id="${patterns[patterns.indexOf(SPLIT_COST)] + ir}" name="${patterns[patterns.indexOf(SPLIT_COST)] + ir}" class="control-textbox valid" type="text" value="${commonGetVal("原価レート")}" placeholder="原価レート" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
+                            <input id="${SPLIT_COST + ir}" name="${SPLIT_COST + ir}" class="control-textbox valid" type="text" value="${commonGetVal("原価レート")}" placeholder="原価レート" data-validate-number="1" data-validate-min-number="0" data-validate-max-number="999999999">
                         </div>
                     </div>
-                    <p id="${patterns[patterns.indexOf(SPLIT_COST)] + ir + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                    <p id="${SPLIT_COST + ir + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                 </div>
 
                 <div id="${asc}"></div>
 
                 <div class="field-normal ${sb}">
-                    <p class="field-label"><label for="${patterns[patterns.indexOf(SPLIT_COST)] + sb}">枝番</label></p>
+                    <p class="field-label"><label for="${SPLIT_COST + sb}">枝番</label></p>
                     <div class="field-control">
                         <div class="container-normal">
-                            <select id="${patterns[patterns.indexOf(SPLIT_COST)] + sb}" name="${patterns[patterns.indexOf(SPLIT_COST)] + sb}" class="control-dropdown">
+                            <select id="${SPLIT_COST + sb}" name="${SPLIT_COST + sb}" class="control-dropdown">
                             </select>
-                            <p id="${patterns[patterns.indexOf(SPLIT_COST)] + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
+                            <p id="${SPLIT_COST + sb + cm}" style="color: red; font-weight: bold; visibility: hidden;">必須項目です</p>
                         </div>
                     </div>
                 </div>
@@ -384,13 +384,13 @@ $p.events.on_editor_load_arr.push(async function () {
         Array.from(document.getElementsByClassName(ap)).forEach(w => w.hidden = true)
         document.getElementById(v + 'Area').hidden = false
     }))
-    document.getElementById(patterns[patterns.indexOf(UPDATE_MODEL)]).click()
+    document.getElementById(UPDATE_MODEL).click()
 
-    displayControlNewModel(patterns[patterns.indexOf(UPDATE_MODEL)])
-    displayControlNewModel(patterns[patterns.indexOf(UPDATE_SUPPLIER)])
+    displayControlNewModel(UPDATE_MODEL)
+    displayControlNewModel(UPDATE_SUPPLIER)
 
-    displayControlCurrency(patterns[patterns.indexOf(SPLIT_UNIT)], commonGetVal('通貨区分'))
-    displayControlCurrency(patterns[patterns.indexOf(SPLIT_COST)], commonGetVal('通貨区分'))
+    displayControlCurrency(SPLIT_UNIT, commonGetVal('通貨区分'))
+    displayControlCurrency(SPLIT_COST, commonGetVal('通貨区分'))
 
     addSplitUnit()
     addSplitCost()
@@ -399,21 +399,22 @@ $p.events.on_editor_load_arr.push(async function () {
     let orderStatus = commonGetVal('注文ステータス', true)
     // 注文区分：他社製品
     if (orderClass == WIKI_ORDER_CLASS.other_company_product.name) {
-        await setSuppOptions(patterns[patterns.indexOf(UPDATE_SUPPLIER)])
+        await setSuppOptions(UPDATE_SUPPLIER)
+        await setModelOptions(commonGetVal('仕入先', true), UPDATE_MODEL, "(新規作成)")
         if (orderStatus >= WIKI_STATUS_ORDER_CONTROL.checkingDelivery.index) {
             // 仕入先注文書発行後（他社製品かつ納期確認中以降）のときは枝番を有効にする
             neccesaryBranchFlag = true
-            await setBranchOptions(commonGetVal('仕入先', true), patterns[patterns.indexOf(SPLIT_UNIT)], "(新規作成)")
-            await setBranchOptions(commonGetVal('仕入先', true), patterns[patterns.indexOf(SPLIT_COST)], "(新規作成)")
+            await setBranchOptions(commonGetVal('仕入先', true), SPLIT_UNIT, "(新規作成)")
+            await setBranchOptions(commonGetVal('仕入先', true), SPLIT_COST, "(新規作成)")
         }
     // 注文区分：自社製品
     } else {
-        document.getElementById(patterns[patterns.indexOf(UPDATE_SUPPLIER)] + "Radio").hidden = true
-        document.getElementById(patterns[patterns.indexOf(SPLIT_COST)] + "Radio").hidden = true
+        await setModelOptions("", UPDATE_MODEL, "(新規作成)")
+        document.getElementById(UPDATE_SUPPLIER + "Radio").hidden = true
+        document.getElementById(SPLIT_COST + "Radio").hidden = true
     }
     Array.from(document.getElementsByClassName(sb)).map(v => v.hidden = !neccesaryBranchFlag)
 
-    await setModelOptions(commonGetVal('仕入先', true), patterns[patterns.indexOf(UPDATE_MODEL)], "(新規作成)")
 })
 
 function openPatternDialog() {
@@ -429,7 +430,7 @@ function addSplitUnit() {
     splitUnitIndex++
     splitUnitIndexList.push(splitUnitIndex)
     div.id = asu + splitUnitIndex
-    let pattern = patterns[patterns.indexOf(SPLIT_UNIT)]
+    let pattern = SPLIT_UNIT
     div.innerHTML =
     `
         <div class="field-normal both" >
@@ -487,7 +488,7 @@ function addSplitCost() {
     splitCostIndex++
     splitCostIndexList.push(splitCostIndex)
     div.id = asc + splitCostIndex
-    let pattern = patterns[patterns.indexOf(SPLIT_COST)]
+    let pattern = SPLIT_COST
     div.innerHTML =
     `
         <div class="field-normal both" >
@@ -595,11 +596,12 @@ async function setModelOptions(supplierId, pattern, topLabel = "") {
     let target = document.getElementById(pattern + sm)
     // ID 、型番
     let productItems = ['ResultId', 'ClassB']
+    // 仕入先があれば会社名で絞り、なければメーカー区分が自社で絞る
+    let filter = supplierId == "" ? {"ClassA": `["自社"]`} : {"ClassH": `["${supplierId}"]`}
     let productRecords = await commonExportAjax(
         TABLE_ID_PRODUCT_INFO
         , productItems
-        // 会社名で絞る
-		, {"ClassH": `["${supplierId}"]`}
+		, filter
 		, false
 		, false
     )
@@ -674,14 +676,14 @@ async function setBranchOptions(supplierId, pattern, topLabel = '') {
         .filter(v => v[bookItems.indexOf('ClassG')] == commonGetVal('MiS番号'))
 
     let curr = ""
-    if (pattern == patterns[patterns.indexOf(SPLIT_UNIT)]) {
+    if (pattern == SPLIT_UNIT) {
         curr = $('#' + pattern + sc).val()
         if (commonIsNull(books)) {
             splitUnitBranchMaxNo = 0
         } else {
             splitUnitBranchMaxNo = Math.max.apply(null ,books.map(v => +v[bookItems.indexOf('ClassA')].split("-")[3]))
         }
-    } else if (pattern == patterns[patterns.indexOf(UPDATE_SUPPLIER)]) {
+    } else if (pattern == UPDATE_SUPPLIER) {
         curr = commonGetVal("通貨区分")
         if (commonIsNull(books)) {
             supplierBranchMaxNo = 0
@@ -712,14 +714,30 @@ async function setBranchOptions(supplierId, pattern, topLabel = '') {
 
 //パターン１
 async function updateModel() {
-    let pattern = patterns[patterns.indexOf(UPDATE_MODEL)]
+    let pattern = UPDATE_MODEL
     let modelId = +document.getElementById(pattern + sm).value
+
+    let valueJpy = commonConvertCTo1($('#' + pattern + icj).val())
+    let valueUsd = commonConvertCTo1($('#' + pattern + icu).val())
+
+    if (modelId == NEW) {
+        // 原価、原価ドルに異常値が選択されたとき
+        if (isNaN(valueJpy) || valueJpy < 0 || isNaN(valueUsd) || valueUsd < 0) {
+            $p.closeDialog($('#' + pdid))
+            commonSetMessage(`原価に異常値が入力されています。`, WARNING)
+            return false
+        }
+    }
+
     // 型番に空が選択されたとき
     if (isNaN(modelId) || modelId == 0) {
         $p.closeDialog($('#' + pdid))
         commonSetMessage(`型番を選択してください。`, WARNING)
         return false
     }
+
+    $p.closeDialog($('#' + pdid))
+    commonSetMessage("型番変更中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
 
     let classHash = {}
     let numHash = {}
@@ -730,8 +748,8 @@ async function updateModel() {
             return false
         }
         classHash[$p.getColumnName("数量単位(日)")] = $('#' + pattern + svu).val()
-        numHash[$p.getColumnName("原価")] = +$('#' + pattern + icj).val()
-        numHash[$p.getColumnName("原価＄")] = +$('#' + pattern + icu).val()
+        numHash[$p.getColumnName("原価")] = valueJpy
+        numHash[$p.getColumnName("原価＄")] = valueUsd
     }
     classHash[$p.getColumnName("型番")] = modelId
 
@@ -741,7 +759,6 @@ async function updateModel() {
         , classHash
         , numHash
     )
-    $p.closeDialog($('#' + pdid))
     let finalAns = window.confirm('型番の更新が完了しました。画面をリロードしますがよろしいでしょうか?')
     if (finalAns) {
         // キャッシュからリロード
@@ -751,10 +768,22 @@ async function updateModel() {
 
 //パターン２
 async function updateSupplier() {
-    let pattern = patterns[patterns.indexOf(UPDATE_SUPPLIER)]
+    let pattern = UPDATE_SUPPLIER
     let suppId = +document.getElementById(pattern + ss).value
     let modelId = +document.getElementById(pattern + sm).value
     let supplierOrderBookId = +document.getElementById(pattern + sb).value
+
+    let valueJpy = commonConvertCTo1($('#' + pattern + icj).val())
+    let valueUsd = commonConvertCTo1($('#' + pattern + icu).val())
+
+    if (modelId == NEW) {
+        // 原価、原価ドルに異常値が選択されたとき
+        if (isNaN(valueJpy) || valueJpy < 0 || isNaN(valueUsd) || valueUsd < 0) {
+            $p.closeDialog($('#' + pdid))
+            commonSetMessage(`原価に異常値が入力されています。`, WARNING)
+            return false
+        }
+    }
 
     // 仕入先に空が選択されたとき
     if (isNaN(suppId) || suppId == 0) {
@@ -781,6 +810,9 @@ async function updateSupplier() {
         }
     }
 
+    $p.closeDialog($('#' + pdid))
+    commonSetMessage("仕入先変更中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
+
     if (modelId == NEW) {
         // 型番を作成
         modelId = await createModel(suppId, pattern)
@@ -788,8 +820,8 @@ async function updateSupplier() {
             return false
         }
         classHash[$p.getColumnName("数量単位(日)")] = $('#' + pattern + svu).val()
-        numHash[$p.getColumnName("原価")] = +$('#' + pattern + icj).val()
-        numHash[$p.getColumnName("原価＄")] = +$('#' + pattern + icu).val()
+        numHash[$p.getColumnName("原価")] = valueJpy
+        numHash[$p.getColumnName("原価＄")] = valueUsd
     }
     if (neccesaryBranchFlag) {
         if (supplierOrderBookId == NEW) {
@@ -818,7 +850,7 @@ async function updateSupplier() {
     }
 }
 
-//パターン３
+//パターン３　＆　パターン４
 async function createSplit(pattern) {
     let supplierOrderBookId = +document.getElementById(pattern + sb).value
     let rate = $('#' + pattern + ir).val()
@@ -873,35 +905,19 @@ async function createSplit(pattern) {
         return false
     }
 
-    // 枝番チェック
-    if (neccesaryBranchFlag) {
-        if (isNaN(supplierOrderBookId) || supplierOrderBookId == 0) {
-            $p.closeDialog($('#' + pdid))
-            commonSetMessage(`枝番を選択してください。`, WARNING)
-            return false
-        } else if (supplierOrderBookId == NEW) {
-            // 最新の枝番を作成
-            supplierOrderBookId = await createBranch(commonGetVal("仕入先", true), splitUnitBranchMaxNo + 1, currencyValue)
-            if (!supplierOrderBookId) {
-                return false
-            }
-        }
-    }
-
-
     //単価、数量チェック
     let sum = 0
     for (let index of list) {
-        let cnt = +$('#' + pattern + iv + index).val()
-        let val = +$('#' + pattern + currencyId + index).val()
+        let cnt = commonConvertCTo1($('#' + pattern + iv + index).val())
+        let val = commonConvertCTo1($('#' + pattern + currencyId + index).val())
         if (isNaN(atLoadVolume) || isNaN(cnt) || cnt > atLoadVolume || cnt < 1) {
             $p.closeDialog($('#' + pdid))
             commonSetMessage(`入力数量が異常です。分割する量は1以上の${atLoadVolume}以下の整数を入力してください。`, WARNING)
             return false
         }
-        if (isNaN(atLoadVolume) || isNaN(val) ||val < 1) {
+        if (isNaN(atLoadVolume) || isNaN(val) ||val <= 0) {
             $p.closeDialog($('#' + pdid))
-            commonSetMessage(`入力単価が異常です。`, WARNING)
+            commonSetMessage(`単価または原価は0より大きい値で入力してください。`, WARNING)
             return false
         }
         sum = sum + cnt
@@ -912,10 +928,32 @@ async function createSplit(pattern) {
         return false
     }
 
+    // 枝番チェック
+    if (neccesaryBranchFlag) {
+        if (isNaN(supplierOrderBookId) || supplierOrderBookId == 0) {
+            $p.closeDialog($('#' + pdid))
+            commonSetMessage(`枝番を選択してください。`, WARNING)
+            return false
+        }
+    }
+
+    $p.closeDialog($('#' + pdid))
+    commonSetMessage("数量分割中のため、ブラウザを閉じないようにお願い致します。", WARNING, true)
+
+    if (neccesaryBranchFlag) {
+        if (supplierOrderBookId == NEW) {
+            // 最新の枝番を作成
+            supplierOrderBookId = await createBranch(commonGetVal("仕入先", true), splitUnitBranchMaxNo + 1, currencyValue)
+            if (!supplierOrderBookId) {
+                return false
+            }
+        }
+    }
+
     let sumVolume = 0
     for (let index of list) {
-        let splitVolume = +$('#' + pattern + iv + index).val()
-        let splitValue = +$('#' + pattern + currencyId + index).val()
+        let splitVolume = commonConvertCTo1($('#' + pattern + iv + index).val())
+        let splitValue = commonConvertCTo1($('#' + pattern + currencyId + index).val())
 
         sumVolume = sumVolume + splitVolume
         // 仕入先注文書台帳の更新のみ
@@ -974,8 +1012,8 @@ async function createSplit(pattern) {
                 if (currencyValue == WIKI_CURRENCY_CLASS.JPY.value) {
                     itemHash[$p.getColumnName("単価")] = splitValue
                 } else {
-                    numHash[$p.getColumnName("単価")] = splitValue * rate
-                    numHash[$p.getColumnName("単価＄")] = splitValue
+                    itemHash[$p.getColumnName("単価")] = splitValue * rate
+                    itemHash[$p.getColumnName("単価＄")] = splitValue
                 }
                 itemHash[$p.getColumnName("通貨区分")] = currencyValue
                 itemHash[$p.getColumnName("税率")] = taxRate
@@ -1094,8 +1132,8 @@ async function createModel(suppId, pattern) {
         "ClassF": $('#' + pattern + sin).val(),     //15.品名
         "ClassH": suppId,                           //15.仕入先
         "ClassJ": $('#' + pattern + svu).val(),     //15.数量単位
-        "NumA": +$('#' + pattern + icj).val(),       //15.原価
-        "NumC": +$('#' + pattern + icu).val(),       //15.原価＄
+        "NumA": commonConvertCTo1($('#' + pattern + icj).val()),       //15.原価
+        "NumC": commonConvertCTo1($('#' + pattern + icu).val()),       //15.原価＄
     }
 
     try {

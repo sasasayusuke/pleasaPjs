@@ -41,23 +41,23 @@
   // 会社区分
   var WIKI_COMPANY_CLASS = {
     MSI: {
-      index: 64134,
+      index: 76366,
       name: "自社",
     },
     AGENCY: {
-      index: 64135,
+      index: 76365,
       name: "代理店",
     },
     CUSTOMER_VIA_AGENCY: {
-      index: 64136,
+      index: 76364,
       name: "顧客（代理店経由）",
     },
     CUSTOMER_DIRECT: {
-      index: 64137,
+      index: 76363,
       name: "顧客（直販）",
     },
     SUPPLIER: {
-      index: 64138,
+      index: 76362,
       name: "仕入先",
     }
   }

@@ -200,7 +200,7 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
             getCell("AE" + rowNumber, worksheet).value   = record[MODEL_NO] //　型番
             getCell("AM" + rowNumber, worksheet).value  = record[VOLUME] //　数量
             getCell("AQ" + rowNumber, worksheet).value  = record[UNIT_PRICE] //　単価
-            getCell("AU" + rowNumber, worksheet).value  = record[PRICE] //　金額
+            getCell("AU" + rowNumber, worksheet).value  = record[SUB_TOTAL] //　金額
             getCell("AZ" + rowNumber, worksheet).value  = record[COMMISSION] //　コミッション率
             getCell("BF" + rowNumber, worksheet).value  = record[CUSTOMER_CH_NO] //　客先注文番号
             getCell("BL" + rowNumber, worksheet).value  = record[CUSTOMER_LIMIT] //　顧客希望納期

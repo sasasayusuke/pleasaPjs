@@ -342,10 +342,10 @@ async function downloadClaimExcel(foreignFlg) {
         for (let record of selectedData.display) {
             getCell("B" + rowNumber, worksheet).value = record[CUSTOMER_CH_NO]
             getCell("F" + rowNumber, worksheet).value = record[MODEL_NO]
-                getCell("N" + rowNumber, worksheet).value = record[VOLUME]
-                getCell("P" + rowNumber, worksheet).value = record[MEASURE]
+            getCell("N" + rowNumber, worksheet).value = record[VOLUME]
+            getCell("P" + rowNumber, worksheet).value = record[MEASURE]
             getCell("R" + rowNumber, worksheet).value = record[UNIT_PRICE]
-                getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
+            getCell("V" + rowNumber, worksheet).value = record[SUB_TOTAL]
             rowNumber = rowNumber + 1
         }
 

@@ -21,6 +21,7 @@ $p.events.on_editor_load_arr.push(function () {
 		"注文ステータス"
 		, Object.keys(WIKI_STATUS_ORDER_CONTROL).map(v => WIKI_STATUS_ORDER_CONTROL[v])
 	)
+	commonAddButton('patternButton', openPatternDialog, '型番・仕入先・数量変更')
 	atLoadVolume = commonConvertCTo1(commonGetVal("数量"))
     atLoadCostJpy = commonConvertCTo1(commonGetVal("原価"))
     atLoadCostUsd = commonConvertCTo1(commonGetVal("原価＄"))

@@ -1,4 +1,4 @@
-var version = 6
+var version = 7
 var api_version = 1.1
 
 var NORMAL  = 100
@@ -15,19 +15,19 @@ var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
  */
 var TABLE = [
   //【01】見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 75298
+  , TABLE_ID_ESTIMATION_BOOK                = 75950
   //【02】注文入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 75302
+  , TABLE_ID_ORDER_INPUT_FORM               = 75948
   //【03】注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 75301
+  , TABLE_ID_ORDER_CONTROL_BOOK             = 75949
   //【04】先行依頼書台帳
-  , TABLE_ID_REQUEST_BOOK                   = 75296
+  , TABLE_ID_REQUEST_BOOK                   = 75945
   //【05】請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 75299
+  , TABLE_ID_CLAIM_BOOK                     = 75951
   //【06】インボイス番号台帳
-  , TABLE_ID_INVOICE_NO                     = 75297
+  , TABLE_ID_INVOICE_NO                     = 75946
   //【07】仕入先注文書台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 75300
+  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 75947
   //【11】国番号
   , TABLE_ID_COUNTRY_NO                     = 64122
   //【12】会社区分
@@ -468,6 +468,7 @@ function commonConvertAto1(str) {
  * 例. "1,500"  ⇒ 1500
  */
 function commonConvertCTo1(str) {
+  str = commonIsNull(str) ? "0" : String(str)
   return +str.replace(',', '')
 }
 
@@ -702,16 +703,20 @@ function commonSetVal (label, value) {
  * @param {Function}  addFunc 最後に実行したい関数
  */
 async function commonGetData(culumns, filters, valueFlg = true, id = $p.siteId(), addFunc) {
-  if (commonIsNull(filters)) {
-      filters = {}
+  let sorts = {
+    "ResultId":"asc"
   }
-  return $p.apiGet({
+  if (commonIsNull(filters)) {
+    filters = {}
+  }
+return $p.apiGet({
       'id': id,
       'data': {
           'View': {
               'ApiDataType': "KeyValues",
               'ApiColumnValueDisplayType': valueFlg ?  "Value" : "DisplayValue",
               'GridColumns': culumns,
+              'ColumnSorterHash': sorts,
               'ColumnFilterHash': filters,
           }
       },
