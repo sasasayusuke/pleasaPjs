@@ -176,35 +176,36 @@ async function downloadRequestExcel(finishFlg = true, printFlg = true) {
         let misNo = rec.Response.Data[0]["MiS番号"]
 
         getCell("B24", worksheet).value = $('#' + requestMemo1).val() // MEMO1
-        getCell("AZ24", worksheet).value = $('#' + requestMemo2).val() // MEMO2
+        getCell("AT24", worksheet).value = $('#' + requestMemo2).val() // MEMO2
         getCell("H3", worksheet).value  = selectedData.display[0][CUSTOMER] //顧客名
         getCell("H4", worksheet).value  = selectedData.display[0][OFFICE] //事業所名
         getCell("H5", worksheet).value  = selectedData.display[0][ENDUSER] //エンドユーザ
         getCell("H6", worksheet).value  = selectedData.display[0][AGENT] //代理店
-        getCell("CF5", worksheet).value = misNo //MiS番号
-        getCell("CF4", worksheet).value = formatYYYYMMDD(new Date()) //作成日
+        getCell("CJ5", worksheet).value = misNo //MiS番号
+        getCell("CJ4", worksheet).value = formatYYYYMMDD(new Date()) //作成日
 
         let rowNumber = 9
         for (let record of selectedData.display) {
             getCell("B" + rowNumber, worksheet).value   = record[SALES_MANAGER] //　営業担当者
-            getCell("H" + rowNumber, worksheet).value   = record[CH_NO] //　注文管理番号
+            getCell("G" + rowNumber, worksheet).value   = record[CH_NO] //　注文管理番号
             if (!commonIsNull(record[DESTINATION])) {
                 if (record[DESTINATION].indexOf("国内") == 0) {
-                    getCell("P" + rowNumber, worksheet).value   = record[DELIVERY_OFFICE] // 納品先事業所
+                    getCell("M" + rowNumber, worksheet).value   = record[DELIVERY_OFFICE] // 納品先事業所
                 } else if (record[DESTINATION].indexOf("海外") == 0) {
-                    getCell("P" + rowNumber, worksheet).value   = record[SHIP_TO_COUNTRY] // 送り先国名
+                    getCell("M" + rowNumber, worksheet).value   = record[SHIP_TO_COUNTRY] // 送り先国名
                 }
             }
-            getCell("U" + rowNumber, worksheet).value   = record[SUPPLIER] //　仕入先
-            getCell("Z" + rowNumber, worksheet).value   = record["品名"] //　品名
-            getCell("AE" + rowNumber, worksheet).value   = record[MODEL_NO] //　型番
-            getCell("AM" + rowNumber, worksheet).value  = record[VOLUME] //　数量
-            getCell("AQ" + rowNumber, worksheet).value  = record[UNIT_PRICE] //　単価
-            getCell("AU" + rowNumber, worksheet).value  = record[SUB_TOTAL] //　金額
-            getCell("AZ" + rowNumber, worksheet).value  = record[COMMISSION] //　コミッション率
-            getCell("BF" + rowNumber, worksheet).value  = record[CUSTOMER_CH_NO] //　客先注文番号
-            getCell("BL" + rowNumber, worksheet).value  = record[CUSTOMER_LIMIT] //　顧客希望納期
-            getCell("BP" + rowNumber, worksheet).value  = record[REQUEST_REMARK] //　先行依頼備考
+            getCell("R" + rowNumber, worksheet).value   = record["品名"] //　品名
+            getCell("V" + rowNumber, worksheet).value   = record[MODEL_NO] //　型番
+            getCell("AH" + rowNumber, worksheet).value  = record[VOLUME] //　数量
+            getCell("AM" + rowNumber, worksheet).value  = record[MEASURE] //　単位
+            getCell("AO" + rowNumber, worksheet).value  = record[UNIT_PRICE] //　単価
+            getCell("AT" + rowNumber, worksheet).value  = record[SUB_TOTAL] //　金額
+            getCell("AY" + rowNumber, worksheet).value  = record[COMMISSION] //　コミッション率
+            getCell("BC" + rowNumber, worksheet).value  = record[CUSTOMER_CH_NO] //　客先注文番号
+            getCell("BI" + rowNumber, worksheet).value  = record[CUSTOMER_LIMIT] //　顧客希望納期
+            getCell("BO" + rowNumber, worksheet).value  = record[SUPPLIER] //　仕入先
+            getCell("BT" + rowNumber, worksheet).value  = record[REQUEST_REMARK] //　先行依頼備考
             rowNumber++
         }
 
