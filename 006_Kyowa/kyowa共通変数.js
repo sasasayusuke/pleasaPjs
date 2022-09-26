@@ -1,66 +1,112 @@
-  var version = 3
+var version = 1
 
-  // 注文管理 ビュー
-  var VIEW_ORDER_CONTROL = {
-  sale: {
-      index: 1,
-      value: "営業担当者用",
-  }
-  , development: {
-      index: 2,
-      value: "開発担当者用",
-  }
-  , destination: {
-      index: 3,
-      value: "DestitationList用",
-  }
-}
+var SETTING_SHEET_NAME = "setting"
+var TEMPLATE_SHEET_NAME = "template"
 
-  // 注文区分
-  var WIKI_ORDER_CLASS = {
-    existing_product: {
-      index: 0,
-      name: "自社既存品",
-    },
-    new_product: {
-      index: 1,
-      name: "自社新規開発品",
-    },
-    other_company_product: {
-      index: 2,
-      name: "他社製品",
-    }
-  }
-  function convertOrderClassNameToIndex(name) {
-    for (let v of Object.keys(WIKI_ORDER_CLASS)) {
-        if (WIKI_ORDER_CLASS[v].name == name) {
-            return WIKI_ORDER_CLASS[v].index
-        }
-    }
-}
+var SERVER_URL = "https://kyowa-konpo.sdt-autolabo.com"
+
+/**
+ * テーブル情報
+ * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
+ *
+ */
+var TABLE = [
   // 会社区分
-  var WIKI_COMPANY_CLASS = {
-    MSI: {
-      index: 76366,
-      name: "自社",
-    },
-    AGENCY: {
-      index: 76365,
-      name: "代理店",
-    },
-    CUSTOMER_VIA_AGENCY: {
-      index: 76364,
-      name: "顧客（代理店経由）",
-    },
-    CUSTOMER_DIRECT: {
-      index: 76363,
-      name: "顧客（直販）",
-    },
-    SUPPLIER: {
-      index: 76362,
-      name: "仕入先",
-    }
+  , TABLE_ID_COMPANY_CLASS                  = 32
+  // 売上集計区分
+  , TABLE_ID_SALE_CLASS                     = 31
+  // 品名区分
+  , TABLE_ID_ITEM_CLASS                     = 33
+  // 会社マスタ
+  , TABLE_ID_COMPANY_MASTER                 = 34
+  // 工場マスタ
+  , TABLE_ID_FACTORY_MASTER                 = 30
+  // 品名マスタ
+  , TABLE_ID_ITEM_MASTER                    = 35
+  // 在庫管理
+  , TABLE_ID_STOCK                          = 36
+  // 計算書管理
+  , TABLE_ID_STATEMENT                      = 74
+  // 見積管理
+  , TABLE_ID_ESTIMATE                       = 75
+  // 売掛管理
+  , TABLE_ID_SELL_ORDER                     = 130
+  // 買掛管理
+  , TABLE_ID_BUY_ORDER                      = 129
+  // 製造管理
+  , TABLE_ID_MANUFACTURE                    = 117
+  // メッセージログ（commonSetMessageで使用）
+  , TABLE_ID_MESSAGE_LOG                    = 96
+  // エクセルフォーマット（downloadExcelで使用）
+  , TABLE_ID_EXCEL_FORMAT                   = 97
+]
+
+var FORMAT = [
+    // 見積書フォーマット
+    FORMAT_ID_ESTIMATION                    = "01"
+    // 先行依頼書フォーマット
+    , FORMAT_ID_REQUEST                     = "02"
+    // 請求書フォーマット
+    , FORMAT_ID_CLAIM                       = "04"
+    // 請求書フォーマット
+    , FORMAT_ID_STORAGE_CLAIM               = "05"
+    // 納品書フォーマット
+    , FORMAT_ID_DELIVERY                    = "06"
+    // 受領書注文フォーマット
+    , FORMAT_ID_RECEIPT                     = "07"
+    // 仕入先注文フォーマット
+    , FORMAT_ID_SUPPLIER                    = "08"
+    // DestinationListフォーマット
+    , FORMAT_ID_DISTINATION                 = "09"
+    // Invoiceフォーマット
+    , FORMAT_ID_INVOICE                     = "10"
+    // PackingListフォーマット
+    , FORMAT_ID_PACKING                     = "11"
+    // 海外用仕入先向け注文書(JPY)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_JPY        = "14"
+    // 海外用仕入先向け注文書(USD)フォーマット
+    , FORMAT_ID_SUPPLIER_FOREIGN_USD        = "15"
+]
+
+
+function convertNameToIndex(wiki, name) {
+  for (let v of Object.keys(wiki)) {
+      if (wiki[v].name == name) {
+          return wiki[v].index
+      }
   }
+}
+
+function convertIndexToName(wiki, index) {
+  for (let v of Object.keys(wiki)) {
+      if (wiki[v].index == index) {
+          return wiki[v].name
+      }
+  }
+}
+// 会社区分
+var WIKI_COMPANY_CLASS = {
+  KYOWA: {
+    index: 144,
+    name: "自社",
+  },
+  DELIVERY: {
+    index: 143,
+    name: "配送業者",
+  },
+  CONSIGNOR: {
+    index: 142,
+    name: "荷主",
+  },
+  SUPPLIER: {
+    index: 141,
+    name: "仕入先",
+  },
+  CUSTOMER: {
+    index: 140,
+    name: "顧客",
+  }
+}
 
   // 注文管理ステータス
   var WIKI_STATUS_ORDER_CONTROL = {

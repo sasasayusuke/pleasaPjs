@@ -6,49 +6,6 @@ var WARNING = 500
 var ERROR   = 900
 var NEW     = -100
 
-var SERVER_URL = "https://mis-tech.sdt-autolabo.com"
-
-/**
- * テーブル情報
- * サイト複製時には、新しく割り振れたテーブルIDを入力し直してください。
- *
- */
-var TABLE = [
-  //【01】見積台帳
-  , TABLE_ID_ESTIMATION_BOOK                = 81092
-  //【02】注文入力フォーム
-  , TABLE_ID_ORDER_INPUT_FORM               = 81095
-  //【03】注文管理台帳
-  , TABLE_ID_ORDER_CONTROL_BOOK             = 81093
-  //【04】先行依頼書台帳
-  , TABLE_ID_REQUEST_BOOK                   = 81091
-  //【05】請求書台帳
-  , TABLE_ID_CLAIM_BOOK                     = 81094
-  //【06】インボイス番号台帳
-  , TABLE_ID_INVOICE_NO                     = 81096
-  //【07】仕入先注文書台帳
-  , TABLE_ID_SUPPLIER_ORDER_BOOK            = 81081
-  //【11】国番号
-  , TABLE_ID_COUNTRY_NO                     = 81088
-  //【12】会社区分
-  , TABLE_ID_COMPANY_CLASS                  = 81083
-  //【13】会社
-  , TABLE_ID_COMPANY_INFO                   = 81086
-  //【14】事業所
-  , TABLE_ID_OFFICE_INFO                    = 81087
-  //【15】製品
-  , TABLE_ID_PRODUCT_INFO                   = 81084
-  //【16】エンドユーザ
-  , TABLE_ID_END_USER                       = 81089
-  //【17】コミッション率
-  , TABLE_ID_COMMISSION_RATE                = 81085
-  // メッセージログ（commonSetMessageで使用）
-  , TABLE_ID_MESSAGE_LOG                    = 57349
-  // エクセルフォーマット（downloadExcelで使用）
-  , TABLE_ID_EXCEL_FORMAT                   = 7
-]
-
-
 
 // 各画面ロード時に実行するメソッドを格納する
 $p.events.on_grid_load_arr = []
@@ -211,23 +168,23 @@ function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId',
 
 /**
  * 分類項目の値を選択したときの表示制御。
- * @param {String} className 分類項目
- * @param {Array} labels 表示制御項目
+ * @param {String} label 分類項目名
+ * @param {Array} displays 表示制御項目
  * @param {String} value 指定値
- * @param {String} value 指定値
- * @param {String} value 指定値
+ * @param {String} successFunc 成功時実行関数
+ * @param {String} failureFunc 失敗時実行関数
  *
  */
-function commonDisplayClass(className, labels, value, successFunc, failureFunc) {
+function commonDisplayClass(label, displays, value, successFunc, failureFunc) {
   let elems = []
-  if (Array.isArray(labels)) {
-    elems = labels
+  if (Array.isArray(displays)) {
+    elems = displays
   } else {
-    elems = [labels]
+    elems = [displays]
   }
 
   // 指定値を選択したとき
-  if (commonGetVal(className) == value) {
+  if (commonGetVal(label) == value) {
       // 表示化
       elems.forEach(v => commonHideElements(commonGetId(v, true, true), false))
       if (successFunc && typeof successFunc === 'function') {
@@ -624,6 +581,7 @@ function commonGetId (label, prefix = true, suffix = false) {
   let id = $p.getColumnName(label)
   if (commonIsNull(id)) {
     commonSetMessage('共通関数commonGetId：ラベル不正。', ERROR, true, label)
+    console.log(label)
   } else {
     id = prefix ? $p.tableName() + '_' + id : id
     id = suffix ? id + 'Field' : id
@@ -731,7 +689,6 @@ return $p.apiGet({
   })
 }
 
-c
 /**
  * 登録APIを呼び出す関数です。
  *
