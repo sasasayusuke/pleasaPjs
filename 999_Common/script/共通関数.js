@@ -1,11 +1,11 @@
 var api_version = 1.0
 
-var NEW         = -100
-var NORMAL      = 100
-var WARNING     = 500
-var CLOSE       = 900
-var PROCESSING  = 990
-var ERROR       = 999
+var NEW = -100
+var NORMAL = 100
+var WARNING = 500
+var CLOSE = 900
+var PROCESSING = 990
+var ERROR = 999
 
 var COLUMN_NAME = {}
 
@@ -25,85 +25,86 @@ $p.events.before_send_Update_arr = []
 
 // 格納したメソッドを実行するメソッド
 $p.events.on_grid_load = function () {
-  Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
-  console.log("start!! on_grid_load_arr!!!")
-  $p.events.on_grid_load_arr.forEach(func => {
-    console.log(func)
-    func()
-  })
+    Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
+    console.log("start!! on_grid_load_arr!!!")
+    $p.events.on_grid_load_arr.forEach(func => {
+        console.log(func)
+        func()
+    })
 }
 $p.events.on_editor_load = function () {
-  Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
-  console.log("start!! on_editor_load_arr!!!")
-  $p.events.on_editor_load_arr.forEach(func => {
-    console.log(func)
-    func()
-  })
+    Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
+    console.log("start!! on_editor_load_arr!!!")
+    $p.events.on_editor_load_arr.forEach(func => {
+        console.log(func)
+        func()
+    })
 }
 $p.events.before_send_Create = function () {
-  console.log("start!! before_send_Create_arr!!!")
-  // falseをreturnするまで繰り返す
-  return $p.events.before_send_Create_arr.every(func => {
-    console.log(func)
-    return func()
-  })
+    console.log("start!! before_send_Create_arr!!!")
+    // falseをreturnするまで繰り返す
+    return $p.events.before_send_Create_arr.every(func => {
+        console.log(func)
+        return func()
+    })
 }
 $p.events.before_send_Update = function () {
-  console.log("start!! before_send_Update_arr!!!")
-  // falseをreturnするまで繰り返す
-  return $p.events.before_send_Update_arr.every(func => {
-    console.log(func)
-    return func()
-  })
+    console.log("start!! before_send_Update_arr!!!")
+    // falseをreturnするまで繰り返す
+    return $p.events.before_send_Update_arr.every(func => {
+        console.log(func)
+        return func()
+    })
 }
 $p.events.on_grid_load_arr.push(function () {
-  try {
-    if (!Object.keys(TABLE_INFO).map(v => TABLE_INFO[v].index).includes($p.siteId())) {
-      commonMessage(ERROR, "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。")
+    try {
+        if (!Object.keys(TABLE_INFO).map(v => TABLE_INFO[v].index).includes($p.siteId())) {
+            commonMessage(ERROR, "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。")
+        }
+
+    } catch (err) {
+
+        console.log(err)
     }
-
-  } catch (err) {
-
-    console.log(err)
-  }
 })
 
 $p.events.on_editor_load_arr.push(function () {
-  try {
-    let style = `
-      <style>
-        .original-style-disabled {
-          width: 100%;
-          min-height: 30px;
-          display: block;
-          padding: 6px 4px 2px 4px;
-          color: #000;
-          background: #f5f5f5;
-          border: solid 1px #c0c0c0;
-          overflow: hidden;
-          border-radius: 5px;
-        }
-      </style>`
-    $('#Application').append(style)
-  } catch (err) {
+    try {
+        let style = `
+            <style>
+                .original-style-disabled {
+                    width: 100%;
+                    min-height: 30px;
+                    display: block;
+                    padding: 6px 4px 2px 4px;
+                    color: #000;
+                    background: #f5f5f5;
+                    border: solid 1px #c0c0c0;
+                    overflow: hidden;
+                    border-radius: 5px;
+                }
+            </style>`
+        $('#Application').append(style)
+    } catch (err) {
 
-    console.log(err)
-  }
+        console.log(err)
+    }
 })
+
 /**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
  *
  * @return {boolean} 判定結果
  */
-function commonIsNull (obj) {
-  if (Array.isArray(obj)) {
-    return obj.filter(v => String(v).trim() !== '').length == 0
-  } else if (typeof obj === 'object') {
-    return !obj || Object.keys(obj).length === 0 && obj.constructor === Object
-  } else {
-    return !obj && obj !== 0 || String(obj).trim() == ''
-  }
+function commonIsNull(obj) {
+    if (Array.isArray(obj)) {
+        return obj.filter(v => String(v).trim() !== '').length == 0
+    } else if (typeof obj === 'object') {
+        return !obj || Object.keys(obj).length === 0 && obj.constructor === Object
+    } else {
+        return !obj && obj !== 0 || String(obj).trim() == ''
+    }
 }
 
 /**
@@ -111,44 +112,44 @@ function commonIsNull (obj) {
  * @param {String} type 深刻度
  * @param {String} message メッセージ内容
  */
-function commonMessage (type = NORMAL, message = '') {
-  $p.clearMessage()
+function commonMessage(type = NORMAL, message = '') {
+    $p.clearMessage()
 
-  switch (type) {
-    case NORMAL:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-success',
-          Text: message
-        })
-      )
-      break
-    case WARNING:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-warning',
-          Text: message
-        })
-      )
-      break
-    case ERROR:
-      $p.setMessage(
-        '#Message',
-        JSON.stringify({
-          Css: 'alert-error',
-          Text: message
-        })
-      )
-      error_messages.push(message)
-      break
-    default:
-      commonLogging(`メッセージタイプが不正な値です。${message}`, "error")
-      throw new Error(message)
+    switch (type) {
+        case NORMAL:
+            $p.setMessage(
+                '#Message',
+                JSON.stringify({
+                    Css: 'alert-success',
+                    Text: message
+                })
+            )
+            break
+        case WARNING:
+            $p.setMessage(
+                '#Message',
+                JSON.stringify({
+                    Css: 'alert-warning',
+                    Text: message
+                })
+            )
+            break
+        case ERROR:
+            $p.setMessage(
+                '#Message',
+                JSON.stringify({
+                    Css: 'alert-error',
+                    Text: message
+                })
+            )
+            error_messages.push(message)
+            break
+        default:
+            commonLogging(`メッセージタイプが不正な値です。${message}`, "error")
+            throw new Error(message)
 
-      break
-  }
+            break
+    }
 }
 
 /**
@@ -160,57 +161,57 @@ function commonMessage (type = NORMAL, message = '') {
  * @param {boolean} set         ブラウザメッセージを出す
  * @param {String} description  詳細内容
  */
-async function commonSetMessage (message = '', type = NORMAL, leave = false, set = true, description = "") {
-  $p.clearMessage()
+async function commonSetMessage(message = '', type = NORMAL, leave = false, set = true, description = "") {
+    $p.clearMessage()
 
-  if (set) {
-    switch (type) {
-      case NORMAL:
-        $p.setMessage(
-          '#Message',
-          JSON.stringify({
-            Css: 'alert-success',
-            Text: message
-          })
-        )
-        break
-      case WARNING:
-        $p.setMessage(
-          '#Message',
-          JSON.stringify({
-            Css: 'alert-warning',
-            Text: message
-          })
-        )
-        break
-      case ERROR:
-        $p.setMessage(
-          '#Message',
-          JSON.stringify({
-            Css: 'alert-error',
-            Text: message
-          })
-        )
-        break
-      default:
-        commonSetMessage(`メッセージタイプが不正な値です。`, ERROR, true, true, type)
-        break
+    if (set) {
+        switch (type) {
+            case NORMAL:
+                $p.setMessage(
+                    '#Message',
+                    JSON.stringify({
+                        Css: 'alert-success',
+                        Text: message
+                    })
+                )
+                break
+            case WARNING:
+                $p.setMessage(
+                    '#Message',
+                    JSON.stringify({
+                        Css: 'alert-warning',
+                        Text: message
+                    })
+                )
+                break
+            case ERROR:
+                $p.setMessage(
+                    '#Message',
+                    JSON.stringify({
+                        Css: 'alert-error',
+                        Text: message
+                    })
+                )
+                break
+            default:
+                commonSetMessage(`メッセージタイプが不正な値です。`, ERROR, true, true, type)
+                break
+        }
     }
-  }
-  if (leave) {
-    let log = commonCreateAjax(
-      TABLE_INFO["メッセージログ"].index
-      , {
-        ClassA: $p.id()
-        , DescriptionA: message
-        , DescriptionB: JSON.stringify(description)
-      }
-      , type
-      , ""
-      , false
-    )
-    console.log(`エラーログ：${SERVER_URL}/items/${log.Id}`)
-  }
+    if (leave) {
+        let log = commonCreateAjax(
+            TABLE_INFO["メッセージログ"].index,
+            {
+                ClassA: $p.id()
+                , DescriptionA: message
+                , DescriptionB: JSON.stringify(description)
+            },
+            type,
+            "",
+            false
+        )
+        console.log(`エラーログ：${SERVER_URL}/items/${log.Id}`)
+    }
 }
 
 
@@ -219,15 +220,15 @@ async function commonSetMessage (message = '', type = NORMAL, leave = false, set
  * @param {Object} err
  */
 function commonGetErrorObj(err) {
-  let obj = {}
-  if (!commonIsNull(err)) {
-    obj = {
-      name: !commonIsNull(err.name) ? err.name : "",
-      message: !commonIsNull(err.message) ? err.message : "",
-      stack: !commonIsNull(err.stack) ? err.stack : "",
+    let obj = {}
+    if (!commonIsNull(err)) {
+        obj = {
+            name: !commonIsNull(err.name) ? err.name : "",
+            message: !commonIsNull(err.message) ? err.message : "",
+            stack: !commonIsNull(err.stack) ? err.stack : "",
+        }
     }
-  }
-  return obj
+    return obj
 }
 
 /**
@@ -235,15 +236,15 @@ function commonGetErrorObj(err) {
  * @param {String} pattern
  */
 function commonGenerateUniqueId(pattern = "xxxx-xxxx-xxxx-xxxx") {
-  let chars = pattern.split("")
-  for (let i = 0, len = chars.length; i < len; i++) {
-      switch (chars[i]) {
-          case "x":
-              chars[i] = Math.floor(Math.random() * 16).toString(16)
-              break
-      }
-  }
-  return chars.join("")
+    let chars = pattern.split("")
+    for (let i = 0, len = chars.length; i < len; i++) {
+        switch (chars[i]) {
+            case "x":
+                chars[i] = Math.floor(Math.random() * 16).toString(16)
+                break
+        }
+    }
+    return chars.join("")
 
 }
 
@@ -260,85 +261,85 @@ function commonGenerateUniqueId(pattern = "xxxx-xxxx-xxxx-xxxx") {
  * @param {Object}  analysis  解析用
  */
 async function commonLogging(messages, progress = "progress", analysis) {
-  try {
-    commonMessage(NORMAL, "処理開始")
+    try {
+        commonMessage(NORMAL, "処理開始")
 
-    let p_status = 0
-    let m_status = 0
-    switch (progress) {
-      case "start":
-        commonSetLoading(true)
-        p_status = m_status = NORMAL
-        error_messages = []
-        updated_ids = []
-        created_ids = []
-        increment = 0
-        unique_id = commonGenerateUniqueId()
+        let p_status = 0
+        let m_status = 0
+        switch (progress) {
+            case "start":
+                commonSetLoading(true)
+                p_status = m_status = NORMAL
+                error_messages = []
+                updated_ids = []
+                created_ids = []
+                increment = 0
+                unique_id = commonGenerateUniqueId()
 
-        // カラム名変数保存
-      await Promise.all(TABLE.map(async v => commonGetColumnNames(v)))
+                // カラム名変数保存
+                await Promise.all(Object.values(TABLE_INFO).map(async v => commonGetColumnNames(v.index)))
 
-        let processLog = await commonCreateAjax(
-          TABLE_INFO["処理ログ"].index
-          , {
-            ClassA: unique_id
-            , ClassB: $p.siteId()
-            , ClassC: $p.id()
-          }
-          , NORMAL
-          , ""
-          , false
+                let processLog = await commonCreateAjax(
+                    TABLE_INFO["処理ログ"].index,
+                    {
+                        ClassA: unique_id,
+                        ClassB: $p.siteId(),
+                        ClassC: $p.id(),
+                    },
+                    NORMAL,
+                    "",
+                    false
+                )
+                process_id = processLog.Id
+                break
+            case "progress":
+                p_status = m_status = NORMAL
+                break
+            case "close":
+                commonSetLoading(false)
+                increment = messages.length - 1
+                p_status = CLOSE
+                m_status = NORMAL
+                unique_id = ""
+                break
+            case "warning":
+                commonSetLoading(false)
+                p_status = m_status = WARNING
+                unique_id = ""
+                break
+            case "error":
+                commonSetLoading(false)
+                p_status = m_status = ERROR
+                unique_id = ""
+                break
+        }
+        let rate = Math.floor(100 * (increment + 1) / messages.length)
+        let message = ""
+        if (Array.isArray(messages)) {
+            message = `${messages[increment]} 進捗率 ${rate}%`
+        } else {
+            message = messages
+        }
+
+        commonMessage(m_status, message)
+        await commonUpdateAjax(
+            process_id,
+            {
+                NumA: rate,
+                DescriptionD: updated_ids.join("\n"),
+                DescriptionE: created_ids.join("\n"),
+            },
+            p_status,
+            "",
+            false
         )
-        process_id = processLog.Id
-        break
-      case "progress":
-        p_status = m_status = NORMAL
-        break
-      case "close":
-        commonSetLoading(false)
-        increment = messages.length - 1
-        p_status = CLOSE
-        m_status = NORMAL
-        unique_id = ""
-        break
-      case "warning":
-        commonSetLoading(false)
-        p_status = m_status = WARNING
-        unique_id = ""
-        break
-      case "error":
-        commonSetLoading(false)
-        p_status = m_status = ERROR
-        unique_id = ""
-        break
+        await commonLog(m_status, message, analysis)
+        increment++
+    } catch (err) {
+        // 再スロー
+        await commonLog(ERROR, commonGetErrorObj(err))
+        throw err
     }
-    let rate = Math.floor(100 * (increment + 1) / messages.length)
-    let message = ""
-    if(Array.isArray(messages)) {
-      message = `${messages[increment]} 進捗率 ${rate}%`
-    } else {
-      message = messages
-    }
-
-    commonMessage(m_status, message)
-    await commonUpdateAjax(
-      process_id
-      , {
-        NumA: rate
-        , DescriptionD: updated_ids.join("\n")
-        , DescriptionE: created_ids.join("\n")
-      }
-      , p_status
-      , ""
-      , false
-    )
-    await commonLog(m_status, message, analysis)
-    increment++
-  } catch (err) {
-    // 再スロー
-    await commonLog(ERROR, commonGetErrorObj(err))
-    throw err
-  }
 }
 
 /**
@@ -352,55 +353,55 @@ async function commonLogging(messages, progress = "progress", analysis) {
  * @return {Array} createdIds
  *
  */
-async function commonPrintLog (message, workbook, filename, tableIds, hashes) {
-  let createdIds = []
-  if (!Array.isArray(tableIds)) {
-    if (commonIsNull(tableIds)) {
-      tableIds = []
-    } else {
-      tableIds = [tableIds]
+async function commonPrintLog(message, workbook, filename, tableIds, hashes) {
+    let createdIds = []
+    if (!Array.isArray(tableIds)) {
+        if (commonIsNull(tableIds)) {
+            tableIds = []
+        } else {
+            tableIds = [tableIds]
+        }
     }
-  }
 
-  if (!Array.isArray(hashes)) {
-    if (commonIsNull(hashes)) {
-      hashes = []
-    } else {
-      hashes = [hashes]
+    if (!Array.isArray(hashes)) {
+        if (commonIsNull(hashes)) {
+            hashes = []
+        } else {
+            hashes = [hashes]
+        }
     }
-  }
 
-  // hashes の配列数を tableIds と揃える
-  hashes = tableIds.map((_, i) => hashes[i])
+    // hashes の配列数を tableIds と揃える
+    hashes = tableIds.map((_, i) => hashes[i])
 
-  // 末尾に帳票出力ログをデフォルトでつける
-  tableIds.push(TABLE_INFO["帳票出力ログ"].index)
-  hashes.push(
-    {
-      ClassA: unique_id,
-      ClassB: $p.siteId(),
-      ClassC: $p.id(),
-      ClassD: process_id,
-      DescriptionA: message,
-      DescriptionB: error_messages.join("  \n"),
-    }
-  )
-
-  for (let i = 0; i < tableIds.length; i++) {
-    let id = tableIds[i]
-    let hash = hashes[i]
-    let log = await commonCreateAjax(
-      id,
-      hash,
-      "",
-      "",
+    // 末尾に帳票出力ログをデフォルトでつける
+    tableIds.push(TABLE_INFO["帳票出力ログ"].index)
+    hashes.push(
+        {
+            ClassA: unique_id,
+            ClassB: $p.siteId(),
+            ClassC: $p.id(),
+            ClassD: process_id,
+            DescriptionA: message,
+            DescriptionB: error_messages.join("  \n"),
+        }
     )
-    // 帳票出力対象テーブルの添付ファイルAに帳票を添付
-    await commonUpdateAttachment(log.Id, "AttachmentsA", workbook, filename)
-    createdIds.push(log.Id)
-    console.log(`ログ：${message}：${SERVER_URL}/items/${log.Id}`)
-  }
-  return createdIds
+
+    for (let i = 0; i < tableIds.length; i++) {
+        let id = tableIds[i]
+        let hash = hashes[i]
+        let log = await commonCreateAjax(
+            id,
+            hash,
+            "",
+            ""
+        )
+        // 帳票出力対象テーブルの添付ファイルAに帳票を添付
+        await commonUpdateAttachment(log.Id, "AttachmentsA", workbook, filename)
+        createdIds.push(log.Id)
+        console.log(`ログ：${message}：${SERVER_URL}/items/${log.Id}`)
+    }
+    return createdIds
 }
 
 /**
@@ -410,25 +411,25 @@ async function commonPrintLog (message, workbook, filename, tableIds, hashes) {
  * @param {Object} analysis     解析用
  * @param {String} description  詳細内容 廃止予定
  */
-async function commonLog (type = NORMAL, message, analysis, description) {
-  let log = await commonCreateAjax(
-    TABLE_INFO["メッセージログ"].index
-    , {
-      ClassA: unique_id
-      , ClassB: $p.siteId()
-      , ClassC: $p.id()
-      , ClassD: process_id
-      , DescriptionA: message
-      , DescriptionB: error_messages.join("  \n")
-      , DescriptionC: JSON.stringify(analysis)
-      , DescriptionD: updated_ids.join("\n")
-      , DescriptionE: created_ids.join("\n")
-    }
-    , type
-    , ""
-    , false
-  )
-  console.log(`ログ：${message}：${SERVER_URL}/items/${log.Id}`)
+async function commonLog(type = NORMAL, message, analysis, description) {
+    let log = await commonCreateAjax(
+        TABLE_INFO["メッセージログ"].index,
+        {
+            ClassA: unique_id,
+            ClassB: $p.siteId(),
+            ClassC: $p.id(),
+            ClassD: process_id,
+            DescriptionA: message,
+            DescriptionB: error_messages.join("  \n"),
+            DescriptionC: JSON.stringify(analysis),
+            DescriptionD: updated_ids.join("\n"),
+            DescriptionE: created_ids.join("\n"),
+        },
+        type,
+        "",
+        false
+    )
+    console.log(`ログ：${message}：${SERVER_URL}/items/${log.Id}`)
 }
 
 /**
@@ -438,19 +439,19 @@ async function commonLog (type = NORMAL, message, analysis, description) {
  * @return {Object} タブID or タブobject
  */
 function commonGetTab(label, flg = true) {
-  try {
-    let tab = Array.from(document.getElementsByClassName("ui-tabs-tab")).filter(v => v.children[0].innerText == label)[0]
-    if (commonIsNull(tab)) {
-      let message = `共通関数commonGetTab：ラベル不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+    try {
+        let tab = Array.from(document.getElementsByClassName("ui-tabs-tab")).filter(v => v.children[0].innerText == label)[0]
+        if (commonIsNull(tab)) {
+            let message = `共通関数commonGetTab：ラベル不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let obj = document.querySelector(`fieldSet[aria-labelledby=${tab.getAttribute("aria-labelledby")}]`)
+        return flg ? obj.id : obj
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    let obj = document.querySelector(`fieldSet[aria-labelledby=${tab.getAttribute("aria-labelledby")}]`)
-    return flg ? obj.id : obj
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 
 }
 
@@ -461,19 +462,19 @@ function commonGetTab(label, flg = true) {
  * @return {Object} セクションID or セクションobject
  */
 function commonGetSection(label, flg = true) {
-  try {
-    let section = Array.from(document.getElementsByClassName("field-section")).filter(v => v.innerText == label)[0]
-    if (commonIsNull(section)) {
-      let message = `共通関数commonGetSection：ラベル不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+    try {
+        let section = Array.from(document.getElementsByClassName("field-section")).filter(v => v.innerText == label)[0]
+        if (commonIsNull(section)) {
+            let message = `共通関数commonGetSection：ラベル不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let obj = document.getElementById(`${section.getAttribute("for")}`)
+        return flg ? obj.id : obj
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    let obj = document.getElementById(`${section.getAttribute("for")}`)
-    return flg ? obj.id : obj
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 
 }
 
@@ -484,9 +485,9 @@ function commonGetSection(label, flg = true) {
  *
  */
 function commonFilterColumnNames(html) {
-  return Array.from(html.querySelectorAll('div[id^="Results_"][id$="Field"]'))
-    .map(v => v.id.split("Results_")[1].split("Field")[0])
-    .filter(v => ["Class", "Num", "Date", "Check", "Description"].some(w => v.includes(w)))
+    return Array.from(html.querySelectorAll('div[id^="Results_"][id$="Field"]'))
+        .map(v => v.id.split("Results_")[1].split("Field")[0])
+        .filter(v => ["Class", "Num", "Date", "Check", "Description"].some(w => v.includes(w)))
 }
 
 /**
@@ -499,93 +500,94 @@ function commonFilterColumnNames(html) {
  *
  */
 function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId', boxClass = 'boxClass') {
-  if (commonIsNull(document.getElementById("CommentField"))) return
-  let html = `
-      <div id="${id}" class="flow">
-      </div>
-      <style>
-          .flow {
-              margin: 0 auto 50px;
-          }
-          .flow .${boxClass}.${color} {
-              background-color: ${color};
-              color: white;
-          }
-          .flow .${boxClass} {
-              margin: 0 auto 33px;
-              width: 66%;
-              text-align: center;
-              padding: 10px;
-              border: 3px solid #326E93;
-              -webkit-border-radius: 5px;
-              border-radius: 5px;
-              position: relative;
-              font-weight: bold; /* テキストの指定 */
-              background-color: cornsilk
-          }
-          .flow .${boxClass}:after {
-              border-top: 20px solid #FFC300;
-              border-left: 50px solid transparent;
-              border-right: 50px solid transparent;
-              content: "";
-              position: absolute;
-              bottom: -28px; /* 三角形の高さ＋ボックスのボーダーをマイナスに */
-              margin-left: -100px; /* 中央寄せに使用 */
-              left: 180px;
-          }
+    if (commonIsNull(document.getElementById("CommentField"))) return
+    let html = `
+        <div id="${id}" class="flow">
+        </div>
+        <style>
+            .flow {
+                margin: 0 auto 50px;
+            }
+            .flow .${boxClass}.${color} {
+                background-color: ${color};
+                color: white;
+            }
+            .flow .${boxClass} {
+                margin: 0 auto 33px;
+                width: 66%;
+                text-align: center;
+                padding: 10px;
+                border: 3px solid #326E93;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                position: relative;
+                font-weight: bold; /* テキストの指定 */
+                background-color: cornsilk
+            }
+            .flow .${boxClass}:after {
+                border-top: 20px solid #FFC300;
+                border-left: 50px solid transparent;
+                border-right: 50px solid transparent;
+                content: "";
+                position: absolute;
+                bottom: -28px; /* 三角形の高さ＋ボックスのボーダーをマイナスに */
+                margin-left: -100px; /* 中央寄せに使用 */
+                left: 180px;
+            }
 
-          .flow .${boxClass}:last-child:after {
-              border: none; /* 最後のボックスだけ三角形を表示しない */
-          }
-      </style>`
-  $("#CommentField").prepend(html)
+            .flow .${boxClass}:last-child:after {
+                border: none; /* 最後のボックスだけ三角形を表示しない */
+            }
+        </style>`
+    $("#CommentField").prepend(html)
 
-  for (let s of useStatus) {
-      let boxDiv = document.createElement("div")
-      boxDiv.classList.add(boxClass)
-      boxDiv.innerHTML = s.name
-      if (commonGetVal(label) == s.name) boxDiv.classList.add(color)
-      document.getElementById(id).appendChild(boxDiv)
-  }
+    for (let s of useStatus) {
+        let boxDiv = document.createElement("div")
+        boxDiv.classList.add(boxClass)
+        boxDiv.innerHTML = s.name
+        if (commonGetVal(label) == s.name) boxDiv.classList.add(color)
+        document.getElementById(id).appendChild(boxDiv)
+    }
 }
+
 
 /**
  * #TODO 廃止予定 commonDisplayに移行
  * 分類項目の値を選択したときの項目ごとの表示制御。
- * @param {String} label 分類項目名
- * @param {Array} displayItems 表示制御項目名
- * @param {String} value 指定値
- * @param {String} successFunc 成功時実行関数
- * @param {String} failureFunc 失敗時実行関数
+ * @param {String} label        分類項目名
+ * @param {Array} displayItems  表示制御項目名
+ * @param {String} value        指定値
+ * @param {String} successFunc  成功時実行関数
+ * @param {String} failureFunc  失敗時実行関数
  *
  */
 function commonDisplayClass(label, displayItems, value, successFunc, failureFunc) {
-  let target = []
-  if (Array.isArray(displayItems)) {
-    target = displayItems
-  } else {
-    target = [displayItems]
-  }
+    let target = []
+    if (Array.isArray(displayItems)) {
+        target = displayItems
+    } else {
+        target = [displayItems]
+    }
 
-  // 指定値を選択したとき
-  if (commonGetVal(label) == value) {
-      // 表示化
-      target.forEach(v => commonHideElements(commonGetId(v, true, true), false))
-      if (successFunc && typeof successFunc === 'function') {
-        // 渡されたオブジェクトが関数なら実行する
-        successFunc()
-      }
-  } else {
-      // 非表示化 & 内容消去
-      target.forEach(v => {
-        commonHideElements(commonGetId(v, true, true))
-        commonSetVal(v, "")
-      })
-      if (failureFunc && typeof failureFunc === 'function') {
-        // 渡されたオブジェクトが関数なら実行する
-        failureFunc()
-      }
-  }
+    // 指定値を選択したとき
+    if (commonGetVal(label) == value) {
+        // 表示化
+        target.forEach(v => commonHideElements(commonGetId(v, true, true), false))
+        if (successFunc && typeof successFunc === 'function') {
+            // 渡されたオブジェクトが関数なら実行する
+            successFunc()
+        }
+    } else {
+        // 非表示化 & 内容消去
+        target.forEach(v => {
+            commonHideElements(commonGetId(v, true, true))
+            commonSetVal(v, "")
+        })
+        if (failureFunc && typeof failureFunc === 'function') {
+            // 渡されたオブジェクトが関数なら実行する
+            failureFunc()
+        }
+    }
 }
 
 /**
@@ -610,100 +612,100 @@ function commonDisplayClass(label, displayItems, value, successFunc, failureFunc
  *
  */
 function commonDisplay(label, display, show = true) {
-  let empty = "empty"
-  let showItemArr = []
-  let hideItemArr = []
-  let showSectionArr = []
-  let hideSectionArr = []
-  let showTabArr = []
-  let hideTabArr = []
-  for (let val in display) {
-    let target = []
-    if (Array.isArray(display[val])) {
-      target = display[val]
-    } else {
-      target = [display[val]]
-    }
-    // 非表示化フラグ
-    let hideFlag = (empty == val && commonIsNull(commonGetVal(label, true))) || (commonGetVal(label, true) == val)
-    // 非表示化 & 内容消去
-    target.forEach(v => {
-      // タブ
-      if (v.includes("FieldSetTab")) {
-          commonFilterColumnNames(document.getElementById(v)).forEach(w =>{
-            if (hideFlag) {
-              hideItemArr.push(w)
+    let empty = "empty"
+    let showItemArr = []
+    let hideItemArr = []
+    let showSectionArr = []
+    let hideSectionArr = []
+    let showTabArr = []
+    let hideTabArr = []
+    for (let val in display) {
+        let target = []
+        if (Array.isArray(display[val])) {
+            target = display[val]
+        } else {
+            target = [display[val]]
+        }
+        // 非表示化フラグ
+        let hideFlag = (empty == val && commonIsNull(commonGetVal(label, true))) || (commonGetVal(label, true) == val)
+        // 非表示化 & 内容消去
+        target.forEach(v => {
+            // タブ
+            if (v.includes("FieldSetTab")) {
+                commonFilterColumnNames(document.getElementById(v)).forEach(w => {
+                    if (hideFlag) {
+                        hideItemArr.push(w)
+                    } else {
+                        showItemArr.push(w)
+                    }
+                })
+                if (hideFlag) {
+                    hideTabArr.push(v)
+                } else {
+                    showTabArr.push(v)
+                }
+                // 見出し
+            } else if (v.includes("SectionFields")) {
+                commonFilterColumnNames(document.getElementById(v)).forEach(w => {
+                    if (hideFlag) {
+                        hideItemArr.push(w)
+                    } else {
+                        showItemArr.push(w)
+                    }
+                })
+                if (hideFlag) {
+                    hideSectionArr.push(v)
+                } else {
+                    showSectionArr.push(v)
+                }
+                // 分類項目、数値項目、日付項目等
             } else {
-              showItemArr.push(w)
+                if (hideFlag) {
+                    hideItemArr.push(v)
+                } else {
+                    showItemArr.push(v)
+                }
             }
-          })
-          if (hideFlag) {
-            hideTabArr.push(v)
-          } else {
-            showTabArr.push(v)
-          }
-      // 見出し
-      } else if (v.includes("SectionFields")) {
-        commonFilterColumnNames(document.getElementById(v)).forEach(w =>{
-          if (hideFlag) {
-            hideItemArr.push(w)
-          } else {
-            showItemArr.push(w)
-          }
         })
-        if (hideFlag) {
-          hideSectionArr.push(v)
-        } else {
-          showSectionArr.push(v)
-        }
-      // 分類項目、数値項目、日付項目等
-      } else {
-        if (hideFlag) {
-          hideItemArr.push(v)
-        } else {
-          showItemArr.push(v)
-        }
-      }
+    }
+    // 表示してから非表示
+    showItemArr.forEach(v => commonHideElements(commonGetId(v, true, true), !show))
+    hideItemArr.forEach(v => {
+        commonHideElements(commonGetId(v, true, true), show)
+        if (show) commonSetVal(v, "")
     })
-  }
-  // 表示してから非表示
-  showItemArr.forEach(v => commonHideElements(commonGetId(v, true, true), !show))
-  hideItemArr.forEach(v => {
-    commonHideElements(commonGetId(v, true, true), show)
-    if (show) commonSetVal(v, "")
-  })
-  showSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = !show)
-  hideSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = show)
-  showTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = !show)
-  hideTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = show)
+    showSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = !show)
+    hideSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = show)
+    showTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = !show)
+    hideTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = show)
 }
 
 /**
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
  * @param {Array} ids 削除ID
  */
-function commonRemoveElements (ids) {
-  let elems = []
-  if (Array.isArray(ids)) {
-    elems = ids
-  } else {
-    elems = [ids]
-  }
+function commonRemoveElements(ids) {
+    let elems = []
+    if (Array.isArray(ids)) {
+        elems = ids
+    } else {
+        elems = [ids]
+    }
 
-  elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+    elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
 }
 
 /**
  * 指定されたIDを持つHTMLエレメントの子要素をすべて削除する関数です。
  * @param {String} id 削除ID
  */
-function commonRemoveElementChilds (id) {
-  //要素取得
-  let target = document.getElementById(id)
-  //子要素削除
-  while(target.lastChild) {
-      target.removeChild(target.lastChild)
-  }
+function commonRemoveElementChilds(id) {
+    //要素取得
+    let target = document.getElementById(id)
+    //子要素削除
+    while (target.lastChild) {
+        target.removeChild(target.lastChild)
+    }
 }
 
 /**
@@ -711,15 +713,15 @@ function commonRemoveElementChilds (id) {
  * @param {Array} ids 削除ID
  * @param {Array} flg 表示・非表示
  */
-function commonHideElements (ids, flg = true) {
-  let elems = []
-  if (Array.isArray(ids)) {
-    elems = ids
-  } else {
-    elems = [ids]
-  }
+function commonHideElements(ids, flg = true) {
+    let elems = []
+    if (Array.isArray(ids)) {
+        elems = ids
+    } else {
+        elems = [ids]
+    }
 
-  elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
+    elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
 }
 
 /**
@@ -731,25 +733,25 @@ function commonHideElements (ids, flg = true) {
  * @param {String} style        スタイル
  * @param {String} icon         アイコン（empty指定でアイコンなし）
  */
-function commonAddButton (buttonId, clickFunc, label, title, style, icon = "ui-icon-disk") {
-	let target = document.getElementById('MainCommands')
-	let elem = document.createElement('button')
-	elem.id = buttonId
-	elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
-	elem.onclick = clickFunc
-	if (!commonIsNull(title)) elem.title = title
-	if (!commonIsNull(style)) elem.style = style
-  elem.innerText = label
-  if (icon !== "empty") {
-    let span = document.createElement('span')
-    span.className = `ui-button-icon ui-icon ${icon}`
-    elem.appendChild(span)
-  }
-  let space = document.createElement('span')
-  space.className = "ui-button-icon-space"
-  elem.appendChild(space)
+function commonAddButton(buttonId, clickFunc, label, title, style, icon = "ui-icon-disk") {
+    let target = document.getElementById('MainCommands')
+    let elem = document.createElement('button')
+    elem.id = buttonId
+    elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
+    elem.onclick = clickFunc
+    if (!commonIsNull(title)) elem.title = title
+    if (!commonIsNull(style)) elem.style = style
+    elem.innerText = label
+    if (icon !== "empty") {
+        let span = document.createElement('span')
+        span.className = `ui-button-icon ui-icon ${icon}`
+        elem.appendChild(span)
+    }
+    let space = document.createElement('span')
+    space.className = "ui-button-icon-space"
+    elem.appendChild(space)
 
-  target.appendChild(elem)
+    target.appendChild(elem)
 }
 
 /**
@@ -758,24 +760,24 @@ function commonAddButton (buttonId, clickFunc, label, title, style, icon = "ui-i
  * @return {Object}   columnNames
  */
 async function commonGetColumnNames(tableId) {
-  let columnNames = {}
-  // 取得済み(保存用変数から取得)
-  if (tableId in COLUMN_NAME) {
-    columnNames = COLUMN_NAME[tableId]
-  // 未取得(APIで取得)
-  } else {
-    let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
-    let html = await data.text()
-    let dom = new DOMParser().parseFromString(html, 'text/html')
-    columnNames = JSON.parse(dom.getElementById("Columns").value)
+    let columnNames = {}
+    // 取得済み(保存用変数から取得)
+    if (tableId in COLUMN_NAME) {
+        columnNames = COLUMN_NAME[tableId]
+        // 未取得(APIで取得)
+    } else {
+        let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
+        let html = await data.text()
+        let dom = new DOMParser().parseFromString(html, 'text/html')
+        columnNames = JSON.parse(dom.getElementById("Columns").value)
 
-  }
-  // 保存用変数
-  COLUMN_NAME = {
-    ...COLUMN_NAME
-    , [tableId] : columnNames
-  }
-  return columnNames
+    }
+    // 保存用変数
+    COLUMN_NAME = {
+        ...COLUMN_NAME
+        , [tableId]: columnNames
+    }
+    return columnNames
 }
 
 /**
@@ -785,31 +787,31 @@ async function commonGetColumnNames(tableId) {
  * @return {String}   columnName
  */
 function commonGetColumnName(tableId, label) {
-  try {
-    if (!(tableId in COLUMN_NAME)) {
-      let message = `共通関数commonGetColumnName：テーブルID不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
-    }
+    try {
+        if (!(tableId in COLUMN_NAME)) {
+            let message = `共通関数commonGetColumnName：テーブルID不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
 
-    // 保存用変数から取得
-    let data = COLUMN_NAME[tableId]
-      .filter(v => v.LabelText == label)
-      .filter(v => v.ColumnName.indexOf("~") < 0)
-    if (data.length == 0) {
-      let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
-    } else if (data.length > 1) {
-      let message = `共通関数commonGetColumnName：ラベル名重複。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+        // 保存用変数から取得
+        let data = COLUMN_NAME[tableId]
+            .filter(v => v.LabelText == label)
+            .filter(v => v.ColumnName.indexOf("~") < 0)
+        if (data.length == 0) {
+            let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        } else if (data.length > 1) {
+            let message = `共通関数commonGetColumnName：ラベル名重複。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        return data[0].ColumnName
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    return data[0].ColumnName
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 }
 
 /**
@@ -817,8 +819,8 @@ function commonGetColumnName(tableId, label) {
  *
  * @return {String} 空日付
  */
-function commonGetDateEmpty () {
-  return '1899-12-30T00:00:00'
+function commonGetDateEmpty() {
+    return '1899-12-30T00:00:00'
 }
 
 /**
@@ -853,27 +855,27 @@ function commonGetDateEmpty () {
  *            ⇓
  *     現在日付の'YYYYMM'
  */
-function commonGetDate (yyyy, mm = 1, dd = 1, format = 'YYYY-MM-DD') {
-  let date
-  try {
-    if (typeof yyyy === 'undefined' || commonIsNull(yyyy)) {
-      date = new Date()
-    } else if (typeof yyyy === 'object') {
-      date = yyyy
-    } else {
-      date = new Date(yyyy, mm - 1, dd)
+function commonGetDate(yyyy, mm = 1, dd = 1, format = 'YYYY-MM-DD') {
+    let date
+    try {
+        if (typeof yyyy === 'undefined' || commonIsNull(yyyy)) {
+            date = new Date()
+        } else if (typeof yyyy === 'object') {
+            date = yyyy
+        } else {
+            date = new Date(yyyy, mm - 1, dd)
+        }
+        return format
+            .replace(/YYYY/, commonPaddingLeft(date.getFullYear(), 4))
+            .replace(/MM/, commonPaddingLeft(date.getMonth() + 1, 2))
+            .replace(/DD/, commonPaddingLeft(date.getDate(), 2))
+            .replace(/hh/, commonPaddingLeft(date.getHours(), 2))
+            .replace(/mm/, commonPaddingLeft(date.getMinutes(), 2))
+            .replace(/ss/, commonPaddingLeft(date.getSeconds(), 2))
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    return format
-      .replace(/YYYY/, commonPaddingLeft(date.getFullYear(), 4))
-      .replace(/MM/, commonPaddingLeft(date.getMonth() + 1, 2))
-      .replace(/DD/, commonPaddingLeft(date.getDate(), 2))
-      .replace(/hh/, commonPaddingLeft(date.getHours(), 2))
-      .replace(/mm/, commonPaddingLeft(date.getMinutes(), 2))
-      .replace(/ss/, commonPaddingLeft(date.getSeconds(), 2))
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 }
 
 /**
@@ -888,18 +890,18 @@ function commonGetDate (yyyy, mm = 1, dd = 1, format = 'YYYY-MM-DD') {
  * @return {String} 締日付
  */
 function commonGetClosingDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
-  let date
-  // 締日が翌月
-  if (+cls <= +dd) {
-    date = commonGetDate(yyyy, +mm + 1, cls, format)
-  // 締日が当月
-  } else if (+dd < +cls && +cls <= 28) {
-    date = commonGetDate(yyyy, mm, cls, format)
-  } else {
-    // 99: 月末締め
-    date = commonGetDate(yyyy, +mm + 1, 0, format)
-  }
-  return date
+    let date
+    // 締日が翌月
+    if (+cls <= +dd) {
+        date = commonGetDate(yyyy, +mm + 1, cls, format)
+        // 締日が当月
+    } else if (+dd < +cls && +cls <= 28) {
+        date = commonGetDate(yyyy, mm, cls, format)
+    } else {
+        // 99: 月末締め
+        date = commonGetDate(yyyy, +mm + 1, 0, format)
+    }
+    return date
 }
 /**
  * 支払日付を算出する関数です。
@@ -913,17 +915,23 @@ function commonGetClosingDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
  * @return {String} 支払日付
  */
 function commonGetPaymentDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
-  let date
-  let nextMm = +mm + 1
-  if (cls <= 28) {
-    date = commonGetDate(yyyy, nextMm, cls, format)
-  } else {
-    // 91: 月末支払
-    // 92: 翌月末支払
-    // 93: 翌々月末支払
-    date = commonGetDate(yyyy, +cls - 90 + nextMm, 0, format)
-  }
-  return date
+    //　100,都度払い
+    //　105,翌月5日支払い
+    //　110,翌月10日支払い
+    //　115,翌月15日支払い
+    //　120,翌月20日支払い
+    //　125,翌月25日支払い
+    //　199,翌月末支払い
+    //　205,翌々月5日支払い
+    //　210,翌々月10日支払い
+    //　215,翌々月15日支払い
+    //　220,翌々月20日支払い
+    //　225,翌々月25日支払い
+    //　299,翌々月末支払い
+
+    let nextMm = +mm + Math.floor(cls / 100)
+    let nextDd = cls % 100 <= 28 ? cls % 100 : 0
+    return date = commonGetDate(yyyy, nextMm, nextDd, format)
 }
 
 
@@ -934,18 +942,18 @@ function commonGetPaymentDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
  * @param {String} char パディング文字
  * @return {String} パディングされた文字列
  */
-function commonPaddingLeft (str, size = 1, char = '0') {
-  try {
-    if (char.length !== 1) {
-      let message = `共通関数commonPaddingLeft：1文字ではないです。${char}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+function commonPaddingLeft(str, size = 1, char = '0') {
+    try {
+        if (char.length !== 1) {
+            let message = `共通関数commonPaddingLeft：1文字ではないです。${char}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        return (char.repeat(size) + str).substr(-1 * size)
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    return (char.repeat(size) + str).substr(-1 * size)
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 }
 
 /**
@@ -955,18 +963,18 @@ function commonPaddingLeft (str, size = 1, char = '0') {
  * @param {String} char パディング文字
  * @return {String} パディングされた文字列
  */
-function commonPaddingRight (str, size = 1, char = ' ') {
-  try {
-    if (char.length !== 1) {
-      let message = `共通関数commonPaddingRight：1文字ではないです。${char}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+function commonPaddingRight(str, size = 1, char = ' ') {
+    try {
+        if (char.length !== 1) {
+            let message = `共通関数commonPaddingRight：1文字ではないです。${char}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        return (str + char.repeat(size)).substr(0, size)
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    return (str + char.repeat(size)).substr(0, size)
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 }
 
 /**
@@ -974,19 +982,19 @@ function commonPaddingRight (str, size = 1, char = ' ') {
  * @param {String} csvStr csv文字列
  * @param {String} title ファイル名
  */
-function commonDownloadCsv (csvStr, title = 'test') {
+function commonDownloadCsv(csvStr, title = 'test') {
 
-  // a要素を作成する
-  const ele = document.createElement('a')
-  // a要素にエンコード化した出力データを追加
-  ele.setAttribute('href', encodeURI(csvStr))
-  // a要素に出力情報を追加
-  ele.setAttribute('download', title + '.csv')
-  ele.style.visibility = 'hidden'
-  document.body.appendChild(ele)
-  // HTMLドキュメントに追加したa要素を実行(clickイベント発火)
-  ele.click()
-  document.body.removeChild(ele)
+    // a要素を作成する
+    const ele = document.createElement('a')
+    // a要素にエンコード化した出力データを追加
+    ele.setAttribute('href', encodeURI(csvStr))
+    // a要素に出力情報を追加
+    ele.setAttribute('download', title + '.csv')
+    ele.style.visibility = 'hidden'
+    document.body.appendChild(ele)
+    // HTMLドキュメントに追加したa要素を実行(clickイベント発火)
+    ele.click()
+    document.body.removeChild(ele)
 
 }
 
@@ -1004,15 +1012,15 @@ function commonDownloadCsv (csvStr, title = 'test') {
  *            ⇓
  * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
  */
-function commonConvert2DToCsv (d2array) {
-  // csvDataに出力方法を追加
-  let csvOutput = 'data:text/csvcharset=utf-8,'
-  let csvData = csvOutput
-  d2array.forEach(v => {
-    const row = '"' + v.join('","') + '"'
-    csvData += row + '\r\n'
-  })
-  return csvData
+function commonConvert2DToCsv(d2array) {
+    // csvDataに出力方法を追加
+    let csvOutput = 'data:text/csvcharset=utf-8,'
+    let csvData = csvOutput
+    d2array.forEach(v => {
+        const row = '"' + v.join('","') + '"'
+        csvData += row + '\r\n'
+    })
+    return csvData
 }
 
 /**
@@ -1029,10 +1037,10 @@ function commonConvert2DToCsv (d2array) {
  *      ['7', '8', '56'],
  *     ]
  */
-function commonConvertCsvTo2D (csvData) {
-  // csvDataに出力方法を追加
-  let csvOutput = 'data:text/csvcharset=utf-8,'
-  return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r.replaceAll('""', '"').replaceAll('"[', '[').replaceAll(']"', ']')}]`)).filter(r => !commonIsNull(r))
+function commonConvertCsvTo2D(csvData) {
+    // csvDataに出力方法を追加
+    let csvOutput = 'data:text/csvcharset=utf-8,'
+    return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r.replaceAll('""', '"').replaceAll('"[', '[').replaceAll(']"', ']')}]`)).filter(r => !commonIsNull(r))
 }
 
 /**
@@ -1045,13 +1053,13 @@ function commonConvertCsvTo2D (csvData) {
  * 例. AA ⇒ 27
  */
 function commonConvertAto1(str) {
-  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  let count = 0
-  for (let i = 0; i < str.length; i++) {
-      j = str.length - i - 1
-      count = count + (alphabet.indexOf(str.toUpperCase()[j]) + 1) * (alphabet.length ** i)
-  }
-  return count
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    let count = 0
+    for (let i = 0; i < str.length; i++) {
+        j = str.length - i - 1
+        count = count + (alphabet.indexOf(str.toUpperCase()[j]) + 1) * (alphabet.length ** i)
+    }
+    return count
 }
 
 /**
@@ -1063,16 +1071,16 @@ function commonConvertAto1(str) {
  * 例. ["ABC", 230, "X"]  ⇒ '["ABC", 230, "X"]'
  */
 function convertArrayToMalti(arr) {
-  let elems = []
-  if (Array.isArray(arr)) {
-    elems = arr
-  } else {
-    elems = [arr]
-  }
+    let elems = []
+    if (Array.isArray(arr)) {
+        elems = arr
+    } else {
+        elems = [arr]
+    }
 
-  elems = elems.map(v => isNaN(v) ? `"${v}"`: +v).join(", ")
-  elems = `[${elems}]`
-  return elems
+    elems = elems.map(v => isNaN(v) ? `"${v}"` : +v).join(", ")
+    elems = `[${elems}]`
+    return elems
 }
 
 /**
@@ -1083,8 +1091,8 @@ function convertArrayToMalti(arr) {
  * 例. "1,500"  ⇒ 1500
  */
 function commonConvertCTo1(str) {
-  str = commonIsNull(str) ? "0" : String(str)
-  return +str.replace(',', '')
+    str = commonIsNull(str) ? "0" : String(str)
+    return +str.replace(',', '')
 }
 
 /**
@@ -1107,16 +1115,16 @@ function commonConvertCTo1(str) {
  *     　　　　 ["SC144S",2900,9696,"SC144S","SC144L","2",true],
  *     　　　　 ["SC147S",1476,9144,"SC147S","SC147L","20",false]]
  */
-function commonJoinLeft (arr1, arr2, init = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
-  let size = arr2[0].length
-  return arr1.map(v => {
-    let tmpArr = arr2.find(w => v[arr1KeyIndex] == w[arr2KeyIndex])
-    if (commonIsNull(tmpArr)) {
-      return v.concat(Array(size).fill(init))
-    } else {
-      return v.concat(tmpArr)
-    }
-  })
+function commonJoinLeft(arr1, arr2, init = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
+    let size = arr2[0].length
+    return arr1.map(v => {
+        let tmpArr = arr2.find(w => v[arr1KeyIndex] == w[arr2KeyIndex])
+        if (commonIsNull(tmpArr)) {
+            return v.concat(Array(size).fill(init))
+        } else {
+            return v.concat(tmpArr)
+        }
+    })
 }
 
 /**
@@ -1130,8 +1138,8 @@ function commonJoinLeft (arr1, arr2, init = 0, arr1KeyIndex = 0, arr2KeyIndex = 
  *           ⇓
  *    [1, 2, 3, 4, 5]
  */
-function commonGenerateSequentialArray (n, a = 0) {
-  return [...Array(n)].map((_, i) => i + a)
+function commonGenerateSequentialArray(n, a = 0) {
+    return [...Array(n)].map((_, i) => i + a)
 }
 
 /**
@@ -1150,8 +1158,8 @@ function commonGenerateSequentialArray (n, a = 0) {
  *      ['1', '1', '1', '1'],
  * ]
  */
-function commonGenerate2DArray (m, n, init = 0) {
-  return [...Array(m)].map(_ => Array(n).fill(init))
+function commonGenerate2DArray(m, n, init = 0) {
+    return [...Array(m)].map(_ => Array(n).fill(init))
 }
 
 /**
@@ -1176,15 +1184,15 @@ function commonGenerate2DArray (m, n, init = 0) {
  *                ,["74057", "47", 10, 10, 10]]
  *
  */
-function commonAddColumn (d2array, n, init = 0) {
-  let m = d2array.length
-  let arr = commonGenerate2DArray(m, n, init)
-  for (let i = 0; i < m; i++) {
-    for (let j = 0; j < n; j++) {
-      if (!commonIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
+function commonAddColumn(d2array, n, init = 0) {
+    let m = d2array.length
+    let arr = commonGenerate2DArray(m, n, init)
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (!commonIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
+        }
     }
-  }
-  return arr
+    return arr
 }
 
 
@@ -1199,17 +1207,17 @@ function commonAddColumn (d2array, n, init = 0) {
  *                             ⇓
  * [ [1, 1, 2, 3], [3, 4, 1, 2], [3, 5, 5, 1], [2, 3, 5] ]
  */
-function commonSliceArray (array, n) {
-  let start = 0
-  let end = n
-  let d2Array = []
-  d2Array.push(array.slice(start, end))
-  while (end < array.length) {
-    start += n
-    end += n
+function commonSliceArray(array, n) {
+    let start = 0
+    let end = n
+    let d2Array = []
     d2Array.push(array.slice(start, end))
-  }
-  return d2Array
+    while (end < array.length) {
+        start += n
+        end += n
+        d2Array.push(array.slice(start, end))
+    }
+    return d2Array
 }
 
 
@@ -1223,8 +1231,8 @@ function commonSliceArray (array, n) {
  *                             ⇓
  * [ [1, 1, 1, 1], [2, 2, 2], [3, 3, 3, 3], [4], [5, 5, 5] ]
  */
-function commonDivideEqualArray (array) {
-  return [...new Set(array)].map(x => Array(array.filter(y => y == x).length).fill(x))
+function commonDivideEqualArray(array) {
+    return [...new Set(array)].map(x => Array(array.filter(y => y == x).length).fill(x))
 }
 
 /**
@@ -1247,20 +1255,20 @@ function commonDivideEqualArray (array) {
  *   ,[["74058","25","*IEH36*","九州倉庫","","100","確認済"],["74063","25","TESTYP-30B-2*","九州倉庫","関東倉庫","24","補充済"]]]
  */
 function commonDivide2DArray(d2array, index) {
-  let list = []
-  let codes = []
-  let tmp = ""
-  d2array = d2array.sort((a, b) => a[index] < b[index] ? 1 : -1)
-  for (let arr of d2array) {
-    if (tmp !== arr[index]) {
-      list.push(codes)
-      codes = []
+    let list = []
+    let codes = []
+    let tmp = ""
+    d2array = d2array.sort((a, b) => a[index] < b[index] ? 1 : -1)
+    for (let arr of d2array) {
+        if (tmp !== arr[index]) {
+            list.push(codes)
+            codes = []
+        }
+        codes.push(arr)
+        tmp = arr[index]
     }
-    codes.push(arr)
-    tmp = arr[index]
-  }
-  list.push(codes)
-  return list.filter(v => !commonIsNull(v))
+    list.push(codes)
+    return list.filter(v => !commonIsNull(v))
 }
 
 /**
@@ -1270,10 +1278,10 @@ function commonDivide2DArray(d2array, index) {
  * @return {Object} インデックス付きのオブジェクト
  */
 function commonConvertArrayToObjectWithIndex(data) {
-  return data.reduce((prev, current, index) => {
-    prev[index + 1] = current
-    return prev
-  }, {})
+    return data.reduce((prev, current, index) => {
+        prev[index + 1] = current
+        return prev
+    }, {})
 }
 
 /**
@@ -1284,16 +1292,16 @@ function commonConvertArrayToObjectWithIndex(data) {
  *
  * @return {Object} インデックス付きのオブジェクト
  */
-function commonConvertDataTo2D(data, keys=[], header = false) {
-  let values = []
-  if (Array.isArray(keys) && !commonIsNull(keys)) {
-    if (header) values.push(keys) // ヘッダーを付ける
-    data.forEach(record => values.push(keys.map(v => record[v]))) // 値
-  } else {
-    if (header) values.push(Object.keys(data[0])) // ヘッダーを付ける
-    data.forEach(record => values.push(Object.values(record))) // 値
-  }
-  return values
+function commonConvertDataTo2D(data, keys = [], header = false) {
+    let values = []
+    if (Array.isArray(keys) && !commonIsNull(keys)) {
+        if (header) values.push(keys) // ヘッダーを付ける
+        data.forEach(record => values.push(keys.map(v => record[v]))) // 値
+    } else {
+        if (header) values.push(Object.keys(data[0])) // ヘッダーを付ける
+        data.forEach(record => values.push(Object.values(record))) // 値
+    }
+    return values
 }
 
 /**
@@ -1301,29 +1309,29 @@ function commonConvertDataTo2D(data, keys=[], header = false) {
  * @param {Array} arr 文字列配列
  */
 function commonUniqueArray(arr) {
-  return arr.filter((elem, index) => arr.indexOf(elem) === index)
+    return arr.filter((elem, index) => arr.indexOf(elem) === index)
 }
 
 /**
  * 入力されたラベルのIDを返却する。
  * @param {String} label ラベル
  */
-function commonGetId (label, prefix = true, suffix = false) {
-  try {
-    let id = $p.getColumnName(label)
-    if (commonIsNull(id)) {
-      let message = `共通関数commonGetId：ラベル不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
-    } else {
-      id = prefix ? $p.tableName() + '_' + id : id
-      id = suffix ? id + 'Field' : id
+function commonGetId(label, prefix = true, suffix = false) {
+    try {
+        let id = $p.getColumnName(label)
+        if (commonIsNull(id)) {
+            let message = `共通関数commonGetId：ラベル不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        } else {
+            id = prefix ? $p.tableName() + '_' + id : id
+            id = suffix ? id + 'Field' : id
+        }
+        return id
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-    return id
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 
 }
 
@@ -1332,47 +1340,47 @@ function commonGetId (label, prefix = true, suffix = false) {
  * @param {String} label ラベル
  * @param {Boolean} disabled trueなら読取専用 falseなら読取解除
  */
-function commonChangeReadOnly (label, disabled = true) {
-  try {
-    let area = commonGetId(label)
-    let field = commonGetId(label, true, true)
-    if (commonIsNull(area)) {
-      let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
-      commonMessage(ERROR, message)
-      throw new Error(message)
+function commonChangeReadOnly(label, disabled = true) {
+    try {
+        let area = commonGetId(label)
+        let field = commonGetId(label, true, true)
+        if (commonIsNull(area)) {
+            let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
 
-    } else {
-      // 入力項目disable制御
-      document.getElementById(area).disabled = disabled
-      // document.getElementById(area).className = disabled ? "control-text" : "control-textbox"
-      // document.getElementById(area).classList.toggle("original-style-disabled")
-      if (disabled){
-          document.getElementById(area).classList.add("original-style-disabled")
-      } else {
-          document.getElementById(area).classList.remove("original-style-disabled")
-      }
+        } else {
+            // 入力項目disable制御
+            document.getElementById(area).disabled = disabled
+            // document.getElementById(area).className = disabled ? "control-text" : "control-textbox"
+            // document.getElementById(area).classList.toggle("original-style-disabled")
+            if (disabled) {
+                document.getElementById(area).classList.add("original-style-disabled")
+            } else {
+                document.getElementById(area).classList.remove("original-style-disabled")
+            }
 
-      // icon 表示制御
-      let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
-      for (let icon of icons) {
-        let target = document.getElementById(field).querySelector('.' + icon)
-        if (!commonIsNull(target)) {
-          target.style['visibility'] = disabled ? 'hidden' : 'visible'
+            // icon 表示制御
+            let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
+            for (let icon of icons) {
+                let target = document.getElementById(field).querySelector('.' + icon)
+                if (!commonIsNull(target)) {
+                    target.style['visibility'] = disabled ? 'hidden' : 'visible'
+                }
+            }
         }
-      }
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-  } catch (err) {
-    // 再スロー
-    throw err
-  }
 }
 
 
 /**
  * メインボタンメニューの読取を反転させる
  */
-function commonChangeReadOnlyMainButton () {
-  Array.from(document.querySelectorAll("#MainCommands button")).map(v => v.disabled = !v.classList.toggle('ui-button'))
+function commonChangeReadOnlyMainButton() {
+    Array.from(document.querySelectorAll("#MainCommands button")).map(v => v.disabled = !v.classList.toggle('ui-button'))
 }
 
 /**
@@ -1380,45 +1388,45 @@ function commonChangeReadOnlyMainButton () {
  * @param {String} label ラベル
  * @param {String} flg true: value false: text
  */
-function commonGetVal (label, valueFlg = false) {
-  let value = ""
-  try {
-    if ( $p.getControl($p.getColumnName(label)).prop("tagName") === "SELECT" ) {
-      if ( $p.getControl($p.getColumnName(label)).attr("multiple") ){
-        value = valueFlg ? $p.getControl($p.getColumnName(label)).val() : $p.getControl($p.getColumnName(label)).next().children().last().text()
-      } else {
-        value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
-      }
-    } else if ( $p.getControl($p.getColumnName(label)).prop("tagName") === "INPUT" ) {
-      if (commonGetId(label).indexOf("Check") > 0) {
-        value = document.getElementById(commonGetId(label)).checked
-        value = valueFlg ? +value : value
-      } else {
-      // 選択系 読み取り専用
-        value = valueFlg ? $p.getControl($p.getColumnName(label)).attr('data-value') : $p.getControl($p.getColumnName(label))[0].innerHTML
-        if (commonIsNull(value)) {
-          // 選択系以外
-          value = $p.getControl($p.getColumnName(label)).val()
+function commonGetVal(label, valueFlg = false) {
+    let value = ""
+    try {
+        if ($p.getControl($p.getColumnName(label)).prop("tagName") === "SELECT") {
+            if ($p.getControl($p.getColumnName(label)).attr("multiple")) {
+                value = valueFlg ? $p.getControl($p.getColumnName(label)).val() : $p.getControl($p.getColumnName(label)).next().children().last().text()
+            } else {
+                value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
+            }
+        } else if ($p.getControl($p.getColumnName(label)).prop("tagName") === "INPUT") {
+            if (commonGetId(label).indexOf("Check") > 0) {
+                value = document.getElementById(commonGetId(label)).checked
+                value = valueFlg ? +value : value
+            } else {
+                // 選択系 読み取り専用
+                value = valueFlg ? $p.getControl($p.getColumnName(label)).attr('data-value') : $p.getControl($p.getColumnName(label))[0].innerHTML
+                if (commonIsNull(value)) {
+                    // 選択系以外
+                    value = $p.getControl($p.getColumnName(label)).val()
+                }
+            }
+        } else if ($p.getControl($p.getColumnName(label)).prop("tagName") === "TEXTAREA") {
+            value = document.getElementById(commonGetId(label) + ".viewer").innerText
+        } else {
+            // 選択系 読み取り専用
+            value = valueFlg ? ($p.getControl($p.getColumnName(label)).attr('data-value') ?? $p.getControl($p.getColumnName(label))[0].innerHTML) : $p.getControl($p.getColumnName(label))[0].innerHTML
+            if (commonIsNull(value)) {
+                // 選択系以外
+                value = $p.getControl($p.getColumnName(label)).val()
+            }
         }
-      }
-    } else if ($p.getControl($p.getColumnName(label)).prop("tagName") === "TEXTAREA") {
-      value = document.getElementById(commonGetId(label) + ".viewer").innerText
-    } else {
-    // 選択系 読み取り専用
-      value = valueFlg ? ($p.getControl($p.getColumnName(label)).attr('data-value') ?? $p.getControl($p.getColumnName(label))[0].innerHTML) : $p.getControl($p.getColumnName(label))[0].innerHTML
-      if (commonIsNull(value)) {
-        // 選択系以外
-        value = $p.getControl($p.getColumnName(label)).val()
-      }
+    } catch (e) {
+        //commonSetMessage(`共通関数commonGetVal：ラベル不正。${label}`, ERROR, true, false, e.message)
+        console.log(label)
+        console.log(e)
+        value = ""
+    } finally {
+        return value
     }
-  } catch (e) {
-    //commonSetMessage(`共通関数commonGetVal：ラベル不正。${label}`, ERROR, true, false, e.message)
-    console.log(label)
-    console.log(e)
-    value = ""
-  } finally {
-    return value
-  }
 }
 
 
@@ -1427,16 +1435,16 @@ function commonGetVal (label, valueFlg = false) {
  * @param {String} label ラベル
  * @param {object} value 値
  */
-function commonSetVal (label, value) {
-  try {
-  // 値が変更されている場合
-    if (commonGetVal(label, true) != value) {
-      $p.set($p.getControl(label), value)
+function commonSetVal(label, value) {
+    try {
+        // 値が変更されている場合
+        if (commonGetVal(label, true) != value) {
+            $p.set($p.getControl(label), value)
+        }
+    } catch (err) {
+        console.log(`共通関数commonSetVal：ラベル不正。${label}`)
+        console.log(err)
     }
-  } catch (err) {
-    console.log(`共通関数commonSetVal：ラベル不正。${label}`)
-    console.log(err)
-  }
 }
 
 /**
@@ -1451,27 +1459,27 @@ function commonSetVal (label, value) {
  * @param {Number}    offset オフセット条件
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonGetData(columns = [], filters = {}, sorts = {"ResultId":"asc"}, valueFlg = true, id = $p.siteId(), offset = 0, addFunc) {
-  return await $p.apiGet({
-      'id': id,
-      'data': {
-        'Offset': offset,
-        'View': {
-          'ApiDataType': "KeyValues",
-          'ApiColumnValueDisplayType': valueFlg ?  "Value" : "DisplayValue",
-          'GridColumns': columns,
-          'ColumnSorterHash': sorts,
-          'ColumnFilterHash': filters,
+async function commonGetData(columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, id = $p.siteId(), offset = 0, addFunc) {
+    return await $p.apiGet({
+        'id': id,
+        'data': {
+            'Offset': offset,
+            'View': {
+                'ApiDataType': "KeyValues",
+                'ApiColumnValueDisplayType': valueFlg ? "Value" : "DisplayValue",
+                'GridColumns': columns,
+                'ColumnSorterHash': sorts,
+                'ColumnFilterHash': filters,
+            }
+        },
+        'done': function (data) {
+            if (addFunc && typeof addFunc === 'function') {
+                // 渡されたオブジェクトが関数なら実行する
+                addFunc(data)
+            }
+            return data.Response.Data
         }
-      },
-      'done': function (data) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
-        }
-          return data.Response.Data
-      }
-  })
+    })
 }
 
 /**
@@ -1484,16 +1492,16 @@ async function commonGetData(columns = [], filters = {}, sorts = {"ResultId":"as
  * @param {Boolean}    valueFlg value値
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonGetDataAll(id = $p.siteId(), columns = [], filters = {}, sorts = {"ResultId":"asc"}, valueFlg = true, addFunc) {
-  let offset = 0
-  let data = []
-  let temp ={}
-  do {
-    temp = await commonGetData(columns, filters, sorts, valueFlg, id, offset)
-    data = [...data, ...temp.Response.Data]
-    offset += temp.Response.PageSize
-  } while (offset < temp.Response.TotalCount)
-  return data
+async function commonGetDataAll(id = $p.siteId(), columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, addFunc) {
+    let offset = 0
+    let data = []
+    let temp = {}
+    do {
+        temp = await commonGetData(columns, filters, sorts, valueFlg, id, offset, addFunc)
+        data = [...data, ...temp.Response.Data]
+        offset += temp.Response.PageSize
+    } while (offset < temp.Response.TotalCount)
+    return data
 }
 
 /**
@@ -1508,62 +1516,62 @@ async function commonGetDataAll(id = $p.siteId(), columns = [], filters = {}, so
  */
 async function commonCreateAjax(tableId, Hash = {}, Status, Comments, pushFlg = true, addFunc) {
 
-  // 登録項目
-  let ClassHash = {}
-  let NumHash = {}
-  let DateHash = {}
-  let DescriptionHash = {}
-  let CheckHash = {}
-  for (let key in Hash) {
-    if (key.includes("Class")) ClassHash[key] = Hash[key]
-    else if (key.includes("Num")) NumHash[key] = commonConvertCTo1(Hash[key])
-    else if (key.includes("Date")) DateHash[key] = commonIsNull(Hash[key]) ? commonGetDateEmpty() : Hash[key]
-    else if (key.includes("Description")) DescriptionHash[key] = Hash[key]
-    else if (key.includes("Check")) CheckHash[key] = Hash[key]
-}
+    // 登録項目
+    let ClassHash = {}
+    let NumHash = {}
+    let DateHash = {}
+    let DescriptionHash = {}
+    let CheckHash = {}
+    for (let key in Hash) {
+        if (key.includes("Class")) ClassHash[key] = Hash[key]
+        else if (key.includes("Num")) NumHash[key] = commonConvertCTo1(Hash[key])
+        else if (key.includes("Date")) DateHash[key] = commonIsNull(Hash[key]) ? commonGetDateEmpty() : Hash[key]
+        else if (key.includes("Description")) DescriptionHash[key] = Hash[key]
+        else if (key.includes("Check")) CheckHash[key] = Hash[key]
+    }
 
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    Status,
-    Comments,
-    ClassHash,
-    NumHash,
-    DateHash,
-    DescriptionHash,
-    CheckHash
-  })
-  if (!commonIsNull(Status)) {
-    delete data["Status"]
-  }
-  if (!commonIsNull(Comments)) {
-    delete data["Comments"]
-  }
+    let data = JSON.stringify({
+        "ApiVersion": api_version,
+        Status,
+        Comments,
+        ClassHash,
+        NumHash,
+        DateHash,
+        DescriptionHash,
+        CheckHash
+    })
+    if (!commonIsNull(Status)) {
+        delete data["Status"]
+    }
+    if (!commonIsNull(Comments)) {
+        delete data["Comments"]
+    }
 
-  return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: `/api/items/${tableId}/create`,
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
-        }
-        if (pushFlg) {
-          created_ids.push(result.Id)
-          created_ids = [...new Set(created_ids.map(v => String(v)))]
-        }
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: `/api/items/${tableId}/create`,
+            contentType: 'application/json',
+            data: data
+        }).then(
+            function (result) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                if (pushFlg) {
+                    created_ids.push(result.Id)
+                    created_ids = [...new Set(created_ids.map(v => String(v)))]
+                }
+                // 正常終了
+                resolve(result)
+            },
+            function () {
+                // エラー
+                reject()
+            }
+        )
+    })
 }
 
 /**
@@ -1585,55 +1593,55 @@ async function commonUpdateAjax(recordId, Hash = {}, Status, Comments, pushFlg =
     let DescriptionHash = {}
     let CheckHash = {}
     for (let key in Hash) {
-      if (key.includes("Class")) ClassHash[key] = Hash[key]
-      else if (key.includes("Num")) NumHash[key] = commonConvertCTo1(Hash[key])
-      else if (key.includes("Date")) DateHash[key] = commonIsNull(Hash[key]) ? commonGetDateEmpty() : Hash[key]
-      else if (key.includes("Description")) DescriptionHash[key] = Hash[key]
-      else if (key.includes("Check")) CheckHash[key] = Hash[key]
+        if (key.includes("Class")) ClassHash[key] = Hash[key]
+        else if (key.includes("Num")) NumHash[key] = commonConvertCTo1(Hash[key])
+        else if (key.includes("Date")) DateHash[key] = commonIsNull(Hash[key]) ? commonGetDateEmpty() : Hash[key]
+        else if (key.includes("Description")) DescriptionHash[key] = Hash[key]
+        else if (key.includes("Check")) CheckHash[key] = Hash[key]
     }
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    Status,
-    Comments,
-    ClassHash,
-    NumHash,
-    DateHash,
-    DescriptionHash,
-    CheckHash
-  })
-  if (!commonIsNull(Status)) {
-    delete data["Status"]
-  }
-  if (!commonIsNull(Comments)) {
-    delete data["Comments"]
-  }
+    let data = JSON.stringify({
+        "ApiVersion": api_version,
+        Status,
+        Comments,
+        ClassHash,
+        NumHash,
+        DateHash,
+        DescriptionHash,
+        CheckHash
+    })
+    if (!commonIsNull(Status)) {
+        delete data["Status"]
+    }
+    if (!commonIsNull(Comments)) {
+        delete data["Comments"]
+    }
 
-  return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: `/api/items/${recordId}/update`,
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
-        }
-        if (pushFlg) {
-          updated_ids.push(result.Id)
-          updated_ids = [...new Set(updated_ids.map(v => String(v)))]
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: `/api/items/${recordId}/update`,
+            contentType: 'application/json',
+            data: data
+        }).then(
+            function (result) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                if (pushFlg) {
+                    updated_ids.push(result.Id)
+                    updated_ids = [...new Set(updated_ids.map(v => String(v)))]
+                }
 
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+                // 正常終了
+                resolve(result)
+            },
+            function () {
+                // エラー
+                reject()
+            }
+        )
+    })
 }
 
 /**
@@ -1647,46 +1655,46 @@ async function commonUpdateAjax(recordId, Hash = {}, Status, Comments, pushFlg =
  * @param {String}    type csv か jsonを選択
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportAjax (tableId, columns = [], filters = {}, over = false, header = true, type = "csv", addFunc) {
-  let col = []
-  columns.forEach(v => col.push({"ColumnName" : v}))
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    "Export": {
-      "Columns": col,
-      "Header": header,
-      "Type": type
-    },
-    "View": {
-      "Overdue": over,
-      "ColumnSorterHash": {
-        "ResultId": "asc"
-      },
-      "ColumnFilterHash": filters
-    }
-  })
-
-	return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: `/api/items/${tableId}/export`,
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
+async function commonExportAjax(tableId, columns = [], filters = {}, over = false, header = true, type = "csv", addFunc) {
+    let col = []
+    columns.forEach(v => col.push({ "ColumnName": v }))
+    let data = JSON.stringify({
+        "ApiVersion": api_version,
+        "Export": {
+            "Columns": col,
+            "Header": header,
+            "Type": type
+        },
+        "View": {
+            "Overdue": over,
+            "ColumnSorterHash": {
+                "ResultId": "asc"
+            },
+            "ColumnFilterHash": filters
         }
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+    })
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: `/api/items/${tableId}/export`,
+            contentType: 'application/json',
+            data: data
+        }).then(
+            function (result) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                // 正常終了
+                resolve(result)
+            },
+            function () {
+                // エラー
+                reject()
+            }
+        )
+    })
 }
 
 /**
@@ -1695,42 +1703,42 @@ async function commonExportAjax (tableId, columns = [], filters = {}, over = fal
  * @param {Array}     userIds 取得UserId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportUserAjax (userIds, addFunc) {
-  let users = []
-  if (Array.isArray(userIds)) {
-    users = userIds
-  } else {
-    users = [userIds]
-  }
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    "View": {
-      "ColumnFilterHash": {
-        "UserId" : JSON.stringify(users)
-      }
+async function commonExportUserAjax(userIds, addFunc) {
+    let users = []
+    if (Array.isArray(userIds)) {
+        users = userIds
+    } else {
+        users = [userIds]
     }
-  })
-	return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: "/api/users/get",
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
+    let data = JSON.stringify({
+        "ApiVersion": api_version,
+        "View": {
+            "ColumnFilterHash": {
+                "UserId": JSON.stringify(users)
+            }
         }
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+    })
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: "/api/users/get",
+            contentType: 'application/json',
+            data: data
+        }).then(
+            function (result) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                // 正常終了
+                resolve(result)
+            },
+            function () {
+                // エラー
+                reject()
+            }
+        )
+    })
 }
 
 /**
@@ -1739,42 +1747,42 @@ async function commonExportUserAjax (userIds, addFunc) {
  * @param {Array}     groupIds 取得GroupId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportGroupAjax (groupIds, addFunc) {
-  let groups = []
-  if (Array.isArray(groupIds)) {
-    groups = groupIds
-  } else {
-    groups = [groupIds]
-  }
-  let data = JSON.stringify({
-    "ApiVersion": api_version,
-    "View": {
-      "ColumnFilterHash": {
-        "GroupId" : JSON.stringify(groups)
-      }
+async function commonExportGroupAjax(groupIds, addFunc) {
+    let groups = []
+    if (Array.isArray(groupIds)) {
+        groups = groupIds
+    } else {
+        groups = [groupIds]
     }
-  })
-	return new Promise((resolve, reject) => {
-		$.ajax({
-			type: "POST",
-			url: "/api/groups/get",
-			contentType: 'application/json',
-			data: data
-		}).then(
-			function (result) {
-        if (addFunc && typeof addFunc === 'function') {
-          // 渡されたオブジェクトが関数なら実行する
-          addFunc(data)
+    let data = JSON.stringify({
+        "ApiVersion": api_version,
+        "View": {
+            "ColumnFilterHash": {
+                "GroupId": JSON.stringify(groups)
+            }
         }
-				// 正常終了
-				resolve(result)
-			},
-			function () {
-				// エラー
-				reject()
-			}
-		)
-	})
+    })
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: "/api/groups/get",
+            contentType: 'application/json',
+            data: data
+        }).then(
+            function (result) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                // 正常終了
+                resolve(result)
+            },
+            function () {
+                // エラー
+                reject()
+            }
+        )
+    })
 }
 
 /**
@@ -1788,54 +1796,54 @@ async function commonExportGroupAjax (groupIds, addFunc) {
  */
 async function commonCopyRecordAjax(editItems = {}, Status, Comments, expand = 999, addFunc) {
 
-  let Hash = {}
+    let Hash = {}
 
-  //項目Aから項目Z
-  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  for (let char of alphabet) {
-    let clsKey = "Class" + char
-    let numKey = "Num" + char
-    let datKey = "Date" + char
-    let dscKey = "Description" + char
-    let chkKey = "Check" + char
-    Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-    Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-    Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-    Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-    Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-  }
+    //項目Aから項目Z
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for (let char of alphabet) {
+        let clsKey = "Class" + char
+        let numKey = "Num" + char
+        let datKey = "Date" + char
+        let dscKey = "Description" + char
+        let chkKey = "Check" + char
+        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+    }
 
-  //項目001から項目999
-  for (let i = 1; i <= expand; i++) {
-    let clsKey = "Class" + commonPaddingLeft(i, 3)
-    let numKey = "Num" + commonPaddingLeft(i, 3)
-    let datKey = "Date" + commonPaddingLeft(i, 3)
-    let dscKey = "Description" + commonPaddingLeft(i, 3)
-    let chkKey = "Check" + commonPaddingLeft(i, 3)
-    Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-    Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-    Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-    Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-    Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-  }
+    //項目001から項目999
+    for (let i = 1; i <= expand; i++) {
+        let clsKey = "Class" + commonPaddingLeft(i, 3)
+        let numKey = "Num" + commonPaddingLeft(i, 3)
+        let datKey = "Date" + commonPaddingLeft(i, 3)
+        let dscKey = "Description" + commonPaddingLeft(i, 3)
+        let chkKey = "Check" + commonPaddingLeft(i, 3)
+        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+    }
 
-  // 変更項目を上書き
-  for (let key in editItems) {
-    Hash[key] = editItems[key]
-  }
+    // 変更項目を上書き
+    for (let key in editItems) {
+        Hash[key] = editItems[key]
+    }
 
-  // ステータスを取得
-  if (commonIsNull(Status)) {
-    Status = commonGetVal("Status", true)
-  }
+    // ステータスを取得
+    if (commonIsNull(Status)) {
+        Status = commonGetVal("Status", true)
+    }
 
-  return commonCreateAjax(
-    $p.siteId()
-    , Hash
-    , Status
-    , Comments
-    , addFunc
-  )
+    return commonCreateAjax(
+        $p.siteId()
+        , Hash
+        , Status
+        , Comments
+        , addFunc
+    )
 }
 
 /**
@@ -1850,153 +1858,153 @@ async function commonCopyRecordAjax(editItems = {}, Status, Comments, expand = 9
  */
 async function commonSaveRecordAjax(editItems = {}, Status, Comments, reload = false, expand = 999, addFunc) {
 
-  let Hash = {}
+    let Hash = {}
 
-  //項目Aから項目Z
-  let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-  for (let char of alphabet) {
-    let clsKey = "Class" + char
-    let numKey = "Num" + char
-    let datKey = "Date" + char
-    let dscKey = "Description" + char
-    let chkKey = "Check" + char
-    Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-    Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-    Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-    Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-    Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-  }
+    //項目Aから項目Z
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for (let char of alphabet) {
+        let clsKey = "Class" + char
+        let numKey = "Num" + char
+        let datKey = "Date" + char
+        let dscKey = "Description" + char
+        let chkKey = "Check" + char
+        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+    }
 
-  //項目001から項目999
-  for (let i = 1; i <= expand; i++) {
-    let clsKey = "Class" + commonPaddingLeft(i, 3)
-    let numKey = "Num" + commonPaddingLeft(i, 3)
-    let datKey = "Date" + commonPaddingLeft(i, 3)
-    let dscKey = "Description" + commonPaddingLeft(i, 3)
-    let chkKey = "Check" + commonPaddingLeft(i, 3)
-    Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-    Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-    Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-    Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-    Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-  }
+    //項目001から項目999
+    for (let i = 1; i <= expand; i++) {
+        let clsKey = "Class" + commonPaddingLeft(i, 3)
+        let numKey = "Num" + commonPaddingLeft(i, 3)
+        let datKey = "Date" + commonPaddingLeft(i, 3)
+        let dscKey = "Description" + commonPaddingLeft(i, 3)
+        let chkKey = "Check" + commonPaddingLeft(i, 3)
+        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+    }
 
-  // 変更項目を上書き
-  for (let key in editItems) {
-    Hash[key] = editItems[key]
-  }
+    // 変更項目を上書き
+    for (let key in editItems) {
+        Hash[key] = editItems[key]
+    }
 
-  // ステータスを取得
-  if (commonIsNull(Status)) {
-    Status = commonGetVal("Status", true)
-  }
+    // ステータスを取得
+    if (commonIsNull(Status)) {
+        Status = commonGetVal("Status", true)
+    }
 
-  let u = await commonUpdateAjax(
-    $p.id()
-    , Hash
-    , Status
-    , Comments
-    , addFunc
-  )
-  if (reload) {
-    $(window).off('beforeunload');
-    location.reload()
-  }
-  return u
+    let u = await commonUpdateAjax(
+        $p.id()
+        , Hash
+        , Status
+        , Comments
+        , addFunc
+    )
+    if (reload) {
+        $(window).off('beforeunload');
+        location.reload()
+    }
+    return u
 }
 
 
 function commonGetBufferToBase64(buffer) {
-  var binary = ''
-  var bytes = new Uint8Array(buffer)
-  var len = bytes.byteLength
-  for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i])
-  }
-  return window.btoa(binary)
+    var binary = ''
+    var bytes = new Uint8Array(buffer)
+    var len = bytes.byteLength
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i])
+    }
+    return window.btoa(binary)
 }
 
 async function commonUpdateAttachment(targetID, className, workbook, filename) {
-  const fileBuffer = await workbook.xlsx.writeBuffer()
-  const base64 = commonGetBufferToBase64(fileBuffer)
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    const base64 = commonGetBufferToBase64(fileBuffer)
 
-  let url = `/api/items/${targetID}/update`
-  let method_name = "POST"
-  let data = {
-    "ApiVersion": api_version,
-    "AttachmentsHash": {
-      [className]: [
-        {
-          "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          "Name": filename,
-          "Base64": base64
+    let url = `/api/items/${targetID}/update`
+    let method_name = "POST"
+    let data = {
+        "ApiVersion": api_version,
+        "AttachmentsHash": {
+            [className]: [
+                {
+                    "ContentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "Name": filename,
+                    "Base64": base64
+                }
+            ]
         }
-      ]
     }
-  }
-  await $.ajax({
-    type: method_name,
-    url: url,
-    data: JSON.stringify(data),
-    contentType: 'application/json',
-    dataType: 'json',
-    scriptCharset: 'utf-8',
-    success: function (data) {
-      // Success
-      console.log("success")
-      console.log(JSON.stringify(data))
-    },
-    error: function (data) {
-      // Error
-      console.log("error")
-      console.log(JSON.stringify(data))
-    }
-  })
+    await $.ajax({
+        type: method_name,
+        url: url,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        scriptCharset: 'utf-8',
+        success: function (data) {
+            // Success
+            console.log("success")
+            console.log(JSON.stringify(data))
+        },
+        error: function (data) {
+            // Error
+            console.log("error")
+            console.log(JSON.stringify(data))
+        }
+    })
 }
 
-$(function(){
-    let insertHtml=`
-    <!-- loading -->
-    <div id="loading" class="is-hide">
-        <div class="cv-spinner">
-            <span class="spinner"></span>
+$(function () {
+    let insertHtml = `
+        <!-- loading -->
+        <div id="loading" class="is-hide">
+            <div class="cv-spinner">
+                <span class="spinner"></span>
+            </div>
         </div>
-    </div>
-    <!-- loading -->
+        <!-- loading -->
     `
-    let insertCSS=`
-    <style>
-        #loading{
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 999;
-            width: 100%;
-            height:100%;
-            background: rgba(0,0,0,0.6);
-        }
-        #loading .cv-spinner {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #loading .spinner {
-            width: 80px;
-            height: 80px;
-            border: 4px #ddd solid;
-            border-top: 4px #999 solid;
-            border-radius: 50%;
-            animation: sp-anime 0.8s infinite linear;
-        }
-        @keyframes sp-anime {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(359deg); }
-        }
-        #loading.is-hide{
-            display:none;
-        }
-    </style>
+    let insertCSS = `
+        <style>
+            #loading{
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 999;
+                width: 100%;
+                height:100%;
+                background: rgba(0,0,0,0.6);
+            }
+            #loading .cv-spinner {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #loading .spinner {
+                width: 80px;
+                height: 80px;
+                border: 4px #ddd solid;
+                border-top: 4px #999 solid;
+                border-radius: 50%;
+                animation: sp-anime 0.8s infinite linear;
+            }
+            @keyframes sp-anime {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(359deg); }
+            }
+            #loading.is-hide{
+                display:none;
+            }
+        </style>
     `
     document.getElementsByTagName('head')[0]
         .insertAdjacentHTML('beforeend', insertCSS);
@@ -2010,4 +2018,120 @@ function commonSetLoading(bool) {
     } else {
         document.getElementById('loading').classList.add('is-hide')
     }
+}
+
+
+var nf = "Num-Field"
+var ni = "Num-Input"
+var nl = "Num-Label"
+var cf = "Class-Field"
+var ci = "Class-Input"
+var cl = "Class-Label"
+var df = "Date-Field"
+var di = "Date-Input"
+var dl = "Date-Label"
+
+/**
+ * テーブルインプットを埋め込む
+ * Class001～Class099(ToDo Num、Dateも使えるようにする)を利用するので、使用時はeditorに追加しておいてください。
+ * @param {String} id   埋め込むelementのID
+ *
+ *
+ */
+function commonInsertTableInput(id, title = "", row = 9, column = 9, startPlace = 0, columnDetail = [cl, ni, ni, di], headerDetail = [di, di, di, di], color = "#fff8dc") {
+
+    let th = ''
+    let td = ''
+
+    if (!columnDetail.every(v => [nf, ni, nl, cf, ci, cl, df, di, dl].includes(v))) {
+        alert("columnDetailの指定が間違っています")
+        return
+    }
+    // 要素数がcolumn数になるまでpushする
+    while (headerDetail.length < column) headerDetail.push(ci)
+    if (!headerDetail.every(v => [nf, ni, nl, cf, ci, cl, df, di, dl].includes(v))) {
+        alert("headerDetailの指定が間違っています")
+        return
+    }
+    // 要素数がcolumn数になるまでpushする
+    while (columnDetail.length < column) columnDetail.push(ci)
+
+    // 要素数がcolumn数になるまでpushする
+    while (headerDetail.length < column) headerDetail.push(ci)
+
+    for (let i = 0; i < row; i++) {
+        for (let j = 1; j <= column; j++) {
+            let index = commonPaddingLeft(startPlace + i * column + j, 3)
+            console.log(index)
+            let type = (i == 0) ? headerDetail[j - 1].split("-") : columnDetail[j - 1].split("-")
+            let eleId = "Results_" + type[0] + index + "Field"
+            let field = document.getElementById(eleId)
+            if (commonIsNull(field)) {
+                alert(eleId + "がありません。")
+                return
+            }
+            let elem = {}
+            if (type[1] == "Field") {
+                elem = field
+            } else if (type[1] == "Input") {
+                elem = field.querySelector("input")
+            } else if (type[1] == "Label") {
+                elem = field.querySelector("label")
+            }
+            let estr = commonConvertElementToString(elem)
+            field.remove()
+
+            if (i == 0) {
+                if (j == 1) th += '<tr class="ui-widget-header">'
+                th += `
+                    <th>
+                        <div>
+                            <span>${estr}</span>
+                        </div>
+                    </th>
+                `
+                if (j == column) th += '</tr>'
+            } else {
+                if (j == 1) td += '<tr>'
+                td += `
+                    <td>
+                        <p>${estr}</p>
+                    </td>
+                `
+                if (j == column) td += '</tr>'
+            }
+        }
+
+    }
+
+    let html = `
+        <div>
+            <table class="grid" style="border-radius:10px;background-color:${color}">
+                <caption>
+                    <span>${title} </span>
+                </caption>
+                <thead>
+                    ${th}
+                </thead>
+                <tbody>
+                    ${td}
+                </tbody>
+            </table>
+        </div>
+    `
+    $("#" + id).prepend(html)
+}
+
+
+/**
+* HTMLエレメントをString変換
+* @param {Object} elem
+*/
+function commonConvertElementToString(elem) {
+    let elemClone = elem.cloneNode(true)
+    //変換したいエレメントを格納する新しい要素
+    let newElement = document.createElement('dialog')
+    //新しい要素のインナーHTMLを取得することで文字列に変換する
+    newElement.appendChild(elemClone)
+    return newElement.innerHTML
 }
