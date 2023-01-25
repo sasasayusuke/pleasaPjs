@@ -16,6 +16,58 @@ var process_id = ""
 var unique_id = ""
 var increment = 0
 
+// 即時関数
+$(function () {
+    let insertHtml = `
+        <!-- loading -->
+        <div id="loading" class="is-hide">
+            <div class="cv-spinner">
+                <span class="spinner"></span>
+            </div>
+        </div>
+        <!-- loading -->
+    `
+    let insertCSS = `
+        <style>
+            #loading{
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 999;
+                width: 100%;
+                height:100%;
+                background: rgba(0,0,0,0.6);
+            }
+            #loading .cv-spinner {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #loading .spinner {
+                width: 80px;
+                height: 80px;
+                border: 4px #ddd solid;
+                border-top: 4px #999 solid;
+                border-radius: 50%;
+                animation: sp-anime 0.8s infinite linear;
+            }
+            @keyframes sp-anime {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(359deg); }
+            }
+            #loading.is-hide{
+                display:none;
+            }
+        </style>
+    `
+    document.getElementsByTagName('head')[0]
+        .insertAdjacentHTML('beforeend', insertCSS);
+    document.getElementsByTagName('body')[0]
+        .insertAdjacentHTML('afterbegin', insertHtml);
+});
+
+
 // 各画面ロード時に実行するメソッドを格納する
 $p.events.on_grid_load_arr = []
 $p.events.on_editor_load_arr = []
@@ -68,8 +120,18 @@ $p.events.on_grid_load_arr.push(function () {
     }
 })
 
+$p.events.on_grid_load_arr.push(function () {
+	// タイトル変更
+    document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 一覧"
+})
+$p.events.on_editor_load_arr.push(function () {
+	// タイトル変更
+    document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 編集"
+})
+
 $p.events.on_editor_load_arr.push(function () {
     try {
+        // オリジナルスタイルの追加
         let style = `
             <style>
                 .original-style-disabled {
@@ -145,75 +207,12 @@ function commonMessage(type = NORMAL, message = '') {
             error_messages.push(message)
             break
         default:
-            commonLogging(`メッセージタイプが不正な値です。${message}`, "error")
+            commonCheckPoint(`メッセージタイプが不正な値です。${message}`, "error")
             throw new Error(message)
 
             break
     }
 }
-
-/**
- * #TODO 廃止予定 commonMessageとcommonLogへ分解
- * Plesanterメッセージを利用する関数です。
- * @param {String} message      メッセージ内容
- * @param {String} type         深刻度
- * @param {boolean} leave       ログを残す
- * @param {boolean} set         ブラウザメッセージを出す
- * @param {String} description  詳細内容
- */
-async function commonSetMessage(message = '', type = NORMAL, leave = false, set = true, description = "") {
-    $p.clearMessage()
-
-    if (set) {
-        switch (type) {
-            case NORMAL:
-                $p.setMessage(
-                    '#Message',
-                    JSON.stringify({
-                        Css: 'alert-success',
-                        Text: message
-                    })
-                )
-                break
-            case WARNING:
-                $p.setMessage(
-                    '#Message',
-                    JSON.stringify({
-                        Css: 'alert-warning',
-                        Text: message
-                    })
-                )
-                break
-            case ERROR:
-                $p.setMessage(
-                    '#Message',
-                    JSON.stringify({
-                        Css: 'alert-error',
-                        Text: message
-                    })
-                )
-                break
-            default:
-                commonSetMessage(`メッセージタイプが不正な値です。`, ERROR, true, true, type)
-                break
-        }
-    }
-    if (leave) {
-        let log = commonCreateAjax(
-            TABLE_INFO["メッセージログ"].index,
-            {
-                ClassA: $p.id()
-                , DescriptionA: message
-                , DescriptionB: JSON.stringify(description)
-            },
-            type,
-            "",
-            false
-        )
-        console.log(`エラーログ：${SERVER_URL}/items/${log.Id}`)
-    }
-}
-
 
 /**
  * エラーオブジェクト ⇒ オブジェクト変換
@@ -250,17 +249,16 @@ function commonGenerateUniqueId(pattern = "xxxx-xxxx-xxxx-xxxx") {
 
 /**
  *
- * TODO commonCheckPointへ名称変更
  * 処理ログ出力（チェックポイント出力）
  * ループや分岐ができるだけ無い箇所で呼ぶ。
  * Messageの配列数をあらかじめ固定して、その回数呼ばれることを前提に置く。
  * 配列数が間違っていても最後に引数progressにcloseで呼べば100％に調整はしてくれます
  *
- * @param {Array}   messages  出力メッセージリスト（配列数は呼び出し元のcommonLoggingを実行回数と一致させてください）
+ * @param {Array}   messages  出力メッセージリスト（配列数は呼び出し元のcommonCheckPointを実行回数と一致させてください）
  * @param {String}  progress  start, progress, close, warning, error のいずれか
  * @param {Object}  analysis  解析用
  */
-async function commonLogging(messages, progress = "progress", analysis) {
+async function commonCheckPoint(messages, progress = "progress", analysis) {
     try {
         commonMessage(NORMAL, "処理開始")
 
@@ -547,46 +545,6 @@ function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId',
         boxDiv.innerHTML = s.name
         if (commonGetVal(label) == s.name) boxDiv.classList.add(color)
         document.getElementById(id).appendChild(boxDiv)
-    }
-}
-
-
-/**
- * #TODO 廃止予定 commonDisplayに移行
- * 分類項目の値を選択したときの項目ごとの表示制御。
- * @param {String} label        分類項目名
- * @param {Array} displayItems  表示制御項目名
- * @param {String} value        指定値
- * @param {String} successFunc  成功時実行関数
- * @param {String} failureFunc  失敗時実行関数
- *
- */
-function commonDisplayClass(label, displayItems, value, successFunc, failureFunc) {
-    let target = []
-    if (Array.isArray(displayItems)) {
-        target = displayItems
-    } else {
-        target = [displayItems]
-    }
-
-    // 指定値を選択したとき
-    if (commonGetVal(label) == value) {
-        // 表示化
-        target.forEach(v => commonHideElements(commonGetId(v, true, true), false))
-        if (successFunc && typeof successFunc === 'function') {
-            // 渡されたオブジェクトが関数なら実行する
-            successFunc()
-        }
-    } else {
-        // 非表示化 & 内容消去
-        target.forEach(v => {
-            commonHideElements(commonGetId(v, true, true))
-            commonSetVal(v, "")
-        })
-        if (failureFunc && typeof failureFunc === 'function') {
-            // 渡されたオブジェクトが関数なら実行する
-            failureFunc()
-        }
     }
 }
 
@@ -1063,14 +1021,13 @@ function commonConvertAto1(str) {
 }
 
 /**
- * TODO commonConvertArrayToMultiへ名称変更
  * 配列をマルチセレクト登録用文字列に変換する
  * @param {Array} arr 配列
  *
  * @return {String} マルチセレクト登録用文字列
  * 例. ["ABC", 230, "X"]  ⇒ '["ABC", 230, "X"]'
  */
-function convertArrayToMalti(arr) {
+function commonConvertArrToMul(arr) {
     let elems = []
     if (Array.isArray(arr)) {
         elems = arr
@@ -1420,7 +1377,6 @@ function commonGetVal(label, valueFlg = false) {
             }
         }
     } catch (e) {
-        //commonSetMessage(`共通関数commonGetVal：ラベル不正。${label}`, ERROR, true, false, e.message)
         console.log(label)
         console.log(e)
         value = ""
@@ -1962,56 +1918,6 @@ async function commonUpdateAttachment(targetID, className, workbook, filename) {
     })
 }
 
-$(function () {
-    let insertHtml = `
-        <!-- loading -->
-        <div id="loading" class="is-hide">
-            <div class="cv-spinner">
-                <span class="spinner"></span>
-            </div>
-        </div>
-        <!-- loading -->
-    `
-    let insertCSS = `
-        <style>
-            #loading{
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 999;
-                width: 100%;
-                height:100%;
-                background: rgba(0,0,0,0.6);
-            }
-            #loading .cv-spinner {
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            #loading .spinner {
-                width: 80px;
-                height: 80px;
-                border: 4px #ddd solid;
-                border-top: 4px #999 solid;
-                border-radius: 50%;
-                animation: sp-anime 0.8s infinite linear;
-            }
-            @keyframes sp-anime {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(359deg); }
-            }
-            #loading.is-hide{
-                display:none;
-            }
-        </style>
-    `
-    document.getElementsByTagName('head')[0]
-        .insertAdjacentHTML('beforeend', insertCSS);
-    document.getElementsByTagName('body')[0]
-        .insertAdjacentHTML('afterbegin', insertHtml);
-});
-
 function commonSetLoading(bool) {
     if (bool) {
         document.getElementById('loading').classList.remove('is-hide')
@@ -2033,12 +1939,11 @@ var dl = "Date-Label"
 
 /**
  * テーブルインプットを埋め込む
- * Class001～Class099(ToDo Num、Dateも使えるようにする)を利用するので、使用時はeditorに追加しておいてください。
  * @param {String} id   埋め込むelementのID
  *
  *
  */
-function commonInsertTableInput(id, title = "", row = 9, column = 9, startPlace = 0, columnDetail = [cl, ni, ni, di], headerDetail = [di, di, di, di], color = "#fff8dc") {
+function commonInsertTableInput(id, startPlace = 0, title = "", column = 9, row = 9, columnDetail = [cl, ni, ni, di], headerRow = 1, headerDetail = [di, di, di, di], color = "#fff8dc") {
 
     let th = ''
     let td = ''
@@ -2063,7 +1968,7 @@ function commonInsertTableInput(id, title = "", row = 9, column = 9, startPlace 
         for (let j = 1; j <= column; j++) {
             let index = commonPaddingLeft(startPlace + i * column + j, 3)
             console.log(index)
-            let type = (i == 0) ? headerDetail[j - 1].split("-") : columnDetail[j - 1].split("-")
+            let type = (i < headerRow) ? headerDetail[j - 1].split("-") : columnDetail[j - 1].split("-")
             let eleId = "Results_" + type[0] + index + "Field"
             let field = document.getElementById(eleId)
             if (commonIsNull(field)) {
@@ -2074,17 +1979,18 @@ function commonInsertTableInput(id, title = "", row = 9, column = 9, startPlace 
             if (type[1] == "Field") {
                 elem = field
             } else if (type[1] == "Input") {
-                elem = field.querySelector("input")
+                // input がなければ select を取得
+                elem = field.querySelector("input") || field.querySelector("select")
             } else if (type[1] == "Label") {
                 elem = field.querySelector("label")
             }
             let estr = commonConvertElementToString(elem)
             field.remove()
 
-            if (i == 0) {
-                if (j == 1) th += '<tr class="ui-widget-header">'
+            if (i < headerRow) {
+                if (j == 1) th += `<tr id="row${i}" class="ui-widget-header">`
                 th += `
-                    <th>
+                    <th id="cell${index}">
                         <div>
                             <span>${estr}</span>
                         </div>
@@ -2092,9 +1998,9 @@ function commonInsertTableInput(id, title = "", row = 9, column = 9, startPlace 
                 `
                 if (j == column) th += '</tr>'
             } else {
-                if (j == 1) td += '<tr>'
+                if (j == 1) td += `<tr id="row${i}">`
                 td += `
-                    <td>
+                    <td id="cell${index}">
                         <p>${estr}</p>
                     </td>
                 `
