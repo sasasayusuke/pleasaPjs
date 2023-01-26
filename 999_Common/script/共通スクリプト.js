@@ -61,10 +61,8 @@ $(function () {
             }
         </style>
     `
-    document.getElementsByTagName('head')[0]
-        .insertAdjacentHTML('beforeend', insertCSS);
-    document.getElementsByTagName('body')[0]
-        .insertAdjacentHTML('afterbegin', insertHtml);
+    document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', insertCSS);
+    document.getElementsByTagName('body')[0].insertAdjacentHTML('afterbegin', insertHtml);
 });
 
 
@@ -77,7 +75,9 @@ $p.events.before_send_Update_arr = []
 
 // 格納したメソッドを実行するメソッド
 $p.events.on_grid_load = function () {
-    Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
+    for (key in TABLE_INFO) {
+        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    }
     console.log("start!! on_grid_load_arr!!!")
     $p.events.on_grid_load_arr.forEach(func => {
         console.log(func)
@@ -85,7 +85,9 @@ $p.events.on_grid_load = function () {
     })
 }
 $p.events.on_editor_load = function () {
-    Object.keys(TABLE_INFO).map(v => TABLE_INFO[v]).forEach(v => console.log(`${v.name} : ${SERVER_URL}/items/${v.index}/index`))
+    for (key in TABLE_INFO) {
+        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    }
     console.log("start!! on_editor_load_arr!!!")
     $p.events.on_editor_load_arr.forEach(func => {
         console.log(func)
@@ -110,7 +112,7 @@ $p.events.before_send_Update = function () {
 }
 $p.events.on_grid_load_arr.push(function () {
     try {
-        if (!Object.keys(TABLE_INFO).map(v => TABLE_INFO[v].index).includes($p.siteId())) {
+        if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
             commonMessage(ERROR, "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。")
         }
 
@@ -275,7 +277,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
                 unique_id = commonGenerateUniqueId()
 
                 // カラム名変数保存
-                await Promise.all(Object.values(TABLE_INFO).map(async v => commonGetColumnNames(v.index)))
+                await Promise.all(Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).map(async v => commonGetColumnNames(v)))
 
                 let processLog = await commonCreateAjax(
                     TABLE_INFO["処理ログ"].index,
