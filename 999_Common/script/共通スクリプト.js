@@ -1,4 +1,3 @@
-var api_version = 1.0
 
 var NEW = -100
 var NORMAL = 100
@@ -277,7 +276,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
                 unique_id = commonGenerateUniqueId()
 
                 // カラム名変数保存
-                await Promise.all(Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).map(async v => commonGetColumnNames(v)))
+                //await Promise.all(Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).map(async v => commonGetColumnNames(v)))
 
                 let processLog = await commonCreateAjax(
                     TABLE_INFO["処理ログ"].index,
@@ -715,66 +714,6 @@ function commonAddButton(buttonId, clickFunc, label, title, style, icon = "ui-ic
 }
 
 /**
- * columnNameの集合を取得
- * @param {String}    tableId テーブルID
- * @return {Object}   columnNames
- */
-async function commonGetColumnNames(tableId) {
-    let columnNames = {}
-    // 取得済み(保存用変数から取得)
-    if (tableId in COLUMN_NAME) {
-        columnNames = COLUMN_NAME[tableId]
-        // 未取得(APIで取得)
-    } else {
-        let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
-        let html = await data.text()
-        let dom = new DOMParser().parseFromString(html, 'text/html')
-        columnNames = JSON.parse(dom.getElementById("Columns").value)
-
-    }
-    // 保存用変数
-    COLUMN_NAME = {
-        ...COLUMN_NAME
-        , [tableId]: columnNames
-    }
-    return columnNames
-}
-
-/**
- * columnNameを取得
- * @param {String}    tableId テーブルID
- * @param {String}    label ラベル名
- * @return {String}   columnName
- */
-function commonGetColumnName(tableId, label) {
-    try {
-        if (!(tableId in COLUMN_NAME)) {
-            let message = `共通関数commonGetColumnName：テーブルID不正。${label}`
-            commonMessage(ERROR, message)
-            throw new Error(message)
-        }
-
-        // 保存用変数から取得
-        let data = COLUMN_NAME[tableId]
-            .filter(v => v.LabelText == label)
-            .filter(v => v.ColumnName.indexOf("~") < 0)
-        if (data.length == 0) {
-            let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
-            commonMessage(ERROR, message)
-            throw new Error(message)
-        } else if (data.length > 1) {
-            let message = `共通関数commonGetColumnName：ラベル名重複。${label}`
-            commonMessage(ERROR, message)
-            throw new Error(message)
-        }
-        return data[0].ColumnName
-    } catch (err) {
-        // 再スロー
-        throw err
-    }
-}
-
-/**
  * 空日付を出力する関数です。
  *
  * @return {String} 空日付
@@ -1074,6 +1013,7 @@ function commonConvertCTo1(str) {
  *     　　　　 ["SC144S",2900,9696,"SC144S","SC144L","2",true],
  *     　　　　 ["SC147S",1476,9144,"SC147S","SC147L","20",false]]
  */
+
 function commonJoinLeft(arr1, arr2, init = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
     let size = arr2[0].length
     return arr1.map(v => {
