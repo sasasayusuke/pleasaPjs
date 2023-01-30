@@ -6,8 +6,6 @@ var CLOSE = 900
 var PROCESSING = 990
 var ERROR = 999
 
-var COLUMN_NAME = {}
-
 var error_messages = []
 var updated_ids = []
 var created_ids = []

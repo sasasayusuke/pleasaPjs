@@ -24,17 +24,14 @@ var TABLE_INFO = {
             "UpdatedTime": "更新日時",
             "Comments": "コメント",
             "Updator": "更新者",
-            "Ver": "バージョン",
-            "ClassA": "分類A"
+            "Ver": "バージョン"
         }
 
     },
     "購買申請": {
         index: 5456,
         status: `
-            100,下書き,下書き,status-new
-            200,PC管理者確認待ち,確認待ち,status-preparation
-            300,PC管理者確認済み,確認済み,status-inprogress
+            100,PC管理者確認待ち,確認待ち,status-preparation
             400,報告書申請済み,申請済み,status-review
             990,処理中,処理中,status-rejected
             999,エラー,エラー,status-rejected
@@ -92,6 +89,7 @@ var TABLE_INFO = {
         index: 5455,
         status: `
             100,未確認,未確認,status-new
+            150,提出済,提出済,status-review
             200,経理担当者承認待ち,経理待,status-preparation
             300,照査者承認待ち,照査者待,status-preparation
             400,決定者承認待ち,決定者待,status-inprogress
@@ -238,8 +236,7 @@ var CODE_INFO = {
             "UpdatedTime": "更新日時",
             "Comments": "コメント",
             "Updator": "更新者",
-            "Ver": "バージョン",
-            "ClassA": "分類A"
+            "Ver": "バージョン"
         }
     },
     {
@@ -428,18 +425,23 @@ async function commonGetColumnNames(tableId) {
 
 /**
  * columnNameを取得
- * @param {String}    tableId テーブルID
+ * @param {String}    table テーブル名
  * @param {String}    label ラベル名
  * @return {String}   columnName
  */
-function commonGetColumnName(tableId, label) {
+function commonGetColumnName(table, label) {
     try {
-        if (!Object.keys(TABLE_INFO).map(v => TABLE_INFO[v].index).includes(tableId)) {
-            let message = `共通関数commonGetColumnName：テーブルID不正。${label}`
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetColumnName：テーブル名不正。${table}`
             commonMessage(ERROR, message)
             throw new Error(message)
         }
-        let column = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => TABLE_INFO[v].index == tableId)[0]].column
+        if (!"column" in TABLE_INFO) {
+            let message = `共通関数commonGetColumnName：column未登録。${table}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let column = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].column
         // 保存用変数から取得
         let data = Object.keys(column)
             .filter(v => v.indexOf("~") < 0)
@@ -459,3 +461,44 @@ function commonGetColumnName(tableId, label) {
         throw err
     }
 }
+
+
+/**
+ * statusを取得
+ * @param {String}      table     テーブル名
+ * @param {Boolean}     format    成形
+ * @return {String}     status
+ */
+function commonGetStatuses(table, format = true) {
+    try {
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetStatus：テーブル名不正。${table}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        if (!"status" in TABLE_INFO) {
+            let message = `共通関数commonGetStatus：status未登録。${table}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let status = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].status
+        if (format) {
+            status = status.trim().split("\n")
+                .map(v => v.trim())
+                .map(v => {
+                    val = v.split(",")
+                    let obj = {}
+                    obj.index = val[0]
+                    obj.name = val[1]
+                    obj.label = val[2]
+                    obj.style = val[3]
+                    return obj
+                })
+        }
+        return status
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
