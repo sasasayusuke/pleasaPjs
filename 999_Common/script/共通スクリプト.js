@@ -13,6 +13,11 @@ var process_id = ""
 var unique_id = ""
 var increment = 0
 
+
+var ERROR_MESSAGE_ID = "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。"
+var ERROR_MESSAGE_UP = "サーバー側で更新がありました。"
+
+
 // 即時関数
 $(function () {
     let insertHtml = `
@@ -110,7 +115,7 @@ $p.events.before_send_Update = function () {
 $p.events.on_grid_load_arr.push(function () {
     try {
         if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
-            commonMessage(ERROR, "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。")
+            commonMessage(ERROR, ERROR_MESSAGE_ID)
         }
 
     } catch (err) {
@@ -276,7 +281,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
                 // カラム名変数保存
                 //await Promise.all(Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).map(async v => commonGetColumnNames(v)))
 
-                let processLog = await commonCreateAjax(
+                let processLog = await commonCreate(
                     TABLE_INFO["処理ログ"].index,
                     {
                         ClassA: unique_id,
@@ -319,7 +324,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
         }
 
         commonMessage(m_status, message)
-        await commonUpdateAjax(
+        await commonUpdate(
             process_id,
             {
                 NumA: rate,
@@ -387,7 +392,7 @@ async function commonPrintLog(message, workbook, filename, tableIds, hashes) {
     for (let i = 0; i < tableIds.length; i++) {
         let id = tableIds[i]
         let hash = hashes[i]
-        let log = await commonCreateAjax(
+        let log = await commonCreate(
             id,
             hash,
             "",
@@ -406,10 +411,9 @@ async function commonPrintLog(message, workbook, filename, tableIds, hashes) {
  * @param {String} type         深刻度
  * @param {String} message      メッセージ内容
  * @param {Object} analysis     解析用
- * @param {String} description  詳細内容 廃止予定
  */
-async function commonLog(type = NORMAL, message, analysis, description) {
-    let log = await commonCreateAjax(
+async function commonLog(type = NORMAL, message, analysis) {
+    let log = await commonCreate(
         TABLE_INFO["メッセージログ"].index,
         {
             ClassA: unique_id,
@@ -1343,40 +1347,6 @@ function commonSetVal(label, value) {
     }
 }
 
-/**
- * 取得APIを呼び出す関数です。
- * 廃止予定（ALLへ移行したい）
- *
- * @param {Array}     columns 取得列
- * @param {Object}    filters フィルター条件
- * @param {Object}    sorts ソート条件
- * @param {Boolean}   valueFlg value値
- * @param {Number}    id テーブルID
- * @param {Number}    offset オフセット条件
- * @param {Function}  addFunc 最後に実行したい関数
- */
-async function commonGetData(columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, id = $p.siteId(), offset = 0, addFunc) {
-    return await $p.apiGet({
-        'id': id,
-        'data': {
-            'Offset': offset,
-            'View': {
-                'ApiDataType': "KeyValues",
-                'ApiColumnValueDisplayType': valueFlg ? "Value" : "DisplayValue",
-                'GridColumns': columns,
-                'ColumnSorterHash': sorts,
-                'ColumnFilterHash': filters,
-            }
-        },
-        'done': function (data) {
-            if (addFunc && typeof addFunc === 'function') {
-                // 渡されたオブジェクトが関数なら実行する
-                addFunc(data)
-            }
-            return data.Response.Data
-        }
-    })
-}
 
 /**
  * 取得APIを呼び出す関数です。(TotalCountが200を超えるとき)
@@ -1388,16 +1358,50 @@ async function commonGetData(columns = [], filters = {}, sorts = { "ResultId": "
  * @param {Boolean}    valueFlg value値
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonGetDataAll(id = $p.siteId(), columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, addFunc) {
+async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, addFunc) {
     let offset = 0
     let data = []
     let temp = {}
     do {
-        temp = await commonGetData(columns, filters, sorts, valueFlg, id, offset, addFunc)
+        temp = await commonGetInnner(columns, filters, sorts, valueFlg, id, offset, addFunc)
         data = [...data, ...temp.Response.Data]
         offset += temp.Response.PageSize
     } while (offset < temp.Response.TotalCount)
     return data
+
+    /**
+     * 取得APIを呼び出す関数内関数です。
+     *
+     * @param {Array}     columns 取得列
+     * @param {Object}    filters フィルター条件
+     * @param {Object}    sorts ソート条件
+     * @param {Boolean}   valueFlg value値
+     * @param {Number}    id テーブルID
+     * @param {Number}    offset オフセット条件
+     * @param {Function}  addFunc 最後に実行したい関数
+     */
+    async function commonGetInnner(columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, id = $p.siteId(), offset = 0, addFunc) {
+        return await $p.apiGet({
+            'id': id,
+            'data': {
+                'Offset': offset,
+                'View': {
+                    'ApiDataType': "KeyValues",
+                    'ApiColumnValueDisplayType': valueFlg ? "Value" : "DisplayValue",
+                    'GridColumns': columns,
+                    'ColumnSorterHash': sorts,
+                    'ColumnFilterHash': filters,
+                }
+            },
+            'done': function (data) {
+                if (addFunc && typeof addFunc === 'function') {
+                    // 渡されたオブジェクトが関数なら実行する
+                    addFunc(data)
+                }
+                return data.Response.Data
+            }
+        })
+    }
 }
 
 /**
@@ -1410,7 +1414,7 @@ async function commonGetDataAll(id = $p.siteId(), columns = [], filters = {}, so
  * @param {Boolean}   pushFlg updated_idsに（default）pushする
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonCreateAjax(tableId, Hash = {}, Status, Comments, pushFlg = true, addFunc) {
+async function commonCreate(tableId, Hash = {}, Status, Comments, pushFlg = true, addFunc) {
 
     // 登録項目
     let ClassHash = {}
@@ -1480,7 +1484,7 @@ async function commonCreateAjax(tableId, Hash = {}, Status, Comments, pushFlg = 
  * @param {Boolean}   pushFlg created_idsに（default）pushする
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonUpdateAjax(recordId, Hash = {}, Status, Comments, pushFlg = true, addFunc) {
+async function commonUpdate(recordId, Hash = {}, Status, Comments, pushFlg = true, addFunc) {
 
     // 更新項目
     let ClassHash = {}
@@ -1551,7 +1555,7 @@ async function commonUpdateAjax(recordId, Hash = {}, Status, Comments, pushFlg =
  * @param {String}    type csv か jsonを選択
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportAjax(tableId, columns = [], filters = {}, over = false, header = true, type = "csv", addFunc) {
+async function commonExport(tableId, columns = [], filters = {}, over = false, header = true, type = "csv", addFunc) {
     let col = []
     columns.forEach(v => col.push({ "ColumnName": v }))
     let data = JSON.stringify({
@@ -1599,7 +1603,7 @@ async function commonExportAjax(tableId, columns = [], filters = {}, over = fals
  * @param {Array}     userIds 取得UserId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportUserAjax(userIds, addFunc) {
+async function commonExportUser(userIds, addFunc) {
     let users = []
     if (Array.isArray(userIds)) {
         users = userIds
@@ -1643,7 +1647,7 @@ async function commonExportUserAjax(userIds, addFunc) {
  * @param {Array}     groupIds 取得GroupId
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonExportGroupAjax(groupIds, addFunc) {
+async function commonExportGroup(groupIds, addFunc) {
     let groups = []
     if (Array.isArray(groupIds)) {
         groups = groupIds
@@ -1690,7 +1694,7 @@ async function commonExportGroupAjax(groupIds, addFunc) {
  * @param {Number}    expand 最大拡張項目数
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonCopyRecordAjax(editItems = {}, Status, Comments, expand = 999, addFunc) {
+async function commonCopyRecord(editItems = {}, Status, Comments, expand = 999, addFunc) {
 
     let Hash = {}
 
@@ -1733,7 +1737,7 @@ async function commonCopyRecordAjax(editItems = {}, Status, Comments, expand = 9
         Status = commonGetVal("Status", true)
     }
 
-    return commonCreateAjax(
+    return commonCreate(
         $p.siteId()
         , Hash
         , Status
@@ -1752,7 +1756,7 @@ async function commonCopyRecordAjax(editItems = {}, Status, Comments, expand = 9
  * @param {Number}    expand 最大拡張項目数
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonSaveRecordAjax(editItems = {}, Status, Comments, reload = false, expand = 999, addFunc) {
+async function commonSaveRecord(editItems = {}, Status, Comments, reload = false, expand = 999, addFunc) {
 
     let Hash = {}
 
@@ -1795,7 +1799,7 @@ async function commonSaveRecordAjax(editItems = {}, Status, Comments, reload = f
         Status = commonGetVal("Status", true)
     }
 
-    let u = await commonUpdateAjax(
+    let u = await commonUpdate(
         $p.id()
         , Hash
         , Status
@@ -1980,4 +1984,33 @@ function commonConvertElementToString(elem) {
     //新しい要素のインナーHTMLを取得することで文字列に変換する
     newElement.appendChild(elemClone)
     return newElement.innerHTML
+}
+
+/**
+ * 処理中へ更新を行う関数です。（編集画面で使用した場合はサーバー側との更新時間が合っているかを確認）
+ *
+ */
+async function commonUpdateProcessing(id = $p.id()) {
+    try {
+        let u = {}
+        if ($p.action() == "edit") {
+            id = $p.id()
+            let serverDate = await commonGetDataAll(id, [$p.getColumnName("更新日時")])
+            serverDate = serverDate[0]["更新日時"]
+            let clientDate = $p.getControl("更新日時").attr("datetime")
+            if (serverDate !== clientDate) {
+                let message = ERROR_MESSAGE_UP
+                commonMessage(ERROR, message)
+                throw new Error(message)
+            }
+            u = await commonSaveRecordAjax({}, PROCESSING)
+        } else {
+            u = await commonUpdateAjax(id, {}, PROCESSING)
+        }
+
+        return u
+    } catch (err) {
+      // 再スロー
+        throw err
+    }
 }

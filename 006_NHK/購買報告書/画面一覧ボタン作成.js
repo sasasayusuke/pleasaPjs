@@ -4,7 +4,7 @@ $p.events.on_grid_load_arr.push(function () {
 
 async function sendMailToUnconfirmed() {
 
-    let buyOrders = await commonGetDataAll(
+    let buyOrders = await commonGetData(
         TABLE_ID_BUY_ORDER,
         [
             commonGetColumnName(TABLE_ID_BUY_ORDER, 'ID'),
