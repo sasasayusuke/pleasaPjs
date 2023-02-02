@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    {% for b in bs %}
+    <input type="text" name="title">
+    <input type="text" name="price">
+    {% endfor %}
+    <form method="post" action="{{ url_for('register') }}">
+        <table border="1">
+            <tr>
+                <td><input type="text" name="title"></td>
+                <td><input type="text" name="price"></td>
+            </tr>
+
+        </table>
+        <input type="submit" value="登録">
+    </form>
+    <h1>saasa</h1>
+    <h2>saasa</h2>
+
+    <input type >
+
+    <table border="1">
+        <tr>
+            <th>たいとる</th>
+            <th>きんがく</th>
+        </tr>
+        {% for b in bs %}
+        <tr>
+            <td>{{ b.title }}</td>
+            <td>{{ b.price }}</td>
+
+        </tr>
+        {% endfor %}
+
+    </table>
+    <a href="{{ url_for('form') }}">編集</a>
+</body>
+</html>
