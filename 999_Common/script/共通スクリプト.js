@@ -297,6 +297,10 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
             case "progress":
                 p_status = m_status = NORMAL
                 break
+            case "add":
+                messages.splice(increment, 0, messages[increment])
+                p_status = m_status = NORMAL
+                break
             case "close":
                 commonSetLoading(false)
                 increment = messages.length - 1
@@ -1349,7 +1353,7 @@ function commonSetVal(label, value) {
 
 
 /**
- * 取得APIを呼び出す関数です。(TotalCountが200を超えるとき)
+ * 取得APIを呼び出す関数です。
  *
  * @param {Number}    id テーブルID
  * @param {Array}     columns 取得列
@@ -1370,7 +1374,7 @@ async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts
     return data
 
     /**
-     * 取得APIを呼び出す関数内関数です。
+     * 取得APIを呼び出す関数内関数です。(TotalCount 200)
      *
      * @param {Array}     columns 取得列
      * @param {Object}    filters フィルター条件
@@ -1694,7 +1698,7 @@ async function commonExportGroup(groupIds, addFunc) {
  * @param {Number}    expand 最大拡張項目数
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonCopyRecord(editItems = {}, Status, Comments, expand = 999, addFunc) {
+async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, addFunc) {
 
     let Hash = {}
 
@@ -1756,7 +1760,7 @@ async function commonCopyRecord(editItems = {}, Status, Comments, expand = 999, 
  * @param {Number}    expand 最大拡張項目数
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonSaveRecord(editItems = {}, Status, Comments, reload = false, expand = 999, addFunc) {
+async function commonSaveRecord(editItems = {}, Status, Comments, reload = false, expand = 0, addFunc) {
 
     let Hash = {}
 
@@ -1995,7 +1999,7 @@ async function commonUpdateProcessing(id = $p.id()) {
         let u = {}
         if ($p.action() == "edit") {
             id = $p.id()
-            let serverDate = await commonGetDataAll(id, [$p.getColumnName("更新日時")])
+            let serverDate = await commonGetData(id, [$p.getColumnName("更新日時")])
             serverDate = serverDate[0]["更新日時"]
             let clientDate = $p.getControl("更新日時").attr("datetime")
             if (serverDate !== clientDate) {
@@ -2003,9 +2007,9 @@ async function commonUpdateProcessing(id = $p.id()) {
                 commonMessage(ERROR, message)
                 throw new Error(message)
             }
-            u = await commonSaveRecordAjax({}, PROCESSING)
+            u = await commonSaveRecord({}, PROCESSING)
         } else {
-            u = await commonUpdateAjax(id, {}, PROCESSING)
+            u = await commonUpdate(id, {}, PROCESSING)
         }
 
         return u
