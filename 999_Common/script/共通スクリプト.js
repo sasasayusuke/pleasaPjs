@@ -794,16 +794,47 @@ function commonGetDate(yyyy, mm = 1, dd = 1, format = 'YYYY-MM-DD') {
  *
  * @return {String} 締日付
  */
-function commonGetClosingDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
+function commonGetClosingDate(cls = 0, yyyy, mm, dd, format = 'YYYY-MM-DD') {
+    //  1,1日締め
+    //  2,2日締め
+    //  3,3日締め
+    //  4,4日締め
+    //  5,5日締め
+    //  6,6日締め
+    //  7,7日締め
+    //  8,8日締め
+    //  9,9日締め
+    //  10,10日締め
+    //  11,11日締め
+    //  12,12日締め
+    //  13,13日締め
+    //  14,14日締め
+    //  15,15日締め
+    //  16,16日締め
+    //  17,17日締め
+    //  18,18日締め
+    //  19,19日締め
+    //  20,20日締め
+    //  21,21日締め
+    //  22,22日締め
+    //  23,23日締め
+    //  24,24日締め
+    //  25,25日締め
+    //  26,26日締め
+    //  27,27日締め
+    //  28,28日締め
+    //  99,月末締め
+
     let date
+
     // 締日が翌月
-    if (+cls <= +dd) {
+    if (+cls < +dd) {
         date = commonGetDate(yyyy, +mm + 1, cls, format)
-        // 締日が当月
-    } else if (+dd < +cls && +cls <= 28) {
+    // 締日が当月
+    } else if (+dd <= +cls && +cls <= 28) {
         date = commonGetDate(yyyy, mm, cls, format)
     } else {
-        // 99: 月末締め
+      // 99: 月末締め
         date = commonGetDate(yyyy, +mm + 1, 0, format)
     }
     return date
@@ -819,21 +850,21 @@ function commonGetClosingDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
  *
  * @return {String} 支払日付
  */
-function commonGetPaymentDate(cls, yyyy, mm, dd, format = 'YYYY-MM-DD') {
-    //　100,都度払い
-    //　105,翌月5日支払い
-    //　110,翌月10日支払い
-    //　115,翌月15日支払い
-    //　120,翌月20日支払い
-    //　125,翌月25日支払い
-    //　199,翌月末支払い
-    //　205,翌々月5日支払い
-    //　210,翌々月10日支払い
-    //　215,翌々月15日支払い
-    //　220,翌々月20日支払い
-    //　225,翌々月25日支払い
-    //　299,翌々月末支払い
-
+function commonGetPaymentDate(cls = 0, yyyy, mm, dd, format = 'YYYY-MM-DD') {
+      //　100,都度払い
+      //　105,翌月5日支払い
+      //　110,翌月10日支払い
+      //　115,翌月15日支払い
+      //　120,翌月20日支払い
+      //　125,翌月25日支払い
+      //　199,翌月末支払い
+      //　205,翌々月5日支払い
+      //　210,翌々月10日支払い
+      //　215,翌々月15日支払い
+      //　220,翌々月20日支払い
+      //　225,翌々月25日支払い
+      //　299,翌々月末支払い
+    cls = +cls < 100 ? 100 : cls
     let nextMm = +mm + Math.floor(cls / 100)
     let nextDd = cls % 100 <= 28 ? cls % 100 : 0
     return date = commonGetDate(yyyy, nextMm, nextDd, format)
