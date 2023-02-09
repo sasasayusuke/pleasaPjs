@@ -16,8 +16,56 @@ var increment = 0
 
 var ERROR_MESSAGE_ID = "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。"
 var ERROR_MESSAGE_UP = "サーバー側で更新がありました。"
+var ERROR_MESSAGE_GRID = "一覧画面で使用を想定"
+var ERROR_MESSAGE_EDIT = "編集画面で使用を想定"
 
 
+// 各画面ロード時に実行するメソッドを格納する
+$p.events.on_grid_load_arr = []
+$p.events.on_editor_load_arr = []
+// 保存押下時に実行するメソッドを格納する
+$p.events.before_send_Create_arr = []
+$p.events.before_send_Update_arr = []
+
+// 格納したメソッドを実行するメソッド
+$p.events.on_grid_load = function () {
+    for (key in TABLE_INFO) {
+        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    }
+    console.log("start!! on_grid_load_arr!!!")
+    $p.events.on_grid_load_arr.forEach(func => {
+        console.log(func)
+        func()
+    })
+}
+$p.events.on_editor_load = function () {
+    for (key in TABLE_INFO) {
+        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    }
+    console.log("start!! on_editor_load_arr!!!")
+    $p.events.on_editor_load_arr.forEach(func => {
+        console.log(func)
+        func()
+    })
+}
+$p.events.before_send_Create = function () {
+    console.log("start!! before_send_Create_arr!!!")
+    // falseをreturnするまで繰り返す
+    return $p.events.before_send_Create_arr.every(func => {
+        console.log(func)
+        return func()
+    })
+}
+$p.events.before_send_Update = function () {
+    console.log("start!! before_send_Update_arr!!!")
+    // falseをreturnするまで繰り返す
+    return $p.events.before_send_Update_arr.every(func => {
+        console.log(func)
+        return func()
+    })
+}
+
+// 共通ロード処理
 // 即時関数
 $(function () {
     let insertHtml = `
@@ -67,74 +115,26 @@ $(function () {
     document.getElementsByTagName('body')[0].insertAdjacentHTML('afterbegin', insertHtml);
 });
 
-
-// 各画面ロード時に実行するメソッドを格納する
-$p.events.on_grid_load_arr = []
-$p.events.on_editor_load_arr = []
-// 保存押下時に実行するメソッドを格納する
-$p.events.before_send_Create_arr = []
-$p.events.before_send_Update_arr = []
-
-// 格納したメソッドを実行するメソッド
-$p.events.on_grid_load = function () {
-    for (key in TABLE_INFO) {
-        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
-    }
-    console.log("start!! on_grid_load_arr!!!")
-    $p.events.on_grid_load_arr.forEach(func => {
-        console.log(func)
-        func()
-    })
-}
-$p.events.on_editor_load = function () {
-    for (key in TABLE_INFO) {
-        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
-    }
-    console.log("start!! on_editor_load_arr!!!")
-    $p.events.on_editor_load_arr.forEach(func => {
-        console.log(func)
-        func()
-    })
-}
-$p.events.before_send_Create = function () {
-    console.log("start!! before_send_Create_arr!!!")
-    // falseをreturnするまで繰り返す
-    return $p.events.before_send_Create_arr.every(func => {
-        console.log(func)
-        return func()
-    })
-}
-$p.events.before_send_Update = function () {
-    console.log("start!! before_send_Update_arr!!!")
-    // falseをreturnするまで繰り返す
-    return $p.events.before_send_Update_arr.every(func => {
-        console.log(func)
-        return func()
-    })
-}
+// 共通gridロード処理
 $p.events.on_grid_load_arr.push(function () {
     try {
         if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
             commonMessage(ERROR, ERROR_MESSAGE_ID)
         }
+        // タイトル変更
+        document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 一覧"
 
     } catch (err) {
-
         console.log(err)
     }
 })
 
-$p.events.on_grid_load_arr.push(function () {
-	// タイトル変更
-    document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 一覧"
-})
-$p.events.on_editor_load_arr.push(function () {
-	// タイトル変更
-    document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 編集"
-})
-
+// 共通editorロード処理
 $p.events.on_editor_load_arr.push(function () {
     try {
+        // タイトル変更
+        document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 編集"
+
         // オリジナルスタイルの追加
         let style = `
             <style>
@@ -152,7 +152,6 @@ $p.events.on_editor_load_arr.push(function () {
             </style>`
         $('#Application').append(style)
     } catch (err) {
-
         console.log(err)
     }
 })
@@ -658,6 +657,103 @@ function commonRemoveElements(ids) {
     }
 
     elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+}
+
+/**
+ * 指定されたボタンを削除する関数です。（一覧画面で使用を想定）
+ * @param {Array} buttonNames ボタン名
+ */
+function commonRemoveGridButton(...buttonNames) {
+    try {
+        if ($p.action() !== "index") {
+            let message = ERROR_MESSAGE_GRID
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let removes = []
+        for (let bn of buttonNames)
+        switch (bn) {
+            case "戻る":
+                removes.push("GoBack")
+                break
+
+            case "一括削除":
+                removes.push("BulkDeleteCommand")
+                break
+
+            case "インポート":
+                removes.push("EditImportSettings")
+                break
+
+            case "エクスポート":
+                removes.push("OpenExportSelectorDialogCommand")
+                break
+
+            case "検索":
+                removes.push("SearchField")
+                break
+
+        }
+        commonRemoveElements(removes)
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+/**
+ * 指定されたボタンを削除する関数です。（編集画面で使用を想定）
+ * @param {Array} buttonNames ボタン名
+ */
+function commonRemoveEditorButton(...buttonNames) {
+    try {
+        if ($p.action() !== "edit") {
+            let message = ERROR_MESSAGE_EDIT
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        let removes = []
+        for (let bn of buttonNames)
+        switch (bn) {
+            case "戻る":
+                removes.push("GoBack")
+                break
+
+            case "更新":
+                removes.push("UpdateCommand")
+                break
+
+            case "インポート":
+                removes.push("OpenCopyDialogCommand")
+                break
+
+            case "メール":
+                removes.push("EditOutgoingMail")
+                break
+
+            case "削除":
+                removes.push("DeleteCommand")
+                break
+
+            case "検索":
+                removes.push("SearchField")
+                break
+
+            case "コメント削除":
+                let i = 1
+                while (document.getElementById("DeleteComment," + i)) {
+                    removes.push("DeleteComment," + i++)
+                }
+                break
+            default:
+                alert("f")
+                break
+        }
+        commonRemoveElements(removes)
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
 }
 
 /**
@@ -1731,54 +1827,65 @@ async function commonExportGroup(groupIds, addFunc) {
  */
 async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, addFunc) {
 
-    let Hash = {}
+    try {
+        if ($p.action() !== "edit") {
+            let message = ERROR_MESSAGE_EDIT
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
 
-    //項目Aから項目Z
-    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for (let char of alphabet) {
-        let clsKey = "Class" + char
-        let numKey = "Num" + char
-        let datKey = "Date" + char
-        let dscKey = "Description" + char
-        let chkKey = "Check" + char
-        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        let Hash = {}
+
+        //項目Aから項目Z
+        let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for (let char of alphabet) {
+            let clsKey = "Class" + char
+            let numKey = "Num" + char
+            let datKey = "Date" + char
+            let dscKey = "Description" + char
+            let chkKey = "Check" + char
+            Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+            Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+            Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+            Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+            Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        }
+
+        //項目001から項目999
+        for (let i = 1; i <= expand; i++) {
+            let clsKey = "Class" + commonPaddingLeft(i, 3)
+            let numKey = "Num" + commonPaddingLeft(i, 3)
+            let datKey = "Date" + commonPaddingLeft(i, 3)
+            let dscKey = "Description" + commonPaddingLeft(i, 3)
+            let chkKey = "Check" + commonPaddingLeft(i, 3)
+            Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+            Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+            Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+            Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+            Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        }
+
+        // 変更項目を上書き
+        for (let key in editItems) {
+            Hash[key] = editItems[key]
+        }
+
+        // ステータスを取得
+        if (commonIsNull(Status)) {
+            Status = commonGetVal("Status", true)
+        }
+
+        return commonCreate(
+            $p.siteId()
+            , Hash
+            , Status
+            , Comments
+            , addFunc
+        )
+    } catch (err) {
+        // 再スロー
+        throw err
     }
-
-    //項目001から項目999
-    for (let i = 1; i <= expand; i++) {
-        let clsKey = "Class" + commonPaddingLeft(i, 3)
-        let numKey = "Num" + commonPaddingLeft(i, 3)
-        let datKey = "Date" + commonPaddingLeft(i, 3)
-        let dscKey = "Description" + commonPaddingLeft(i, 3)
-        let chkKey = "Check" + commonPaddingLeft(i, 3)
-        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-    }
-
-    // 変更項目を上書き
-    for (let key in editItems) {
-        Hash[key] = editItems[key]
-    }
-
-    // ステータスを取得
-    if (commonIsNull(Status)) {
-        Status = commonGetVal("Status", true)
-    }
-
-    return commonCreate(
-        $p.siteId()
-        , Hash
-        , Status
-        , Comments
-        , addFunc
-    )
 }
 
 /**
@@ -1793,59 +1900,71 @@ async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, ad
  */
 async function commonSaveRecord(editItems = {}, Status, Comments, reload = false, expand = 0, addFunc) {
 
-    let Hash = {}
+    try {
+        if ($p.action() !== "edit") {
+            let message = ERROR_MESSAGE_EDIT
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
 
-    //項目Aから項目Z
-    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for (let char of alphabet) {
-        let clsKey = "Class" + char
-        let numKey = "Num" + char
-        let datKey = "Date" + char
-        let dscKey = "Description" + char
-        let chkKey = "Check" + char
-        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        let Hash = {}
+
+        //項目Aから項目Z
+        let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for (let char of alphabet) {
+            let clsKey = "Class" + char
+            let numKey = "Num" + char
+            let datKey = "Date" + char
+            let dscKey = "Description" + char
+            let chkKey = "Check" + char
+            Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+            Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+            Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+            Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+            Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        }
+
+        //項目001から項目999
+        for (let i = 1; i <= expand; i++) {
+            let clsKey = "Class" + commonPaddingLeft(i, 3)
+            let numKey = "Num" + commonPaddingLeft(i, 3)
+            let datKey = "Date" + commonPaddingLeft(i, 3)
+            let dscKey = "Description" + commonPaddingLeft(i, 3)
+            let chkKey = "Check" + commonPaddingLeft(i, 3)
+            Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
+            Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
+            Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
+            Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
+            Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
+        }
+
+        // 変更項目を上書き
+        for (let key in editItems) {
+            Hash[key] = editItems[key]
+        }
+
+        // ステータスを取得
+        if (commonIsNull(Status)) {
+            Status = commonGetVal("Status", true)
+        }
+
+        let u = await commonUpdate(
+            $p.id()
+            , Hash
+            , Status
+            , Comments
+            , addFunc
+        )
+        if (reload) {
+            $(window).off('beforeunload');
+            location.reload()
+        }
+        return u
+    } catch (err) {
+        // 再スロー
+        throw err
     }
 
-    //項目001から項目999
-    for (let i = 1; i <= expand; i++) {
-        let clsKey = "Class" + commonPaddingLeft(i, 3)
-        let numKey = "Num" + commonPaddingLeft(i, 3)
-        let datKey = "Date" + commonPaddingLeft(i, 3)
-        let dscKey = "Description" + commonPaddingLeft(i, 3)
-        let chkKey = "Check" + commonPaddingLeft(i, 3)
-        Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
-        Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
-        Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
-        Hash[dscKey] = commonIsNull(commonGetVal(dscKey)) ? "" : commonGetVal(dscKey)
-        Hash[chkKey] = commonIsNull(commonGetVal(chkKey)) ? false : commonGetVal(chkKey)
-    }
-
-    // 変更項目を上書き
-    for (let key in editItems) {
-        Hash[key] = editItems[key]
-    }
-
-    // ステータスを取得
-    if (commonIsNull(Status)) {
-        Status = commonGetVal("Status", true)
-    }
-
-    let u = await commonUpdate(
-        $p.id()
-        , Hash
-        , Status
-        , Comments
-        , addFunc
-    )
-    if (reload) {
-        $(window).off('beforeunload');
-        location.reload()
-    }
-    return u
 }
 
 
@@ -2027,6 +2146,12 @@ function commonConvertElementToString(elem) {
  */
 async function commonUpdateProcessing(id = $p.id()) {
     try {
+        if ($p.action() !== "edit") {
+            let message = ERROR_MESSAGE_EDIT
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+
         let u = {}
         if ($p.action() == "edit") {
             id = $p.id()
