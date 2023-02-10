@@ -29,7 +29,7 @@ $p.events.before_send_Update_arr = []
 
 // 格納したメソッドを実行するメソッド
 $p.events.on_grid_load = function () {
-    for (key in TABLE_INFO) {
+    for (let key in TABLE_INFO) {
         console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
     }
     console.log("start!! on_grid_load_arr!!!")
@@ -39,7 +39,7 @@ $p.events.on_grid_load = function () {
     })
 }
 $p.events.on_editor_load = function () {
-    for (key in TABLE_INFO) {
+    for (let key in TABLE_INFO) {
         console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
     }
     console.log("start!! on_editor_load_arr!!!")
@@ -692,6 +692,11 @@ function commonRemoveGridButton(...buttonNames) {
             case "検索":
                 removes.push("SearchField")
                 break
+            default:
+                Array.from(document.getElementsByTagName("button"))
+                    .filter(v => v.innerText.trim() == bn)
+                    .forEach(v => v.remove())
+                break
 
         }
         commonRemoveElements(removes)
@@ -746,7 +751,9 @@ function commonRemoveEditorButton(...buttonNames) {
                 }
                 break
             default:
-                alert("f")
+                Array.from(document.getElementsByTagName("button"))
+                    .filter(v => v.innerText.trim() == bn)
+                    .forEach(v => v.remove())
                 break
         }
         commonRemoveElements(removes)

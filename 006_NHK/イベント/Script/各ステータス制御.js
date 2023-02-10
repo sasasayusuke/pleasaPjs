@@ -8,7 +8,6 @@ $p.events.on_editor_load_arr.push(function (){
             commonAddButton('accept', accept, '受付開始', 'イベントの受付を開始します')
             break
         case "受付中":
-
             break
         case "終了":
             break
