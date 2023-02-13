@@ -1,6 +1,3 @@
-$p.events.on_grid_load_arr.push(function () {
-    commonAddButton('sendMailToUnconfirmed', sendMailToUnconfirmed, '未確認者へメール', "ステータスが未確認の部局担当者にメールを送ります", "", "ui-icon-mail-open")
-})
 
 async function sendMailToUnconfirmed() {
 

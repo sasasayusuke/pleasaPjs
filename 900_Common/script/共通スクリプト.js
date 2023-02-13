@@ -1,10 +1,15 @@
 
-var NEW = -100
-var NORMAL = 100
-var WARNING = 500
-var CLOSE = 900
-var PROCESSING = 990
-var ERROR = 999
+var STATUS_NEW = -100
+var STATUS_NORMAL = 100
+var STATUS_WARNING = 500
+var STATUS_CLOSE = 900
+var STATUS_PROCESSING = 990
+var STATUS_ERROR = 999
+
+var STATUS_ERROR_MESSAGE_ID = "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。"
+var STATUS_ERROR_MESSAGE_UP = "サーバー側で更新がありました。"
+var STATUS_ERROR_MESSAGE_GRID = "一覧画面で使用を想定"
+var STATUS_ERROR_MESSAGE_EDIT = "編集画面で使用を想定"
 
 var error_messages = []
 var updated_ids = []
@@ -13,11 +18,6 @@ var process_id = ""
 var unique_id = ""
 var increment = 0
 
-
-var ERROR_MESSAGE_ID = "テーブルIDを修正してください。スクリプトタブから共通変数を確認してください。"
-var ERROR_MESSAGE_UP = "サーバー側で更新がありました。"
-var ERROR_MESSAGE_GRID = "一覧画面で使用を想定"
-var ERROR_MESSAGE_EDIT = "編集画面で使用を想定"
 
 
 // 各画面ロード時に実行するメソッドを格納する
@@ -118,8 +118,9 @@ $(function () {
 // 共通gridロード処理
 $p.events.on_grid_load_arr.push(function () {
     try {
+        // 変数一覧へテーブルIDの登録チェック
         if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
-            commonMessage(ERROR, ERROR_MESSAGE_ID)
+            commonMessage(STATUS_ERROR, STATUS_ERROR_MESSAGE_ID)
         }
 
         // システムタイトル取得
@@ -191,11 +192,11 @@ function commonIsNull(obj) {
  * @param {String} type 深刻度
  * @param {String} message メッセージ内容
  */
-function commonMessage(type = NORMAL, message = '') {
+function commonMessage(type = STATUS_NORMAL, message = '') {
     $p.clearMessage()
 
     switch (type) {
-        case NORMAL:
+        case STATUS_NORMAL:
             $p.setMessage(
                 '#Message',
                 JSON.stringify({
@@ -204,7 +205,7 @@ function commonMessage(type = NORMAL, message = '') {
                 })
             )
             break
-        case WARNING:
+        case STATUS_WARNING:
             $p.setMessage(
                 '#Message',
                 JSON.stringify({
@@ -213,7 +214,7 @@ function commonMessage(type = NORMAL, message = '') {
                 })
             )
             break
-        case ERROR:
+        case STATUS_ERROR:
             $p.setMessage(
                 '#Message',
                 JSON.stringify({
@@ -277,14 +278,14 @@ function commonGenerateUniqueId(pattern = "xxxx-xxxx-xxxx-xxxx") {
  */
 async function commonCheckPoint(messages, progress = "progress", analysis) {
     try {
-        commonMessage(NORMAL, "処理開始")
+        commonMessage(STATUS_NORMAL, "処理開始")
 
         let p_status = 0
         let m_status = 0
         switch (progress) {
             case "start":
                 commonSetLoading(true)
-                p_status = m_status = NORMAL
+                p_status = m_status = STATUS_NORMAL
                 error_messages = []
                 updated_ids = []
                 created_ids = []
@@ -301,34 +302,34 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
                         ClassB: $p.siteId(),
                         ClassC: $p.id(),
                     },
-                    NORMAL,
+                    STATUS_NORMAL,
                     "",
                     false
                 )
                 process_id = processLog.Id
                 break
             case "progress":
-                p_status = m_status = NORMAL
+                p_status = m_status = STATUS_NORMAL
                 break
             case "add":
                 messages.splice(increment, 0, messages[increment])
-                p_status = m_status = NORMAL
+                p_status = m_status = STATUS_NORMAL
                 break
             case "close":
                 commonSetLoading(false)
                 increment = messages.length - 1
-                p_status = CLOSE
-                m_status = NORMAL
+                p_status = STATUS_CLOSE
+                m_status = STATUS_NORMAL
                 unique_id = ""
                 break
             case "warning":
                 commonSetLoading(false)
-                p_status = m_status = WARNING
+                p_status = m_status = STATUS_WARNING
                 unique_id = ""
                 break
             case "error":
                 commonSetLoading(false)
-                p_status = m_status = ERROR
+                p_status = m_status = STATUS_ERROR
                 unique_id = ""
                 break
         }
@@ -356,7 +357,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
         increment++
     } catch (err) {
         // 再スロー
-        await commonLog(ERROR, commonGetErrorObj(err))
+        await commonLog(STATUS_ERROR, commonGetErrorObj(err))
         throw err
     }
 }
@@ -429,7 +430,7 @@ async function commonPrintLog(message, workbook, filename, tableIds, hashes) {
  * @param {String} message      メッセージ内容
  * @param {Object} analysis     解析用
  */
-async function commonLog(type = NORMAL, message, analysis) {
+async function commonLog(type = STATUS_NORMAL, message, analysis) {
     let log = await commonCreate(
         TABLE_INFO["メッセージログ"].index,
         {
@@ -461,7 +462,7 @@ function commonGetTab(label, flg = true) {
         let tab = Array.from(document.getElementsByClassName("ui-tabs-tab")).filter(v => v.children[0].innerText == label)[0]
         if (commonIsNull(tab)) {
             let message = `共通関数commonGetTab：ラベル不正。${label}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         let obj = document.querySelector(`fieldSet[aria-labelledby=${tab.getAttribute("aria-labelledby")}]`)
@@ -484,7 +485,7 @@ function commonGetSection(label, flg = true) {
         let section = Array.from(document.getElementsByClassName("field-section")).filter(v => v.innerText == label)[0]
         if (commonIsNull(section)) {
             let message = `共通関数commonGetSection：ラベル不正。${label}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         let obj = document.getElementById(`${section.getAttribute("for")}`)
@@ -680,8 +681,8 @@ function commonRemoveElements(ids) {
 function commonRemoveGridButtons(...buttonNames) {
     try {
         if ($p.action() !== "index") {
-            let message = ERROR_MESSAGE_GRID
-            commonMessage(ERROR, message)
+            let message = STATUS_ERROR_MESSAGE_GRID
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         let removes = []
@@ -727,8 +728,8 @@ function commonRemoveGridButtons(...buttonNames) {
 function commonRemoveEditorButtons(...buttonNames) {
     try {
         if ($p.action() !== "edit" && $p.action() !== "new") {
-            let message = ERROR_MESSAGE_EDIT
-            commonMessage(ERROR, message)
+            let message = STATUS_ERROR_MESSAGE_EDIT
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         let removes = []
@@ -999,7 +1000,7 @@ function commonPaddingLeft(str, size = 1, char = '0') {
     try {
         if (char.length !== 1) {
             let message = `共通関数commonPaddingLeft：1文字ではないです。${char}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         return (char.repeat(size) + str).substr(-1 * size)
@@ -1020,7 +1021,7 @@ function commonPaddingRight(str, size = 1, char = ' ') {
     try {
         if (char.length !== 1) {
             let message = `共通関数commonPaddingRight：1文字ではないです。${char}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
         return (str + char.repeat(size)).substr(0, size)
@@ -1374,7 +1375,7 @@ function commonGetId(label, prefix = true, suffix = false) {
         let id = $p.getColumnName(label)
         if (commonIsNull(id)) {
             let message = `共通関数commonGetId：ラベル不正。${label}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         } else {
             id = prefix ? $p.tableName() + '_' + id : id
@@ -1399,7 +1400,7 @@ function commonChangeReadOnly(label, disabled = true) {
         let field = commonGetId(label, true, true)
         if (commonIsNull(area)) {
             let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
-            commonMessage(ERROR, message)
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
 
         } else {
@@ -1850,8 +1851,8 @@ async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, ad
 
     try {
         if ($p.action() !== "edit") {
-            let message = ERROR_MESSAGE_EDIT
-            commonMessage(ERROR, message)
+            let message = STATUS_ERROR_MESSAGE_EDIT
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
 
@@ -1923,8 +1924,8 @@ async function commonSaveRecord(editItems = {}, Status, Comments, reload = false
 
     try {
         if ($p.action() !== "edit") {
-            let message = ERROR_MESSAGE_EDIT
-            commonMessage(ERROR, message)
+            let message = STATUS_ERROR_MESSAGE_EDIT
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
 
@@ -2168,8 +2169,8 @@ function commonConvertElementToString(elem) {
 async function commonUpdateProcessing(id = $p.id()) {
     try {
         if ($p.action() !== "edit") {
-            let message = ERROR_MESSAGE_EDIT
-            commonMessage(ERROR, message)
+            let message = STATUS_ERROR_MESSAGE_EDIT
+            commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
 
@@ -2180,13 +2181,13 @@ async function commonUpdateProcessing(id = $p.id()) {
             serverDate = serverDate[0]["更新日時"]
             let clientDate = $p.getControl("更新日時").attr("datetime")
             if (serverDate !== clientDate) {
-                let message = ERROR_MESSAGE_UP
-                commonMessage(ERROR, message)
+                let message = STATUS_ERROR_MESSAGE_UP
+                commonMessage(STATUS_ERROR, message)
                 throw new Error(message)
             }
-            u = await commonSaveRecord({}, PROCESSING)
+            u = await commonSaveRecord({}, STATUS_PROCESSING)
         } else {
-            u = await commonUpdate(id, {}, PROCESSING)
+            u = await commonUpdate(id, {}, STATUS_PROCESSING)
         }
 
         return u

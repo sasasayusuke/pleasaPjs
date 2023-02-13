@@ -15,7 +15,7 @@ $p.events.on_editor_load_arr.push(function (){
             break
         default:
             // その他のステータスの場合エラー
-            commonSetMessage("不正status", ERROR, true)
+            commonSetMessage("不正status", STATUS_ERROR, true)
             break
     }
 })
