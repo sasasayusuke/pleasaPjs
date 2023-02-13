@@ -9,6 +9,8 @@ $p.events.on_editor_load_arr.push(function (){
             break
         case "受付中":
             break
+        case "購買依頼報告書締切":
+            break
         case "終了":
             break
         default:

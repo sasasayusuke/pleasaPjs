@@ -70,8 +70,8 @@ var TABLE_INFO = {
         }
     },
     "パソコン形状登録": {
-        index: 8923,
-    }
+        index: 5461,
+    },
     "購買申請": {
         index: 5456,
         status: `

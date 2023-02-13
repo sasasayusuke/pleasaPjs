@@ -121,8 +121,13 @@ $p.events.on_grid_load_arr.push(function () {
         if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
             commonMessage(ERROR, ERROR_MESSAGE_ID)
         }
-        // タイトル変更
-        document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 一覧"
+
+        // システムタイトル取得
+        let sysTitle = document.getElementsByTagName("Title")[0].innerText
+        // サイトタイトル取得
+        let siteTitle = JSON.parse(document.getElementById("JoinedSites").value)[0].Title
+        // システムタイトル置換
+        document.getElementsByTagName("Title")[0].innerText = sysTitle.replace("PCLS", "PCLS 一覧 " + siteTitle)
 
     } catch (err) {
         console.log(err)
@@ -132,8 +137,12 @@ $p.events.on_grid_load_arr.push(function () {
 // 共通editorロード処理
 $p.events.on_editor_load_arr.push(function () {
     try {
-        // タイトル変更
-        document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 編集"
+        // システムタイトル取得
+        let sysTitle = document.getElementsByTagName("Title")[0].innerText
+        // サイトタイトル取得
+        let siteTitle = JSON.parse(document.getElementById("JoinedSites").value)[0].Title
+        // システムタイトル置換
+        document.getElementsByTagName("Title")[0].innerText = sysTitle.replace("PCLS", "PCLS 編集 " + siteTitle)
 
         // 読み取り制御
         Object.values(TABLE_INFO[commonGetTableName($p.siteId())].column)
@@ -668,7 +677,7 @@ function commonRemoveElements(ids) {
  * 指定されたボタンを削除する関数です。（一覧画面で使用を想定）
  * @param {Array} buttonNames ボタン名
  */
-function commonRemoveGridButton(...buttonNames) {
+function commonRemoveGridButtons(...buttonNames) {
     try {
         if ($p.action() !== "index") {
             let message = ERROR_MESSAGE_GRID
@@ -715,7 +724,7 @@ function commonRemoveGridButton(...buttonNames) {
  * 指定されたボタンを削除する関数です。（編集画面で使用を想定）
  * @param {Array} buttonNames ボタン名
  */
-function commonRemoveEditorButton(...buttonNames) {
+function commonRemoveEditorButtons(...buttonNames) {
     try {
         if ($p.action() !== "edit" && $p.action() !== "new") {
             let message = ERROR_MESSAGE_EDIT
