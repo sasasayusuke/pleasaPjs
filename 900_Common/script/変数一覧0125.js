@@ -10,62 +10,68 @@ var TABLE_INFO = {
         index: 5460,
         status: `
             100,下書き,下書,status-new
-            200,受付中,受付中,status-preparation
+            200,受付中,受付,status-preparation
+            800,購買依頼報告書締切,購締切,status-closed
             900,終了,終了,status-closed
+            990,処理中,処理中,status-rejected
+            999,エラー,エラー,status-rejected
         `,
         column: {
             "DateA": {
                 "label": "購買依頼報告書締切日",
-                "readOnly": [],
-                "display": []
+                "readOnly": [200, 800, 900],
+                "hidden": []
             },
             "DateB": {
                 "label": "パソコン設定登録書締切日",
-                "readOnly": [],
-                "display": []
+                "readOnly": [200, 800, 900],
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "イベントタイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
+    "パソコン形状登録": {
+        index: 8923,
+    }
     "購買申請": {
         index: 5456,
         status: `
@@ -78,277 +84,277 @@ var TABLE_INFO = {
             "ClassA": {
                 "label": "イベント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "ワークフロー",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumA": {
                 "label": "台数1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "パソコン形状1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "経理科目1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "細節1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "部局メモ1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "パソコン形状2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "経理科目2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "細節2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "部局メモ2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumB": {
                 "label": "台数2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassM": {
                 "label": "パソコン形状3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassN": {
                 "label": "経理科目3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassO": {
                 "label": "細節3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassP": {
                 "label": "部局メモ3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumC": {
                 "label": "台数3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassR": {
                 "label": "経理科目4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassV": {
                 "label": "パソコン形状5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumD": {
                 "label": "購買台数入力 - 項目数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassX": {
                 "label": "申請部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassY": {
                 "label": "申請部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassZ": {
                 "label": "納入先部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class001": {
                 "label": "納入先部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class002": {
                 "label": "氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003": {
                 "label": "外線番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class004": {
                 "label": "内線番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class005": {
                 "label": "メールアドレス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class006": {
                 "label": "送付先住所1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "備考1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "備考2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "備考3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "送付先住所2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "送付先住所3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassQ": {
                 "label": "パソコン形状4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumE": {
                 "label": "台数4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassS": {
                 "label": "細節4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassT": {
                 "label": "部局メモ4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassU": {
                 "label": "送付先住所4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionF": {
                 "label": "備考4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumF": {
                 "label": "台数5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassW": {
                 "label": "経理科目5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class007": {
                 "label": "細節5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class008": {
                 "label": "部局メモ5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class009": {
                 "label": "送付先住所5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionG": {
                 "label": "備考5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -368,122 +374,122 @@ var TABLE_INFO = {
             "ClassA": {
                 "label": "イベント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "ステータス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "経理担当 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "経理担当 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "照査者 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "照査者 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "決定者 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "決定者 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateA": {
                 "label": "経理担当 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateB": {
                 "label": "照査者 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateC": {
                 "label": "決定者 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "申請部局",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "提出者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "内線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "外線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "メールアドレス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -493,92 +499,92 @@ var TABLE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "解析用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -588,87 +594,87 @@ var TABLE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumA": {
                 "label": "進捗率",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -678,97 +684,97 @@ var TABLE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "処理ログ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "AttachmentsA": {
                 "label": "出力帳票",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "解析用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "説明C",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "説明D",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "説明E",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -778,62 +784,62 @@ var TABLE_INFO = {
             "ClassA": {
                 "label": "部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "親部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC~5679,ClassB": {
                 "label": "部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC~5679,ClassA": {
                 "label": "部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -843,247 +849,247 @@ var TABLE_INFO = {
             "ClassA": {
                 "label": "拠点名（ラベル名）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "PC名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "ドメイン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "ワークグループ名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "管理者権限付与アカウント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckA": {
                 "label": "スタッフ用・共有機用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckB": {
                 "label": "IPアドレス固定",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "備品番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckC": {
                 "label": "DNS自動",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckD": {
                 "label": "DNS固定",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "優先DNS",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "代替DNS",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassM": {
                 "label": "放送局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassN": {
                 "label": "郵便番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassO": {
                 "label": "住所",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassP": {
                 "label": "担当者名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassQ": {
                 "label": "担当者外線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassR": {
                 "label": "納品希望日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassS": {
                 "label": "伝票番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateA": {
                 "label": "着荷予定日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassT": {
                 "label": "受領日（WEB上）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassU": {
                 "label": "貸出ステータス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateD": {
                 "label": "返却PC到着日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassV": {
                 "label": "破損・物損・欠損等",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassW": {
                 "label": "NHK備品番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassX": {
                 "label": "シリアル番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassY": {
                 "label": "優先MAC",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassZ": {
                 "label": "無線MAC",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class001": {
                 "label": "備品シール",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class002": {
                 "label": "過放電シール",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003": {
                 "label": "貸出状況一覧リンク",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateB": {
                 "label": "PC管理センターキッティング開始日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "名称",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "管理グループID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "設置場所/配布部署",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "管理担当者（職員番号）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,DateD": {
                 "label": "貸出開始日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,DateE": {
                 "label": "貸出終了日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassA": {
                 "label": "貸出申請書ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassC": {
                 "label": "申請部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassF": {
                 "label": "担当者名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1106,52 +1112,52 @@ var CODE_INFO = {
             "DateA": {
                 "label": "購買依頼報告書締切日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateB": {
                 "label": "パソコン設定登録書締切日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "イベントタイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1160,277 +1166,277 @@ var CODE_INFO = {
             "ClassA": {
                 "label": "イベント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "ワークフロー",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumA": {
                 "label": "台数1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "パソコン形状1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "経理科目1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "細節1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "部局メモ1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "パソコン形状2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "経理科目2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "細節2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "部局メモ2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumB": {
                 "label": "台数2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassM": {
                 "label": "パソコン形状3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassN": {
                 "label": "経理科目3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassO": {
                 "label": "細節3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassP": {
                 "label": "部局メモ3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumC": {
                 "label": "台数3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassR": {
                 "label": "経理科目4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassV": {
                 "label": "パソコン形状5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumD": {
                 "label": "購買台数入力 - 項目数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassX": {
                 "label": "申請部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassY": {
                 "label": "申請部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassZ": {
                 "label": "納入先部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class001": {
                 "label": "納入先部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class002": {
                 "label": "氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003": {
                 "label": "外線番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class004": {
                 "label": "内線番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class005": {
                 "label": "メールアドレス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class006": {
                 "label": "送付先住所1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "備考1",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "備考2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "備考3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "送付先住所2",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "送付先住所3",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassQ": {
                 "label": "パソコン形状4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumE": {
                 "label": "台数4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassS": {
                 "label": "細節4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassT": {
                 "label": "部局メモ4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassU": {
                 "label": "送付先住所4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionF": {
                 "label": "備考4",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumF": {
                 "label": "台数5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassW": {
                 "label": "経理科目5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class007": {
                 "label": "細節5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class008": {
                 "label": "部局メモ5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class009": {
                 "label": "送付先住所5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionG": {
                 "label": "備考5",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1439,122 +1445,122 @@ var CODE_INFO = {
             "ClassA": {
                 "label": "イベント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "ステータス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "経理担当 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "経理担当 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "照査者 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "照査者 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "決定者 - 氏名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "決定者 - 役職",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateA": {
                 "label": "経理担当 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateB": {
                 "label": "照査者 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateC": {
                 "label": "決定者 - 承認日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "申請部局",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "提出者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "内線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "外線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "メールアドレス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1563,92 +1569,92 @@ var CODE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "解析用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1657,87 +1663,87 @@ var CODE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "NumA": {
                 "label": "進捗率",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1746,97 +1752,97 @@ var CODE_INFO = {
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "処理ログ",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "AttachmentsA": {
                 "label": "出力帳票",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionB": {
                 "label": "解析用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Manager": {
                 "label": "管理者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ResultId": {
                 "label": "ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionC": {
                 "label": "説明C",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionD": {
                 "label": "説明D",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionE": {
                 "label": "説明E",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1845,62 +1851,62 @@ var CODE_INFO = {
             "ClassA": {
                 "label": "部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "親部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC~5679,ClassB": {
                 "label": "部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC~5679,ClassA": {
                 "label": "部局コード",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     },
@@ -1909,247 +1915,247 @@ var CODE_INFO = {
             "ClassA": {
                 "label": "拠点名（ラベル名）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassB": {
                 "label": "PC名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassC": {
                 "label": "ドメイン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassD": {
                 "label": "ワークグループ名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassE": {
                 "label": "管理者権限付与アカウント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckA": {
                 "label": "スタッフ用・共有機用",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckB": {
                 "label": "IPアドレス固定",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassI": {
                 "label": "備品番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckC": {
                 "label": "DNS自動",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "CheckD": {
                 "label": "DNS固定",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassK": {
                 "label": "優先DNS",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassL": {
                 "label": "代替DNS",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassM": {
                 "label": "放送局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassN": {
                 "label": "郵便番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassO": {
                 "label": "住所",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassP": {
                 "label": "担当者名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassQ": {
                 "label": "担当者外線",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassR": {
                 "label": "納品希望日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassS": {
                 "label": "伝票番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateA": {
                 "label": "着荷予定日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassT": {
                 "label": "受領日（WEB上）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassU": {
                 "label": "貸出ステータス",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateD": {
                 "label": "返却PC到着日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassV": {
                 "label": "破損・物損・欠損等",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DescriptionA": {
                 "label": "備考",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassW": {
                 "label": "NHK備品番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassX": {
                 "label": "シリアル番号",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassY": {
                 "label": "優先MAC",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassZ": {
                 "label": "無線MAC",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class001": {
                 "label": "備品シール",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class002": {
                 "label": "過放電シール",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003": {
                 "label": "貸出状況一覧リンク",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "DateB": {
                 "label": "PC管理センターキッティング開始日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassF": {
                 "label": "名称",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassG": {
                 "label": "管理グループID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassH": {
                 "label": "設置場所/配布部署",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "ClassJ": {
                 "label": "管理担当者（職員番号）",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Owner": {
                 "label": "担当者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Status": {
                 "label": "状況",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Title": {
                 "label": "タイトル",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Comments": {
                 "label": "コメント",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Updator": {
                 "label": "更新者",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,DateD": {
                 "label": "貸出開始日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,DateE": {
                 "label": "貸出終了日",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassA": {
                 "label": "貸出申請書ID",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassC": {
                 "label": "申請部局名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             },
             "Class003~5450,ClassF": {
                 "label": "担当者名",
                 "readOnly": [],
-                "display": []
+                "hidden": []
             }
         }
     }
@@ -2176,7 +2182,7 @@ async function commonGetColumnNames(tableId) {
     for (let c of columnNames) obj[tableId][c.ColumnName] = {
         label: c.LabelText,
         readOnly: [],
-        display: [],
+        hidden: [],
     }
     return obj
 }
@@ -2203,7 +2209,7 @@ function commonGetColumnName(table, label) {
         // 保存用変数から取得
         let data = Object.keys(column)
             .filter(v => v.indexOf("~") < 0)
-            .filter(v => column[v] == label)
+            .filter(v => column[v].label == label)
         if (data.length == 0) {
             let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
             commonMessage(ERROR, message)
@@ -2254,6 +2260,32 @@ function commonGetStatuses(table, format = true) {
                 })
         }
         return status
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+
+/**
+ * statusを取得
+ * @param {String}      tableId     テーブルID
+ * @return {String}     tableName
+ */
+function commonGetTableName(tableId) {
+    try {
+        table = Object.keys(TABLE_INFO).filter(v => TABLE_INFO[v].index == tableId)
+        if (table.length == 0) {
+            let message = `共通関数commonGetTableName：テーブルID不正。${tableId}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        } else if (table.length > 1) {
+            let message = `共通関数commonGetTableName：テーブルが2重で登録されています。${tableId}`
+            commonMessage(ERROR, message)
+            throw new Error(message)
+        }
+        return table[0]
+
     } catch (err) {
         // 再スロー
         throw err

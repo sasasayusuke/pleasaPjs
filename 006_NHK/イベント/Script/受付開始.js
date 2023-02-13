@@ -24,7 +24,7 @@ async function accept() {
 
         let departments = await commonGetData(
             TABLE_INFO["部局情報"].index,
-            ["親部局コード", "部局名", "ID"].map(v => commonGetColumnName("部局情報", v)),
+            ["親部局コード", "部局名"].map(v => commonGetColumnName("部局情報", v)),
         )
         departments = departments.filter(v => commonIsNull(v["親部局コード"]))
         let i = 0

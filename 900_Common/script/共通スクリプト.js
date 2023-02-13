@@ -135,6 +135,11 @@ $p.events.on_editor_load_arr.push(function () {
         // タイトル変更
         document.getElementsByTagName("Title")[0].innerText = JSON.parse(document.getElementById("JoinedSites").value)[0].Title + " ー 編集"
 
+        // 読み取り制御
+        Object.values(TABLE_INFO[commonGetTableName($p.siteId())].column)
+            .filter(v => v.readOnly.includes(+commonGetVal("Status", true)))
+            .forEach(v => commonChangeReadOnly(v.label))
+
         // オリジナルスタイルの追加
         let style = `
             <style>
@@ -712,7 +717,7 @@ function commonRemoveGridButton(...buttonNames) {
  */
 function commonRemoveEditorButton(...buttonNames) {
     try {
-        if ($p.action() !== "edit") {
+        if ($p.action() !== "edit" && $p.action() !== "new") {
             let message = ERROR_MESSAGE_EDIT
             commonMessage(ERROR, message)
             throw new Error(message)
