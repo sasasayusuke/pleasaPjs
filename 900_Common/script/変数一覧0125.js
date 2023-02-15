@@ -15,52 +15,52 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5460": {
             "DateA": {
                 "label": "購買依頼報告書締切日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "パソコン設定登録書締切日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "イベントタイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -69,277 +69,277 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5456": {
             "ClassA": {
                 "label": "イベント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "ワークフロー",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumA": {
                 "label": "台数1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "パソコン形状1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "経理科目1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "細節1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "部局メモ1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "パソコン形状2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "経理科目2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "細節2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "部局メモ2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumB": {
                 "label": "台数2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassM": {
                 "label": "パソコン形状3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassN": {
                 "label": "経理科目3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassO": {
                 "label": "細節3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassP": {
                 "label": "部局メモ3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumC": {
                 "label": "台数3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassR": {
                 "label": "経理科目4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassV": {
                 "label": "パソコン形状5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumD": {
                 "label": "購買台数入力 - 項目数",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassX": {
                 "label": "申請部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassY": {
                 "label": "申請部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassZ": {
                 "label": "納入先部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class001": {
                 "label": "納入先部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class002": {
                 "label": "氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003": {
                 "label": "外線番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class004": {
                 "label": "内線番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class005": {
                 "label": "メールアドレス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class006": {
                 "label": "送付先住所1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "備考1",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "備考2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "備考3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "送付先住所2",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "送付先住所3",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassQ": {
                 "label": "パソコン形状4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumE": {
                 "label": "台数4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassS": {
                 "label": "細節4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassT": {
                 "label": "部局メモ4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassU": {
                 "label": "送付先住所4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionF": {
                 "label": "備考4",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumF": {
                 "label": "台数5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassW": {
                 "label": "経理科目5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class007": {
                 "label": "細節5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class008": {
                 "label": "部局メモ5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class009": {
                 "label": "送付先住所5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionG": {
                 "label": "備考5",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -348,122 +348,122 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5455": {
             "ClassA": {
                 "label": "イベント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "ステータス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "経理担当 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "経理担当 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "照査者 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "照査者 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "決定者 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "決定者 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateA": {
                 "label": "経理担当 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "照査者 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateC": {
                 "label": "決定者 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "申請部局",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "提出者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "内線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "外線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "メールアドレス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -472,92 +472,92 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5474": {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "解析用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -566,87 +566,87 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5475": {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumA": {
                 "label": "進捗率",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -655,97 +655,97 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5473": {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "処理ログ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "AttachmentsA": {
                 "label": "出力帳票",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "解析用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "説明C",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "説明D",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "説明E",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -754,62 +754,62 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "5679": {
             "ClassA": {
                 "label": "部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "親部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC~5679,ClassB": {
                 "label": "部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC~5679,ClassA": {
                 "label": "部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -818,247 +818,247 @@ var SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
         "8929": {
             "ClassA": {
                 "label": "拠点名（ラベル名）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "PC名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "ドメイン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "ワークグループ名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "管理者権限付与アカウント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckA": {
                 "label": "スタッフ用・共有機用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckB": {
                 "label": "IPアドレス固定",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "備品番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckC": {
                 "label": "DNS自動",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckD": {
                 "label": "DNS固定",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "優先DNS",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "代替DNS",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassM": {
                 "label": "放送局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassN": {
                 "label": "郵便番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassO": {
                 "label": "住所",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassP": {
                 "label": "担当者名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassQ": {
                 "label": "担当者外線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassR": {
                 "label": "納品希望日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassS": {
                 "label": "伝票番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateA": {
                 "label": "着荷予定日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassT": {
                 "label": "受領日（WEB上）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassU": {
                 "label": "貸出ステータス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateD": {
                 "label": "返却PC到着日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassV": {
                 "label": "破損・物損・欠損等",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "備考",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassW": {
                 "label": "NHK備品番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassX": {
                 "label": "シリアル番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassY": {
                 "label": "優先MAC",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassZ": {
                 "label": "無線MAC",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class001": {
                 "label": "備品シール",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class002": {
                 "label": "過放電シール",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003": {
                 "label": "貸出状況一覧リンク",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "PC管理センターキッティング開始日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "名称",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "管理グループID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "設置場所/配布部署",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "管理担当者（職員番号）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,DateD": {
                 "label": "貸出開始日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,DateE": {
                 "label": "貸出終了日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassA": {
                 "label": "貸出申請書ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassC": {
                 "label": "申請部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassF": {
                 "label": "担当者名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1081,52 +1081,52 @@ var TABLE_INFO = {
         column: {
             "DateA": {
                 "label": "購買依頼報告書締切日",
-                "readOnly": [200, 800, 900],
+                "readOnly": [200, 800, 900, 990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "パソコン設定登録書締切日",
-                "readOnly": [200, 800, 900],
+                "readOnly": [200, 800, 900, 990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "イベントタイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1146,277 +1146,277 @@ var TABLE_INFO = {
         column: {
             "ClassA": {
                 "label": "イベント",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "ワークフロー",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumA": {
                 "label": "台数1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "パソコン形状1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "経理科目1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "細節1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "部局メモ1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "パソコン形状2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "経理科目2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "細節2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "部局メモ2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumB": {
                 "label": "台数2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassM": {
                 "label": "パソコン形状3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassN": {
                 "label": "経理科目3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassO": {
                 "label": "細節3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassP": {
                 "label": "部局メモ3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumC": {
                 "label": "台数3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassR": {
                 "label": "経理科目4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassV": {
                 "label": "パソコン形状5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumD": {
                 "label": "購買台数入力 - 項目数",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassX": {
                 "label": "申請部局コード",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassY": {
                 "label": "申請部局名",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassZ": {
                 "label": "納入先部局コード",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class001": {
                 "label": "納入先部局名",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class002": {
                 "label": "氏名",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class003": {
                 "label": "外線番号",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class004": {
                 "label": "内線番号",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class005": {
                 "label": "メールアドレス",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class006": {
                 "label": "送付先住所1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "備考1",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "備考2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "備考3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "送付先住所2",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "送付先住所3",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassQ": {
                 "label": "パソコン形状4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumE": {
                 "label": "台数4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassS": {
                 "label": "細節4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassT": {
                 "label": "部局メモ4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassU": {
                 "label": "送付先住所4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionF": {
                 "label": "備考4",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "NumF": {
                 "label": "台数5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "ClassW": {
                 "label": "経理科目5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class007": {
                 "label": "細節5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class008": {
                 "label": "部局メモ5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Class009": {
                 "label": "送付先住所5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "DescriptionG": {
                 "label": "備考5",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [400],
+                "readOnly": [400, 990, 999],
                 "hidden": []
             }
         }
@@ -1436,122 +1436,122 @@ var TABLE_INFO = {
         column: {
             "ClassA": {
                 "label": "イベント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "ステータス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "経理担当 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "経理担当 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "照査者 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "照査者 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "決定者 - 氏名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "決定者 - 役職",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateA": {
                 "label": "経理担当 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "照査者 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateC": {
                 "label": "決定者 - 承認日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "購買台数",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "申請部局",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "提出者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "内線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "外線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "メールアドレス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "備考",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1561,92 +1561,92 @@ var TABLE_INFO = {
         column: {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "解析用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1656,87 +1656,87 @@ var TABLE_INFO = {
         column: {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "内容",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "更新済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "作成済ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "NumA": {
                 "label": "進捗率",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1746,97 +1746,97 @@ var TABLE_INFO = {
         column: {
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassA": {
                 "label": "処理ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "メッセージ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "テーブルID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "レコードID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "処理ログ",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "AttachmentsA": {
                 "label": "出力帳票",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionB": {
                 "label": "解析用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Manager": {
                 "label": "管理者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ResultId": {
                 "label": "ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionC": {
                 "label": "説明C",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionD": {
                 "label": "説明D",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionE": {
                 "label": "説明E",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1846,62 +1846,62 @@ var TABLE_INFO = {
         column: {
             "ClassA": {
                 "label": "部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "親部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC~5679,ClassB": {
                 "label": "部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC~5679,ClassA": {
                 "label": "部局コード",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -1911,247 +1911,247 @@ var TABLE_INFO = {
         column: {
             "ClassA": {
                 "label": "拠点名（ラベル名）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassB": {
                 "label": "PC名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassC": {
                 "label": "ドメイン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassD": {
                 "label": "ワークグループ名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassE": {
                 "label": "管理者権限付与アカウント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckA": {
                 "label": "スタッフ用・共有機用",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckB": {
                 "label": "IPアドレス固定",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassI": {
                 "label": "備品番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckC": {
                 "label": "DNS自動",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "CheckD": {
                 "label": "DNS固定",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassK": {
                 "label": "優先DNS",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassL": {
                 "label": "代替DNS",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassM": {
                 "label": "放送局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassN": {
                 "label": "郵便番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassO": {
                 "label": "住所",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassP": {
                 "label": "担当者名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassQ": {
                 "label": "担当者外線",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassR": {
                 "label": "納品希望日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassS": {
                 "label": "伝票番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateA": {
                 "label": "着荷予定日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassT": {
                 "label": "受領日（WEB上）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassU": {
                 "label": "貸出ステータス",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateD": {
                 "label": "返却PC到着日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassV": {
                 "label": "破損・物損・欠損等",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DescriptionA": {
                 "label": "備考",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassW": {
                 "label": "NHK備品番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassX": {
                 "label": "シリアル番号",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassY": {
                 "label": "優先MAC",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassZ": {
                 "label": "無線MAC",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class001": {
                 "label": "備品シール",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class002": {
                 "label": "過放電シール",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003": {
                 "label": "貸出状況一覧リンク",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "DateB": {
                 "label": "PC管理センターキッティング開始日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassF": {
                 "label": "名称",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassG": {
                 "label": "管理グループID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassH": {
                 "label": "設置場所/配布部署",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "ClassJ": {
                 "label": "管理担当者（職員番号）",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Owner": {
                 "label": "担当者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Status": {
                 "label": "状況",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Title": {
                 "label": "タイトル",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "UpdatedTime": {
                 "label": "更新日時",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Comments": {
                 "label": "コメント",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Updator": {
                 "label": "更新者",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Ver": {
                 "label": "バージョン",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,DateD": {
                 "label": "貸出開始日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,DateE": {
                 "label": "貸出終了日",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassA": {
                 "label": "貸出申請書ID",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassC": {
                 "label": "申請部局名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             },
             "Class003~5450,ClassF": {
                 "label": "担当者名",
-                "readOnly": [],
+                "readOnly": [990, 999],
                 "hidden": []
             }
         }
@@ -2182,7 +2182,7 @@ async function commonGetColumnNames(tableId) {
     // 保存用変数
     for (let c of columnNames) obj[tableId][c.ColumnName] = {
         label: c.LabelText,
-        readOnly: [STATUS_PROCESSING, STATUS_ERROR],
+        readOnly: [STATUS_PROCESSING, STATUS_ERROR, 990, 999],
         hidden: [],
     }
     return obj

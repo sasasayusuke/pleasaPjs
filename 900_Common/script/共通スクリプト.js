@@ -1091,11 +1091,32 @@ function commonConvert2DToCsv(d2array) {
  *      ['7', '8', '56'],
  *     ]
  */
-function commonConvertCsvTo2D(csvData) {
+function commonConvertCsvTo2D (csvData) {
     // csvDataに出力方法を追加
     let csvOutput = 'data:text/csvcharset=utf-8,'
-    return csvData.replace(csvOutput, '').split(/\n/).map(r => JSON.parse(`[${r.replaceAll('""', '"').replaceAll('"[', '[').replaceAll(']"', ']')}]`)).filter(r => !commonIsNull(r))
+    // 改行の代わり
+    let replaceStr = "xxxxxxxxx====xxxxxxxxx====xxxxxxxxxxx"
+    // 説明項目の語尾の改行の置換
+    while (csvData.includes('\n",')) {
+        csvData = csvData.replace('\n",', '",' + replaceStr)
+    }
+
+    let lines = csvData.replace(csvOutput, '').split(/\n/)
+    let newLines = []
+    for (let i = 0; i < lines.length; i++) {
+        if(lines[i] == "\"") {
+            newLines[newLines.length - 1] +=  replaceStr + '"'
+        } else if (lines[i].startsWith('""') && !lines[i].startsWith('"",')) {
+            newLines[newLines.length - 1] +=  replaceStr + lines[i]
+        } else if (lines[i].startsWith('"')) {
+            newLines.push(lines[i])
+        } else {
+            newLines[newLines.length - 1] += replaceStr + lines[i]
+        }
+    }
+    return newLines.map(v => v.split(",").map(v => v.replaceAll(replaceStr, "\n")))
 }
+
 
 /**
  * アルファベットのみの文字列を数値に変換する
