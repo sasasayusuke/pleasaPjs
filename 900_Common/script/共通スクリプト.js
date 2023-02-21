@@ -172,6 +172,144 @@ $p.events.on_editor_load_arr.push(function () {
 })
 
 /**
+ * columnNameの集合を取得
+ * @param {String}    tableId テーブルID
+ * @return {Object}   obj
+ */
+async function commonGetColumnNames(tableId) {
+    let columnNames = {}
+    // 取得済み(保存用変数から取得)
+
+    let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
+    let html = await data.text()
+    let dom = new DOMParser().parseFromString(html, 'text/html')
+    columnNames = JSON.parse(dom.getElementById("Columns").value)
+    let obj = {}
+    obj[tableId] = {}
+    // 保存用変数
+    for (let c of columnNames) {
+        obj[tableId][c.ColumnName] = {
+            label: c.LabelText,
+            readOnly: [STATUS_CLOSE, STATUS_PROCESSING, STATUS_ERROR],
+            hidden: [],
+        }
+
+        let column = "column"
+        if (column in TABLE_INFO[commonGetTableName(tableId)] && c.ColumnName in TABLE_INFO[commonGetTableName(tableId)][column]) {
+            obj[tableId][c.ColumnName].readOnly = TABLE_INFO[commonGetTableName(tableId)][column][c.ColumnName].readOnly
+            obj[tableId][c.ColumnName].hidden = TABLE_INFO[commonGetTableName(tableId)][column][c.ColumnName].hidden
+        }
+    }
+    return obj
+}
+
+/**
+ * columnNameを取得
+ * @param {String}    table テーブル名
+ * @param {String}    label ラベル名
+ * @return {String}   columnName
+ */
+function commonGetColumnName(table, label) {
+    try {
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetColumnName：テーブル名不正。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!"column" in TABLE_INFO) {
+            let message = `共通関数commonGetColumnName：column未登録。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        let column = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].column
+        // 保存用変数から取得
+        let data = Object.keys(column)
+            .filter(v => v.indexOf("~") < 0)
+            .filter(v => column[v].label == label)
+        if (data.length == 0) {
+            let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        } else if (data.length > 1) {
+            let message = `共通関数commonGetColumnName：ラベル名重複。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        return data[0]
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+
+/**
+ * statusを取得
+ * @param {String}      table   テーブル名
+ * @param {Boolean}     label   ラベル名
+ * @return {String}     status
+ */
+function commonGetStatuses(table, label) {
+    try {
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetStatus：テーブル名不正。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!"status" in TABLE_INFO) {
+            let message = `共通関数commonGetStatus：status未登録。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        let status = TABLE_INFO[Object.keys(TABLE_INFO)
+            .filter(v => v == table)[0]].status
+            .trim().split("\n")
+            .map(v => v.trim())
+            .map(v => {
+                let val = v.split(",")
+                let obj = {}
+                obj.index = val[0]
+                obj.name = val[1]
+                obj.label = val[2]
+                obj.style = val[3]
+                return obj
+            })
+            .filter(v => commonIsNull(label) || v.name == label)
+        return status
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+
+/**
+ * statusを取得
+ * @param {String}      tableId     テーブルID
+ * @return {String}     tableName
+ */
+function commonGetTableName(tableId) {
+    try {
+        let table = Object.keys(TABLE_INFO).filter(v => TABLE_INFO[v].index == tableId)
+        if (table.length == 0) {
+            let message = `共通関数commonGetTableName：テーブルID不正。${tableId}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        } else if (table.length > 1) {
+            let message = `共通関数commonGetTableName：テーブルが2重で登録されています。${tableId}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        return table[0]
+
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+
+/**
  * Null判定する関数です。
  * @param {object} obj オブジェクト
  *
@@ -743,7 +881,7 @@ function commonRemoveEditorButtons(...buttonNames) {
                 removes.push("UpdateCommand")
                 break
 
-            case "インポート":
+            case "コピー":
                 removes.push("OpenCopyDialogCommand")
                 break
 
