@@ -12,9 +12,9 @@ var TABLE_INFO = {
         status: `
             100,下書き,下書,status-new
             200,受付中,受付,status-preparation
+            800,購買依頼報告書締切,購買締,status-review
             900,終了,終了,status-closed
             990,処理中,処理中,status-rejected
-            999,エラー,エラー,status-rejected
         `,
         column: {
             "DateA": {
@@ -51,6 +51,8 @@ var TABLE_INFO = {
             "ClassB": {
                 "label": "イベントタイトル",
                 "readOnly": [
+                    200,
+                    800,
                     900,
                     990,
                     999
@@ -60,6 +62,8 @@ var TABLE_INFO = {
             "NumA": {
                 "label": "年度",
                 "readOnly": [
+                    200,
+                    800,
                     900,
                     990,
                     999

@@ -1098,7 +1098,7 @@ function commonConvertCsvTo2D (csvData) {
     let replaceStr = "xxxxxxxxx====xxxxxxxxx====xxxxxxxxxxx"
     // 説明項目の語尾の改行の置換
     while (csvData.includes('\n",')) {
-        csvData = csvData.replace('\n",', '",' + replaceStr)
+        csvData = csvData.replace('\n",', '",')
     }
 
     let lines = csvData.replace(csvOutput, '').split(/\n/)
@@ -1114,7 +1114,7 @@ function commonConvertCsvTo2D (csvData) {
             newLines[newLines.length - 1] += replaceStr + lines[i]
         }
     }
-    return newLines.map(v => v.split(",").map(v => v.replaceAll(replaceStr, "\n")))
+    return newLines.map(v => v.split(",").map(v => v.replaceAll(replaceStr, "\n").replace(/^"/, '').replace(/"$/, '')))
 }
 
 

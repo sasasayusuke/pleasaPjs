@@ -1,7 +1,7 @@
 
 $p.events.on_editor_load_arr.push(function (){
     // 各ステータス制御
-    let status = commonGetVal('注文ステータス')
+    let status = commonGetVal('Status')
 
     switch(status) {
         case "下書き":
@@ -10,12 +10,14 @@ $p.events.on_editor_load_arr.push(function (){
         case "受付中":
             break
         case "購買依頼報告書締切":
+            commonAddButton('printSpread', printSpread, 'エクセル出力', "ステータスが購買締切以降であればエクセル出力できます。", "", "ui-icon-print")
             break
         case "終了":
+            commonAddButton('printSpread', printSpread, 'エクセル出力', "ステータスが購買締切以降であればエクセル出力できます。", "", "ui-icon-print")
             break
         default:
             // その他のステータスの場合エラー
-            commonSetMessage("不正status", ERROR, true)
+            commonMessage(STATUS_ERROR, "不正status")
             break
     }
 })
