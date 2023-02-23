@@ -1204,15 +1204,57 @@ function commonDownloadCsv(csvStr, title = 'test') {
  *            ⇓
  * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
  */
-function commonConvert2DToCsv(d2array) {
+function commonConvert2DToCsv(array) {
     // csvDataに出力方法を追加
     let csvOutput = 'data:text/csvcharset=utf-8,'
     let csvData = csvOutput
-    d2array.forEach(v => {
+    array.forEach(v => {
         const row = '"' + v.join('","') + '"'
         csvData += row + '\r\n'
     })
     return csvData
+}
+
+
+/**
+ * 引数の2次元配列をmarkdownの形式に変換する関数です。
+ * @param {Array} array 2次元配列
+ *
+ * @return {String} md
+ * 例. [
+ *      ['種別', '単価'],   // ヘッダー
+ *      [10, -4],          // 長さと寄せ(マイナスなら右寄せ)
+ *      ['small', '35'],
+ *      ['large', '56'],
+ *     ]
+ *            ⇓
+ * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
+ */
+function commonConvert2DToMd(array) {
+    if (array[0].length != array[1].length) {
+        let message = `共通関数commonConvert2DToMd：要素数不正。`
+        commonMessage(STATUS_ERROR, message)
+        throw new Error(message)
+    }
+    let md = ["[md]"]
+    for (let i = 0; i < array.length; i++) {
+        let line = array[i]
+        if (i == 1) {
+            // 2行目の時
+            md.push(
+                "|" + line.reduce((pre, cur) => {
+                    if (cur > 0) {
+                        return pre + ":" + "-".repeat(cur) + "|"
+                    } else {
+                        return pre + "-".repeat(cur * -1) + ":|"
+                    }
+                }, "")
+            )
+        } else {
+            md.push("|" + line.reduce((pre, cur) => pre + cur + "|", ""))
+        }
+    }
+    return md.join("\n")
 }
 
 /**
@@ -1373,6 +1415,87 @@ function commonGenerateSequentialArray(n, a = 0) {
  */
 function commonGenerate2DArray(m, n, init = 0) {
     return [...Array(m)].map(_ => Array(n).fill(init))
+}
+
+/**
+ * 2次元配列をソートする関数です。
+ * @param {Array} d2array 元2次元配列
+ * @param {Array} sortIndexes ソートする配列番号（1番目が同値なら2番目でソート 2番目が同値なら...）
+ *
+ * @return {Array} ソート済2次元配列
+ *
+ * 例. d2array = [
+ *      ['A', '10', '1x', 'r'],
+ *      ['B', '50', '1x', 'c'],
+ *      ['B', '10', '1x', 'r'],
+ *      ['B', '15', '1x', 'v'],
+ *      ['B', '10', 'x1', 'b'],
+ *      ['C', '15', 'x1', 'r'],
+ *      ['B', '15', 'x1', 'r'],
+ * ]
+ *    sortIndexes = [0, 1, 3]
+ *             ⇓
+ * [
+ *      ['A', '10', '1x', 'r'],
+ *      ['B', '10', 'x1', 'b'],
+ *      ['B', '10', '1x', 'r'],
+ *      ['B', '15', 'x1', 'r'],
+ *      ['B', '15', '1x', 'v'],
+ *      ['B', '50', '1x', 'c'],
+ *      ['C', '15', 'x1', 'r'],
+ * ]
+ */
+function commonSort2DArray(d2array, sortIndexes) {
+    d2array.sort((a, b) => {
+        for (let i = 0; i < sortIndexes.length; i++) {
+            let idx = sortIndexes[i]
+            if (a[idx] !== b[idx]) {
+                return a[idx] > b[idx] ? 1 : -1
+            }
+        }
+        return a[0] > b[0] ? 1 : -1
+    })
+    return d2array
+}
+
+/**
+ * 2次元配列をサマリーする関数です。
+ * @param {Array} d2array 元2次元配列
+ * @param {Array} findIndexes 検索する配列番号（1番目が同値なら2番目でソート 2番目が同値なら...）
+ * @param {Number} sumIndex 合計する配列番号
+ *
+ * @return {Array} サマリー済2次元配列
+ *
+ * 例. d2array = [
+ *      ['A', 10, '1x', 'r'],
+ *      ['B', 50, '1x', 'c'],
+ *      ['B', 10, '1x', 'r'],
+ *      ['B', 15, '1x', 'v'],
+ *      ['B', 10, 'x1', 'b'],
+ *      ['C', 15, 'x1', 'r'],
+ *      ['B', 15, 'x1', 'r'],
+ * ]
+ *    findIndexes = [0, 2]
+ *    sumIndex = 1
+ *             ⇓
+ * [
+ *     ['A', 10, '1x', 'r'],
+ *     ['B', 75, '1x', 'c'],
+ *     ['B', 25, 'x1', 'b'],
+ *     ['C', 15, 'x1', 'r'],
+ * ]
+ */
+function commonSum2DArray(d2array, findIndexes, sumIndex) {
+    let result = []
+    d2array.forEach(item => {
+        let index = result.findIndex(row => findIndexes.every(idx => row[idx] == item[idx]))
+        if (index != -1) {
+            result[index][sumIndex] += item[sumIndex]
+        } else {
+            result.push([...item])
+        }
+    })
+    return result
 }
 
 /**
