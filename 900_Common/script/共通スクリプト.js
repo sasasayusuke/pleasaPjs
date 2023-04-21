@@ -68,6 +68,37 @@ $p.events.before_send_Update = function () {
 // 共通ロード処理
 // 即時関数
 $(function () {
+
+    if (typeof api_version === 'undefined') {
+        api_version = 1.0
+    }
+    if (typeof SERVER_URL === 'undefined') {
+        SERVER_URL = window.location.origin
+    }
+    if (typeof TABLE_INFO === 'undefined') {
+        TABLE_INFO = {}
+    }
+    if (typeof CODE_INFO === 'undefined') {
+        CODE_INFO = {}
+    }
+    if (typeof COLUMN_INFO === 'undefined') {
+        COLUMN_INFO = {}
+    }
+
+    if (window.location.search) {
+        // クエリパラメーターが存在する場合の処理
+        let queryParams = {}
+        let urlParams = new URLSearchParams(window.location.search)
+        for (let [key, value] of urlParams) {
+            queryParams[key] = value
+        }
+        // messageのパラメータがあったらメッセージをだす
+        if ("message" in queryParams) {
+            commonMessage(STATUS_NORMAL, queryParams["message"])
+        }
+    }
+
+
     let insertHtml = `
         <!-- loading -->
         <div id="loading" class="is-hide">
@@ -109,6 +140,17 @@ $(function () {
             #loading.is-hide{
                 display:none;
             }
+            .original-style-disabled {
+                width: 100%;
+                min-height: 30px;
+                display: block;
+                padding: 6px 4px 2px 4px;
+                color: #000;
+                background: #f5f5f5;
+                border: solid 1px #c0c0c0;
+                overflow: hidden;
+                border-radius: 5px;
+            }
         </style>
     `
     document.getElementsByTagName('head')[0].insertAdjacentHTML('beforeend', insertCSS);
@@ -123,12 +165,10 @@ $p.events.on_grid_load_arr.push(function () {
             commonMessage(STATUS_ERROR, STATUS_ERROR_MESSAGE_ID)
         }
 
-        // システムタイトル取得
-        let sysTitle = document.getElementsByTagName("Title")[0].innerText
         // サイトタイトル取得
         let siteTitle = JSON.parse(document.getElementById("JoinedSites").value)[0].Title
         // システムタイトル置換
-        document.getElementsByTagName("Title")[0].innerText = sysTitle.replace("PCLS", "PCLS 一覧 " + siteTitle)
+        document.getElementsByTagName("Title")[0].innerText = siteTitle + " - 一覧"
 
     } catch (err) {
         console.log(err)
@@ -138,31 +178,28 @@ $p.events.on_grid_load_arr.push(function () {
 // 共通editorロード処理
 $p.events.on_editor_load_arr.push(function () {
     try {
-        // システムタイトル取得
-        let sysTitle = document.getElementsByTagName("Title")[0].innerText
         // サイトタイトル取得
         let siteTitle = JSON.parse(document.getElementById("JoinedSites").value)[0].Title
         // システムタイトル置換
-        document.getElementsByTagName("Title")[0].innerText = sysTitle.replace("PCLS", "PCLS 編集 " + siteTitle)
+        document.getElementsByTagName("Title")[0].innerText = siteTitle + " - 編集"
 
         // 読み取り制御
-        Object.values(TABLE_INFO[commonGetTableName($p.siteId())].column)
-            .filter(v => v.readOnly.includes(+commonGetVal("Status", true)))
-            .forEach(v => commonChangeReadOnly(v.label))
+        let columns = COLUMN_INFO[commonGetTableName($p.siteId())]
+        Object.keys(columns)
+            .filter(v => commonCheckStatus(columns[v].readOnly))
+            .forEach(v => commonChangeReadOnly(v))
+
+        // 非表示制御
+        Object.keys(columns)
+            .filter(v => commonCheckStatus(columns[v].hidden))
+            .forEach(v => commonHideElements(commonGetId(v, true, true)))
+
 
         // オリジナルスタイルの追加
         let style = `
             <style>
-                .original-style-disabled {
-                    width: 100%;
-                    min-height: 30px;
-                    display: block;
-                    padding: 6px 4px 2px 4px;
-                    color: #000;
-                    background: #f5f5f5;
-                    border: solid 1px #c0c0c0;
-                    overflow: hidden;
-                    border-radius: 5px;
+                textarea {
+                    resize: none;
                 }
             </style>`
         $('#Application').append(style)
@@ -173,33 +210,46 @@ $p.events.on_editor_load_arr.push(function () {
 
 /**
  * columnNameの集合を取得
- * @param {String}    tableId テーブルID
  * @return {Object}   obj
  */
-async function commonGetColumnNames(tableId) {
-    let columnNames = {}
-    // 取得済み(保存用変数から取得)
-
-    let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
-    let html = await data.text()
-    let dom = new DOMParser().parseFromString(html, 'text/html')
-    columnNames = JSON.parse(dom.getElementById("Columns").value)
+async function commonGetAllColumnNames(structureType = "long") {
+    if (TABLE_INFO[key].hasOwnProperty('index'))
+    tableIds = Object.keys(TABLE_INFO).map(key => structureType == "long" ? TABLE_INFO[key].index : TABLE_INFO[key])
     let obj = {}
-    obj[tableId] = {}
-    // 保存用変数
-    for (let c of columnNames) {
-        obj[tableId][c.ColumnName] = {
-            label: c.LabelText,
-            readOnly: [STATUS_CLOSE, STATUS_PROCESSING, STATUS_ERROR],
-            hidden: [],
-        }
 
-        let column = "column"
-        if (column in TABLE_INFO[commonGetTableName(tableId)] && c.ColumnName in TABLE_INFO[commonGetTableName(tableId)][column]) {
-            obj[tableId][c.ColumnName].readOnly = TABLE_INFO[commonGetTableName(tableId)][column][c.ColumnName].readOnly
-            obj[tableId][c.ColumnName].hidden = TABLE_INFO[commonGetTableName(tableId)][column][c.ColumnName].hidden
+    for (let tableId of tableIds) {
+        let columnNames = {}
+        // 取得済み(保存用変数から取得)
+
+        let data = await fetch(`${SERVER_URL}/items/${tableId}/index`)
+        let html = await data.text()
+        let dom = new DOMParser().parseFromString(html, 'text/html')
+        columnNames = JSON.parse(dom.getElementById("Columns").value)
+        let key = structureType == "long" ? commonGetTableName(tableId)
+        obj[key] = {}
+        // 保存用変数
+        for (let c of columnNames) {
+            if (c.ColumnName.indexOf("~") >= 0) continue
+            if (structureType == "long" ) {
+                obj[key][c.ColumnName] = {
+                    label: c.LabelText,
+                    readOnly: [STATUS_CLOSE, STATUS_PROCESSING, STATUS_ERROR],
+                    hidden: [],
+                }
+
+                if (key in COLUMN_INFO && c.ColumnName in COLUMN_INFO[key]) {
+                    obj[key][c.ColumnName].readOnly = COLUMN_INFO[key][c.ColumnName].readOnly
+                    obj[key][c.ColumnName].hidden = COLUMN_INFO[key][c.ColumnName].hidden
+                }
+            } else {
+                obj[key][c.ColumnName] = c.LabelText
+            }
+
+            console.log(tableId, c)
+
         }
     }
+
     return obj
 }
 
@@ -216,12 +266,12 @@ function commonGetColumnName(table, label) {
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
-        if (!"column" in TABLE_INFO) {
-            let message = `共通関数commonGetColumnName：column未登録。${table}`
+        if (!table in COLUMN_INFO) {
+            let message = `共通関数commonGetColumnName：テーブル未登録。${table}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
-        let column = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].column
+        let column = COLUMN_INFO[table]
         // 保存用変数から取得
         let data = Object.keys(column)
             .filter(v => v.indexOf("~") < 0)
@@ -231,7 +281,7 @@ function commonGetColumnName(table, label) {
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         } else if (data.length > 1) {
-            let message = `共通関数commonGetColumnName：ラベル名重複。${label}`
+            let message = `共通関数commonGetColumnName：ラベル名変数重複。${label}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
@@ -242,27 +292,22 @@ function commonGetColumnName(table, label) {
     }
 }
 
-
 /**
- * statusを取得
- * @param {String}      table   テーブル名
- * @param {Boolean}     label   ラベル名
- * @return {String}     status
+ * codeを取得
+ * @param {String}     codeName    コード名
+ * @param {String}     label       ラベル名
+ * @param {String}     attr        属性名
+ *
+ * @return {String}     code
  */
-function commonGetStatuses(table, label) {
+function commonGetCode(codeName, label, attr = "index") {
     try {
-        if (!Object.keys(TABLE_INFO).includes(table)) {
-            let message = `共通関数commonGetStatus：テーブル名不正。${table}`
+        if (!Object.keys(CODE_INFO).includes(codeName)) {
+            let message = `共通関数commonGetCode：コード名不正。${codeName}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }
-        if (!"status" in TABLE_INFO) {
-            let message = `共通関数commonGetStatus：status未登録。${table}`
-            commonMessage(STATUS_ERROR, message)
-            throw new Error(message)
-        }
-        let status = TABLE_INFO[Object.keys(TABLE_INFO)
-            .filter(v => v == table)[0]].status
+        let code = CODE_INFO[codeName]
             .trim().split("\n")
             .map(v => v.trim())
             .map(v => {
@@ -275,6 +320,103 @@ function commonGetStatuses(table, label) {
                 return obj
             })
             .filter(v => commonIsNull(label) || v.name == label)
+        if (code.length == 0) {
+            let message = `共通関数commonGetCode：ラベル名不正。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        } else if (code.length > 1) {
+            let message = `共通関数commonGetCode：ラベル名変数重複。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!commonIsNull(attr)) code = code[0][attr]
+        return code
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+/**
+ * 全statusを取得
+ * @param {String}      table   テーブル名
+ *
+ * @return {Array}     statuses
+ */
+function commonGetAllStatuses(table) {
+    try {
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetStatus：テーブル名不正。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!"status" in TABLE_INFO) {
+            let message = `共通関数commonGetStatus：status未登録。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        let statuses = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].status
+            .trim().split("\n")
+            .map(v => v.trim())
+            .map(v => {
+                let val = v.split(",")
+                let obj = {}
+                obj.index = val[0]
+                obj.name = val[1]
+                obj.label = val[2]
+                obj.style = val[3]
+                return obj
+            })
+        return statuses
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+/**
+ * statusを取得
+ * @param {String}      table   テーブル名
+ * @param {String}      label   name or label
+ * @param {String}      attr    属性名
+ *
+ * @return {String}     status
+ */
+function commonGetStatus(table, label, attr = "index") {
+    try {
+        if (!Object.keys(TABLE_INFO).includes(table)) {
+            let message = `共通関数commonGetStatus：テーブル名不正。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!"status" in TABLE_INFO) {
+            let message = `共通関数commonGetStatus：status未登録。${table}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        let status = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].status
+            .trim().split("\n")
+            .map(v => v.trim())
+            .map(v => {
+                let val = v.split(",")
+                let obj = {}
+                obj.index = val[0]
+                obj.name = val[1]
+                obj.label = val[2]
+                obj.style = val[3]
+                return obj
+            })
+            .filter(v => v.name == label || v.label == label)
+        if (status.length == 0) {
+            let message = `共通関数commonGetStatus：ラベル名不正。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        } else if (status.length > 1) {
+            let message = `共通関数commonGetStatus：ラベル名変数重複。${label}`
+            commonMessage(STATUS_ERROR, message)
+            throw new Error(message)
+        }
+        if (!commonIsNull(attr)) status = status[0][attr]
         return status
     } catch (err) {
         // 再スロー
@@ -284,7 +426,7 @@ function commonGetStatuses(table, label) {
 
 
 /**
- * statusを取得
+ * テーブル名を取得
  * @param {String}      tableId     テーブルID
  * @return {String}     tableName
  */
@@ -363,10 +505,8 @@ function commonMessage(type = STATUS_NORMAL, message = '') {
             error_messages.push(message)
             break
         default:
-            commonCheckPoint(`メッセージタイプが不正な値です。${message}`, "error")
             throw new Error(message)
 
-            break
     }
 }
 
@@ -429,9 +569,6 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
                 created_ids = []
                 increment = 0
                 unique_id = commonGenerateUniqueId()
-
-                // カラム名変数保存
-                //await Promise.all(Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).map(async v => commonGetColumnNames(v)))
 
                 let processLog = await commonCreate(
                     TABLE_INFO["処理ログ"].index,
@@ -638,13 +775,16 @@ function commonGetSection(label, flg = true) {
 /**
  * 渡されたオブジェクトからcolumnNameの抽出
  * @param {Object} html
+ * @param {Object} flg  true:項目を取得 false：日本語ラベルを取得
  * @return {Array} columnNames
  *
  */
-function commonFilterColumnNames(html) {
-    return Array.from(html.querySelectorAll('div[id^="Results_"][id$="Field"]'))
-        .map(v => v.id.split("Results_")[1].split("Field")[0])
-        .filter(v => ["Class", "Num", "Date", "Check", "Description"].some(w => v.includes(w)))
+function commonFilterColumnNames(html, flg = false) {
+    columns = Array.from(html.querySelectorAll('label[for^="Results_"]'))
+        .filter(v => ["Class", "Num", "Date", "Check", "Description"].some(w => v.htmlFor.split("Results_")[1].startsWith(w)))
+        .map(v => v.innerText)
+    if (flg) columns = columns.map(v => $p.getColumnName(v))
+    return columns
 }
 
 /**
@@ -709,9 +849,10 @@ function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId',
 
 /**
  * 分類項目の値を選択したときの表示制御。
- * @param {String} label 分類項目名
+ * @param {String} label 分類項目名（またはチェック項目）
  * @param {Object} display 表示制御オブジェクト
  * @param {Bool} show
+ * @param {Bool} onchange ラベルにonchangeを付与
  *
  * displayの書き方
  * {
@@ -728,88 +869,90 @@ function commonSetFlowchart(label, useStatus, color = "red", id = 'flowchartId',
  * それ以外の時、全て表示
  *
  */
-function commonDisplay(label, display, show = true) {
-    let empty = "empty"
-    let showItemArr = []
-    let hideItemArr = []
-    let showSectionArr = []
-    let hideSectionArr = []
-    let showTabArr = []
-    let hideTabArr = []
-    for (let val in display) {
-        let target = []
-        if (Array.isArray(display[val])) {
-            target = display[val]
-        } else {
-            target = [display[val]]
+function commonDisplay(label, display, show = true, onchange = true) {
+    commonDisplayInner(label, display, show = true)
+    if (onchange) {
+        document.getElementById(commonGetId(label)).onchange = function() {
+            commonDisplayInner(label, display, show = true)
         }
-        // 非表示化フラグ
-        let hideFlag = (empty == val && commonIsNull(commonGetVal(label, true))) || (commonGetVal(label, true) == val)
-        // 非表示化 & 内容消去
-        target.forEach(v => {
-            // タブ
-            if (v.includes("FieldSetTab")) {
-                commonFilterColumnNames(document.getElementById(v)).forEach(w => {
-                    if (hideFlag) {
-                        hideItemArr.push(w)
-                    } else {
-                        showItemArr.push(w)
-                    }
-                })
-                if (hideFlag) {
-                    hideTabArr.push(v)
-                } else {
-                    showTabArr.push(v)
-                }
-                // 見出し
-            } else if (v.includes("SectionFields")) {
-                commonFilterColumnNames(document.getElementById(v)).forEach(w => {
-                    if (hideFlag) {
-                        hideItemArr.push(w)
-                    } else {
-                        showItemArr.push(w)
-                    }
-                })
-                if (hideFlag) {
-                    hideSectionArr.push(v)
-                } else {
-                    showSectionArr.push(v)
-                }
-                // 分類項目、数値項目、日付項目等
-            } else {
-                if (hideFlag) {
-                    hideItemArr.push(v)
-                } else {
-                    showItemArr.push(v)
-                }
-            }
-        })
     }
-    // 表示してから非表示
-    showItemArr.forEach(v => commonHideElements(commonGetId(v, true, true), !show))
-    hideItemArr.forEach(v => {
-        commonHideElements(commonGetId(v, true, true), show)
-        if (show) commonSetVal(v, "")
-    })
-    showSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = !show)
-    hideSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = show)
-    showTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = !show)
-    hideTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = show)
+    function commonDisplayInner(label, display, show = true) {
+        let empty = "empty"
+        let showItemArr = []
+        let hideItemArr = []
+        let showSectionArr = []
+        let hideSectionArr = []
+        let showTabArr = []
+        let hideTabArr = []
+        for (let val in display) {
+            let target = []
+            if (Array.isArray(display[val])) {
+                target = display[val]
+            } else {
+                target = [display[val]]
+            }
+            // 非表示化フラグ
+            let hideFlag = (empty == val && commonIsNull(commonGetVal(label, true))) || (commonGetVal(label, true) == val)
+            // 非表示化 & 内容消去
+            target.forEach(v => {
+                // タブ
+                if (v.includes("FieldSetTab")) {
+                    commonFilterColumnNames(document.getElementById(v), true).forEach(w => {
+                        if (hideFlag) {
+                            hideItemArr.push(w)
+                        } else {
+                            showItemArr.push(w)
+                        }
+                    })
+                    if (hideFlag) {
+                        hideTabArr.push(v)
+                    } else {
+                        showTabArr.push(v)
+                    }
+                    // 見出し
+                } else if (v.includes("SectionFields")) {
+                    commonFilterColumnNames(document.getElementById(v), true).forEach(w => {
+                        if (hideFlag) {
+                            hideItemArr.push(w)
+                        } else {
+                            showItemArr.push(w)
+                        }
+                    })
+                    if (hideFlag) {
+                        hideSectionArr.push(v)
+                    } else {
+                        showSectionArr.push(v)
+                    }
+                    // 分類項目、数値項目、日付項目等
+                } else {
+                    if (hideFlag) {
+                        hideItemArr.push(v)
+                    } else {
+                        showItemArr.push(v)
+                    }
+                }
+            })
+        }
+        // 表示してから非表示
+        showItemArr.forEach(v => commonHideElements(commonGetId(v, true, true), !show))
+        hideItemArr.forEach(v => {
+            commonHideElements(commonGetId(v, true, true), show)
+            if (show) commonSetVal(v, "")
+        })
+        showSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = !show)
+        hideSectionArr.forEach(v => document.getElementById(`${v}Container`).hidden = show)
+        showTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = !show)
+        hideTabArr.forEach(v => document.querySelector(`li[aria-controls=${v}]`).hidden = show)
+    }
 }
 
 /**
  * 指定されたIDを持つHTMLエレメントを削除する関数です。
  * @param {Array} ids 削除ID
  */
-function commonRemoveElements(ids) {
-    let elems = []
-    if (Array.isArray(ids)) {
-        elems = ids
-    } else {
-        elems = [ids]
-    }
+function commonRemoveElements(...ids) {
 
-    elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).remove())
+    ids.filter(id => !commonIsNull(document.getElementById(id))).forEach(id => document.getElementById(id).remove())
 }
 
 /**
@@ -852,7 +995,7 @@ function commonRemoveGridButtons(...buttonNames) {
                 break
 
         }
-        commonRemoveElements(removes)
+        commonRemoveElements(...removes)
     } catch (err) {
         // 再スロー
         throw err
@@ -909,7 +1052,7 @@ function commonRemoveEditorButtons(...buttonNames) {
                     .forEach(v => v.remove())
                 break
         }
-        commonRemoveElements(removes)
+        commonRemoveElements(...removes)
     } catch (err) {
         // 再スロー
         throw err
@@ -945,6 +1088,23 @@ function commonHideElements(ids, flg = true) {
     elems.filter(v => !commonIsNull(document.getElementById(v))).forEach(v => document.getElementById(v).hidden = flg)
 }
 
+
+/**
+ * コマンドエリアにボタンを追加する関数です。
+ * @param {Array} applys        適用するステータス
+ */
+function commonCheckStatus(applys = "all") {
+    let allFlg = false
+    if (!Array.isArray(applys)) {
+        if (applys = "all") {
+            allFlg = true
+        } else {
+            applys = [applys]
+        }
+    }
+    return allFlg || applys.map(v => +v).includes(+commonGetVal("Status", true))
+}
+
 /**
  * コマンドエリアにボタンを追加する関数です。
  * @param {String} buttonId     ボタンID
@@ -953,9 +1113,13 @@ function commonHideElements(ids, flg = true) {
  * @param {String} title        タイトル
  * @param {String} style        スタイル
  * @param {String} icon         アイコン（empty指定でアイコンなし）
+ * @param {String} appendId     appendする要素ID
+ * @param {Array} applys        適用するステータス
  */
-function commonAddButton(buttonId, clickFunc, label, title, style, icon = "ui-icon-disk") {
-    let target = document.getElementById('MainCommands')
+function commonAddButton(buttonId, clickFunc, label, title, style, icon = "ui-icon-disk", appendId = "MainCommands", applys = "all") {
+    if (!commonCheckStatus(applys)) return
+
+    let target = document.getElementById(appendId)
     let elem = document.createElement('button')
     elem.id = buttonId
     elem.className = 'button button-icon ui-button ui-corner-all ui-widget applied'
@@ -1027,12 +1191,12 @@ function commonGetDate(yyyy, mm = 1, dd = 1, format = 'YYYY-MM-DD') {
             date = new Date(yyyy, mm - 1, dd)
         }
         return format
-            .replace(/YYYY/, commonPaddingLeft(date.getFullYear(), 4))
-            .replace(/MM/, commonPaddingLeft(date.getMonth() + 1, 2))
-            .replace(/DD/, commonPaddingLeft(date.getDate(), 2))
-            .replace(/hh/, commonPaddingLeft(date.getHours(), 2))
-            .replace(/mm/, commonPaddingLeft(date.getMinutes(), 2))
-            .replace(/ss/, commonPaddingLeft(date.getSeconds(), 2))
+            .replace(/YYYY/, String(date.getFullYear()).padStart(4, "0"))
+            .replace(/MM/, String(date.getMonth() + 1).padStart(2, "0"))
+            .replace(/DD/, String(date.getDate()).padStart(2, "0"))
+            .replace(/hh/, String(date.getHours()).padStart(2, "0"))
+            .replace(/mm/, String(date.getMinutes()).padStart(2, "0"))
+            .replace(/ss/, String(date.getSeconds()).padStart(2, "0"))
     } catch (err) {
         // 再スロー
         throw err
@@ -1126,95 +1290,37 @@ function commonGetPaymentDate(cls = 0, yyyy, mm, dd, format = 'YYYY-MM-DD') {
     return date = commonGetDate(yyyy, nextMm, nextDd, format)
 }
 
-
 /**
- * 左パディングする関数です。
- * @param {String} str 数値
- * @param {Number} size 桁数
- * @param {String} char パディング文字
- * @return {String} パディングされた文字列
+ * 引数の2次元配列をCSVでダウンロードする関数です。
+ *
+ * @param {Array} d2array       2次元配列
+ * @param {String} title        ファイル名
+ * @param {String} charcode     文字コード
  */
-function commonPaddingLeft(str, size = 1, char = '0') {
-    try {
-        if (char.length !== 1) {
-            let message = `共通関数commonPaddingLeft：1文字ではないです。${char}`
-            commonMessage(STATUS_ERROR, message)
-            throw new Error(message)
-        }
-        return (char.repeat(size) + str).substr(-1 * size)
-    } catch (err) {
-        // 再スロー
-        throw err
-    }
-}
+function commonDownloadCsv(d2array, title = 'test', charcode = "utf-8") {
+    // CSVデータを文字列に変換
+    let csvString = d2array.map(row => '"' +  row.join('","') + '"').join("\n")
 
-/**
- * 右パディングする関数です。
- * @param {String} str 数値
- * @param {Number} size 桁数
- * @param {String} char パディング文字
- * @return {String} パディングされた文字列
- */
-function commonPaddingRight(str, size = 1, char = ' ') {
-    try {
-        if (char.length !== 1) {
-            let message = `共通関数commonPaddingRight：1文字ではないです。${char}`
-            commonMessage(STATUS_ERROR, message)
-            throw new Error(message)
-        }
-        return (str + char.repeat(size)).substr(0, size)
-    } catch (err) {
-        // 再スロー
-        throw err
-    }
-}
+    // UTF-8でエンコードされたCSVファイルを生成
+    let encoder = new TextEncoder(charcode)
+    let csvEncoded = encoder.encode(csvString)
 
-/**
- * 引数のcsv文字列をCSVでダウンロードする関数です。
- * @param {String} csvStr csv文字列
- * @param {String} title ファイル名
- */
-function commonDownloadCsv(csvStr, title = 'test') {
+    // CSVファイルをダウンロード
+    let blob = new Blob([csvEncoded], { type: `text/csv;charset=${charcode};` })
 
     // a要素を作成する
-    const ele = document.createElement('a')
+    let link = document.createElement('a')
     // a要素にエンコード化した出力データを追加
-    ele.setAttribute('href', encodeURI(csvStr))
+    link.setAttribute('href', URL.createObjectURL(blob))
     // a要素に出力情報を追加
-    ele.setAttribute('download', title + '.csv')
-    ele.style.visibility = 'hidden'
-    document.body.appendChild(ele)
+    link.setAttribute('download', title + '.csv')
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
     // HTMLドキュメントに追加したa要素を実行(clickイベント発火)
-    ele.click()
-    document.body.removeChild(ele)
+    link.click()
+    document.body.removeChild(link)
 
 }
-
-/**
- * 引数の2次元配列をUTF-8のCSVに変換する関数です。
- * @param {Array} array 2次元配列
- *
- * @return {String} csvData
- * 例. [
- *      ['数量', '単価', '合計'],
- *      ['1', '2', '2'],
- *      ['4', '5', '20'],
- *      ['7', '8', '56'],
- *     ]
- *            ⇓
- * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
- */
-function commonConvert2DToCsv(array) {
-    // csvDataに出力方法を追加
-    let csvOutput = 'data:text/csvcharset=utf-8,'
-    let csvData = csvOutput
-    array.forEach(v => {
-        const row = '"' + v.join('","') + '"'
-        csvData += row + '\r\n'
-    })
-    return csvData
-}
-
 
 /**
  * 引数の2次元配列をmarkdownの形式に変換する関数です。
@@ -1222,13 +1328,14 @@ function commonConvert2DToCsv(array) {
  *
  * @return {String} md
  * 例. [
- *      ['種別', '単価'],   // ヘッダー
- *      [10, -4],          // 長さと寄せ(マイナスなら右寄せ)
- *      ['small', '35'],
- *      ['large', '56'],
+ *      ['サイズ', '種別', '単価'],    // ヘッダー
+ *      ['left', 'center', 'right'],    // 寄せ
+ *      ['small', 'c', '35'],
+ *      ['small', 'p', '38'],
+ *      ['large', 'c', '56'],
  *     ]
  *            ⇓
- * 'data:text/csvcharset=utf-8,"数量","単価","合計"\r\n"1","2","2"\r\n"4","5","20"\r\n"7","8","56"\r\n'
+ * '[md]\n|サイズ|種別|単価|\n|:-|:-:|-:|\n|small|c|35|\n|small|p|38|\n|large|c|56|'
  */
 function commonConvert2DToMd(array) {
     if (array[0].length != array[1].length) {
@@ -1243,10 +1350,12 @@ function commonConvert2DToMd(array) {
             // 2行目の時
             md.push(
                 "|" + line.reduce((pre, cur) => {
-                    if (cur > 0) {
-                        return pre + ":" + "-".repeat(cur) + "|"
+                    if (cur == "left") {
+                        return pre + ":" + "-" + "|"
+                    } else if (cur == "right") {
+                        return pre + "-" + ":|"
                     } else {
-                        return pre + "-".repeat(cur * -1) + ":|"
+                        return pre + ":" + "-" + ":|"
                     }
                 }, "")
             )
@@ -1268,7 +1377,8 @@ function commonConvert2DToMd(array) {
  *      ['数量', '単価', '合計'],
  *      ['1', '2', '2'],
  *      ['4', '5', '20'],
- *      ['7', '8', '56'],
+ *      ['7', '2', '14'],
+ *      ['8', '8', '64'],
  *     ]
  */
 function commonConvertCsvTo2D (csvData) {
@@ -1281,7 +1391,7 @@ function commonConvertCsvTo2D (csvData) {
         csvData = csvData.replace('\n",', '",')
     }
 
-    let lines = csvData.replace(csvOutput, '').split(/\n/)
+    let lines = csvData.trim().replace(csvOutput, '').replaceAll("\r\n", "\n").split("\n")
     let newLines = []
     for (let i = 0; i < lines.length; i++) {
         if(lines[i] == "\"") {
@@ -1318,26 +1428,6 @@ function commonConvertAto1(str) {
 }
 
 /**
- * 配列をマルチセレクト登録用文字列に変換する
- * @param {Array} arr 配列
- *
- * @return {String} マルチセレクト登録用文字列
- * 例. ["ABC", 230, "X"]  ⇒ '["ABC", 230, "X"]'
- */
-function commonConvertArrToMul(arr) {
-    let elems = []
-    if (Array.isArray(arr)) {
-        elems = arr
-    } else {
-        elems = [arr]
-    }
-
-    elems = elems.map(v => isNaN(v) ? `"${v}"` : +v).join(", ")
-    elems = `[${elems}]`
-    return elems
-}
-
-/**
  * カンマ区切り数列を数値に変換する
  * @param {String} str カンマ区切り数列
  *
@@ -1350,19 +1440,19 @@ function commonConvertCTo1(str) {
 }
 
 /**
- * 2次元配列 * 2次元配列 で left join する関数です。(比較する行はuniqueにしてください。)
- * @param {Array} arr1          2次元配列
- * @param {Array} arr2          2次元配列
- * @param {Number} init         初期値
- * @param {Number} arr1KeyIndex arr1の比較列
- * @param {Number} arr2KeyIndex arr2の比較列
+ * 2次元配列 * 2次元配列 で left join（左外部結合） する関数です。(比較する行はuniqueにしてください。)
+ * @param {Array} d2arr1            2次元配列1
+ * @param {Number} d2arr1KeyIndex   2次元配列1の比較列
+ * @param {Array} d2arr2            2次元配列2
+ * @param {Number} d2arr2KeyIndex   2次元配列2の比較列
+ * @param {Number} init             初期値
  *
  * @return {Array} 2次元配列
  *
- * 例. arr1 = [["T3B-12",5413,1879],    arr2 = [["SC133S","SC133L","2",true],      init = ""
- *             ["TD-150",2858,8520],            ["SC144S","SC144L","2",true],
- *             ["SC144S",2900,9696],            ["SC147S","SC147L","20",false]]
- *             ["SC147S",1476,9144]]
+ * 例. d2arr1 = [["T3B-12",5413,1879],    d2arr2 = [["SC133S","SC133L","2",true],      init = ""
+ *               ["TD-150",2858,8520],              ["SC144S","SC144L","2",true],
+ *               ["SC144S",2900,9696],              ["SC147S","SC147L","20",false]]
+ *               ["SC147S",1476,9144]]
  *     　　　　                           ⇓
  *            [["T3B-12",5413,1879,"","","",""],
  *             ["TD-150",2858,8520,"","","",""],
@@ -1370,10 +1460,10 @@ function commonConvertCTo1(str) {
  *     　　　　 ["SC147S",1476,9144,"SC147S","SC147L","20",false]]
  */
 
-function commonJoinLeft(arr1, arr2, init = 0, arr1KeyIndex = 0, arr2KeyIndex = 0) {
-    let size = arr2[0].length
-    return arr1.map(v => {
-        let tmpArr = arr2.find(w => v[arr1KeyIndex] == w[arr2KeyIndex])
+function commonJoinLeft(d2arr1, d2arr1KeyIndex = 0, d2arr2, d2arr2KeyIndex = 0,  init = "") {
+    let size = d2arr2[0].length
+    return d2arr1.map(v => {
+        let tmpArr = d2arr2.find(w => v[d2arr1KeyIndex] == w[d2arr2KeyIndex])
         if (commonIsNull(tmpArr)) {
             return v.concat(Array(size).fill(init))
         } else {
@@ -1418,47 +1508,6 @@ function commonGenerate2DArray(m, n, init = 0) {
 }
 
 /**
- * 2次元配列をソートする関数です。
- * @param {Array} d2array 元2次元配列
- * @param {Array} sortIndexes ソートする配列番号（1番目が同値なら2番目でソート 2番目が同値なら...）
- *
- * @return {Array} ソート済2次元配列
- *
- * 例. d2array = [
- *      ['A', '10', '1x', 'r'],
- *      ['B', '50', '1x', 'c'],
- *      ['B', '10', '1x', 'r'],
- *      ['B', '15', '1x', 'v'],
- *      ['B', '10', 'x1', 'b'],
- *      ['C', '15', 'x1', 'r'],
- *      ['B', '15', 'x1', 'r'],
- * ]
- *    sortIndexes = [0, 1, 3]
- *             ⇓
- * [
- *      ['A', '10', '1x', 'r'],
- *      ['B', '10', 'x1', 'b'],
- *      ['B', '10', '1x', 'r'],
- *      ['B', '15', 'x1', 'r'],
- *      ['B', '15', '1x', 'v'],
- *      ['B', '50', '1x', 'c'],
- *      ['C', '15', 'x1', 'r'],
- * ]
- */
-function commonSort2DArray(d2array, sortIndexes) {
-    d2array.sort((a, b) => {
-        for (let i = 0; i < sortIndexes.length; i++) {
-            let idx = sortIndexes[i]
-            if (a[idx] !== b[idx]) {
-                return a[idx] > b[idx] ? 1 : -1
-            }
-        }
-        return a[0] > b[0] ? 1 : -1
-    })
-    return d2array
-}
-
-/**
  * 2次元配列をサマリーする関数です。
  * @param {Array} d2array 元2次元配列
  * @param {Array} findIndexes 検索する配列番号（1番目が同値なら2番目でソート 2番目が同値なら...）
@@ -1466,34 +1515,75 @@ function commonSort2DArray(d2array, sortIndexes) {
  *
  * @return {Array} サマリー済2次元配列
  *
- * 例. d2array = [
- *      ['A', 10, '1x', 'r'],
- *      ['B', 50, '1x', 'c'],
- *      ['B', 10, '1x', 'r'],
- *      ['B', 15, '1x', 'v'],
- *      ['B', 10, 'x1', 'b'],
- *      ['C', 15, 'x1', 'r'],
- *      ['B', 15, 'x1', 'r'],
+ * 例.
+ * d2array = [
+ *     ['A', 10, '1x', 'bird'],
+ *     ['B', 50, '1x', 'cat'],
+ *     ['D', 14, '1x', 'bird'],
+ *     ['B', 10, '1x', 'bird'],
+ *     ['A', 55, '1x', 'cat'],
+ *     ['B', 15, '1x', 'dog'],
+ *     ['A', 10, '1x', 'bird'],
+ *     ['C', 15, 'x1', 'bird'],
+ *     ['D', 12, 'x1', 'dog'],
+ *     ['D', 10, 'x1', 'dog'],
+ *     ['B', 25, 'x1', 'cat']
  * ]
- *    findIndexes = [0, 2]
- *    sumIndex = 1
- *             ⇓
+ * findIndexes = [0, 2]
+ * sortIndexes = [0]
+ * summaryHash = {
+ *     1: 0,
+ *     3: "; ",
+ * }
+ * countFlg = true
+ *
+ *        ⇓
+ *
  * [
- *     ['A', 10, '1x', 'r'],
- *     ['B', 75, '1x', 'c'],
- *     ['B', 25, 'x1', 'b'],
- *     ['C', 15, 'x1', 'r'],
+ *     ["A",75,"1x","bird; cat; bird",3],
+ *     ["B",25,"x1","cat",1],
+ *     ["B",75,"1x","cat; bird; dog",3],
+ *     ["C",15,"x1","bird",1],
+ *     ["D",22,"x1","dog; dog",2],
+ *     ["D",14,"1x","bird",1]
  * ]
  */
-function commonSum2DArray(d2array, findIndexes, sumIndex) {
+function commonSummary2DArray(d2array, findIndexes = [], sortIndexes = [], summaryHash, countFlg = false) {
+    if (commonIsNull(d2array)) {
+        let message = `共通関数commonSummary2DArray：配列が空です。`
+        commonMessage(STATUS_ERROR, message)
+        throw new Error(message)    }
+
+    let countIndex = d2array[0].length + 1
+    if (countFlg) d2array = commonAddColumn(d2array, countIndex, 1)
+
     let result = []
-    d2array.forEach(item => {
-        let index = result.findIndex(row => findIndexes.every(idx => row[idx] == item[idx]))
-        if (index != -1) {
-            result[index][sumIndex] += item[sumIndex]
-        } else {
-            result.push([...item])
+    if (commonIsNull(findIndexes)) {
+        result = d2array
+    } else {
+        d2array.forEach(item => {
+            let index = result.findIndex(row => findIndexes.every(idx => row[idx] == item[idx]))
+            if (index != -1) {
+                for (let key in summaryHash) {
+                    if (!commonIsNull(item[key])) {
+                        result[index][key] += summaryHash[key] + item[key]
+                    }
+                }
+                if (countFlg) result[index][countIndex - 1]++
+            } else {
+                result.push([...item])
+            }
+        })
+    }
+
+    result = result.sort((a, b) => {
+        for (let i = 0; i < sortIndexes.length; i++) {
+            let idx = sortIndexes[i]
+            if (a[idx] !== b[idx]) {
+                return a[idx] > b[idx] ? 1 : -1
+            }
         }
+        return a[0] > b[0] ? 1 : -1
     })
     return result
 }
@@ -1512,7 +1602,9 @@ function commonSum2DArray(d2array, findIndexes, sumIndex) {
  *               ,["74061", "15"]
  *               ,["74058", "24"]
  *               ,["74057", "47"]]
+ *
  *  　　　　                   ⇓
+ *
  *                [["74060", "60", 10, 10, 10]
  *                ,["74063", "25", 10, 10, 10]
  *                ,["74061", "15", 10, 10, 10]
@@ -1521,16 +1613,45 @@ function commonSum2DArray(d2array, findIndexes, sumIndex) {
  *
  */
 function commonAddColumn(d2array, n, init = 0) {
-    let m = d2array.length
-    let arr = commonGenerate2DArray(m, n, init)
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (!commonIsNull(d2array[i][j])) arr[i][j] = d2array[i][j]
+    let arr = commonGenerate2DArray(d2array.length, n, init)
+    for (let i = 0; i < d2array.length; i++) {
+        for (let j = 0; j < d2array[i].length; j++) {
+            arr[i][j] = d2array[i][j]
         }
     }
     return arr
 }
 
+
+/**
+ * 2次元配列の列を削除する関数です。
+ * @param {Array} d2array 元2次元配列
+ * @param {Number} index  削除列
+
+ *
+ * @return {Array} 生成２次元配列
+ *
+ * 例. d2array = [["74060", "60", 10] index = 1
+ *               ,["74063", "25", 10]
+ *               ,["74061", "15", 10]
+ *               ,["74058", "24", 10]
+ *               ,["74057", "47", 10]]
+ *
+ *  　　　　             ⇓
+ *
+ *                [["74060", 10]
+ *                ,["74063", 10]
+ *                ,["74061", 10]
+ *                ,["74058", 10]
+ *                ,["74057", 10]]
+ */
+function commonDeleteColumn(d2array, index = 0) {
+    let newArray = []
+    for (let row of d2array) {
+        newArray.push(row.slice(0, index).concat(row.slice(index + 1)))
+    }
+    return newArray
+}
 
 /**
  * 配列をn個ずつ分割する関数です。
@@ -1594,7 +1715,7 @@ function commonDivide2DArray(d2array, index) {
     let list = []
     let codes = []
     let tmp = ""
-    d2array = d2array.sort((a, b) => a[index] < b[index] ? 1 : -1)
+    d2array = d2array.sort((a, b) => a[index] < b[index] ? -1 : 1)
     for (let arr of d2array) {
         if (tmp !== arr[index]) {
             list.push(codes)
@@ -1678,33 +1799,102 @@ function commonGetId(label, prefix = true, suffix = false) {
  */
 function commonChangeReadOnly(label, disabled = true) {
     try {
-        let area = commonGetId(label)
-        let field = commonGetId(label, true, true)
+        let areaId = commonGetId(label)
+        if (commonIsNull(areaId)) {
+            let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
+            console.log(message)
+            return
+        }
+        let area = document.getElementById(areaId)
         if (commonIsNull(area)) {
+            let message = `共通関数commonChangeReadOnly：area制御不要。${label}`
+            console.log(message)
+            return
+        }
+        let field = document.getElementById(commonGetId(label, true, true))
+        if (commonIsNull(field)) {
+            let message = `共通関数commonChangeReadOnly：field制御不要。${label}`
+            console.log(message)
+            return
+        }
+
+        // 入力項目disable制御
+        area.disabled = disabled
+        // area.className = disabled ? "control-text" : "control-textbox"
+        // area.classList.toggle("original-style-disabled")
+        if (disabled) {
+            // 説明項目とチェック項目はクラス付与しない
+            if (!["checkbox", "textarea"].includes(area.type)) {
+                area.classList.add("original-style-disabled")
+            }
+        } else {
+            area.classList.remove("original-style-disabled")
+        }
+
+        // icon 表示制御
+        let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
+        for (let icon of icons) {
+
+            let target = field.querySelector('.' + icon)
+            if (!commonIsNull(target)) {
+                target.style['visibility'] = disabled ? 'hidden' : 'visible'
+            }
+        }
+
+    } catch (err) {
+        // 再スロー
+        throw err
+    }
+}
+
+/**
+ * 入力されたラベルに一致する項目を読取専用に変更または解除する。
+ * @param {String} label ラベル
+ * @param {Boolean} disabled trueなら読取専用 falseなら読取解除
+ */
+function commonChangeHidden(label, disabled = true) {
+    try {
+        let areaId = commonGetId(label)
+        if (commonIsNull(areaId)) {
             let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
+        }
+        let area = document.getElementById(areaId)
+        if (commonIsNull(area)) {
+            let message = `共通関数commonChangeReadOnly：area制御不要。${label}`
+            console.log(message)
+            return
+        }
+        let field = document.getElementById(commonGetId(label, true, true))
+        if (commonIsNull(field)) {
+            let message = `共通関数commonChangeReadOnly：field制御不要。${label}`
+            console.log(message)
+            return
+        }
 
-        } else {
-            // 入力項目disable制御
-            document.getElementById(area).disabled = disabled
-            // document.getElementById(area).className = disabled ? "control-text" : "control-textbox"
-            // document.getElementById(area).classList.toggle("original-style-disabled")
-            if (disabled) {
-                document.getElementById(area).classList.add("original-style-disabled")
-            } else {
-                document.getElementById(area).classList.remove("original-style-disabled")
+        // 入力項目disable制御
+        area.disabled = disabled
+        // area.className = disabled ? "control-text" : "control-textbox"
+        // area.classList.toggle("original-style-disabled")
+        if (disabled) {
+            if (area.type !== "checkbox") {
+                area.classList.add("original-style-disabled")
             }
+        } else {
+            area.classList.remove("original-style-disabled")
+        }
 
-            // icon 表示制御
-            let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
-            for (let icon of icons) {
-                let target = document.getElementById(field).querySelector('.' + icon)
-                if (!commonIsNull(target)) {
-                    target.style['visibility'] = disabled ? 'hidden' : 'visible'
-                }
+        // icon 表示制御
+        let icons = ['ui-icon-clock', 'ui-icon-person', 'ui-icon-pencil', 'ui-icon-image', 'ui-icon-video']
+        for (let icon of icons) {
+
+            let target = field.querySelector('.' + icon)
+            if (!commonIsNull(target)) {
+                target.style['visibility'] = disabled ? 'hidden' : 'visible'
             }
         }
+
     } catch (err) {
         // 再スロー
         throw err
@@ -1774,7 +1964,13 @@ function commonSetVal(label, value) {
     try {
         // 値が変更されている場合
         if (commonGetVal(label, true) != value) {
-            $p.set($p.getControl(label), value)
+            if ($p.getColumnName(label).startsWith("Check")) {
+                // changeイベントを動かす
+                $p.getControl(label).click()
+            } else {
+                value = (value == commonGetDateEmpty()) ? "" : value
+                $p.set($p.getControl(label), value)
+            }
         }
     } catch (err) {
         console.log(`共通関数commonSetVal：ラベル不正。${label}`)
@@ -1788,17 +1984,21 @@ function commonSetVal(label, value) {
  *
  * @param {Number}    id テーブルID
  * @param {Array}     columns 取得列
- * @param {Object}    filters フィルター条件
- * @param {Object}    sorts ソート条件
- * @param {Boolean}    valueFlg value値
+ * @param {Object}    filterHash フィルター条件
+ * @param {Object}    sorterHash ソート条件
+ * @param {Object}    filterSearchTypes 検索条件
+ * @param {Boolean}   valueFlg true : value値 false : display値
  * @param {Function}  addFunc 最後に実行したい関数
  */
-async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, addFunc) {
+async function commonGetData(id = $p.siteId(), columns = ["ClassA", "NumA"], filterHash = {}, sorterHash = { "ResultId": "asc" }, filterSearchTypes = {}, valueFlg = true, addFunc) {
+    if (!Array.isArray(columns)) {
+        columns = [columns]
+    }
     let offset = 0
     let data = []
     let temp = {}
     do {
-        temp = await commonGetInnner(columns, filters, sorts, valueFlg, id, offset, addFunc)
+        temp = await commonGetInnner(id, columns, filterHash, sorterHash, filterSearchTypes, valueFlg, offset, addFunc)
         data = [...data, ...temp.Response.Data]
         offset += temp.Response.PageSize
     } while (offset < temp.Response.TotalCount)
@@ -1807,15 +2007,16 @@ async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts
     /**
      * 取得APIを呼び出す関数内関数です。(TotalCount 200)
      *
-     * @param {Array}     columns 取得列
-     * @param {Object}    filters フィルター条件
-     * @param {Object}    sorts ソート条件
-     * @param {Boolean}   valueFlg value値
      * @param {Number}    id テーブルID
+     * @param {Array}     columns 取得列
+     * @param {Object}    filterHash フィルター条件
+     * @param {Object}    sorterHash ソート条件
+     * @param {Object}    filterSearchTypes 検索条件
+     * @param {Boolean}   valueFlg true : value値 false : display値
      * @param {Number}    offset オフセット条件
      * @param {Function}  addFunc 最後に実行したい関数
      */
-    async function commonGetInnner(columns = [], filters = {}, sorts = { "ResultId": "asc" }, valueFlg = true, id = $p.siteId(), offset = 0, addFunc) {
+    async function commonGetInnner(id, columns, filterHash, sorterHash, filterSearchTypes, valueFlg, offset, addFunc) {
         return await $p.apiGet({
             'id': id,
             'data': {
@@ -1824,8 +2025,9 @@ async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts
                     'ApiDataType': "KeyValues",
                     'ApiColumnValueDisplayType': valueFlg ? "Value" : "DisplayValue",
                     'GridColumns': columns,
-                    'ColumnSorterHash': sorts,
-                    'ColumnFilterHash': filters,
+                    "ColumnFilterHash": filterHash,
+                    "ColumnSorterHash": sorterHash,
+                    "ColumnFilterSearchTypes": filterSearchTypes,
                 }
             },
             'done': function (data) {
@@ -1835,6 +2037,90 @@ async function commonGetData(id = $p.siteId(), columns = [], filters = {}, sorts
                 }
                 return data.Response.Data
             }
+        })
+    }
+}
+
+/**
+ * エクスポートAPIを呼び出す関数です。
+ *
+ * @param {String}    tableId 取得テーブルID
+ * @param {Array}     columns 取得列
+ * @param {Object}    filterHash フィルター条件
+ * @param {Object}    sorterHash ソート条件
+ * @param {Object}    filterSearchTypes 検索条件
+ * @param {Boolean}   jsonFlg trueならjson　falseならcsvで取得
+ * @param {Boolean}   headerFlg trueならheaderも取得
+ * @param {Boolean}   overFlg trueなら超過分のみ取得
+ * @param {Function}  addFunc 最後に実行したい関数
+ */
+async function commonExportData(tableId = $p.siteId(), columns = ["ClassA", "NumA"], filterHash = {}, sorterHash = {"ResultId": "asc"}, filterSearchTypes = {}, jsonFlg = true, headerFlg = true, overFlg = false, addFunc) {
+    if (!Array.isArray(columns)) {
+        columns = [columns]
+    }
+        columns.unshift("ResultId")
+    let data = await commonExportInner(tableId, columns, filterHash, sorterHash, filterSearchTypes, jsonFlg, headerFlg, overFlg, addFunc)
+    if (jsonFlg) {
+        // json整形
+        data = JSON.parse(data.Response.Content)
+    } else {
+        // csv整形
+        data = commonConvertCsvTo2D(data.Response.Content)
+    }
+
+    return data
+    /**
+     * エクスポートAPIを呼び出す関数内関数です。
+     *
+     * @param {String}    tableId 取得テーブルID
+     * @param {Array}     columns 取得列
+     * @param {Object}    filterHash フィルター条件
+     * @param {Object}    sorterHash ソート条件
+     * @param {Object}    filterSearchTypes 検索条件
+     * @param {Boolean}   jsonFlg trueならjson　falseならcsvで取得
+     * @param {Boolean}   headerFlg trueならheaderも取得
+     * @param {Boolean}   overFlg trueなら超過分のみ取得
+     * @param {Function}  addFunc 最後に実行したい関数
+     */
+    async function commonExportInner(tableId, columns, filterHash, sorterHash, filterSearchTypes, jsonFlg, headerFlg, overFlg, addFunc) {
+
+        let col = []
+        columns.forEach(v => col.push({ "ColumnName": v }))
+        let data = JSON.stringify({
+            "ApiVersion": api_version ,
+            "Export": {
+                "Columns": col,
+                "Header": headerFlg,
+                "Type": jsonFlg ? "json" : "csv"
+            },
+            "View": {
+                "Overdue": overFlg,
+                "ColumnFilterHash": filterHash,
+                "ColumnSorterHash": sorterHash,
+                "ColumnFilterSearchTypes": filterSearchTypes,
+            }
+        })
+
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: `/api/items/${tableId}/export`,
+                contentType: 'application/json',
+                data: data
+            }).then(
+                function (result) {
+                    if (addFunc && typeof addFunc === 'function') {
+                        // 渡されたオブジェクトが関数なら実行する
+                        addFunc(data)
+                    }
+                    // 正常終了
+                    resolve(result)
+                },
+                function () {
+                    // エラー
+                    reject()
+                }
+            )
         })
     }
 }
@@ -1866,7 +2152,7 @@ async function commonCreate(tableId, Hash = {}, Status, Comments, pushFlg = true
     }
 
     let data = JSON.stringify({
-        "ApiVersion": api_version,
+        "ApiVersion": api_version ,
         Status,
         Comments,
         ClassHash,
@@ -1935,7 +2221,7 @@ async function commonUpdate(recordId, Hash = {}, Status, Comments, pushFlg = tru
         else if (key.includes("Check")) CheckHash[key] = Hash[key]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version,
+        "ApiVersion": api_version ,
         Status,
         Comments,
         ClassHash,
@@ -1980,59 +2266,6 @@ async function commonUpdate(recordId, Hash = {}, Status, Comments, pushFlg = tru
 }
 
 /**
- * エクスポートAPIを呼び出す関数です。csv形式で取得
- *
- * @param {String}    tableId 取得テーブルID
- * @param {Array}     columns 取得列
- * @param {Object}    filters フィルター条件
- * @param {Boolean}   over trueなら超過分のみ取得
- * @param {Boolean}   header trueならheaderも取得
- * @param {String}    type csv か jsonを選択
- * @param {Function}  addFunc 最後に実行したい関数
- */
-async function commonExport(tableId, columns = [], filters = {}, over = false, header = true, type = "csv", addFunc) {
-    let col = []
-    columns.forEach(v => col.push({ "ColumnName": v }))
-    let data = JSON.stringify({
-        "ApiVersion": api_version,
-        "Export": {
-            "Columns": col,
-            "Header": header,
-            "Type": type
-        },
-        "View": {
-            "Overdue": over,
-            "ColumnSorterHash": {
-                "ResultId": "asc"
-            },
-            "ColumnFilterHash": filters
-        }
-    })
-
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            type: "POST",
-            url: `/api/items/${tableId}/export`,
-            contentType: 'application/json',
-            data: data
-        }).then(
-            function (result) {
-                if (addFunc && typeof addFunc === 'function') {
-                    // 渡されたオブジェクトが関数なら実行する
-                    addFunc(data)
-                }
-                // 正常終了
-                resolve(result)
-            },
-            function () {
-                // エラー
-                reject()
-            }
-        )
-    })
-}
-
-/**
  * ユーザー取得APIを呼び出す関数です。
  *
  * @param {Array}     userIds 取得UserId
@@ -2046,7 +2279,7 @@ async function commonExportUser(userIds, addFunc) {
         users = [userIds]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version,
+        "ApiVersion": api_version ,
         "View": {
             "ColumnFilterHash": {
                 "UserId": JSON.stringify(users)
@@ -2090,7 +2323,7 @@ async function commonExportGroup(groupIds, addFunc) {
         groups = [groupIds]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version,
+        "ApiVersion": api_version ,
         "View": {
             "ColumnFilterHash": {
                 "GroupId": JSON.stringify(groups)
@@ -2157,11 +2390,11 @@ async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, ad
 
         //項目001から項目999
         for (let i = 1; i <= expand; i++) {
-            let clsKey = "Class" + commonPaddingLeft(i, 3)
-            let numKey = "Num" + commonPaddingLeft(i, 3)
-            let datKey = "Date" + commonPaddingLeft(i, 3)
-            let dscKey = "Description" + commonPaddingLeft(i, 3)
-            let chkKey = "Check" + commonPaddingLeft(i, 3)
+            let clsKey = "Class" + String(i).padStart(3, "0")
+            let numKey = "Num" + String(i).padStart(3, "0")
+            let datKey = "Date" + String(i).padStart(3, "0")
+            let dscKey = "Description" + String(i).padStart(3, "0")
+            let chkKey = "Check" + String(i).padStart(3, "0")
             Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
             Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
             Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
@@ -2230,11 +2463,11 @@ async function commonSaveRecord(editItems = {}, Status, Comments, reload = false
 
         //項目001から項目999
         for (let i = 1; i <= expand; i++) {
-            let clsKey = "Class" + commonPaddingLeft(i, 3)
-            let numKey = "Num" + commonPaddingLeft(i, 3)
-            let datKey = "Date" + commonPaddingLeft(i, 3)
-            let dscKey = "Description" + commonPaddingLeft(i, 3)
-            let chkKey = "Check" + commonPaddingLeft(i, 3)
+            let clsKey = "Class" + String(i).padStart(3, "0")
+            let numKey = "Num" + String(i).padStart(3, "0")
+            let datKey = "Date" + String(i).padStart(3, "0")
+            let dscKey = "Description" + String(i).padStart(3, "0")
+            let chkKey = "Check" + String(i).padStart(3, "0")
             Hash[clsKey] = commonIsNull(commonGetVal(clsKey)) ? "" : (Array.isArray(commonGetVal(clsKey, true)) ? convertArrayToMalti(commonGetVal(clsKey, true)) : commonGetVal(clsKey, true))
             Hash[numKey] = commonIsNull(commonGetVal(numKey)) ? 0 : commonConvertCTo1(commonGetVal(numKey))
             Hash[datKey] = commonIsNull(commonGetVal(datKey)) ? commonGetDateEmpty() : commonGetVal(datKey)
@@ -2273,10 +2506,9 @@ async function commonSaveRecord(editItems = {}, Status, Comments, reload = false
 
 
 function commonGetBufferToBase64(buffer) {
-    var binary = ''
-    var bytes = new Uint8Array(buffer)
-    var len = bytes.byteLength
-    for (var i = 0; i < len; i++) {
+    let binary
+    let bytes = new Uint8Array(buffer)
+    for (let i = 0; i < bytes.byteLength; i++) {
         binary += String.fromCharCode(bytes[i])
     }
     return window.btoa(binary)
@@ -2289,7 +2521,7 @@ async function commonUpdateAttachment(targetID, className, workbook, filename) {
     let url = `/api/items/${targetID}/update`
     let method_name = "POST"
     let data = {
-        "ApiVersion": api_version,
+        "ApiVersion": api_version ,
         "AttachmentsHash": {
             [className]: [
                 {
@@ -2368,7 +2600,7 @@ function commonInsertTableInput(id, startPlace = 0, title = "", column = 9, row 
 
     for (let i = 0; i < row; i++) {
         for (let j = 1; j <= column; j++) {
-            let index = commonPaddingLeft(startPlace + i * column + j, 3)
+            let index = String(startPlace + i * column + j).padStart(3, "0")
             console.log(index)
             let type = (i < headerRow) ? headerDetail[j - 1].split("-") : columnDetail[j - 1].split("-")
             let eleId = "Results_" + type[0] + index + "Field"
