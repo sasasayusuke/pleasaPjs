@@ -213,8 +213,7 @@ $p.events.on_editor_load_arr.push(function () {
  * @return {Object}   obj
  */
 async function commonGetAllColumnNames(structureType = "long") {
-    if (TABLE_INFO[key].hasOwnProperty('index'))
-    tableIds = Object.keys(TABLE_INFO).map(key => structureType == "long" ? TABLE_INFO[key].index : TABLE_INFO[key])
+    tableIds = Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key])
     let obj = {}
 
     for (let tableId of tableIds) {
@@ -225,7 +224,7 @@ async function commonGetAllColumnNames(structureType = "long") {
         let html = await data.text()
         let dom = new DOMParser().parseFromString(html, 'text/html')
         columnNames = JSON.parse(dom.getElementById("Columns").value)
-        let key = structureType == "long" ? commonGetTableName(tableId)
+        let key = commonGetTableName(tableId)
         obj[key] = {}
         // 保存用変数
         for (let c of columnNames) {
@@ -432,7 +431,10 @@ function commonGetStatus(table, label, attr = "index") {
  */
 function commonGetTableName(tableId) {
     try {
-        let table = Object.keys(TABLE_INFO).filter(v => TABLE_INFO[v].index == tableId)
+        let table = Object.keys(TABLE_INFO).filter(key => {
+            let id = TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key]
+            return id == tableId
+        })
         if (table.length == 0) {
             let message = `共通関数commonGetTableName：テーブルID不正。${tableId}`
             commonMessage(STATUS_ERROR, message)
