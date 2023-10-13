@@ -1,0 +1,48 @@
+.status-gyoumu {
+    background:#fff;!important;
+}
+.status-juryou {
+    background:rgb(215,234,194);!important;
+}
+.status-uketsuke {
+    background:rgb(174, 213, 133);!important;
+}
+.status-kakou {
+    color: #000;
+    background:rgb(105, 181, 244);!important;
+}
+.status-toichu {
+    color: #000;
+    background:rgb(253, 213,  90);!important;
+}
+
+.status-accesska {
+    color: #000;
+    background:rgb(132,155,229);!important;
+}
+.status-accesschu {
+    color: #000;
+    background:rgb(159,130,213);!important;
+}
+
+
+.status-shuuryou {
+    color: #000;
+    background:rgb(186, 104, 198);!important;
+}
+.status-closed {
+    color: #000;
+    background:rgb(253, 138, 104);!important;
+}
+
+50,NeIS業務受,業受,status-gyoumu
+70,受領データ確認中,受中,status-juryou
+100,DATA受付済,受付,status-uketsuke
+200,DATA加工処理中,処中,status-kakou
+300,DATA加工不備・重複問合せ中,問中,status-toichu
+350,Access実行可,A可,status-accesska
+370,Access実行中,A中,status-accesschu
+400,加工終了・出力待ち,出待,status-shuuryou
+900,出力完了,完了,status-closed
+
+

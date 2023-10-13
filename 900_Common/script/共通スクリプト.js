@@ -29,8 +29,9 @@ $p.events.before_send_Update_arr = []
 
 // 格納したメソッドを実行するメソッド
 $p.events.on_grid_load = function () {
-    for (let key in TABLE_INFO) {
-        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    tableIds = Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key])
+    for (let id of tableIds) {
+        console.log(`${commonGetTableName(id)} : ${SERVER_URL}/items/${id}/index`)
     }
     console.log("start!! on_grid_load_arr!!!")
     $p.events.on_grid_load_arr.forEach(func => {
@@ -39,8 +40,9 @@ $p.events.on_grid_load = function () {
     })
 }
 $p.events.on_editor_load = function () {
-    for (let key in TABLE_INFO) {
-        console.log(`${key} : ${SERVER_URL}/items/${TABLE_INFO[key].index}/index`)
+    tableIds = Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key])
+    for (let id of tableIds) {
+        console.log(`${commonGetTableName(id)} : ${SERVER_URL}/items/${id}/index`)
     }
     console.log("start!! on_editor_load_arr!!!")
     $p.events.on_editor_load_arr.forEach(func => {
@@ -161,7 +163,7 @@ $(function () {
 $p.events.on_grid_load_arr.push(function () {
     try {
         // 変数一覧へテーブルIDの登録チェック
-        if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].index).includes($p.siteId())) {
+        if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? +TABLE_INFO[key].index : +TABLE_INFO[key]).includes($p.siteId())) {
             commonMessage(STATUS_ERROR, STATUS_ERROR_MESSAGE_ID)
         }
 
@@ -436,11 +438,11 @@ function commonGetTableName(tableId) {
             return id == tableId
         })
         if (table.length == 0) {
-            let message = `共通関数commonGetTableName：テーブルID不正。${tableId}`
+            let message = `共通関数commonGetTableName：TABLE_INFOにテーブルID未登録。${tableId}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         } else if (table.length > 1) {
-            let message = `共通関数commonGetTableName：テーブルが2重で登録されています。${tableId}`
+            let message = `共通関数commonGetTableName：TABLE_INFOにテーブルが2重で登録されています。${tableId}`
             commonMessage(STATUS_ERROR, message)
             throw new Error(message)
         }

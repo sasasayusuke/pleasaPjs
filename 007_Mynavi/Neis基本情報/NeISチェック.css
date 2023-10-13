@@ -1,0 +1,135 @@
+/*テーブル*/
+.sdt-table{
+    max-width:1000px;
+    margin: 20px auto 0px;
+}
+.sdt-row{
+    background-color: #fff;
+    border-bottom: solid 1px #c0c0c0;
+}
+.sdt-center{
+    text-align: center;
+}
+.sdt-row p{
+    display: inline-block;
+}
+.sdt-row td{
+    vertical-align: middle;
+}
+
+/*チェックボックス*/
+.sdt-YN{
+    display:none;
+}
+.sdt-YN + label{
+    display: block;
+    width: 100%;
+    height: 20px;
+}
+/*✕*/
+.sdt-YN + label:after{
+    content: '';
+    color: #F44336;
+    position: absolute;
+    margin-left:-8px;
+    top: 9px;
+    width: 17px;
+    height: 2px;
+    background-color: currentColor;
+    -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+}
+.sdt-YN + label:before{
+    content: '';
+    color: #F44336;
+    position: absolute;
+    margin-left:-8px;
+    top: 9px;
+    width: 17px;
+    height: 2px;
+    background-color: currentColor;
+    -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+}
+/*○*/
+.sdt-YN:checked + label:after{
+    content: '';
+    color: #4CAF50;
+    top: 0px;
+    position: absolute;
+    margin-left:-7px;
+    margin-top:2px;
+    width: 12px;
+    height: 12px;
+    border: solid 2px currentColor;
+    border-radius: 8px;
+    background-color: transparent;
+}
+.sdt-YN:checked + label:before{
+    content: '';
+    color: #4CAF50;
+    top: 0px;
+    position: absolute;
+    margin-left:-7px;
+    margin-top:2px;
+    width: 12px;
+    height: 12px;
+    border: solid 2px currentColor;
+    border-radius: 8px;
+    background-color: transparent;
+}
+/*チェックマーク*/
+.sdt-closed{
+    color: #2196F3;
+    position: absolute;
+    margin-left: -5px;
+    margin-top: -5px;
+    width: 14px;
+    height: 8px;
+    border-bottom: solid 2px currentColor;
+    border-left: solid 2px currentColor;
+    -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+}
+/*-マーク*/
+.sdt-rejected{
+    color: #607D8B;
+    position: absolute;
+    margin-left: -7px;
+    width: 15px;
+    height: 2px;
+    background-color: currentColor;
+}
+
+/*送信ボタン*/
+.sdt-mailbutton{
+    background: #C5CAE9;
+    color: #1A237E;
+    border: solid 1px #9FA8DA;
+    margin: 20px;
+}
+/*受領データ再取込ボタン*/
+.sdt-recapturebutton{
+    background: #F76C59;
+    color: #E4F9F5;
+    border: solid 1px #9FA8DA;
+    margin: 20px;
+}
+/*このまま加工ボタン*/
+.sdt-continuebutton{
+    background: #B2DFDB;
+    color: #004D40;
+    border: solid 1px #80CBC4;
+    margin: 20px;
+}
+/*不備重複取込ボタン*/
+.sdt-importbutton{
+    background: #11B93E;
+    color: #E4F9F5;
+    border: solid 1px #1CF0DB;
+    margin: 20px;
+}
+.sdt-buttonContainer{
+    width:100%;
+    text-align: center;
+}
