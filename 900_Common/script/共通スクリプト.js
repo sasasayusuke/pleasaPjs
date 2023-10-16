@@ -71,8 +71,8 @@ $p.events.before_send_Update = function () {
 // 即時関数
 $(function () {
 
-    if (typeof api_version === 'undefined') {
-        api_version = 1.0
+    if (typeof API_VERSION === 'undefined') {
+        API_VERSION = 1.0
     }
     if (typeof SERVER_URL === 'undefined') {
         SERVER_URL = window.location.origin
@@ -85,6 +85,23 @@ $(function () {
     }
     if (typeof COLUMN_INFO === 'undefined') {
         COLUMN_INFO = {}
+    }
+    if (typeof LOADING_SCRIPT_LIST === 'undefined') {
+        LOADING_SCRIPT_LIST = []
+    }
+
+    // 2重ロード制御
+    if (!window.scriptLoaded) {
+        for (const s of LOADING_SCRIPT_LIST) {
+            let scriptElm = document.createElement('script')
+            scriptElm.src = s
+            scriptElm.onerror = function() {
+                let message = `帳票スクリプト読み込みエラー: ${s}`
+                throw new Error(message)
+            }
+            document.head.appendChild(scriptElm)
+        }
+        window.scriptLoaded = true
     }
 
     if (window.location.search) {
@@ -2091,7 +2108,7 @@ async function commonExportData(tableId = $p.siteId(), columns = ["ClassA", "Num
         let col = []
         columns.forEach(v => col.push({ "ColumnName": v }))
         let data = JSON.stringify({
-            "ApiVersion": api_version ,
+            "ApiVersion": API_VERSION ,
             "Export": {
                 "Columns": col,
                 "Header": headerFlg,
@@ -2156,7 +2173,7 @@ async function commonCreate(tableId, Hash = {}, Status, Comments, pushFlg = true
     }
 
     let data = JSON.stringify({
-        "ApiVersion": api_version ,
+        "ApiVersion": API_VERSION ,
         Status,
         Comments,
         ClassHash,
@@ -2225,7 +2242,7 @@ async function commonUpdate(recordId, Hash = {}, Status, Comments, pushFlg = tru
         else if (key.includes("Check")) CheckHash[key] = Hash[key]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version ,
+        "ApiVersion": API_VERSION ,
         Status,
         Comments,
         ClassHash,
@@ -2283,7 +2300,7 @@ async function commonExportUser(userIds, addFunc) {
         users = [userIds]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version ,
+        "ApiVersion": API_VERSION ,
         "View": {
             "ColumnFilterHash": {
                 "UserId": JSON.stringify(users)
@@ -2327,7 +2344,7 @@ async function commonExportGroup(groupIds, addFunc) {
         groups = [groupIds]
     }
     let data = JSON.stringify({
-        "ApiVersion": api_version ,
+        "ApiVersion": API_VERSION ,
         "View": {
             "ColumnFilterHash": {
                 "GroupId": JSON.stringify(groups)
@@ -2525,7 +2542,7 @@ async function commonUpdateAttachment(targetID, className, workbook, filename) {
     let url = `/api/items/${targetID}/update`
     let method_name = "POST"
     let data = {
-        "ApiVersion": api_version ,
+        "ApiVersion": API_VERSION ,
         "AttachmentsHash": {
             [className]: [
                 {

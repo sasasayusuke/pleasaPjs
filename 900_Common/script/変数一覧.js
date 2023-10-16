@@ -1,7 +1,13 @@
-const api_version = 1.0
+const API_VERSION = 1.0
 
 const SETTING_SHEET_NAME = "setting"
 const TEMPLATE_SHEET_NAME = "template"
+
+const LOADING_SCRIPT_LIST = [
+    "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js",
+]
 
 const SERVER_URL = "https://pcls-dev.cit.nhk.or.jp"
 const MDI_SYSMTE_USER_ID = 10

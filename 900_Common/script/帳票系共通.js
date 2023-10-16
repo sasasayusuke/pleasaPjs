@@ -1,65 +1,4 @@
 
-let scriptLoaded = false
-$p.events.on_grid_load_arr.push(function() {
-    // 2重ロード制御
-    if (scriptLoaded) return
-
-    // js読み込み
-    const scripts = [
-        "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js",
-    ]
-    for (const script of scripts) {
-        console.log(script)
-        var request = new XMLHttpRequest()
-        request.open('GET', script, false)
-        request.send(null)
-
-        if (request.status === 200) {
-            var elm = document.createElement('script')
-            elm.text = request.responseText
-            document.head.appendChild(elm)
-            scriptLoaded = true
-        } else {
-            // その他のステータスの場合エラー
-            let message = `帳票スクリプト読み込みエラー`
-            commonLogging(message, "error")
-            throw new Error(message)
-        }
-    }
-})
-
-$p.events.on_editor_load_arr.push(function() {
-    // 2重ロード制御
-    if (scriptLoaded) return
-
-    // js読み込み
-    const scripts = [
-        "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js",
-    ]
-    for (const script of scripts) {
-        console.log(script)
-        var request = new XMLHttpRequest()
-        request.open('GET', script, false)
-        request.send(null)
-
-        if (request.status === 200) {
-            var elm = document.createElement('script')
-            elm.text = request.responseText
-            document.head.appendChild(elm)
-            scriptLoaded = true
-        } else {
-            // その他のステータスの場合エラー
-            let message = `帳票スクリプト読み込みエラー`
-            commonLogging(message, "error")
-            throw new Error(message)
-        }
-    }
-})
-
 function copySheet(sheetname, copysheet, workbook) {
     workbook.addWorksheet(sheetname)
     //深いコピー (deep copy)
@@ -88,7 +27,6 @@ function getCell(address, worksheet) {
         if (isNaN(row)) {
             // その他のステータスの場合エラー
             let message = `addressに${address}が入力されました。`
-            commonLogging(message, "error")
             throw new Error(message)
         }
         let rowNo = +row
