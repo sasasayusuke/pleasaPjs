@@ -40,35 +40,16 @@ function getCell(address, worksheet) {
 
 }
 
-// 廃止予定commonUpdateAjaxを利用
-async function editSelectedRecord(data, ids = $p.selectedIds()) {
-    ids.forEach((elem, index) => {
-        console.log(`${index}: ${elem}`)
-        $p.apiUpdate({
-            'id': elem,
-            data: data,
-            'done': function (data) {
-                console.log('通信が成功しました。')
-            },
-            'fail': function (error) {
-                console.log('通信が失敗しました。')
-            },
-            'always': function (data) {
-                console.log('通信が完了しました。')
-            }
-        })
-    })
-}
 
 
 
-async function downloadExcel(formatId) {
+async function downloadExcel(tableId, recordId) {
     return $p.apiGet({
-        'id': TABLE_ID_EXCEL_FORMAT,
+        'id': tableId,
         'data': {
             'View': {
                 'ColumnFilterHash': {
-                    "ClassA": formatId
+                    "ClassA": recordId
                 }
             }
         },
@@ -89,25 +70,6 @@ async function downloadExcel(formatId) {
             console.log('通信が完了しました。')
         }
     })
-}
-
-
-// 廃止予定commonCrerateAjaxを利用
-async function createParentRecord(tableId, data) {
-    return $p.apiCreate({
-        id: tableId,
-        data: data,
-        'done': function (data) {
-            console.log('通信が成功しました。');
-            console.log(data);
-        },
-        'fail': function (error) {
-            console.log('通信が失敗しました。');
-        },
-        'always': function (data) {
-            console.log('通信が完了しました。');
-        }
-    });
 }
 
 
@@ -169,33 +131,4 @@ function toBlob(base64) {
         return false
     }
     return blob
-}
-
-// 廃止予定commonGetDateを利用
-function getNow() {
-    var date = new Date()
-    return date.getFullYear() + ('0' + (date.getMonth() + 1)).slice(-2) + ('0' + date.getDate()).slice(-2) + ('0' + date.getHours()).slice(-2) + ('0' + date.getMinutes()).slice(-2) + ('0' + date.getSeconds()).slice(-2)
-}
-
-// 廃止予定commonGetDateを利用
-function getEndOfMonth(year, month) {
-    var date = new Date(year + "/" + month + "/1")
-    // 1ヶ月加えて翌月にします.
-    date.setMonth(date.getMonth() + 1)
-    // 日付に0を設定し、該当月のの0日（つまり、前月末）にします.
-    date.setDate(0)
-    return date
-}
-
-// 廃止予定commonGetDateを利用
-function getStartOfMonth(year, month) {
-    var date = new Date(year + "/" + month + "/1")
-    // 日付に1を設定します.
-    date.setDate(1)
-    return date
-}
-
-// 廃止予定commonGetDateを利用
-function formatYYYYMMDD(date) {
-    return date.getFullYear() + "/" + ('00' + (date.getMonth() + 1)).slice(-2) + "/" + ('00' + date.getDate()).slice(-2)
 }

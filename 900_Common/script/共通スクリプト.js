@@ -29,6 +29,28 @@ $p.events.before_send_Update_arr = []
 
 // 格納したメソッドを実行するメソッド
 $p.events.on_grid_load = function () {
+
+    if (typeof API_VERSION === 'undefined') {
+        API_VERSION = 1.0
+    }
+    if (typeof SERVER_URL === 'undefined') {
+        SERVER_URL = window.location.origin
+    }
+    if (typeof TABLE_INFO === 'undefined') {
+        TABLE_INFO = {
+            "NoName": $p.siteId(),
+        }
+    }
+    if (typeof CODE_INFO === 'undefined') {
+        CODE_INFO = {}
+    }
+    if (typeof COLUMN_INFO === 'undefined') {
+        COLUMN_INFO = {}
+    }
+    if (typeof LOADING_SCRIPT_LIST === 'undefined') {
+        LOADING_SCRIPT_LIST = []
+    }
+
     tableIds = Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key])
     for (let id of tableIds) {
         console.log(`${commonGetTableName(id)} : ${SERVER_URL}/items/${id}/index`)
@@ -40,6 +62,30 @@ $p.events.on_grid_load = function () {
     })
 }
 $p.events.on_editor_load = function () {
+
+    if (typeof API_VERSION === 'undefined') {
+        API_VERSION = 1.0
+    }
+    if (typeof SERVER_URL === 'undefined') {
+        SERVER_URL = window.location.origin
+    }
+    if (typeof TABLE_INFO === 'undefined') {
+        if (typeof TABLE_INFO === 'undefined') {
+            TABLE_INFO = {
+                "NoName": $p.siteId(),
+            }
+        }
+    }
+    if (typeof CODE_INFO === 'undefined') {
+        CODE_INFO = {}
+    }
+    if (typeof COLUMN_INFO === 'undefined') {
+        COLUMN_INFO = {}
+    }
+    if (typeof LOADING_SCRIPT_LIST === 'undefined') {
+        LOADING_SCRIPT_LIST = []
+    }
+
     tableIds = Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? TABLE_INFO[key].index : TABLE_INFO[key])
     for (let id of tableIds) {
         console.log(`${commonGetTableName(id)} : ${SERVER_URL}/items/${id}/index`)
@@ -50,22 +96,25 @@ $p.events.on_editor_load = function () {
         func()
     })
 }
-$p.events.before_send_Create = function () {
+
+$p.events.before_send_Create = function (e) {
     console.log("start!! before_send_Create_arr!!!")
     // falseをreturnするまで繰り返す
     return $p.events.before_send_Create_arr.every(func => {
         console.log(func)
-        return func()
+        return func(e)
     })
 }
-$p.events.before_send_Update = function () {
+
+$p.events.before_send_Update = function (e) {
     console.log("start!! before_send_Update_arr!!!")
     // falseをreturnするまで繰り返す
     return $p.events.before_send_Update_arr.every(func => {
         console.log(func)
-        return func()
+        return func(e)
     })
 }
+
 
 // 共通ロード処理
 // 即時関数
@@ -78,7 +127,11 @@ $(function () {
         SERVER_URL = window.location.origin
     }
     if (typeof TABLE_INFO === 'undefined') {
-        TABLE_INFO = {}
+        if (typeof TABLE_INFO === 'undefined') {
+            TABLE_INFO = {
+                "NoName": $p.siteId(),
+            }
+        }
     }
     if (typeof CODE_INFO === 'undefined') {
         CODE_INFO = {}
@@ -113,7 +166,7 @@ $(function () {
         }
         // messageのパラメータがあったらメッセージをだす
         if ("message" in queryParams) {
-            commonMessage(STATUS_NORMAL, queryParams["message"])
+            commonMessage(queryParams["message"])
         }
     }
 
@@ -181,7 +234,7 @@ $p.events.on_grid_load_arr.push(function () {
     try {
         // 変数一覧へテーブルIDの登録チェック
         if (!Object.keys(TABLE_INFO).map(key => TABLE_INFO[key].hasOwnProperty('index') ? +TABLE_INFO[key].index : +TABLE_INFO[key]).includes($p.siteId())) {
-            commonMessage(STATUS_ERROR, STATUS_ERROR_MESSAGE_ID)
+            commonMessage(STATUS_ERROR_MESSAGE_ID, STATUS_ERROR)
         }
 
         // サイトタイトル取得
@@ -203,7 +256,7 @@ $p.events.on_editor_load_arr.push(function () {
         document.getElementsByTagName("Title")[0].innerText = siteTitle + " - 編集"
 
         // 読み取り制御
-        let columns = COLUMN_INFO[commonGetTableName($p.siteId())]
+        let columns = Object.keys(COLUMN_INFO).filter(key => COLUMN_INFO[key].hasOwnProperty('index'))
         Object.keys(columns)
             .filter(v => commonCheckStatus(columns[v].readOnly))
             .forEach(v => commonChangeReadOnly(v))
@@ -281,26 +334,26 @@ function commonGetColumnName(table, label) {
     try {
         if (!Object.keys(TABLE_INFO).includes(table)) {
             let message = `共通関数commonGetColumnName：テーブル名不正。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         if (!table in COLUMN_INFO) {
             let message = `共通関数commonGetColumnName：テーブル未登録。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
-        let column = COLUMN_INFO[table]
+        let column = COLUMN_INFO[table].hasOwnProperty('label') ? COLUMN_INFO[table].label : COLUMN_INFO[table]
         // 保存用変数から取得
         let data = Object.keys(column)
             .filter(v => v.indexOf("~") < 0)
-            .filter(v => column[v].label == label)
+            .filter(v => column[v] == label)
         if (data.length == 0) {
             let message = `共通関数commonGetColumnName：ラベル名不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         } else if (data.length > 1) {
             let message = `共通関数commonGetColumnName：ラベル名変数重複。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         return data[0]
@@ -322,7 +375,7 @@ function commonGetCode(codeName, label, attr = "index") {
     try {
         if (!Object.keys(CODE_INFO).includes(codeName)) {
             let message = `共通関数commonGetCode：コード名不正。${codeName}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let code = CODE_INFO[codeName]
@@ -340,11 +393,11 @@ function commonGetCode(codeName, label, attr = "index") {
             .filter(v => commonIsNull(label) || v.name == label)
         if (code.length == 0) {
             let message = `共通関数commonGetCode：ラベル名不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         } else if (code.length > 1) {
             let message = `共通関数commonGetCode：ラベル名変数重複。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         if (!commonIsNull(attr)) code = code[0][attr]
@@ -365,12 +418,12 @@ function commonGetAllStatuses(table) {
     try {
         if (!Object.keys(TABLE_INFO).includes(table)) {
             let message = `共通関数commonGetStatus：テーブル名不正。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         if (!"status" in TABLE_INFO) {
             let message = `共通関数commonGetStatus：status未登録。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let statuses = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].status
@@ -404,12 +457,12 @@ function commonGetStatus(table, label, attr = "index") {
     try {
         if (!Object.keys(TABLE_INFO).includes(table)) {
             let message = `共通関数commonGetStatus：テーブル名不正。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         if (!"status" in TABLE_INFO) {
             let message = `共通関数commonGetStatus：status未登録。${table}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let status = TABLE_INFO[Object.keys(TABLE_INFO).filter(v => v == table)[0]].status
@@ -427,11 +480,11 @@ function commonGetStatus(table, label, attr = "index") {
             .filter(v => v.name == label || v.label == label)
         if (status.length == 0) {
             let message = `共通関数commonGetStatus：ラベル名不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         } else if (status.length > 1) {
             let message = `共通関数commonGetStatus：ラベル名変数重複。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         if (!commonIsNull(attr)) status = status[0][attr]
@@ -456,11 +509,11 @@ function commonGetTableName(tableId) {
         })
         if (table.length == 0) {
             let message = `共通関数commonGetTableName：TABLE_INFOにテーブルID未登録。${tableId}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         } else if (table.length > 1) {
             let message = `共通関数commonGetTableName：TABLE_INFOにテーブルが2重で登録されています。${tableId}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         return table[0]
@@ -493,7 +546,7 @@ function commonIsNull(obj) {
  * @param {String} type 深刻度
  * @param {String} message メッセージ内容
  */
-function commonMessage(type = STATUS_NORMAL, message = '') {
+function commonMessage(message = '', type = STATUS_NORMAL) {
     $p.clearMessage()
 
     switch (type) {
@@ -577,7 +630,7 @@ function commonGenerateUniqueId(pattern = "xxxx-xxxx-xxxx-xxxx") {
  */
 async function commonCheckPoint(messages, progress = "progress", analysis) {
     try {
-        commonMessage(STATUS_NORMAL, "処理開始")
+        commonMessage("処理開始")
 
         let p_status = 0
         let m_status = 0
@@ -637,7 +690,7 @@ async function commonCheckPoint(messages, progress = "progress", analysis) {
             message = messages
         }
 
-        commonMessage(m_status, message)
+        commonMessage(message, m_status)
         await commonUpdate(
             process_id,
             {
@@ -758,7 +811,7 @@ function commonGetTab(label, flg = true) {
         let tab = Array.from(document.getElementsByClassName("ui-tabs-tab")).filter(v => v.children[0].innerText == label)[0]
         if (commonIsNull(tab)) {
             let message = `共通関数commonGetTab：ラベル不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let obj = document.querySelector(`fieldSet[aria-labelledby=${tab.getAttribute("aria-labelledby")}]`)
@@ -781,7 +834,7 @@ function commonGetSection(label, flg = true) {
         let section = Array.from(document.getElementsByClassName("field-section")).filter(v => v.innerText == label)[0]
         if (commonIsNull(section)) {
             let message = `共通関数commonGetSection：ラベル不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let obj = document.getElementById(`${section.getAttribute("for")}`)
@@ -984,7 +1037,7 @@ function commonRemoveGridButtons(...buttonNames) {
     try {
         if ($p.action() !== "index") {
             let message = STATUS_ERROR_MESSAGE_GRID
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message ,STATUS_ERROR)
             throw new Error(message)
         }
         let removes = []
@@ -1031,7 +1084,7 @@ function commonRemoveEditorButtons(...buttonNames) {
     try {
         if ($p.action() !== "edit" && $p.action() !== "new") {
             let message = STATUS_ERROR_MESSAGE_EDIT
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let removes = []
@@ -1361,7 +1414,7 @@ function commonDownloadCsv(d2array, title = 'test', charcode = "utf-8") {
 function commonConvert2DToMd(array) {
     if (array[0].length != array[1].length) {
         let message = `共通関数commonConvert2DToMd：要素数不正。`
-        commonMessage(STATUS_ERROR, message)
+        commonMessage(message, STATUS_ERROR)
         throw new Error(message)
     }
     let md = ["[md]"]
@@ -1572,7 +1625,7 @@ function commonGenerate2DArray(m, n, init = 0) {
 function commonSummary2DArray(d2array, findIndexes = [], sortIndexes = [], summaryHash, countFlg = false) {
     if (commonIsNull(d2array)) {
         let message = `共通関数commonSummary2DArray：配列が空です。`
-        commonMessage(STATUS_ERROR, message)
+        commonMessage(message, STATUS_ERROR)
         throw new Error(message)    }
 
     let countIndex = d2array[0].length + 1
@@ -1791,6 +1844,14 @@ function commonUniqueArray(arr) {
 }
 
 /**
+ * 子配列の全ての要素が親配列に含まれているかどうか
+ * @param {Array} arr 文字列配列
+ */
+function commonContainArray(parentArray, childArray) {
+    return childArray.every(element => parentArray.includes(element))
+}
+
+/**
  * 入力されたラベルのIDを返却する。
  * @param {String} label ラベル
  */
@@ -1799,7 +1860,7 @@ function commonGetId(label, prefix = true, suffix = false) {
         let id = $p.getColumnName(label)
         if (commonIsNull(id)) {
             let message = `共通関数commonGetId：ラベル不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         } else {
             id = prefix ? $p.tableName() + '_' + id : id
@@ -1878,7 +1939,7 @@ function commonChangeHidden(label, disabled = true) {
         let areaId = commonGetId(label)
         if (commonIsNull(areaId)) {
             let message = `共通関数commonChangeReadOnly：ラベル不正。${label}`
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
         let area = document.getElementById(areaId)
@@ -1937,14 +1998,15 @@ function commonChangeReadOnlyMainButton() {
  */
 function commonGetVal(label, valueFlg = false) {
     let value = ""
+    let tagName = $p.getControl($p.getColumnName(label)).prop("tagName")
     try {
-        if ($p.getControl($p.getColumnName(label)).prop("tagName") === "SELECT") {
+        if (tagName === "SELECT") {
             if ($p.getControl($p.getColumnName(label)).attr("multiple")) {
                 value = valueFlg ? $p.getControl($p.getColumnName(label)).val() : $p.getControl($p.getColumnName(label)).next().children().last().text()
             } else {
                 value = valueFlg ? $p.getControl($p.getColumnName(label)).children(':selected').val() : $p.getControl($p.getColumnName(label)).children(':selected').text()
             }
-        } else if ($p.getControl($p.getColumnName(label)).prop("tagName") === "INPUT") {
+        } else if (tagName === "INPUT") {
             if (commonGetId(label).indexOf("Check") > 0) {
                 value = document.getElementById(commonGetId(label)).checked
                 value = valueFlg ? +value : value
@@ -1956,7 +2018,7 @@ function commonGetVal(label, valueFlg = false) {
                     value = $p.getControl($p.getColumnName(label)).val()
                 }
             }
-        } else if ($p.getControl($p.getColumnName(label)).prop("tagName") === "TEXTAREA") {
+        } else if (tagName === "TEXTAREA") {
             value = document.getElementById(commonGetId(label) + ".viewer").innerText
         } else {
             // 選択系 読み取り専用
@@ -1971,7 +2033,13 @@ function commonGetVal(label, valueFlg = false) {
         console.log(e)
         value = ""
     } finally {
-        return value
+        try {
+            // JSON.parseを試みる
+            return typeof value === 'string' ? JSON.parse(value) : value
+        } catch (error) {
+            // エラーが発生した場合、元の値を返す
+            return value;
+        }
     }
 }
 
@@ -2388,7 +2456,7 @@ async function commonCopyRecord(editItems = {}, Status, Comments, expand = 0, ad
     try {
         if ($p.action() !== "edit") {
             let message = STATUS_ERROR_MESSAGE_EDIT
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
 
@@ -2461,7 +2529,7 @@ async function commonSaveRecord(editItems = {}, Status, Comments, reload = false
     try {
         if ($p.action() !== "edit") {
             let message = STATUS_ERROR_MESSAGE_EDIT
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
 
@@ -2705,7 +2773,7 @@ async function commonUpdateProcessing(id = $p.id()) {
     try {
         if ($p.action() !== "edit") {
             let message = STATUS_ERROR_MESSAGE_EDIT
-            commonMessage(STATUS_ERROR, message)
+            commonMessage(message, STATUS_ERROR)
             throw new Error(message)
         }
 
@@ -2717,7 +2785,7 @@ async function commonUpdateProcessing(id = $p.id()) {
             let clientDate = $p.getControl("更新日時").attr("datetime")
             if (serverDate !== clientDate) {
                 let message = STATUS_ERROR_MESSAGE_UP
-                commonMessage(STATUS_ERROR, message)
+                commonMessage(message, STATUS_ERROR)
                 throw new Error(message)
             }
             u = await commonSaveRecord({}, STATUS_PROCESSING)
