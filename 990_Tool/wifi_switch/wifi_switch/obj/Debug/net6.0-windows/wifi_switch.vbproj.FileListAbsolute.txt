@@ -1,0 +1,16 @@
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\bin\Debug\net6.0-windows\wifi_switch.exe
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\bin\Debug\net6.0-windows\wifi_switch.deps.json
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\bin\Debug\net6.0-windows\wifi_switch.runtimeconfig.json
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\bin\Debug\net6.0-windows\wifi_switch.dll
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\bin\Debug\net6.0-windows\wifi_switch.pdb
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.Form1.resources
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.vbproj.GenerateResource.cache
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.AssemblyInfoInputs.cache
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.AssemblyInfo.vb
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.vbproj.CoreCompileInputs.cache
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.dll
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\refint\wifi_switch.dll
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.pdb
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.genruntimeconfig.cache
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\ref\wifi_switch.dll

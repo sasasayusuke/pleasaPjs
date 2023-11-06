@@ -54,3 +54,8 @@ $p.events.before_send_Update_arr.push(function (e) {
     }
     return true
 })
+
+document.getElementById(commonGetId("使用チケット")).onchange = function() {
+    let tickets = commonGetVal("使用チケット", true)
+    commonSetVal("作業工数", tickets.length)
+}
