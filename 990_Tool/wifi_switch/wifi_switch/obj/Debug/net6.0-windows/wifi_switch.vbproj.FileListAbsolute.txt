@@ -14,3 +14,4 @@ C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\w
 C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.pdb
 C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.genruntimeconfig.cache
 C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\ref\wifi_switch.dll
+C:\Users\Y-Sasaki\Desktop\sasaki\product\github\pleasaPjs\990_Tool\wifi_switch\wifi_switch\obj\Debug\net6.0-windows\wifi_switch.Resources.resources
