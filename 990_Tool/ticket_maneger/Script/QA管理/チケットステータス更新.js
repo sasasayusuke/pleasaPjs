@@ -24,7 +24,8 @@ $p.events.before_send_Update_arr.push(function (e) {
                 `${commonGetVal("ID")} ${commonGetVal("タイトル")} に対してチケット使用`
             )
         }
-    } else if (controlId == "Process_3") {
+    // 完了ボタン押下
+    } else if (controlId == "Process_3" || controlId == "Process_5") {
         // チケット完了
         for (let tid of tickets) {
             commonUpdate(
