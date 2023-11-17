@@ -1,19 +1,23 @@
 ﻿Imports System.Diagnostics
 Public Class Util
     Public Shared Function ExecuteCommand(command As String) As String
-        Using process As New Process()
-            process.StartInfo.FileName = "cmd.exe"
-            process.StartInfo.Arguments = "/c " & command
-            process.StartInfo.RedirectStandardOutput = True
-            process.StartInfo.UseShellExecute = False
-            process.StartInfo.CreateNoWindow = True
-            process.Start()
+        Try
+            Using process As New Process()
+                process.StartInfo.FileName = "cmd.exe"
+                process.StartInfo.Arguments = "/c " & command
+                process.StartInfo.RedirectStandardOutput = True
+                process.StartInfo.UseShellExecute = False
+                process.StartInfo.CreateNoWindow = True
+                process.Start()
 
-            Dim output As String = process.StandardOutput.ReadToEnd()
-            process.WaitForExit()
+                Dim output As String = process.StandardOutput.ReadToEnd()
+                process.WaitForExit()
 
-            Return output
-        End Using
+                Return output
+            End Using
+        Catch ex As Exception
+            Return "Error: " & ex.Message
+        End Try
     End Function
     Public Shared Function GetAvailableNetworkSSIDs() As List(Of String)
         Dim ssidList As New List(Of String)

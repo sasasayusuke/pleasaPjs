@@ -1,10 +1,8 @@
 ﻿Public Class Form1
 
 
-    ' Form1内の適切な場所で、例えばボタンクリックイベント内で以下のように呼び出します。
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ' ここではcインスタンスは不要です。代わりにクラス名で静的メソッドを呼び出します。
-        ' Panel1とs（Settingsのインスタンス）を引数として渡します。
+        ' リストを表示するPanelを引数として渡します。
         Util.AddControlsToPanel(SplitContainer1.Panel2)
     End Sub
 
@@ -27,13 +25,5 @@
         e.Cancel = True
         Me.Visible = False
         NotifyIcon1.Visible = True
-    End Sub
-
-    Private Sub Label1_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
-
     End Sub
 End Class

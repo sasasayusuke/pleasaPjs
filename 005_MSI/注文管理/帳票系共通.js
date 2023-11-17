@@ -138,13 +138,13 @@ async function commonUpdateAttachment(targetID, className, workbook, filename) {
 }
 
 
-async function downloadExcel(tableId, recordId) {
+async function downloadExcel(formatId) {
     return $p.apiGet({
-        'id': tableId,
+        'id': TABLE_ID_EXCEL_FORMAT,
         'data': {
             'View': {
                 'ColumnFilterHash': {
-                    "ClassA": recordId
+                    "ClassA": formatId
                 }
             }
         },
