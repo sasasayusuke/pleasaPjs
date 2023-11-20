@@ -23,24 +23,23 @@ Partial Class FormIp
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormIp))
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioAutoObtainIP = New System.Windows.Forms.RadioButton()
+        Me.RadioSpecificDNS = New System.Windows.Forms.RadioButton()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.MaskedTextBox5 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxSecondaryDNS = New System.Windows.Forms.MaskedTextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.MaskedTextBox4 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxPrimaryDNS = New System.Windows.Forms.MaskedTextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.RadioButton4 = New System.Windows.Forms.RadioButton()
+        Me.IpSave = New System.Windows.Forms.Button()
+        Me.RadioAutoObtainDNS = New System.Windows.Forms.RadioButton()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.MaskedTextBox3 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxGateway = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxSubnet = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxIPAddress = New System.Windows.Forms.MaskedTextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.RadioButton5 = New System.Windows.Forms.RadioButton()
+        Me.RadioSpecificIP = New System.Windows.Forms.RadioButton()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.tbSsid = New System.Windows.Forms.TextBox()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
@@ -48,33 +47,33 @@ Partial Class FormIp
         Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
-        'RadioButton1
+        'RadioAutoObtainIP
         '
-        Me.RadioButton1.AutoSize = True
-        Me.RadioButton1.Location = New System.Drawing.Point(31, 74)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(166, 16)
-        Me.RadioButton1.TabIndex = 0
-        Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "IPアドレスを自動的に取得する"
-        Me.RadioButton1.UseVisualStyleBackColor = True
+        Me.RadioAutoObtainIP.AutoSize = True
+        Me.RadioAutoObtainIP.Location = New System.Drawing.Point(31, 74)
+        Me.RadioAutoObtainIP.Name = "RadioAutoObtainIP"
+        Me.RadioAutoObtainIP.Size = New System.Drawing.Size(166, 16)
+        Me.RadioAutoObtainIP.TabIndex = 201
+        Me.RadioAutoObtainIP.TabStop = True
+        Me.RadioAutoObtainIP.Text = "IPアドレスを自動的に取得する"
+        Me.RadioAutoObtainIP.UseVisualStyleBackColor = True
         '
-        'RadioButton2
+        'RadioSpecificDNS
         '
-        Me.RadioButton2.AutoSize = True
-        Me.RadioButton2.Location = New System.Drawing.Point(31, 232)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(172, 16)
-        Me.RadioButton2.TabIndex = 1
-        Me.RadioButton2.TabStop = True
-        Me.RadioButton2.Text = "次のDNSサーバのアドレスを使う"
-        Me.RadioButton2.UseVisualStyleBackColor = True
+        Me.RadioSpecificDNS.AutoSize = True
+        Me.RadioSpecificDNS.Location = New System.Drawing.Point(31, 232)
+        Me.RadioSpecificDNS.Name = "RadioSpecificDNS"
+        Me.RadioSpecificDNS.Size = New System.Drawing.Size(172, 16)
+        Me.RadioSpecificDNS.TabIndex = 204
+        Me.RadioSpecificDNS.TabStop = True
+        Me.RadioSpecificDNS.Text = "次のDNSサーバのアドレスを使う"
+        Me.RadioSpecificDNS.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.MaskedTextBox5)
+        Me.GroupBox1.Controls.Add(Me.MaskedTextBoxSecondaryDNS)
         Me.GroupBox1.Controls.Add(Me.Label5)
-        Me.GroupBox1.Controls.Add(Me.MaskedTextBox4)
+        Me.GroupBox1.Controls.Add(Me.MaskedTextBoxPrimaryDNS)
         Me.GroupBox1.Controls.Add(Me.Label4)
         Me.GroupBox1.Location = New System.Drawing.Point(21, 232)
         Me.GroupBox1.Name = "GroupBox1"
@@ -82,15 +81,15 @@ Partial Class FormIp
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         '
-        'MaskedTextBox5
+        'MaskedTextBoxSecondaryDNS
         '
-        Me.MaskedTextBox5.Location = New System.Drawing.Point(156, 65)
-        Me.MaskedTextBox5.Mask = "000.000.000.000"
-        Me.MaskedTextBox5.Name = "MaskedTextBox5"
-        Me.MaskedTextBox5.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox5.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox5.TabIndex = 3
-        Me.MaskedTextBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxSecondaryDNS.Location = New System.Drawing.Point(156, 65)
+        Me.MaskedTextBoxSecondaryDNS.Mask = "000.000.000.000"
+        Me.MaskedTextBoxSecondaryDNS.Name = "MaskedTextBoxSecondaryDNS"
+        Me.MaskedTextBoxSecondaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxSecondaryDNS.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxSecondaryDNS.TabIndex = 305
+        Me.MaskedTextBoxSecondaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
         '
@@ -101,15 +100,15 @@ Partial Class FormIp
         Me.Label5.TabIndex = 2
         Me.Label5.Text = "代替 DNS サーバ ："
         '
-        'MaskedTextBox4
+        'MaskedTextBoxPrimaryDNS
         '
-        Me.MaskedTextBox4.Location = New System.Drawing.Point(156, 31)
-        Me.MaskedTextBox4.Mask = "000.000.000.000"
-        Me.MaskedTextBox4.Name = "MaskedTextBox4"
-        Me.MaskedTextBox4.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox4.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox4.TabIndex = 3
-        Me.MaskedTextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxPrimaryDNS.Location = New System.Drawing.Point(156, 31)
+        Me.MaskedTextBoxPrimaryDNS.Mask = "000.000.000.000"
+        Me.MaskedTextBoxPrimaryDNS.Name = "MaskedTextBoxPrimaryDNS"
+        Me.MaskedTextBoxPrimaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxPrimaryDNS.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxPrimaryDNS.TabIndex = 304
+        Me.MaskedTextBoxPrimaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label4
         '
@@ -120,80 +119,71 @@ Partial Class FormIp
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "優先 DNS サーバ ："
         '
-        'Button1
+        'IpSave
         '
-        Me.Button1.Location = New System.Drawing.Point(345, 348)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 4
-        Me.Button1.Text = "キャンセル"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.IpSave.Location = New System.Drawing.Point(333, 346)
+        Me.IpSave.Name = "IpSave"
+        Me.IpSave.Size = New System.Drawing.Size(75, 23)
+        Me.IpSave.TabIndex = 901
+        Me.IpSave.Text = "保存"
+        Me.IpSave.UseVisualStyleBackColor = True
         '
-        'Button2
+        'RadioAutoObtainDNS
         '
-        Me.Button2.Location = New System.Drawing.Point(264, 348)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 4
-        Me.Button2.Text = "OK"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'RadioButton4
-        '
-        Me.RadioButton4.AutoSize = True
-        Me.RadioButton4.Location = New System.Drawing.Point(31, 210)
-        Me.RadioButton4.Name = "RadioButton4"
-        Me.RadioButton4.Size = New System.Drawing.Size(219, 16)
-        Me.RadioButton4.TabIndex = 3
-        Me.RadioButton4.TabStop = True
-        Me.RadioButton4.Text = "DNSサーバのアドレスを自動的に取得する"
-        Me.RadioButton4.UseVisualStyleBackColor = True
+        Me.RadioAutoObtainDNS.AutoSize = True
+        Me.RadioAutoObtainDNS.Location = New System.Drawing.Point(31, 210)
+        Me.RadioAutoObtainDNS.Name = "RadioAutoObtainDNS"
+        Me.RadioAutoObtainDNS.Size = New System.Drawing.Size(219, 16)
+        Me.RadioAutoObtainDNS.TabIndex = 203
+        Me.RadioAutoObtainDNS.TabStop = True
+        Me.RadioAutoObtainDNS.Text = "DNSサーバのアドレスを自動的に取得する"
+        Me.RadioAutoObtainDNS.UseVisualStyleBackColor = True
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.MaskedTextBox3)
-        Me.GroupBox2.Controls.Add(Me.MaskedTextBox2)
-        Me.GroupBox2.Controls.Add(Me.MaskedTextBox1)
+        Me.GroupBox2.Controls.Add(Me.MaskedTextBoxGateway)
+        Me.GroupBox2.Controls.Add(Me.MaskedTextBoxSubnet)
+        Me.GroupBox2.Controls.Add(Me.MaskedTextBoxIPAddress)
         Me.GroupBox2.Controls.Add(Me.Label3)
         Me.GroupBox2.Controls.Add(Me.Label2)
         Me.GroupBox2.Controls.Add(Me.Label1)
-        Me.GroupBox2.Controls.Add(Me.RadioButton5)
+        Me.GroupBox2.Controls.Add(Me.RadioSpecificIP)
         Me.GroupBox2.Location = New System.Drawing.Point(21, 96)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(387, 100)
         Me.GroupBox2.TabIndex = 5
         Me.GroupBox2.TabStop = False
         '
-        'MaskedTextBox3
+        'MaskedTextBoxGateway
         '
-        Me.MaskedTextBox3.Location = New System.Drawing.Point(156, 73)
-        Me.MaskedTextBox3.Mask = "000.000.000.000"
-        Me.MaskedTextBox3.Name = "MaskedTextBox3"
-        Me.MaskedTextBox3.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox3.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox3.TabIndex = 3
-        Me.MaskedTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxGateway.Location = New System.Drawing.Point(156, 73)
+        Me.MaskedTextBoxGateway.Mask = "000.000.000.000"
+        Me.MaskedTextBoxGateway.Name = "MaskedTextBoxGateway"
+        Me.MaskedTextBoxGateway.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxGateway.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxGateway.TabIndex = 303
+        Me.MaskedTextBoxGateway.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox2
+        'MaskedTextBoxSubnet
         '
-        Me.MaskedTextBox2.Location = New System.Drawing.Point(156, 47)
-        Me.MaskedTextBox2.Mask = "000.000.000.000"
-        Me.MaskedTextBox2.Name = "MaskedTextBox2"
-        Me.MaskedTextBox2.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox2.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox2.TabIndex = 3
-        Me.MaskedTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxSubnet.Location = New System.Drawing.Point(156, 47)
+        Me.MaskedTextBoxSubnet.Mask = "000.000.000.000"
+        Me.MaskedTextBoxSubnet.Name = "MaskedTextBoxSubnet"
+        Me.MaskedTextBoxSubnet.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxSubnet.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxSubnet.TabIndex = 302
+        Me.MaskedTextBoxSubnet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox1
+        'MaskedTextBoxIPAddress
         '
-        Me.MaskedTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(156, 20)
-        Me.MaskedTextBox1.Mask = "000.000.000.000"
-        Me.MaskedTextBox1.Name = "MaskedTextBox1"
-        Me.MaskedTextBox1.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox1.TabIndex = 3
-        Me.MaskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxIPAddress.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.MaskedTextBoxIPAddress.Location = New System.Drawing.Point(156, 20)
+        Me.MaskedTextBoxIPAddress.Mask = "000.000.000.000"
+        Me.MaskedTextBoxIPAddress.Name = "MaskedTextBoxIPAddress"
+        Me.MaskedTextBoxIPAddress.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxIPAddress.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxIPAddress.TabIndex = 301
+        Me.MaskedTextBoxIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label3
         '
@@ -222,16 +212,16 @@ Partial Class FormIp
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "IPアドレス ："
         '
-        'RadioButton5
+        'RadioSpecificIP
         '
-        Me.RadioButton5.AutoSize = True
-        Me.RadioButton5.Location = New System.Drawing.Point(10, 0)
-        Me.RadioButton5.Name = "RadioButton5"
-        Me.RadioButton5.Size = New System.Drawing.Size(119, 16)
-        Me.RadioButton5.TabIndex = 1
-        Me.RadioButton5.TabStop = True
-        Me.RadioButton5.Text = "次のIPアドレスを使う"
-        Me.RadioButton5.UseVisualStyleBackColor = True
+        Me.RadioSpecificIP.AutoSize = True
+        Me.RadioSpecificIP.Location = New System.Drawing.Point(10, 0)
+        Me.RadioSpecificIP.Name = "RadioSpecificIP"
+        Me.RadioSpecificIP.Size = New System.Drawing.Size(119, 16)
+        Me.RadioSpecificIP.TabIndex = 202
+        Me.RadioSpecificIP.TabStop = True
+        Me.RadioSpecificIP.Text = "次のIPアドレスを使う"
+        Me.RadioSpecificIP.UseVisualStyleBackColor = True
         '
         'Label6
         '
@@ -258,7 +248,7 @@ Partial Class FormIp
         Me.CheckBox1.Location = New System.Drawing.Point(31, 47)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(144, 16)
-        Me.CheckBox1.TabIndex = 6
+        Me.CheckBox1.TabIndex = 101
         Me.CheckBox1.Text = "会社のIP情報を使用する"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
@@ -271,11 +261,10 @@ Partial Class FormIp
         Me.Controls.Add(Me.tbSsid)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.GroupBox2)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.RadioButton4)
-        Me.Controls.Add(Me.RadioButton2)
-        Me.Controls.Add(Me.RadioButton1)
+        Me.Controls.Add(Me.IpSave)
+        Me.Controls.Add(Me.RadioAutoObtainDNS)
+        Me.Controls.Add(Me.RadioSpecificDNS)
+        Me.Controls.Add(Me.RadioAutoObtainIP)
         Me.Controls.Add(Me.GroupBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -292,24 +281,23 @@ Partial Class FormIp
 
     End Sub
 
-    Friend WithEvents RadioButton1 As RadioButton
-    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents RadioAutoObtainIP As RadioButton
+    Friend WithEvents RadioSpecificDNS As RadioButton
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
-    Friend WithEvents RadioButton4 As RadioButton
+    Friend WithEvents IpSave As Button
+    Friend WithEvents RadioAutoObtainDNS As RadioButton
     Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents RadioButton5 As RadioButton
+    Friend WithEvents RadioSpecificIP As RadioButton
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents MaskedTextBox1 As MaskedTextBox
-    Friend WithEvents MaskedTextBox5 As MaskedTextBox
+    Friend WithEvents MaskedTextBoxIPAddress As MaskedTextBox
+    Friend WithEvents MaskedTextBoxSecondaryDNS As MaskedTextBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents MaskedTextBox4 As MaskedTextBox
+    Friend WithEvents MaskedTextBoxPrimaryDNS As MaskedTextBox
     Friend WithEvents Label4 As Label
-    Friend WithEvents MaskedTextBox3 As MaskedTextBox
-    Friend WithEvents MaskedTextBox2 As MaskedTextBox
+    Friend WithEvents MaskedTextBoxGateway As MaskedTextBox
+    Friend WithEvents MaskedTextBoxSubnet As MaskedTextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents tbSsid As TextBox
     Friend WithEvents CheckBox1 As CheckBox

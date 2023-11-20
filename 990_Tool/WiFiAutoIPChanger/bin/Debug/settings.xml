@@ -1,7 +1,9 @@
 <Settings>
-  <Setting Key="MaskedTextBoxPrimaryDNS">222.222.222.222</Setting>
-  <Setting Key="MaskedTextBoxSecondaryDNS">102.222.222.002</Setting>
-  <Setting Key="MaskedTextBoxIPAddress">   .   .   .</Setting>
-  <Setting Key="MaskedTextBoxSubnet">  1.  1.  1.  1</Setting>
-  <Setting Key="MaskedTextBoxGateway">   .   .   .</Setting>
+  <Conf>
+    <Setting Key="MaskedTextBoxIPAddress">123.131.111.  1</Setting>
+    <Setting Key="MaskedTextBoxSubnet"> 21.233. 41.  1</Setting>
+    <Setting Key="MaskedTextBoxGateway"> 11.112.111.141</Setting>
+    <Setting Key="Masked TextBoxPrimaryDNS">   .   .   .</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">   .   .   .</Setting>
+  </Conf>
 </Settings>

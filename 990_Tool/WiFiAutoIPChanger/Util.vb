@@ -118,7 +118,7 @@ Public Class Util
     End Function
 
     ' XML書込
-    Public Shared Sub WriteValueToXml(key As String, value As String)
+    Public Shared Sub WriteValueToXml(section As String, key As String, value As String)
         Dim doc As New XmlDocument()
 
         ' ファイルが存在する場合は読み込む
@@ -130,31 +130,39 @@ Public Class Util
             doc.AppendChild(root)
         End If
 
-        ' キーと値の要素を追加
-        Dim settingElement As XmlElement = doc.CreateElement(Constants.SETTING_TAG)
-        settingElement.SetAttribute("Key", key)
-        settingElement.InnerText = value
+        ' セクションを検索し、存在しない場合は作成
+        Dim sectionElement As XmlElement = CType(doc.SelectSingleNode($"//{section}"), XmlElement)
+        If sectionElement Is Nothing Then
+            sectionElement = doc.CreateElement(section)
+            doc.DocumentElement.AppendChild(sectionElement)
+        End If
 
-        ' 同一キーが存在する場合は値を更新
-        Dim existingElement As XmlElement = doc.SelectSingleNode($"//{Constants.SETTING_TAG}[@Key='{key}']")
-        If existingElement IsNot Nothing Then
-            existingElement.InnerText = value
+        ' キーと値の要素を追加または更新
+        Dim settingElement As XmlElement = CType(sectionElement.SelectSingleNode($"Setting[@Key='{key}']"), XmlElement)
+        If settingElement IsNot Nothing Then
+            ' 既存の要素の値を更新
+            settingElement.InnerText = value
         Else
-            doc.DocumentElement.AppendChild(settingElement)
+            ' 新しい要素を作成して追加
+            settingElement = doc.CreateElement(Constants.SETTING_TAG)
+            settingElement.SetAttribute("Key", key)
+            settingElement.InnerText = value
+            sectionElement.AppendChild(settingElement)
         End If
 
         ' XMLファイルに書き込む
         doc.Save(Constants.APP_PATH)
     End Sub
 
+
     ' XML読込
-    Public Shared Function ReadValueFromXml(key As String) As String
+    Public Shared Function ReadValueFromXml(section As String, key As String) As String
         ' XmlDocumentインスタンスを作成し、ファイルを読み込む
         Dim doc As New XmlDocument()
         doc.Load(Constants.APP_PATH)
 
         ' キーに対応するノードを検索
-        Dim xpath As String = $"//{Constants.SETTING_SECTION}/{Constants.SETTING_TAG}[@Key='{key}']"
+        Dim xpath As String = $"//{Constants.SETTING_SECTION}/{section}/{Constants.SETTING_TAG}[@Key='{key}']"
         Dim node As XmlNode = doc.SelectSingleNode(xpath)
 
         ' 該当が見つかった場合はそのテキストを返す

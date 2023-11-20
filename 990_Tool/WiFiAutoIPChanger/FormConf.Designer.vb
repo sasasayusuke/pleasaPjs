@@ -182,7 +182,7 @@ Partial Class FormConf
         Me.ConfSave.Name = "ConfSave"
         Me.ConfSave.Size = New System.Drawing.Size(75, 23)
         Me.ConfSave.TabIndex = 91
-        Me.ConfSave.Text = "保存終了"
+        Me.ConfSave.Text = "保存"
         Me.ConfSave.UseVisualStyleBackColor = True
         '
         'FormConf
