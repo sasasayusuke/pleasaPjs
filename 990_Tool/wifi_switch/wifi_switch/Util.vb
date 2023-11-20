@@ -19,6 +19,7 @@ Public Class Util
             Return "Error: " & ex.Message
         End Try
     End Function
+
     Public Shared Function GetAvailableNetworkSSIDs() As List(Of String)
         Dim ssidList As New List(Of String)
         Dim output As String = ExecuteCommand("netsh wlan show networks")

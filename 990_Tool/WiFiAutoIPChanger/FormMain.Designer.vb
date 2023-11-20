@@ -133,7 +133,6 @@ Partial Class FormMain
         Me.Name = "FormMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "WiFiAutoIPChanger"
-        Me.TopMost = True
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()

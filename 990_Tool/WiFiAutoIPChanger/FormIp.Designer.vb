@@ -283,7 +283,6 @@ Partial Class FormIp
         Me.MinimizeBox = False
         Me.Name = "FormIp"
         Me.Text = "IP設定"
-        Me.TopMost = True
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)

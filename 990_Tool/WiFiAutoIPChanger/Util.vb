@@ -30,6 +30,7 @@ Public Class Util
         Dim output As String = ExecuteCommand("netsh wlan show profiles")
 
         Dim lines As String() = output.Split(New String() {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+        ' SSIDを抽出します
         For Each line In lines
             If line.Contains("すべてのユーザー プロファイル") Then
                 ' SSID行からSSID名を取得します。
@@ -44,37 +45,31 @@ Public Class Util
 
 
     ' 利用可能なSSIDを取得する関数 → 現在使用中のSSIDを取得
-    Public Shared Function GetAvailableNetworkSSIDs() As List(Of String)
-        Dim ssidList As New List(Of String)
-        Dim output As String = ExecuteCommand("netsh wlan show networks")
-
+    Public Shared Function GetCurrentSSID() As String
+        Dim output As String = ExecuteCommand("netsh wlan show interfaces")
         Dim lines As String() = output.Split(New String() {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+        Dim currentSSID As String = String.Empty
+
         For Each line In lines
             If line.Contains("SSID") AndAlso Not line.Contains("BSSID") Then
                 ' SSID行からSSID名を取得します。
-                Dim ssid As String = line.Split(New String() {":"}, StringSplitOptions.RemoveEmptyEntries)(1).Trim()
-                ssidList.Add(ssid)
+                Dim parts As String() = line.Split(New String() {":"}, StringSplitOptions.RemoveEmptyEntries)
+                If parts.Length > 1 Then
+                    currentSSID = parts(1).Trim()
+                    Exit For
+                End If
             End If
         Next
 
-        Return ssidList
+        Return currentSSID
     End Function
 
     ' パネルに接続中SSIDを表示する関数
     Public Shared Sub AddControlsToPanel(ByVal panel As Panel)
         ' 利用可能なWi-FiネットワークのSSIDを取得します。
-        Dim ssids As List(Of String) = GetAvailableNetworkSSIDs()
+        Dim ssid As String = GetCurrentSSID()
         Dim nextControlTop As Integer = 10
 
-        ' SSIDごとにラベルを生成し、パネルに追加します。
-        For Each ssid As String In ssids
-            Dim newLabel As New Label()
-            newLabel.Text = ssid
-            newLabel.AutoSize = True
-            newLabel.Location = New Point(10, nextControlTop)
-            panel.Controls.Add(newLabel)
-            nextControlTop += newLabel.Height + 5  ' 次のコントロールのためにスペースを追加します。
-        Next
     End Sub
 
     ' IPアドレスのバリデーションメソッド

@@ -27,15 +27,15 @@ Partial Class FormConf
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.MaskedTextBox5 = New System.Windows.Forms.MaskedTextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.MaskedTextBox4 = New System.Windows.Forms.MaskedTextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
         Me.MaskedTextBox3 = New System.Windows.Forms.MaskedTextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBox4 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Conf_Bt_Close = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -91,6 +91,16 @@ Partial Class FormConf
         Me.MaskedTextBox5.TabIndex = 3
         Me.MaskedTextBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
+        'MaskedTextBox3
+        '
+        Me.MaskedTextBox3.Location = New System.Drawing.Point(165, 80)
+        Me.MaskedTextBox3.Mask = "000.000.000.000"
+        Me.MaskedTextBox3.Name = "MaskedTextBox3"
+        Me.MaskedTextBox3.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBox3.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBox3.TabIndex = 3
+        Me.MaskedTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
         'Label5
         '
         Me.Label5.AutoSize = True
@@ -99,62 +109,6 @@ Partial Class FormConf
         Me.Label5.Size = New System.Drawing.Size(100, 12)
         Me.Label5.TabIndex = 2
         Me.Label5.Text = "代替 DNS サーバ ："
-        '
-        'MaskedTextBox4
-        '
-        Me.MaskedTextBox4.Location = New System.Drawing.Point(165, 110)
-        Me.MaskedTextBox4.Mask = "000.000.000.000"
-        Me.MaskedTextBox4.Name = "MaskedTextBox4"
-        Me.MaskedTextBox4.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox4.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox4.TabIndex = 3
-        Me.MaskedTextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(17, 113)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(100, 12)
-        Me.Label4.TabIndex = 2
-        Me.Label4.Text = "優先 DNS サーバ ："
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(19, 23)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(61, 12)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "IPアドレス ："
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(17, 53)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(89, 12)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "サブネット マスク ："
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(17, 83)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(116, 12)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "デフォルト ゲートウェイ ："
-        '
-        'MaskedTextBox1
-        '
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(165, 20)
-        Me.MaskedTextBox1.Mask = "000.000.000.000"
-        Me.MaskedTextBox1.Name = "MaskedTextBox1"
-        Me.MaskedTextBox1.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox1.TabIndex = 3
-        Me.MaskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'MaskedTextBox2
         '
@@ -166,15 +120,61 @@ Partial Class FormConf
         Me.MaskedTextBox2.TabIndex = 3
         Me.MaskedTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox3
+        'MaskedTextBox4
         '
-        Me.MaskedTextBox3.Location = New System.Drawing.Point(165, 80)
-        Me.MaskedTextBox3.Mask = "000.000.000.000"
-        Me.MaskedTextBox3.Name = "MaskedTextBox3"
-        Me.MaskedTextBox3.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox3.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox3.TabIndex = 3
-        Me.MaskedTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBox4.Location = New System.Drawing.Point(165, 110)
+        Me.MaskedTextBox4.Mask = "000.000.000.000"
+        Me.MaskedTextBox4.Name = "MaskedTextBox4"
+        Me.MaskedTextBox4.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBox4.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBox4.TabIndex = 3
+        Me.MaskedTextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'MaskedTextBox1
+        '
+        Me.MaskedTextBox1.Location = New System.Drawing.Point(165, 20)
+        Me.MaskedTextBox1.Mask = "000.000.000.000"
+        Me.MaskedTextBox1.Name = "MaskedTextBox1"
+        Me.MaskedTextBox1.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBox1.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBox1.TabIndex = 3
+        Me.MaskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(17, 113)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(100, 12)
+        Me.Label4.TabIndex = 2
+        Me.Label4.Text = "優先 DNS サーバ ："
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(17, 83)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(116, 12)
+        Me.Label3.TabIndex = 2
+        Me.Label3.Text = "デフォルト ゲートウェイ ："
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(17, 53)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(89, 12)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "サブネット マスク ："
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(19, 23)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(61, 12)
+        Me.Label1.TabIndex = 2
+        Me.Label1.Text = "IPアドレス ："
         '
         'Conf_Bt_Close
         '
@@ -198,7 +198,6 @@ Partial Class FormConf
         Me.MinimizeBox = False
         Me.Name = "FormConf"
         Me.Text = "環境設定"
-        Me.TopMost = True
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
