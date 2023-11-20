@@ -1,6 +1,6 @@
-﻿Imports System.Diagnostics
+﻿Imports System.Text.RegularExpressions
 Imports System.IO
-
+Imports System.Xml
 Public Class Util
 
     ' コマンドプロンプトでコマンドを実行する関数
@@ -20,7 +20,7 @@ Public Class Util
                 Return output
             End Using
         Catch ex As Exception
-            Return "Error: " & ex.Message
+            MessageBox.Show("Error: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -72,8 +72,14 @@ Public Class Util
 
     End Sub
 
-    ' IPアドレスのバリデーションメソッド
+    ' IPアドレスのバリデーション
     Public Shared Function IsValidIpAddress(ipAddress As String) As Boolean
+
+        ' 未入力状態の場合
+        If Regex.IsMatch(ipAddress, "^[ .]*$") Then
+            Return True
+        End If
+
         Dim parts As String() = ipAddress.Split("."c)
 
         ' IPアドレスが4つの部分から構成されているか確認
@@ -89,32 +95,46 @@ Public Class Util
             End If
         Next
 
+
         Return True
     End Function
 
-    ' INI書込
-    Sub WriteToIniFile(filePath As String, section As String, key As String, value As String)
-        Using writer As New StreamWriter(filePath, True)
-            writer.WriteLine($"[{section}]")
-            writer.WriteLine($"{key}={value}")
-        End Using
+    ' XML書込
+    Public Shared Sub WriteToXmlFile(key As String, value As String)
+        Dim doc As New XmlDocument()
+
+        ' XMLドキュメントのルート要素を作成
+        Dim root As XmlElement = doc.CreateElement("Settings")
+        doc.AppendChild(root)
+
+        ' キーと値の要素を追加
+        Dim settingElement As XmlElement = doc.CreateElement("Setting")
+        settingElement.SetAttribute("Key", key)
+        settingElement.InnerText = value
+        root.AppendChild(settingElement)
+
+        ' XMLファイルに書き込む
+        doc.Save(Constants.APP_PATH)
     End Sub
 
-    ' INI読込
-    Function ReadFromIniFile(filePath As String, section As String, key As String) As String
-        Dim lines As String() = File.ReadAllLines(filePath)
+    ' XML読込
+    Public Shared Function ReadFromXmlFile(section As String, key As String) As String
+        ' XmlDocumentインスタンスを作成し、ファイルを読み込む
+        Dim doc As New XmlDocument()
+        doc.Load(Constants.APP_PATH)
 
-        Dim sectionFound As Boolean = False
-        For Each line As String In lines
-            If line.Trim() = $"[{section}]" Then
-                sectionFound = True
-            ElseIf sectionFound AndAlso line.StartsWith($"{key}=") Then
-                Return line.Substring(line.IndexOf("=") + 1).Trim()
-            End If
-        Next
+        ' XPathを使用して特定のセクションとキーに対応ノードを検索
+        Dim node As XmlNode = doc.SelectSingleNode($"//{section}/{key}")
 
+        ' 該当が見つかった場合はそのテキストを返す
+        If node IsNot Nothing Then
+            Return node.InnerText.Trim()
+        End If
+
+        ' 該当が見つからなかった場合は空の文字列を返す
         Return String.Empty
     End Function
+
 
     ' 現在接続中のWiFi確認
     ' WiFi情報の取得

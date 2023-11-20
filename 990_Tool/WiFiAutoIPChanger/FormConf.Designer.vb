@@ -26,17 +26,17 @@ Partial Class FormConf
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.MaskedTextBox5 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox3 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxSecondaryDNS = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxGateway = New System.Windows.Forms.MaskedTextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox4 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxSubnet = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxPrimaryDNS = New System.Windows.Forms.MaskedTextBox()
+        Me.MaskedTextBoxIPAddress = New System.Windows.Forms.MaskedTextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Conf_Bt_Close = New System.Windows.Forms.Button()
+        Me.ConfSave = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.SuspendLayout()
@@ -63,12 +63,12 @@ Partial Class FormConf
         '
         'TabPage2
         '
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox5)
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox3)
+        Me.TabPage2.Controls.Add(Me.MaskedTextBoxSecondaryDNS)
+        Me.TabPage2.Controls.Add(Me.MaskedTextBoxGateway)
         Me.TabPage2.Controls.Add(Me.Label5)
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox2)
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox4)
-        Me.TabPage2.Controls.Add(Me.MaskedTextBox1)
+        Me.TabPage2.Controls.Add(Me.MaskedTextBoxSubnet)
+        Me.TabPage2.Controls.Add(Me.MaskedTextBoxPrimaryDNS)
+        Me.TabPage2.Controls.Add(Me.MaskedTextBoxIPAddress)
         Me.TabPage2.Controls.Add(Me.Label4)
         Me.TabPage2.Controls.Add(Me.Label3)
         Me.TabPage2.Controls.Add(Me.Label2)
@@ -81,25 +81,25 @@ Partial Class FormConf
         Me.TabPage2.Text = "会社IP"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'MaskedTextBox5
+        'MaskedTextBoxSecondaryDNS
         '
-        Me.MaskedTextBox5.Location = New System.Drawing.Point(165, 140)
-        Me.MaskedTextBox5.Mask = "000.000.000.000"
-        Me.MaskedTextBox5.Name = "MaskedTextBox5"
-        Me.MaskedTextBox5.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox5.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox5.TabIndex = 3
-        Me.MaskedTextBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxSecondaryDNS.Location = New System.Drawing.Point(165, 140)
+        Me.MaskedTextBoxSecondaryDNS.Mask = "000.000.000.000"
+        Me.MaskedTextBoxSecondaryDNS.Name = "MaskedTextBoxSecondaryDNS"
+        Me.MaskedTextBoxSecondaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxSecondaryDNS.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxSecondaryDNS.TabIndex = 15
+        Me.MaskedTextBoxSecondaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox3
+        'MaskedTextBoxGateway
         '
-        Me.MaskedTextBox3.Location = New System.Drawing.Point(165, 80)
-        Me.MaskedTextBox3.Mask = "000.000.000.000"
-        Me.MaskedTextBox3.Name = "MaskedTextBox3"
-        Me.MaskedTextBox3.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox3.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox3.TabIndex = 3
-        Me.MaskedTextBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxGateway.Location = New System.Drawing.Point(165, 80)
+        Me.MaskedTextBoxGateway.Mask = "000.000.000.000"
+        Me.MaskedTextBoxGateway.Name = "MaskedTextBoxGateway"
+        Me.MaskedTextBoxGateway.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxGateway.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxGateway.TabIndex = 13
+        Me.MaskedTextBoxGateway.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
         '
@@ -110,35 +110,35 @@ Partial Class FormConf
         Me.Label5.TabIndex = 2
         Me.Label5.Text = "代替 DNS サーバ ："
         '
-        'MaskedTextBox2
+        'MaskedTextBoxSubnet
         '
-        Me.MaskedTextBox2.Location = New System.Drawing.Point(165, 50)
-        Me.MaskedTextBox2.Mask = "000.000.000.000"
-        Me.MaskedTextBox2.Name = "MaskedTextBox2"
-        Me.MaskedTextBox2.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox2.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox2.TabIndex = 3
-        Me.MaskedTextBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxSubnet.Location = New System.Drawing.Point(165, 50)
+        Me.MaskedTextBoxSubnet.Mask = "000.000.000.000"
+        Me.MaskedTextBoxSubnet.Name = "MaskedTextBoxSubnet"
+        Me.MaskedTextBoxSubnet.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxSubnet.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxSubnet.TabIndex = 12
+        Me.MaskedTextBoxSubnet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox4
+        'MaskedTextBoxPrimaryDNS
         '
-        Me.MaskedTextBox4.Location = New System.Drawing.Point(165, 110)
-        Me.MaskedTextBox4.Mask = "000.000.000.000"
-        Me.MaskedTextBox4.Name = "MaskedTextBox4"
-        Me.MaskedTextBox4.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox4.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox4.TabIndex = 3
-        Me.MaskedTextBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxPrimaryDNS.Location = New System.Drawing.Point(165, 110)
+        Me.MaskedTextBoxPrimaryDNS.Mask = "000.000.000.000"
+        Me.MaskedTextBoxPrimaryDNS.Name = "MaskedTextBoxPrimaryDNS"
+        Me.MaskedTextBoxPrimaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxPrimaryDNS.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxPrimaryDNS.TabIndex = 14
+        Me.MaskedTextBoxPrimaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'MaskedTextBox1
+        'MaskedTextBoxIPAddress
         '
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(165, 20)
-        Me.MaskedTextBox1.Mask = "000.000.000.000"
-        Me.MaskedTextBox1.Name = "MaskedTextBox1"
-        Me.MaskedTextBox1.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(225, 19)
-        Me.MaskedTextBox1.TabIndex = 3
-        Me.MaskedTextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.MaskedTextBoxIPAddress.Location = New System.Drawing.Point(165, 20)
+        Me.MaskedTextBoxIPAddress.Mask = "000.000.000.000"
+        Me.MaskedTextBoxIPAddress.Name = "MaskedTextBoxIPAddress"
+        Me.MaskedTextBoxIPAddress.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
+        Me.MaskedTextBoxIPAddress.Size = New System.Drawing.Size(225, 19)
+        Me.MaskedTextBoxIPAddress.TabIndex = 11
+        Me.MaskedTextBoxIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label4
         '
@@ -176,21 +176,21 @@ Partial Class FormConf
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "IPアドレス ："
         '
-        'Conf_Bt_Close
+        'ConfSave
         '
-        Me.Conf_Bt_Close.Location = New System.Drawing.Point(347, 376)
-        Me.Conf_Bt_Close.Name = "Conf_Bt_Close"
-        Me.Conf_Bt_Close.Size = New System.Drawing.Size(75, 23)
-        Me.Conf_Bt_Close.TabIndex = 91
-        Me.Conf_Bt_Close.Text = "保存終了"
-        Me.Conf_Bt_Close.UseVisualStyleBackColor = True
+        Me.ConfSave.Location = New System.Drawing.Point(347, 376)
+        Me.ConfSave.Name = "ConfSave"
+        Me.ConfSave.Size = New System.Drawing.Size(75, 23)
+        Me.ConfSave.TabIndex = 91
+        Me.ConfSave.Text = "保存終了"
+        Me.ConfSave.UseVisualStyleBackColor = True
         '
         'FormConf
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(434, 411)
-        Me.Controls.Add(Me.Conf_Bt_Close)
+        Me.Controls.Add(Me.ConfSave)
         Me.Controls.Add(Me.TabControl1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -208,15 +208,15 @@ Partial Class FormConf
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents TabPage2 As TabPage
-    Friend WithEvents MaskedTextBox5 As MaskedTextBox
-    Friend WithEvents MaskedTextBox3 As MaskedTextBox
+    Friend WithEvents MaskedTextBoxSecondaryDNS As MaskedTextBox
+    Friend WithEvents MaskedTextBoxGateway As MaskedTextBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents MaskedTextBox2 As MaskedTextBox
-    Friend WithEvents MaskedTextBox4 As MaskedTextBox
-    Friend WithEvents MaskedTextBox1 As MaskedTextBox
+    Friend WithEvents MaskedTextBoxSubnet As MaskedTextBox
+    Friend WithEvents MaskedTextBoxPrimaryDNS As MaskedTextBox
+    Friend WithEvents MaskedTextBoxIPAddress As MaskedTextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents Conf_Bt_Close As Button
+    Friend WithEvents ConfSave As Button
 End Class
