@@ -78,6 +78,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.vb" />
     <Compile Include="FormConf.Designer.vb">
       <DependentUpon>FormConf.vb</DependentUpon>
     </Compile>

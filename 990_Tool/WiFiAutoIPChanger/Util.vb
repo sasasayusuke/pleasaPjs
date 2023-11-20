@@ -1,6 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
-Imports System.IO
 Imports System.Xml
+Imports System.IO
+
 Public Class Util
 
     ' コマンドプロンプトでコマンドを実行する関数
@@ -72,6 +73,23 @@ Public Class Util
 
     End Sub
 
+    Public Shared Function ConvertIpAddressFormat(ipAddress As String) As String
+        ' IPアドレスをドットで分割
+        Dim parts As String() = ipAddress.Replace(" ", "").Split("."c)
+        ' 未入力状態の場合
+        If Regex.IsMatch(ipAddress, "^[.0]*$") Then
+            Return Constants.EMPTY_IP_ADDRESS
+        End If
+
+        ' 各部分を3桁の左ゼロ詰めに変換
+        For i As Integer = 0 To parts.Length - 1
+            parts(i) = parts(i).PadLeft(3, " "c)
+        Next
+
+        ' 変換された部分をドットで結合して返す
+        Return String.Join(".", parts)
+    End Function
+
     ' IPアドレスのバリデーション
     Public Shared Function IsValidIpAddress(ipAddress As String) As Boolean
 
@@ -100,31 +118,44 @@ Public Class Util
     End Function
 
     ' XML書込
-    Public Shared Sub WriteToXmlFile(key As String, value As String)
+    Public Shared Sub WriteValueToXml(key As String, value As String)
         Dim doc As New XmlDocument()
 
-        ' XMLドキュメントのルート要素を作成
-        Dim root As XmlElement = doc.CreateElement("Settings")
-        doc.AppendChild(root)
+        ' ファイルが存在する場合は読み込む
+        If File.Exists(Constants.APP_PATH) Then
+            doc.Load(Constants.APP_PATH)
+        Else
+            ' ファイルが存在しない場合は新しいルート要素を作成
+            Dim root As XmlElement = doc.CreateElement(Constants.SETTING_SECTION)
+            doc.AppendChild(root)
+        End If
 
         ' キーと値の要素を追加
-        Dim settingElement As XmlElement = doc.CreateElement("Setting")
+        Dim settingElement As XmlElement = doc.CreateElement(Constants.SETTING_TAG)
         settingElement.SetAttribute("Key", key)
         settingElement.InnerText = value
-        root.AppendChild(settingElement)
+
+        ' 同一キーが存在する場合は値を更新
+        Dim existingElement As XmlElement = doc.SelectSingleNode($"//{Constants.SETTING_TAG}[@Key='{key}']")
+        If existingElement IsNot Nothing Then
+            existingElement.InnerText = value
+        Else
+            doc.DocumentElement.AppendChild(settingElement)
+        End If
 
         ' XMLファイルに書き込む
         doc.Save(Constants.APP_PATH)
     End Sub
 
     ' XML読込
-    Public Shared Function ReadFromXmlFile(section As String, key As String) As String
+    Public Shared Function ReadValueFromXml(key As String) As String
         ' XmlDocumentインスタンスを作成し、ファイルを読み込む
         Dim doc As New XmlDocument()
         doc.Load(Constants.APP_PATH)
 
-        ' XPathを使用して特定のセクションとキーに対応ノードを検索
-        Dim node As XmlNode = doc.SelectSingleNode($"//{section}/{key}")
+        ' キーに対応するノードを検索
+        Dim xpath As String = $"//{Constants.SETTING_SECTION}/{Constants.SETTING_TAG}[@Key='{key}']"
+        Dim node As XmlNode = doc.SelectSingleNode(xpath)
 
         ' 該当が見つかった場合はそのテキストを返す
         If node IsNot Nothing Then

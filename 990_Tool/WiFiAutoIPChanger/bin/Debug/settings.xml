@@ -1,3 +1,7 @@
 <Settings>
-  <Setting Key="SampleKey">SampleValueeeeee</Setting>
+  <Setting Key="MaskedTextBoxPrimaryDNS">222.222.222.222</Setting>
+  <Setting Key="MaskedTextBoxSecondaryDNS">102.222.222.002</Setting>
+  <Setting Key="MaskedTextBoxIPAddress">   .   .   .</Setting>
+  <Setting Key="MaskedTextBoxSubnet">  1.  1.  1.  1</Setting>
+  <Setting Key="MaskedTextBoxGateway">   .   .   .</Setting>
 </Settings>
