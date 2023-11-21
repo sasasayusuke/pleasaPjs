@@ -9,10 +9,8 @@ Public Class FormMain
         Me.Visible = False
         Me.ShowInTaskbar = False
 
-        Dim SsidList
-        SsidList = Util.GetKnownWiFi()
+        Dim SsidList = Util.GetKnownWiFi()
 
-        Dim SendItem(0)
         For i = 0 To SsidList.Count - 1
             SsidListView.Items.Add(SsidList(i))
         Next i
@@ -26,11 +24,11 @@ Public Class FormMain
     '＝＝＝＝＝＝＝　SSIDListをクリックした際の動作　＝＝＝＝＝＝＝
     Private fi As FormIp
     Private Sub SsidListView_DoubleClick(sender As System.Object, e As System.EventArgs) Handles SsidListView.DoubleClick
-        Dim strSsid As String = SsidListView.SelectedItems(0).Text
+        Constants.selectedSSID = SsidListView.SelectedItems(0).Text
         'IP設定画面の表示
         fi = New FormIp
         fi.Owner = Me
-        fi.tbSsid.Text = strSsid
+        fi.tbSsid.Text = Constants.selectedSSID
         fi.Show()
     End Sub
 
@@ -66,6 +64,7 @@ Public Class FormMain
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         ' 現在接続中のWiFi確認
+        Constants.currentSSID = Util.GetCurrentSSID()
     End Sub
 
     '##### コンテキストメニュー設定 ここまで #####

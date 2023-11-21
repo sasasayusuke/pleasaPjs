@@ -45,7 +45,7 @@ Public Class Util
     End Function
 
 
-    ' 利用可能なSSIDを取得する関数 → 現在使用中のSSIDを取得
+    ' 現在接続中のSSIDを取得
     Public Shared Function GetCurrentSSID() As String
         Dim output As String = ExecuteCommand("netsh wlan show interfaces")
         Dim lines As String() = output.Split(New String() {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
@@ -118,7 +118,7 @@ Public Class Util
     End Function
 
     ' XML書込
-    Public Shared Sub WriteValueToXml(section As String, key As String, value As String)
+    Public Shared Sub WriteValueToXml(section As String, sectionKey As String, key As String, value As String)
         Dim doc As New XmlDocument()
 
         ' ファイルが存在する場合は読み込む
@@ -131,14 +131,15 @@ Public Class Util
         End If
 
         ' セクションを検索し、存在しない場合は作成
-        Dim sectionElement As XmlElement = CType(doc.SelectSingleNode($"//{section}"), XmlElement)
+        Dim sectionElement As XmlElement = CType(doc.SelectSingleNode($"//{section}[@Key='{sectionKey}']"), XmlElement)
         If sectionElement Is Nothing Then
             sectionElement = doc.CreateElement(section)
+            sectionElement.SetAttribute("Key", sectionKey)
             doc.DocumentElement.AppendChild(sectionElement)
         End If
 
         ' キーと値の要素を追加または更新
-        Dim settingElement As XmlElement = CType(sectionElement.SelectSingleNode($"Setting[@Key='{key}']"), XmlElement)
+        Dim settingElement As XmlElement = CType(sectionElement.SelectSingleNode($"{Constants.SETTING_TAG}[@Key='{key}']"), XmlElement)
         If settingElement IsNot Nothing Then
             ' 既存の要素の値を更新
             settingElement.InnerText = value
@@ -156,13 +157,13 @@ Public Class Util
 
 
     ' XML読込
-    Public Shared Function ReadValueFromXml(section As String, key As String) As String
+    Public Shared Function ReadValueFromXml(section As String, sectionKey As String, key As String) As String
         ' XmlDocumentインスタンスを作成し、ファイルを読み込む
         Dim doc As New XmlDocument()
         doc.Load(Constants.APP_PATH)
 
         ' キーに対応するノードを検索
-        Dim xpath As String = $"//{Constants.SETTING_SECTION}/{section}/{Constants.SETTING_TAG}[@Key='{key}']"
+        Dim xpath As String = $"//{Constants.SETTING_SECTION}/{section}[@Key='{sectionKey}']/{Constants.SETTING_TAG}[@Key='{key}']"
         Dim node As XmlNode = doc.SelectSingleNode(xpath)
 
         ' 該当が見つかった場合はそのテキストを返す

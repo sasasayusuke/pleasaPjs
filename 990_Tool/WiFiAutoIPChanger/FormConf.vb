@@ -4,11 +4,11 @@ Public Class FormConf
     ' フォームのロード時に一度だけマスクを設定します。
     Private Sub FormConf_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' 全てのMaskedTextBoxの共通の設定
-        Dim mtbs As MaskedTextBox() = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
-        For Each mtb As MaskedTextBox In mtbs
+        Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
+        For Each mtb In mtbs
             mtb.Mask = "000\.000\.000\.000"
             mtb.PromptChar = "_"
-            Dim ip = Util.ReadValueFromXml(Constants.APP_CONF, mtb.Name)
+            Dim ip = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF, mtb.Name)
             If String.IsNullOrEmpty(ip) Then
                 mtb.Text = Constants.EMPTY_IP_ADDRESS
             Else
@@ -37,9 +37,9 @@ Public Class FormConf
         ' XMLファイルに書き込み
 
         ' 全てのMaskedTextBoxの共通の設定
-        Dim mtbs As MaskedTextBox() = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
-        For Each mtb As MaskedTextBox In mtbs
-            Util.WriteValueToXml(Constants.APP_CONF, mtb.Name, mtb.Text)
+        Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
+        For Each mtb In mtbs
+            Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF, mtb.Name, mtb.Text)
         Next
         MessageBox.Show("設定内容を保存しました", "保存", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub

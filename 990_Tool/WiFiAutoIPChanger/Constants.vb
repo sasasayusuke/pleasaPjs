@@ -8,8 +8,11 @@ Public Class Constants
     Public Const SETTING_SECTION As String = "Settings"
     Public Const SETTING_TAG As String = "Setting"
 
-    Public Const APP_CONF As String = "Conf"
-    Public Const APP_IP As String = "IP"
+    Public Const PAGE_CONF As String = "Conf"
+    Public Const PAGE_IP As String = "IP"
+
+    Public Shared currentSSID As String
+    Public Shared selectedSSID As String
 
     Public Shared ReadOnly Property APP_PATH As String
         Get
