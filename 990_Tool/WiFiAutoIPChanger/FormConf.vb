@@ -35,12 +35,14 @@ Public Class FormConf
     ' 保存ボタンクリック
     Private Sub ConfSave_Click(sender As Object, e As EventArgs) Handles ConfSave.Click
         ' XMLファイルに書き込み
+        Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, ComboBoxNetwork.Name, ComboBoxNetwork.Text)
 
-        ' 全てのMaskedTextBoxの共通の設定
+        ' 全てのMaskedTextBox
         Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
         For Each mtb In mtbs
-            Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF, mtb.Name, mtb.Text)
+            Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, mtb.Name, mtb.Text)
         Next
         MessageBox.Show("設定内容を保存しました", "保存", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
+
 End Class

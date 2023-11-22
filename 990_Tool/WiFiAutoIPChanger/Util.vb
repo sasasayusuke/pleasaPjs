@@ -65,12 +65,84 @@ Public Class Util
         Return currentSSID
     End Function
 
-    ' パネルに接続中SSIDを表示する関数
-    Public Shared Sub AddControlsToPanel(ByVal panel As Panel)
-        ' 利用可能なWi-FiネットワークのSSIDを取得します。
-        Dim ssid As String = GetCurrentSSID()
-        Dim nextControlTop As Integer = 10
+    ' パネルに割り当て対象アドレスを表示する関数
+    Public Shared Sub AddControlsToPanel(ByVal panel As Panel, Optional ipAddress As String = "", Optional subnetMask As String = "", Optional gateway As String = "", Optional primaryDNS As String = "", Optional secondaryDNS As String = "", Optional remark As String = "")
+        ' パネルの既存のコントロールをクリア
+        panel.Controls.Clear()
 
+        Dim left = 10
+        Dim height = 10
+
+        ' IPアドレスのラベルを追加
+        If Not String.IsNullOrEmpty(ipAddress) Then
+            Dim lbl As New Label()
+            lbl.Text = "IPアドレス :" & ipAddress
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+
+        ' サブネットマスクのラベルを追加
+        If Not String.IsNullOrEmpty(subnetMask) Then
+            Dim lbl As New Label()
+            lbl.Text = "サブネット マスク :" & subnetMask
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+
+        ' ゲートウェイのラベルを追加
+        If Not String.IsNullOrEmpty(gateway) Then
+            Dim lbl As New Label()
+            lbl.Text = "デフォルト ゲートウェイ :" & gateway
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+
+        ' 優先 DNS サーバ のラベルを追加
+        If Not String.IsNullOrEmpty(primaryDNS) Then
+            Dim lbl As New Label()
+            lbl.Text = "優先 DNS サーバ :" & primaryDNS
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+
+        ' 代替 DNS サーバのラベルを追加
+        If Not String.IsNullOrEmpty(secondaryDNS) Then
+            Dim lbl As New Label()
+            lbl.Text = "代替 DNS サーバ :" & secondaryDNS
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+
+        ' 備考のラベルを追加
+        If Not String.IsNullOrEmpty(secondaryDNS) Then
+            Dim lbl As New Label()
+            lbl.Text = "備考 :" & secondaryDNS
+            lbl.Location = New Point(left, height)
+            height += 30
+            panel.Controls.Add(lbl)
+        End If
+    End Sub
+
+    ' IPアドレスを設定する関数
+    Public Shared Sub SetStaticIPAddress(interfaceName As String, ipAddress As String, subnetMask As String, gateway As String)
+        Dim setIPCommand As String = $"netsh interface ip set address name=""{interfaceName}"" static {ipAddress} {subnetMask} {gateway}"
+        ExecuteCommand(setIPCommand)
+    End Sub
+
+    ' DNSを設定する関数
+    Public Shared Sub SetStaticDNS(interfaceName As String, primaryDNS As String, Optional secondaryDNS As String = "")
+        Dim setPrimaryDNSCommand As String = $"netsh interface ip set dns name=""{interfaceName}"" static {primaryDNS}"
+        ExecuteCommand(setPrimaryDNSCommand)
+
+        If Not String.IsNullOrEmpty(secondaryDNS) Then
+            Dim setSecondaryDNSCommand As String = $"netsh interface ip add dns name=""{interfaceName}"" {secondaryDNS} index=2"
+            ExecuteCommand(setSecondaryDNSCommand)
+        End If
     End Sub
 
     Public Shared Function ConvertIpAddressFormat(ipAddress As String) As String

@@ -117,6 +117,8 @@ Partial Class FormMain
         '
         'Timer1
         '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 10000
         '
         'FormMain
         '

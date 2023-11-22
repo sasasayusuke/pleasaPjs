@@ -9,21 +9,23 @@ $p.events.on_editor_load_arr.push(function () {
             flex-direction: column;
         }
         .chart-container, .table-container {
-            padding: 20px;
             box-sizing: border-box;
         }
-        table {
+        table {n
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
-            padding: 8px 12px;
             text-align: left;
             border: 1px solid #ddd;
         }
     </style>
 
     <div id="pdf-target" class="container">
+        
+        <h1 id="pdf-company" hidden></h1>
+        <h2 id="pdf-manager" hidden></h2>
+
         <div class="chart-container">
             <canvas id="radarChart"></canvas>
         </div>
@@ -192,10 +194,10 @@ $p.events.on_editor_load_arr.push(function () {
                 options: {
                     scales: {
                         r: {
+                            min: 0,
+                            max: 5,
                             ticks: {
                                 beginAtZero: true,
-                                min: 0,
-                                max: 5,
                                 stepSize: 1
                             },
                             pointLabels: {
@@ -234,12 +236,20 @@ function arraysAreEqual(arr1, arr2) {
 }
 
 function printPdf() {
+    let company = document.getElementById('pdf-company')
+    let manager = document.getElementById('pdf-manager')
+
+    company.innerText = commonGetVal("会社名")
+    manager.innerText = commonGetVal("担当者名")
+    let fileName = `${company.innerText}_ ${manager.innerText}.pdf`
+
+    company.hidden = false
+    manager.hidden = false
 
     let element = document.getElementById('pdf-target');
-
     let opt = {
         margin: 10,
-        filename: 'mypdf.pdf',
+        filename: fileName,
         image: {
             type: 'jpeg',
             quality: 0.98
@@ -251,7 +261,7 @@ function printPdf() {
             unit: 'mm',
             format: 'a4',
             orientation: 'portrait',
-        }
+        },
     }
 
     html2pdf().from(element).set(opt).save();

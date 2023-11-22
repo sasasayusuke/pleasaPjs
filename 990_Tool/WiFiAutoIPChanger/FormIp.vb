@@ -44,7 +44,7 @@ Public Class FormIp
         End If
     End Sub
     Private Sub CheckSpecificCompanyIP_Changed(sender As Object, e As EventArgs) Handles CheckSpecificCompanyIP.CheckedChanged
-        ' 次のDNSサーバーのアドレスを自動的に取得する をチェックした場合はテキストボックスを有効化
+        ' 会社のIP情報を使う をチェックした場合は全アイテム無効化
         Dim check = Not CheckSpecificCompanyIP.Checked
         MaskedTextBoxIPAddress.Enabled = check
         MaskedTextBoxSubnet.Enabled = check
@@ -57,7 +57,7 @@ Public Class FormIp
         RadioSpecificDNS.Enabled = check
     End Sub
     Private Sub RadioAutoObtainIP_Changed(sender As Object, e As EventArgs) Handles RadioAutoObtainIP.CheckedChanged
-        ' IPアドレスを自動的に取得する をチェックした場合はテキストボックスを無効化
+        ' IPアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを無効化
         If RadioAutoObtainIP.Checked Then
             MaskedTextBoxIPAddress.Enabled = False
             MaskedTextBoxSubnet.Enabled = False
@@ -66,7 +66,7 @@ Public Class FormIp
         End If
     End Sub
     Private Sub RadioSpecificIP_Changed(sender As Object, e As EventArgs) Handles RadioSpecificIP.CheckedChanged
-        ' 次のIPアドレスを使う をチェックした場合はテキストボックスを有効化
+        ' 次のIPアドレスを使う をチェックした場合は以下のテキストボックスを有効化
         If RadioSpecificIP.Checked Then
             MaskedTextBoxIPAddress.Enabled = True
             MaskedTextBoxSubnet.Enabled = True
@@ -75,7 +75,7 @@ Public Class FormIp
         End If
     End Sub
     Private Sub RadioAutoObtainDNS_Changed(sender As Object, e As EventArgs) Handles RadioAutoObtainDNS.CheckedChanged
-        ' DNSサーバーのアドレスを自動的に取得する をチェックした場合はテキストボックスを無効化
+        ' DNSサーバのアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを無効化
         If RadioAutoObtainDNS.Checked Then
             MaskedTextBoxPrimaryDNS.Enabled = False
             MaskedTextBoxSecondaryDNS.Enabled = False
@@ -83,7 +83,7 @@ Public Class FormIp
         End If
     End Sub
     Private Sub RadioSpecificDNS_Changed(sender As Object, e As EventArgs) Handles RadioSpecificDNS.CheckedChanged
-        ' 次のDNSサーバーのアドレスを自動的に取得する をチェックした場合はテキストボックスを有効化
+        ' 次のDNSサーバのアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを有効化
         If RadioSpecificDNS.Checked Then
             MaskedTextBoxPrimaryDNS.Enabled = True
             MaskedTextBoxSecondaryDNS.Enabled = True

@@ -8,10 +8,20 @@ Public Class Constants
     Public Const SETTING_SECTION As String = "Settings"
     Public Const SETTING_TAG As String = "Setting"
 
-    Public Const PAGE_CONF As String = "Conf"
     Public Const PAGE_IP As String = "IP"
+    Public Const PAGE_CONF As String = "Conf"
+    Public Const PAGE_CONF_GENERAL As String = "General"
+    Public Const PAGE_CONF_COMPANY As String = "Company"
 
     Public Shared currentSSID As String
+
+    Public Shared showedSSID As String
+    Public Shared showedIpAddress  As String
+    Public Shared showedSubnetMask As String
+    Public Shared showedGateway As String
+    Public Shared showedPrimaryDNS As String
+    Public Shared showedSecondaryDNS As String
+
     Public Shared selectedSSID As String
 
     Public Shared ReadOnly Property APP_PATH As String
