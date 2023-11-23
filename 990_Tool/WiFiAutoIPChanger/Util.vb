@@ -65,69 +65,81 @@ Public Class Util
         Return currentSSID
     End Function
 
-    ' パネルに割り当て対象アドレスを表示する関数
-    Public Shared Sub AddControlsToPanel(ByVal panel As Panel, Optional ipAddress As String = "", Optional subnetMask As String = "", Optional gateway As String = "", Optional primaryDNS As String = "", Optional secondaryDNS As String = "", Optional remark As String = "")
+    Public Shared Function FindItemIndexByListView(ByVal listView As ListView, searchText As String) As Integer
+        For Each item As ListViewItem In listView.Items
+            If item.Text.Equals(searchText) Then
+                Return listView.Items.IndexOf(item)
+            End If
+        Next
+        ' テキストが見つからない場合は -1 を返す
+        Return -1
+    End Function
+
+    ' ListView の左端にアイコンを追加
+    Public Shared Sub AddIconToListView(ByVal listView As ListView, ByVal icon As Icon, searchText As String)
+        ' 既存のアイコンをすべて消去
+        For Each item As ListViewItem In listView.Items
+            item.ImageIndex = -1
+        Next
+
+        ' SmallImageList が初期化されていない場合は、新しい ImageList を作成する
+        If listView.SmallImageList Is Nothing Then
+            listView.SmallImageList = New ImageList()
+        End If
+
+        Dim index As Integer = Util.FindItemIndexByListView(listView, searchText)
+        If index <> -1 Then
+            listView.SmallImageList.Images.Add(icon)
+
+            ' 特定のアイテムにアイコンを設定
+            listView.Items(index).ImageIndex = 0
+        End If
+
+    End Sub
+
+    ' パネルにラベルを表示する関数
+    Public Shared Sub UpdateLabelsToPanel(ByVal panel As Panel, Optional remark As String = "", Optional ipAddress As String = "", Optional subnetMask As String = "", Optional gateway As String = "", Optional primaryDNS As String = "", Optional secondaryDNS As String = "")
         ' パネルの既存のコントロールをクリア
         panel.Controls.Clear()
 
-        Dim left = 10
-        Dim height = 10
-
-        ' IPアドレスのラベルを追加
-        If Not String.IsNullOrEmpty(ipAddress) Then
-            Dim lbl As New Label()
-            lbl.Text = "IPアドレス :" & ipAddress
-            lbl.Location = New Point(left, height)
-            height += 30
-            panel.Controls.Add(lbl)
-        End If
-
-        ' サブネットマスクのラベルを追加
-        If Not String.IsNullOrEmpty(subnetMask) Then
-            Dim lbl As New Label()
-            lbl.Text = "サブネット マスク :" & subnetMask
-            lbl.Location = New Point(left, height)
-            height += 30
-            panel.Controls.Add(lbl)
-        End If
-
-        ' ゲートウェイのラベルを追加
-        If Not String.IsNullOrEmpty(gateway) Then
-            Dim lbl As New Label()
-            lbl.Text = "デフォルト ゲートウェイ :" & gateway
-            lbl.Location = New Point(left, height)
-            height += 30
-            panel.Controls.Add(lbl)
-        End If
-
-        ' 優先 DNS サーバ のラベルを追加
-        If Not String.IsNullOrEmpty(primaryDNS) Then
-            Dim lbl As New Label()
-            lbl.Text = "優先 DNS サーバ :" & primaryDNS
-            lbl.Location = New Point(left, height)
-            height += 30
-            panel.Controls.Add(lbl)
-        End If
-
-        ' 代替 DNS サーバのラベルを追加
-        If Not String.IsNullOrEmpty(secondaryDNS) Then
-            Dim lbl As New Label()
-            lbl.Text = "代替 DNS サーバ :" & secondaryDNS
-            lbl.Location = New Point(left, height)
-            height += 30
-            panel.Controls.Add(lbl)
-        End If
+        Dim lblLeft = 20
+        Dim valLeft = 140
+        Dim height = 100
 
         ' 備考のラベルを追加
-        If Not String.IsNullOrEmpty(secondaryDNS) Then
+        If Not String.IsNullOrEmpty(remark) Then
             Dim lbl As New Label()
-            lbl.Text = "備考 :" & secondaryDNS
-            lbl.Location = New Point(left, height)
-            height += 30
+            lbl.AutoSize = True
+            lbl.Text = remark
+            lbl.Location = New Point(10, 10)
             panel.Controls.Add(lbl)
         End If
-    End Sub
 
+        Dim dict As New Dictionary(Of String, String) From {
+            {"IPアドレス", ipAddress},
+            {"サブネット マスク", subnetMask},
+            {"デフォルト ゲートウェイ", gateway},
+            {"優先 DNS サーバ", primaryDNS},
+            {"代替 DNS サーバ", secondaryDNS}
+        }
+
+        For Each d As KeyValuePair(Of String, String) In dict
+            If Not String.IsNullOrEmpty(d.Value) Then
+                Dim lbl As New Label()
+                lbl.AutoSize = True
+                lbl.Text = d.Key
+                lbl.Location = New Point(lblLeft, height)
+                panel.Controls.Add(lbl)
+                Dim val As New Label()
+                val.AutoSize = True
+                val.Text = d.Value
+                val.Location = New Point(valLeft, height)
+                panel.Controls.Add(val)
+                height += val.Height + 10
+            End If
+        Next
+
+    End Sub
     ' IPアドレスを設定する関数
     Public Shared Sub SetStaticIPAddress(interfaceName As String, ipAddress As String, subnetMask As String, gateway As String)
         Dim setIPCommand As String = $"netsh interface ip set address name=""{interfaceName}"" static {ipAddress} {subnetMask} {gateway}"

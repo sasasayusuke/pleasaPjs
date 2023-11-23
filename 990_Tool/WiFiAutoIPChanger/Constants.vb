@@ -15,13 +15,6 @@ Public Class Constants
 
     Public Shared currentSSID As String
 
-    Public Shared showedSSID As String
-    Public Shared showedIpAddress  As String
-    Public Shared showedSubnetMask As String
-    Public Shared showedGateway As String
-    Public Shared showedPrimaryDNS As String
-    Public Shared showedSecondaryDNS As String
-
     Public Shared selectedSSID As String
 
     Public Shared ReadOnly Property APP_PATH As String
