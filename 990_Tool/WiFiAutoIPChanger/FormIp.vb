@@ -10,7 +10,7 @@ Public Class FormIp
         For Each mtb In mtbs
             mtb.Mask = "000\.000\.000\.000"
             mtb.PromptChar = "_"
-            Dim ip = Util.ReadValueFromXml(Constants.PAGE_IP, Constants.selectedSSID, mtb.Name)
+            Dim ip As String = Util.ReadValueFromXml(Constants.PAGE_IP, Constants.selectedSSID, mtb.Name)
             If String.IsNullOrEmpty(ip) Then
                 mtb.Text = Constants.EMPTY_IP_ADDRESS
             Else
@@ -21,9 +21,8 @@ Public Class FormIp
         For Each rb In rbs
             Dim check = Util.ReadValueFromXml(Constants.PAGE_IP, Constants.selectedSSID, rb.Name)
             If String.IsNullOrEmpty(check) Then
-                rb.Checked = False
             Else
-                rb.Checked = check
+                rb.Checked = Boolean.Parse(check)
             End If
         Next
 
@@ -100,11 +99,13 @@ Public Class FormIp
         Dim rbs = {CheckSpecificCompanyIP, RadioAutoObtainIP, RadioSpecificIP, RadioAutoObtainDNS, RadioSpecificDNS}
 
         For Each mtb In mtbs
-            Util.WriteValueToXml(Constants.PAGE_IP, Constants.selectedSSID, mtb.Name, mtb.Text)
+            Dim ip As String = mtb.Text.Replace(" ", "")
+            Util.WriteValueToXml(Constants.PAGE_IP, Constants.selectedSSID, mtb.Name, ip)
         Next
         For Each rb In rbs
             Util.WriteValueToXml(Constants.PAGE_IP, Constants.selectedSSID, rb.Name, rb.Checked)
         Next
         MessageBox.Show("設定内容を保存しました", "保存", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Me.Close()
     End Sub
 End Class

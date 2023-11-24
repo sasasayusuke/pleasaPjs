@@ -1,27 +1,52 @@
 <Settings>
   <Conf Key="General">
-    <Setting Key="ComboBoxNetwork">イーサネット</Setting>
+    <Setting Key="ComboBoxWiredNetwork">イーサネット</Setting>
+    <Setting Key="ComboBoxWirelessNetwork">Wi-Fi</Setting>
   </Conf>
   <Conf Key="Company">
-    <Setting Key="MaskedTextBoxIPAddress">122.221.111.111</Setting>
-    <Setting Key="MaskedTextBoxSubnet">111.111.111.111</Setting>
-    <Setting Key="MaskedTextBoxGateway"> 32. 32.  4.  2</Setting>
-    <Setting Key="MaskedTextBoxPrimaryDNS">  2.244.242.235</Setting>
-    <Setting Key="MaskedTextBoxSecondaryDNS">  2.142.111.134</Setting>
+    <Setting Key="MaskedTextBoxIPAddress">192.168.1.116</Setting>
+    <Setting Key="MaskedTextBoxSubnet">255.255.255.0</Setting>
+    <Setting Key="MaskedTextBoxGateway">192.168.1.1</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">192.168.1.237</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">202.234.232.6</Setting>
   </Conf>
   <IP Key="SDT_3FNW_MtgR">
     <Setting Key="MaskedTextBoxIPAddress">111.111.111.111</Setting>
     <Setting Key="MaskedTextBoxSubnet">111.111.111.111</Setting>
-    <Setting Key="MaskedTextBoxGateway"> 11.111.111. 11</Setting>
-    <Setting Key="MaskedTextBoxPrimaryDNS">222.222.222.  2</Setting>
-    <Setting Key="MaskedTextBoxSecondaryDNS">121.212.122.  2</Setting>
-    <Setting Key="CheckSpecificCompanyIP">False</Setting>
-    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="MaskedTextBoxGateway">11.111.111.11</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">222.222.222.2</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">121.212.122.2</Setting>
+    <Setting Key="CheckSpecificCompanyIP">True</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
     <Setting Key="RadioSpecificIP">False</Setting>
+    <Setting Key="RadioAutoObtainDNS">False</Setting>
+    <Setting Key="RadioSpecificDNS">True</Setting>
+  </IP>
+  <IP Key="SDT_3FNW_DevR">
+    <Setting Key="MaskedTextBoxIPAddress">...</Setting>
+    <Setting Key="MaskedTextBoxSubnet">...</Setting>
+    <Setting Key="MaskedTextBoxGateway">...</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
+    <Setting Key="CheckSpecificCompanyIP">True</Setting>
+    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="RadioSpecificIP">True</Setting>
     <Setting Key="RadioAutoObtainDNS">False</Setting>
     <Setting Key="RadioSpecificDNS">False</Setting>
   </IP>
-  <IP Key="SDT_3FNW_DevR">
+  <IP Key="KAONM-F51D5-G">
+    <Setting Key="MaskedTextBoxIPAddress">111.114.114.4</Setting>
+    <Setting Key="MaskedTextBoxSubnet">222.222.222.222</Setting>
+    <Setting Key="MaskedTextBoxGateway">222.222.222.222</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
+    <Setting Key="CheckSpecificCompanyIP">True</Setting>
+    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="RadioSpecificIP">True</Setting>
+    <Setting Key="RadioAutoObtainDNS">True</Setting>
+    <Setting Key="RadioSpecificDNS">False</Setting>
+  </IP>
+  <IP Key="mscdocomo">
     <Setting Key="MaskedTextBoxIPAddress">   .   .   .</Setting>
     <Setting Key="MaskedTextBoxSubnet">   .   .   .</Setting>
     <Setting Key="MaskedTextBoxGateway">   .   .   .</Setting>
@@ -31,6 +56,54 @@
     <Setting Key="RadioAutoObtainIP">False</Setting>
     <Setting Key="RadioSpecificIP">False</Setting>
     <Setting Key="RadioAutoObtainDNS">False</Setting>
+    <Setting Key="RadioSpecificDNS">False</Setting>
+  </IP>
+  <IP Key="N01J-637b4e">
+    <Setting Key="MaskedTextBoxIPAddress">   .   .   .</Setting>
+    <Setting Key="MaskedTextBoxSubnet">   .   .   .</Setting>
+    <Setting Key="MaskedTextBoxGateway">   .   .   .</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">   .   .   .</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">   .   .   .</Setting>
+    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
+    <Setting Key="RadioSpecificIP">False</Setting>
+    <Setting Key="RadioAutoObtainDNS">False</Setting>
+    <Setting Key="RadioSpecificDNS">True</Setting>
+  </IP>
+  <IP Key="Xiaomi 11T Pro">
+    <Setting Key="MaskedTextBoxIPAddress">212.121.211.111</Setting>
+    <Setting Key="MaskedTextBoxSubnet">255.255.255.255</Setting>
+    <Setting Key="MaskedTextBoxGateway">212.121.111.1</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">221.211.111.1</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">21.212.121.1</Setting>
+    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="RadioSpecificIP">True</Setting>
+    <Setting Key="RadioAutoObtainDNS">True</Setting>
+    <Setting Key="RadioSpecificDNS">False</Setting>
+  </IP>
+  <IP Key="SDT_EVENT">
+    <Setting Key="MaskedTextBoxIPAddress">...</Setting>
+    <Setting Key="MaskedTextBoxSubnet">...</Setting>
+    <Setting Key="MaskedTextBoxGateway">...</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
+    <Setting Key="CheckSpecificCompanyIP">True</Setting>
+    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="RadioSpecificIP">True</Setting>
+    <Setting Key="RadioAutoObtainDNS">False</Setting>
+    <Setting Key="RadioSpecificDNS">True</Setting>
+  </IP>
+  <IP Key="SDT_7FNW_DevR">
+    <Setting Key="MaskedTextBoxIPAddress">...</Setting>
+    <Setting Key="MaskedTextBoxSubnet">...</Setting>
+    <Setting Key="MaskedTextBoxGateway">...</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
+    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
+    <Setting Key="RadioSpecificIP">False</Setting>
+    <Setting Key="RadioAutoObtainDNS">True</Setting>
     <Setting Key="RadioSpecificDNS">False</Setting>
   </IP>
 </Settings>

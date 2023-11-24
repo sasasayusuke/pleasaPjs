@@ -18,7 +18,7 @@ Partial Class FormMain
     Private components As System.ComponentModel.IContainer
 
     'メモ: 以下のプロシージャは Windows フォーム デザイナーで必要です。
-    'Windows フォーム デザイナーを使用して変更できます。  
+    'Windows フォーム デザイナーを使用して変更できます。
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
@@ -48,7 +48,7 @@ Partial Class FormMain
         '
         Me.ViewMenuItem.Name = "ViewMenuItem"
         Me.ViewMenuItem.Size = New System.Drawing.Size(145, 22)
-        Me.ViewMenuItem.Text = "無線LAN設定"
+        Me.ViewMenuItem.Text = "メイン画面表示"
         '
         'ConfMenuItem
         '
@@ -85,7 +85,7 @@ Partial Class FormMain
         Me.OptionLabel.Name = "OptionLabel"
         Me.OptionLabel.Size = New System.Drawing.Size(75, 12)
         Me.OptionLabel.TabIndex = 2
-        Me.OptionLabel.Text = "無線LAN情報"
+        Me.OptionLabel.Text = "詳細情報"
         '
         'SsidListView
         '

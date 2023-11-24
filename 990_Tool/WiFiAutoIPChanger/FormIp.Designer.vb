@@ -58,21 +58,19 @@ Partial Class FormIp
         Me.GroupBox1.Controls.Add(Me.Label5)
         Me.GroupBox1.Controls.Add(Me.MaskedTextBoxPrimaryDNS)
         Me.GroupBox1.Controls.Add(Me.Label4)
-        Me.GroupBox1.Location = New System.Drawing.Point(28, 290)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4)
+        Me.GroupBox1.Location = New System.Drawing.Point(21, 232)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4)
-        Me.GroupBox1.Size = New System.Drawing.Size(516, 125)
+        Me.GroupBox1.Size = New System.Drawing.Size(387, 100)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         '
         'RadioSpecificDNS
         '
         Me.RadioSpecificDNS.AutoSize = True
-        Me.RadioSpecificDNS.Location = New System.Drawing.Point(8, 0)
-        Me.RadioSpecificDNS.Margin = New System.Windows.Forms.Padding(4)
+        Me.RadioSpecificDNS.Checked = True
+        Me.RadioSpecificDNS.Location = New System.Drawing.Point(6, 0)
         Me.RadioSpecificDNS.Name = "RadioSpecificDNS"
-        Me.RadioSpecificDNS.Size = New System.Drawing.Size(209, 19)
+        Me.RadioSpecificDNS.Size = New System.Drawing.Size(172, 16)
         Me.RadioSpecificDNS.TabIndex = 907
         Me.RadioSpecificDNS.TabStop = True
         Me.RadioSpecificDNS.Text = "次のDNSサーバのアドレスを使う"
@@ -80,52 +78,47 @@ Partial Class FormIp
         '
         'MaskedTextBoxSecondaryDNS
         '
-        Me.MaskedTextBoxSecondaryDNS.Location = New System.Drawing.Point(208, 81)
-        Me.MaskedTextBoxSecondaryDNS.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaskedTextBoxSecondaryDNS.Location = New System.Drawing.Point(156, 65)
         Me.MaskedTextBoxSecondaryDNS.Mask = "000.000.000.000"
         Me.MaskedTextBoxSecondaryDNS.Name = "MaskedTextBoxSecondaryDNS"
         Me.MaskedTextBoxSecondaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBoxSecondaryDNS.Size = New System.Drawing.Size(299, 22)
+        Me.MaskedTextBoxSecondaryDNS.Size = New System.Drawing.Size(225, 19)
         Me.MaskedTextBoxSecondaryDNS.TabIndex = 305
         Me.MaskedTextBoxSecondaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(11, 85)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label5.Location = New System.Drawing.Point(8, 68)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(126, 15)
+        Me.Label5.Size = New System.Drawing.Size(100, 12)
         Me.Label5.TabIndex = 2
         Me.Label5.Text = "代替 DNS サーバ ："
         '
         'MaskedTextBoxPrimaryDNS
         '
-        Me.MaskedTextBoxPrimaryDNS.Location = New System.Drawing.Point(208, 39)
-        Me.MaskedTextBoxPrimaryDNS.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaskedTextBoxPrimaryDNS.Location = New System.Drawing.Point(156, 31)
         Me.MaskedTextBoxPrimaryDNS.Mask = "000.000.000.000"
         Me.MaskedTextBoxPrimaryDNS.Name = "MaskedTextBoxPrimaryDNS"
         Me.MaskedTextBoxPrimaryDNS.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBoxPrimaryDNS.Size = New System.Drawing.Size(299, 22)
+        Me.MaskedTextBoxPrimaryDNS.Size = New System.Drawing.Size(225, 19)
         Me.MaskedTextBoxPrimaryDNS.TabIndex = 304
         Me.MaskedTextBoxPrimaryDNS.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(11, 42)
-        Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label4.Location = New System.Drawing.Point(8, 34)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(126, 15)
+        Me.Label4.Size = New System.Drawing.Size(100, 12)
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "優先 DNS サーバ ："
         '
         'IpSave
         '
-        Me.IpSave.Location = New System.Drawing.Point(444, 432)
-        Me.IpSave.Margin = New System.Windows.Forms.Padding(4)
+        Me.IpSave.Location = New System.Drawing.Point(333, 346)
         Me.IpSave.Name = "IpSave"
-        Me.IpSave.Size = New System.Drawing.Size(100, 29)
+        Me.IpSave.Size = New System.Drawing.Size(75, 23)
         Me.IpSave.TabIndex = 901
         Me.IpSave.Text = "保存"
         Me.IpSave.UseVisualStyleBackColor = True
@@ -133,31 +126,28 @@ Partial Class FormIp
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(25, 22)
-        Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label6.Location = New System.Drawing.Point(19, 18)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(82, 15)
+        Me.Label6.Size = New System.Drawing.Size(64, 12)
         Me.Label6.TabIndex = 4
         Me.Label6.Text = "対象SSID ："
         '
         'tbSsid
         '
         Me.tbSsid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.tbSsid.Location = New System.Drawing.Point(120, 19)
-        Me.tbSsid.Margin = New System.Windows.Forms.Padding(4)
+        Me.tbSsid.Location = New System.Drawing.Point(90, 15)
         Me.tbSsid.Name = "tbSsid"
         Me.tbSsid.ReadOnly = True
-        Me.tbSsid.Size = New System.Drawing.Size(423, 22)
+        Me.tbSsid.Size = New System.Drawing.Size(318, 19)
         Me.tbSsid.TabIndex = 0
         Me.tbSsid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'CheckSpecificCompanyIP
         '
         Me.CheckSpecificCompanyIP.AutoSize = True
-        Me.CheckSpecificCompanyIP.Location = New System.Drawing.Point(41, 59)
-        Me.CheckSpecificCompanyIP.Margin = New System.Windows.Forms.Padding(4)
+        Me.CheckSpecificCompanyIP.Location = New System.Drawing.Point(31, 47)
         Me.CheckSpecificCompanyIP.Name = "CheckSpecificCompanyIP"
-        Me.CheckSpecificCompanyIP.Size = New System.Drawing.Size(146, 19)
+        Me.CheckSpecificCompanyIP.Size = New System.Drawing.Size(120, 16)
         Me.CheckSpecificCompanyIP.TabIndex = 101
         Me.CheckSpecificCompanyIP.Text = "会社のIP情報を使う"
         Me.CheckSpecificCompanyIP.UseVisualStyleBackColor = True
@@ -165,64 +155,58 @@ Partial Class FormIp
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 29)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label1.Location = New System.Drawing.Point(10, 23)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(77, 15)
+        Me.Label1.Size = New System.Drawing.Size(61, 12)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "IPアドレス ："
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(11, 62)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label2.Location = New System.Drawing.Point(8, 50)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(112, 15)
+        Me.Label2.Size = New System.Drawing.Size(89, 12)
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "サブネット マスク ："
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(11, 95)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.Label3.Location = New System.Drawing.Point(8, 76)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(146, 15)
+        Me.Label3.Size = New System.Drawing.Size(116, 12)
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "デフォルト ゲートウェイ ："
         '
         'MaskedTextBoxIPAddress
         '
         Me.MaskedTextBoxIPAddress.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.MaskedTextBoxIPAddress.Location = New System.Drawing.Point(208, 25)
-        Me.MaskedTextBoxIPAddress.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaskedTextBoxIPAddress.Location = New System.Drawing.Point(156, 20)
         Me.MaskedTextBoxIPAddress.Mask = "000.000.000.000"
         Me.MaskedTextBoxIPAddress.Name = "MaskedTextBoxIPAddress"
         Me.MaskedTextBoxIPAddress.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBoxIPAddress.Size = New System.Drawing.Size(299, 22)
+        Me.MaskedTextBoxIPAddress.Size = New System.Drawing.Size(225, 19)
         Me.MaskedTextBoxIPAddress.TabIndex = 301
         Me.MaskedTextBoxIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'MaskedTextBoxSubnet
         '
-        Me.MaskedTextBoxSubnet.Location = New System.Drawing.Point(208, 59)
-        Me.MaskedTextBoxSubnet.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaskedTextBoxSubnet.Location = New System.Drawing.Point(156, 47)
         Me.MaskedTextBoxSubnet.Mask = "000.000.000.000"
         Me.MaskedTextBoxSubnet.Name = "MaskedTextBoxSubnet"
         Me.MaskedTextBoxSubnet.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBoxSubnet.Size = New System.Drawing.Size(299, 22)
+        Me.MaskedTextBoxSubnet.Size = New System.Drawing.Size(225, 19)
         Me.MaskedTextBoxSubnet.TabIndex = 302
         Me.MaskedTextBoxSubnet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'MaskedTextBoxGateway
         '
-        Me.MaskedTextBoxGateway.Location = New System.Drawing.Point(208, 91)
-        Me.MaskedTextBoxGateway.Margin = New System.Windows.Forms.Padding(4)
+        Me.MaskedTextBoxGateway.Location = New System.Drawing.Point(156, 73)
         Me.MaskedTextBoxGateway.Mask = "000.000.000.000"
         Me.MaskedTextBoxGateway.Name = "MaskedTextBoxGateway"
         Me.MaskedTextBoxGateway.PromptChar = Global.Microsoft.VisualBasic.ChrW(32)
-        Me.MaskedTextBoxGateway.Size = New System.Drawing.Size(299, 22)
+        Me.MaskedTextBoxGateway.Size = New System.Drawing.Size(225, 19)
         Me.MaskedTextBoxGateway.TabIndex = 303
         Me.MaskedTextBoxGateway.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -235,21 +219,19 @@ Partial Class FormIp
         Me.GroupBox2.Controls.Add(Me.Label3)
         Me.GroupBox2.Controls.Add(Me.Label2)
         Me.GroupBox2.Controls.Add(Me.Label1)
-        Me.GroupBox2.Location = New System.Drawing.Point(28, 120)
-        Me.GroupBox2.Margin = New System.Windows.Forms.Padding(4)
+        Me.GroupBox2.Location = New System.Drawing.Point(21, 96)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Padding = New System.Windows.Forms.Padding(4)
-        Me.GroupBox2.Size = New System.Drawing.Size(516, 125)
+        Me.GroupBox2.Size = New System.Drawing.Size(387, 100)
         Me.GroupBox2.TabIndex = 5
         Me.GroupBox2.TabStop = False
         '
         'RadioSpecificIP
         '
         Me.RadioSpecificIP.AutoSize = True
-        Me.RadioSpecificIP.Location = New System.Drawing.Point(9, 1)
-        Me.RadioSpecificIP.Margin = New System.Windows.Forms.Padding(4)
+        Me.RadioSpecificIP.Checked = True
+        Me.RadioSpecificIP.Location = New System.Drawing.Point(7, 1)
         Me.RadioSpecificIP.Name = "RadioSpecificIP"
-        Me.RadioSpecificIP.Size = New System.Drawing.Size(144, 19)
+        Me.RadioSpecificIP.Size = New System.Drawing.Size(119, 16)
         Me.RadioSpecificIP.TabIndex = 905
         Me.RadioSpecificIP.TabStop = True
         Me.RadioSpecificIP.Text = "次のIPアドレスを使う"
@@ -258,21 +240,18 @@ Partial Class FormIp
         'GroupBox3
         '
         Me.GroupBox3.Controls.Add(Me.RadioAutoObtainIP)
-        Me.GroupBox3.Location = New System.Drawing.Point(11, 75)
-        Me.GroupBox3.Margin = New System.Windows.Forms.Padding(4)
+        Me.GroupBox3.Location = New System.Drawing.Point(8, 60)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(4)
-        Me.GroupBox3.Size = New System.Drawing.Size(552, 170)
+        Me.GroupBox3.Size = New System.Drawing.Size(414, 136)
         Me.GroupBox3.TabIndex = 902
         Me.GroupBox3.TabStop = False
         '
         'RadioAutoObtainIP
         '
         Me.RadioAutoObtainIP.AutoSize = True
-        Me.RadioAutoObtainIP.Location = New System.Drawing.Point(27, 18)
-        Me.RadioAutoObtainIP.Margin = New System.Windows.Forms.Padding(4)
+        Me.RadioAutoObtainIP.Location = New System.Drawing.Point(20, 14)
         Me.RadioAutoObtainIP.Name = "RadioAutoObtainIP"
-        Me.RadioAutoObtainIP.Size = New System.Drawing.Size(204, 19)
+        Me.RadioAutoObtainIP.Size = New System.Drawing.Size(166, 16)
         Me.RadioAutoObtainIP.TabIndex = 904
         Me.RadioAutoObtainIP.TabStop = True
         Me.RadioAutoObtainIP.Text = "IPアドレスを自動的に取得する"
@@ -281,21 +260,18 @@ Partial Class FormIp
         'GroupBox4
         '
         Me.GroupBox4.Controls.Add(Me.RadioAutoObtainDNS)
-        Me.GroupBox4.Location = New System.Drawing.Point(11, 242)
-        Me.GroupBox4.Margin = New System.Windows.Forms.Padding(4)
+        Me.GroupBox4.Location = New System.Drawing.Point(8, 194)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(4)
-        Me.GroupBox4.Size = New System.Drawing.Size(552, 172)
+        Me.GroupBox4.Size = New System.Drawing.Size(414, 138)
         Me.GroupBox4.TabIndex = 903
         Me.GroupBox4.TabStop = False
         '
         'RadioAutoObtainDNS
         '
         Me.RadioAutoObtainDNS.AutoSize = True
-        Me.RadioAutoObtainDNS.Location = New System.Drawing.Point(25, 20)
-        Me.RadioAutoObtainDNS.Margin = New System.Windows.Forms.Padding(4)
+        Me.RadioAutoObtainDNS.Location = New System.Drawing.Point(19, 16)
         Me.RadioAutoObtainDNS.Name = "RadioAutoObtainDNS"
-        Me.RadioAutoObtainDNS.Size = New System.Drawing.Size(269, 19)
+        Me.RadioAutoObtainDNS.Size = New System.Drawing.Size(219, 16)
         Me.RadioAutoObtainDNS.TabIndex = 906
         Me.RadioAutoObtainDNS.TabStop = True
         Me.RadioAutoObtainDNS.Text = "DNSサーバのアドレスを自動的に取得する"
@@ -303,9 +279,9 @@ Partial Class FormIp
         '
         'FormIp
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(579, 476)
+        Me.ClientSize = New System.Drawing.Size(434, 381)
         Me.Controls.Add(Me.CheckSpecificCompanyIP)
         Me.Controls.Add(Me.tbSsid)
         Me.Controls.Add(Me.Label6)
@@ -316,7 +292,6 @@ Partial Class FormIp
         Me.Controls.Add(Me.GroupBox4)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "FormIp"

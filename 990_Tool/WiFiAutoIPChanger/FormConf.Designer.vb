@@ -18,14 +18,16 @@ Partial Class FormConf
     Private components As System.ComponentModel.IContainer
 
     'メモ: 以下のプロシージャは Windows フォーム デザイナーで必要です。
-    'Windows フォーム デザイナーを使用して変更できます。  
+    'Windows フォーム デザイナーを使用して変更できます。
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormConf))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.ComboBoxNetwork = New System.Windows.Forms.ComboBox()
+        Me.ComboBoxWirelessNetwork = New System.Windows.Forms.ComboBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.ComboBoxWiredNetwork = New System.Windows.Forms.ComboBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.MaskedTextBoxSecondaryDNS = New System.Windows.Forms.MaskedTextBox()
@@ -39,6 +41,7 @@ Partial Class FormConf
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ConfSave = New System.Windows.Forms.Button()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
@@ -48,15 +51,21 @@ Partial Class FormConf
         '
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Controls.Add(Me.TabPage3)
+        Me.TabControl1.ImeMode = System.Windows.Forms.ImeMode.[On]
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.Multiline = True
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(435, 369)
         Me.TabControl1.TabIndex = 0
+        Me.TabControl1.Visible = False
         '
         'TabPage1
         '
-        Me.TabPage1.Controls.Add(Me.ComboBoxNetwork)
+        Me.TabPage1.Controls.Add(Me.ComboBoxWirelessNetwork)
+        Me.TabPage1.Controls.Add(Me.Label7)
+        Me.TabPage1.Controls.Add(Me.ComboBoxWiredNetwork)
         Me.TabPage1.Controls.Add(Me.Label6)
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
@@ -66,24 +75,43 @@ Partial Class FormConf
         Me.TabPage1.Text = "全般"
         Me.TabPage1.UseVisualStyleBackColor = True
         '
-        'ComboBoxNetwork
+        'ComboBoxWirelessNetwork
         '
-        Me.ComboBoxNetwork.FormattingEnabled = True
-        Me.ComboBoxNetwork.Items.AddRange(New Object() {"イーサネット", "Wi-Fi"})
-        Me.ComboBoxNetwork.Location = New System.Drawing.Point(131, 32)
-        Me.ComboBoxNetwork.Name = "ComboBoxNetwork"
-        Me.ComboBoxNetwork.Size = New System.Drawing.Size(121, 20)
-        Me.ComboBoxNetwork.TabIndex = 92
-        Me.ComboBoxNetwork.Text = "Wi-Fi"
+        Me.ComboBoxWirelessNetwork.FormattingEnabled = True
+        Me.ComboBoxWirelessNetwork.Items.AddRange(New Object() {"Wi-Fi"})
+        Me.ComboBoxWirelessNetwork.Location = New System.Drawing.Point(131, 83)
+        Me.ComboBoxWirelessNetwork.Name = "ComboBoxWirelessNetwork"
+        Me.ComboBoxWirelessNetwork.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxWirelessNetwork.TabIndex = 94
+        Me.ComboBoxWirelessNetwork.Text = "Wi-Fi"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(22, 87)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(63, 12)
+        Me.Label7.TabIndex = 93
+        Me.Label7.Text = "無線接続 ："
+        '
+        'ComboBoxWiredNetwork
+        '
+        Me.ComboBoxWiredNetwork.FormattingEnabled = True
+        Me.ComboBoxWiredNetwork.Items.AddRange(New Object() {"イーサネット"})
+        Me.ComboBoxWiredNetwork.Location = New System.Drawing.Point(131, 32)
+        Me.ComboBoxWiredNetwork.Name = "ComboBoxWiredNetwork"
+        Me.ComboBoxWiredNetwork.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxWiredNetwork.TabIndex = 92
+        Me.ComboBoxWiredNetwork.Text = "イーサネット"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(22, 36)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(91, 12)
+        Me.Label6.Size = New System.Drawing.Size(63, 12)
         Me.Label6.TabIndex = 3
-        Me.Label6.Text = "ネットワーク接続 ："
+        Me.Label6.Text = "有線接続 ："
         '
         'TabPage2
         '
@@ -209,6 +237,16 @@ Partial Class FormConf
         Me.ConfSave.Text = "保存"
         Me.ConfSave.UseVisualStyleBackColor = True
         '
+        'TabPage3
+        '
+        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage3.Name = "TabPage3"
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Size = New System.Drawing.Size(427, 343)
+        Me.TabPage3.TabIndex = 2
+        Me.TabPage3.Text = "バージョン"
+        Me.TabPage3.UseVisualStyleBackColor = True
+        '
         'FormConf
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
@@ -246,5 +284,8 @@ Partial Class FormConf
     Friend WithEvents Label1 As Label
     Friend WithEvents ConfSave As Button
     Friend WithEvents Label6 As Label
-    Friend WithEvents ComboBoxNetwork As ComboBox
+    Friend WithEvents ComboBoxWiredNetwork As ComboBox
+    Friend WithEvents ComboBoxWirelessNetwork As ComboBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents TabPage3 As TabPage
 End Class

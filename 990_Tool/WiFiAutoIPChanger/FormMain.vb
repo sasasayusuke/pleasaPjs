@@ -17,70 +17,13 @@ Public Class FormMain
 
     '＝＝＝＝＝＝＝　SSIDListをクリックした際の動作　＝＝＝＝＝＝＝
     Private fi As FormIp
-    Private Sub SsidListView_Select(sender As System.Object, e As System.EventArgs) Handles SsidListView.SelectedIndexChanged
-        Try
+    Private Sub SsidListView_Select(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles SsidListView.ItemSelectionChanged
+        Dim showedSSID As String = e.Item.Text
 
-            Dim showedSSID As String = SsidListView.SelectedItems(0).Text
-            Dim showedIpAddress As String = ""
-            Dim showedSubnetMask As String = ""
-            Dim showedGateway As String = ""
-            Dim showedPrimaryDNS As String = ""
-            Dim showedSecondaryDNS As String = ""
+        Dim setting As NetworkSettings = Util.GetNetworkSettings(showedSSID)
 
-            Dim remark As String = ""
-
-            ' 会社のIP情報を使う をチェックしていた場合
-            If Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "CheckSpecificCompanyIP")) Then
-                remark += "会社のIP情報を使う。" & vbCrLf
-                showedIpAddress = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxIPAddress")
-                showedSubnetMask = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxSubnet")
-                showedGateway = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxGateway")
-                showedPrimaryDNS = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxPrimaryDNS")
-                showedSecondaryDNS = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxSecondaryDNS")
-            Else
-                ' 次のIPアドレスを使う をチェックしていた場合
-                If Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "RadioAutoObtainIP")) Then
-                    remark += "次のIPアドレスを使う。" & vbCrLf
-                    showedIpAddress = Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "MaskedTextBoxIPAddress")
-                    showedSubnetMask = Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "MaskedTextBoxSubnet")
-                    showedGateway = Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "MaskedTextBoxGateway")
-                Else
-                    remark += "自動IP接続" & vbCrLf
-                End If
-
-                ' 次のDNSサーバのアドレスを使う をチェックしていた場合
-                If Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "RadioAutoObtainDNS")) Then
-                    remark += "次のIPアドレスを使う。" & vbCrLf
-                    showedPrimaryDNS = Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "MaskedTextBoxPrimaryDNS")
-                    showedSecondaryDNS = Util.ReadValueFromXml(Constants.PAGE_IP, showedSSID, "MaskedTextBoxSecondaryDNS")
-                Else
-                    remark += "自動DNS接続" & vbCrLf
-                End If
-            End If
-
-            ' Panel1に表示
-            Util.UpdateLabelsToPanel(
-                        Panel1,
-                        remark,
-                        showedIpAddress,
-                        showedSubnetMask,
-                        showedGateway,
-                        showedPrimaryDNS,
-                        showedSecondaryDNS
-                    )
-        Catch ex As Exception
-            ' Panel1に表示
-            Util.UpdateLabelsToPanel(
-                Panel1,
-                "接続情報が未設定です。",
-                "",
-                "",
-                "",
-                "",
-                ""
-            )
-
-        End Try
+        ' Panel1に表示
+        Util.SetLabelsToPanel(Panel1, setting.remark, setting.ipAddress, setting.subnetMask, setting.gateway, setting.primaryDNS, setting.secondaryDNS)
 
     End Sub
     Private Sub SsidListView_DoubleClick(sender As System.Object, e As System.EventArgs) Handles SsidListView.DoubleClick
@@ -129,24 +72,61 @@ Public Class FormMain
             Constants.currentSSID = tmpSsid
             ' ListView の端にアイコンを追加
             Dim icon As New Icon("green_wi-fi_icon.ico")
-            Util.AddIconToListView(SsidListView, icon, Constants.currentSSID)
+            Util.SetIconToListView(SsidListView, icon, Constants.currentSSID)
+            Dim index As Integer = Util.FindItemIndexByListView(SsidListView, Constants.currentSSID)
+            If index <> -1 Then
 
+
+                ' 設定情報を取得
+                Dim setting As NetworkSettings = Util.GetNetworkSettings(Constants.currentSSID)
+
+                Dim interfaceWired As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWiredNetwork")
+                Dim interfaceWireless As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWirelessNetwork")
+
+                ' 有線のIPを解除
+                Dim response = Constants.currentSSID & "へ接続します。以下の設定をしました" & vbCrLf
+                response += Util.UpdateIPToDHCP(interfaceWired)
+                response += Util.UpdateDNSToDHCP(interfaceWired)
+
+                ' 設定情報を更新
+                If setting.autoObtainIP Then
+                    response += Util.UpdateIPToDHCP(interfaceWireless)
+                Else
+                    response += Util.UpdateStaticIPAddress(interfaceWireless, setting.ipAddress, setting.subnetMask, setting.gateway)
+                End If
+
+                If setting.autoObtainDNS Then
+                    response += Util.UpdateDNSToDHCP(interfaceWireless)
+                Else
+                    response += Util.UpdateStaticPrimaryDNS(interfaceWireless, setting.primaryDNS)
+                    If Not String.IsNullOrEmpty(setting.secondaryDNS) Then
+                        response += Util.UpdateStaticSecondaryDNS(interfaceWireless, setting.secondaryDNS)
+                    End If
+
+                End If
+
+                MessageBox.Show(response, "実行結果", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
 
         End If
     End Sub
 
-    Private Sub UpdateListViewIcon()
-        Dim imageList As New ImageList()
-        imageList.Images.Add(icon)
-        SsidListView.SmallImageList = imageList
-
-        ' ListView の最後の項目のインデックスを取得
-        Dim lastIndex As Integer = SsidListView.Items.Count - 1
-
-        ' 最後の項目にアイコンを設定
-        SsidListView.Items(lastIndex).ImageIndex = 0
-    End Sub
 
 
-    '##### コンテキストメニュー設定 ここまで #####
+
+    ' 現在接続中のWiFi確認
+    ' WiFi情報の取得
+
+    ' 変更がある場合
+    ' IPの付け替え（無線ありの場合）
+    ' 無線にSSIDに応じたIPを付与
+    ' 会社のIPを使用するSSIDの場合には、有線のIPを削除
+    ' 会社のIPを使用しないSSIDの場合には、有線に会社IPを付与
+
+    ' IPの付け替え（無線なしの場合）
+    ' 有線に会社IPを付与
+
+
+    ' 変更がない場合
+    ' 終了
 End Class

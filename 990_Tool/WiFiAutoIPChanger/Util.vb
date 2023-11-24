@@ -2,28 +2,117 @@
 Imports System.Xml
 Imports System.IO
 
+Public Class NetworkSettings
+    Public Property autoObtainIP As Boolean
+    Public Property autoObtainDNS As Boolean
+    Public Property ipAddress As String
+    Public Property subnetMask As String
+    Public Property gateway As String
+    Public Property primaryDNS As String
+    Public Property secondaryDNS As String
+    Public Property remark As String
+End Class
+
 Public Class Util
 
+    Public Shared Function GetNetworkSettings(ByVal ssid As String) As NetworkSettings
+        Try
+            Dim networkSettings As New NetworkSettings()
+            networkSettings.remark = ssid & vbCrLf & vbCrLf
+
+            networkSettings.ipAddress = ""
+            networkSettings.subnetMask = ""
+            networkSettings.gateway = ""
+            networkSettings.primaryDNS = ""
+            networkSettings.secondaryDNS = ""
+
+            networkSettings.autoObtainIP = False
+            networkSettings.autoObtainDNS = False
+
+            ' 会社のIP情報を使う をチェックしていた場合
+            If Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "CheckSpecificCompanyIP")) Then
+                networkSettings.remark += "会社のIP情報を使う。" & vbCrLf
+                networkSettings.ipAddress = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxIPAddress")
+                networkSettings.subnetMask = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxSubnet")
+                networkSettings.gateway = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxGateway")
+                networkSettings.primaryDNS = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxPrimaryDNS")
+                networkSettings.secondaryDNS = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, "MaskedTextBoxSecondaryDNS")
+            Else
+                networkSettings.autoObtainIP = Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "RadioAutoObtainIP"))
+                networkSettings.autoObtainDNS = Boolean.Parse(Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "RadioAutoObtainDNS"))
+
+                If networkSettings.autoObtainIP Then
+                    ' IPアドレスを自動的に取得する をチェックしていた場合
+                    networkSettings.remark += "IPアドレスを自動的に取得する。" & vbCrLf
+                Else
+                    ' 次のIPアドレスを使う をチェックしていた場合
+                    networkSettings.remark += "次のIPアドレスを使う。" & vbCrLf
+                    networkSettings.ipAddress = Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "MaskedTextBoxIPAddress")
+                    networkSettings.subnetMask = Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "MaskedTextBoxSubnet")
+                    networkSettings.gateway = Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "MaskedTextBoxGateway")
+                End If
+
+                If networkSettings.autoObtainDNS Then
+                    ' DNSサーバのアドレスを自動的に取得する をチェックしていた場合
+                    networkSettings.remark += "DNSサーバのアドレスを自動的に取得する。" & vbCrLf
+                Else
+                    ' 次のDNSサーバのアドレスを使う をチェックしていた場合
+                    networkSettings.remark += "次のDNSアドレスを使う。" & vbCrLf
+                    networkSettings.primaryDNS = Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "MaskedTextBoxPrimaryDNS")
+                    networkSettings.secondaryDNS = Util.ReadValueFromXml(Constants.PAGE_IP, ssid, "MaskedTextBoxSecondaryDNS")
+                End If
+            End If
+            Return networkSettings
+
+        Catch ex As Exception
+            Dim networkSettings As New NetworkSettings()
+            networkSettings.remark = "接続情報が未設定です。"
+            Return networkSettings
+        End Try
+
+    End Function
+
     ' コマンドプロンプトでコマンドを実行する関数
-    Public Shared Function ExecuteCommand(command As String) As String
+    Public Shared Function ExecuteCommand(command As String, Optional runAsAdmin As Boolean = False) As String
         Try
             Using process As New Process()
                 process.StartInfo.FileName = "cmd.exe"
                 process.StartInfo.Arguments = "/c " & command
-                process.StartInfo.RedirectStandardOutput = True
-                process.StartInfo.UseShellExecute = False
+                process.StartInfo.UseShellExecute = runAsAdmin ' 管理者権限の場合はTrueに、そうでなければFalseに設定
                 process.StartInfo.CreateNoWindow = True
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden
+                If runAsAdmin Then
+                    process.StartInfo.Verb = "runas"
+                Else
+                    process.StartInfo.RedirectStandardOutput = True ' 非管理者では標準出力をリダイレクト
+                    process.StartInfo.RedirectStandardError = True ' 非管理者では標準エラーをリダイレクト
+                End If
+
                 process.Start()
 
-                Dim output As String = process.StandardOutput.ReadToEnd()
+                Dim output As String = String.Empty
+                Dim errorOutput As String = String.Empty
+
+                If Not runAsAdmin Then
+                    output = process.StandardOutput.ReadToEnd()
+                    errorOutput = process.StandardError.ReadToEnd()
+                End If
+
                 process.WaitForExit()
 
-                Return output
+                If String.IsNullOrEmpty(errorOutput) Then
+                    Return output
+                Else
+                    MessageBox.Show("Error: " & errorOutput, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return "Error: " & errorOutput
+                End If
             End Using
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return "Error: " & ex.Message
         End Try
     End Function
+
 
     ' 既知のSSIDを取得する関数
     Public Shared Function GetKnownWiFi() As List(Of String)
@@ -76,35 +165,32 @@ Public Class Util
     End Function
 
     ' ListView の左端にアイコンを追加
-    Public Shared Sub AddIconToListView(ByVal listView As ListView, ByVal icon As Icon, searchText As String)
-        ' 既存のアイコンをすべて消去
+    Public Shared Sub SetIconToListView(ByVal listView As ListView, ByVal icon As Icon, searchText As String)
+        listView.SmallImageList = New ImageList()
+        ' 先に ImageIndex をリセット
         For Each item As ListViewItem In listView.Items
             item.ImageIndex = -1
         Next
 
-        ' SmallImageList が初期化されていない場合は、新しい ImageList を作成する
-        If listView.SmallImageList Is Nothing Then
-            listView.SmallImageList = New ImageList()
-        End If
-
         Dim index As Integer = Util.FindItemIndexByListView(listView, searchText)
         If index <> -1 Then
+            ' 新しいアイコンを追加
             listView.SmallImageList.Images.Add(icon)
-
-            ' 特定のアイテムにアイコンを設定
+            ' ImageIndex をセット
             listView.Items(index).ImageIndex = 0
         End If
 
     End Sub
 
+
     ' パネルにラベルを表示する関数
-    Public Shared Sub UpdateLabelsToPanel(ByVal panel As Panel, Optional remark As String = "", Optional ipAddress As String = "", Optional subnetMask As String = "", Optional gateway As String = "", Optional primaryDNS As String = "", Optional secondaryDNS As String = "")
+    Public Shared Sub SetLabelsToPanel(ByVal panel As Panel, Optional remark As String = "", Optional ipAddress As String = "", Optional subnetMask As String = "", Optional gateway As String = "", Optional primaryDNS As String = "", Optional secondaryDNS As String = "")
         ' パネルの既存のコントロールをクリア
         panel.Controls.Clear()
 
         Dim lblLeft = 20
         Dim valLeft = 140
-        Dim height = 100
+        Dim height = 70
 
         ' 備考のラベルを追加
         If Not String.IsNullOrEmpty(remark) Then
@@ -140,22 +226,38 @@ Public Class Util
         Next
 
     End Sub
-    ' IPアドレスを設定する関数
-    Public Shared Sub SetStaticIPAddress(interfaceName As String, ipAddress As String, subnetMask As String, gateway As String)
+
+    ' IPアドレスを自動的に取得するように設定する関数
+    Public Shared Function UpdateIPToDHCP(interfaceName As String)
+        Dim setDHCPCommand As String = $"netsh interface ip set address name=""{interfaceName}"" dhcp"
+        Return setDHCPCommand & vbCrLf & ExecuteCommand(setDHCPCommand, True)
+    End Function
+
+
+    ' DNSサーバーアドレスを自動的に取得するように設定する関数
+    Public Shared Function UpdateDNSToDHCP(interfaceName As String)
+        Dim setDNSDHCPCommand As String = $"netsh interface ip set dns name=""{interfaceName}"" dhcp"
+        Return setDNSDHCPCommand & vbCrLf & ExecuteCommand(setDNSDHCPCommand, True)
+    End Function
+
+    ' 固定IPアドレスを設定する関数
+    Public Shared Function UpdateStaticIPAddress(interfaceName As String, ipAddress As String, subnetMask As String, gateway As String)
         Dim setIPCommand As String = $"netsh interface ip set address name=""{interfaceName}"" static {ipAddress} {subnetMask} {gateway}"
-        ExecuteCommand(setIPCommand)
-    End Sub
+        Return setIPCommand & vbCrLf & ExecuteCommand(setIPCommand, True)
+    End Function
 
-    ' DNSを設定する関数
-    Public Shared Sub SetStaticDNS(interfaceName As String, primaryDNS As String, Optional secondaryDNS As String = "")
+    ' 固定優先DNSサーバアドレスを設定する関数
+    Public Shared Function UpdateStaticPrimaryDNS(interfaceName As String, primaryDNS As String)
         Dim setPrimaryDNSCommand As String = $"netsh interface ip set dns name=""{interfaceName}"" static {primaryDNS}"
-        ExecuteCommand(setPrimaryDNSCommand)
+        Return setPrimaryDNSCommand & vbCrLf & ExecuteCommand(setPrimaryDNSCommand, True)
+    End Function
 
-        If Not String.IsNullOrEmpty(secondaryDNS) Then
-            Dim setSecondaryDNSCommand As String = $"netsh interface ip add dns name=""{interfaceName}"" {secondaryDNS} index=2"
-            ExecuteCommand(setSecondaryDNSCommand)
-        End If
-    End Sub
+    ' 固定代替DNSサーバアドレスを設定する関数
+    Public Shared Function UpdateStaticSecondaryDNS(interfaceName As String, secondaryDNS As String)
+        Dim setSecondaryDNSCommand As String = $"netsh interface ip add dns name=""{interfaceName}"" {secondaryDNS} index=2"
+        Return setSecondaryDNSCommand & vbCrLf & ExecuteCommand(setSecondaryDNSCommand, True)
+    End Function
+
 
     Public Shared Function ConvertIpAddressFormat(ipAddress As String) As String
         ' IPアドレスをドットで分割
@@ -259,24 +361,6 @@ Public Class Util
         Return String.Empty
     End Function
 
-
-    ' 現在接続中のWiFi確認
-    ' WiFi情報の取得
-    ' 前回のSSID
-    ' 現在のSSID
-
-    ' 変更がある場合
-    ' IPの付け替え（無線ありの場合）
-    ' 無線にSSIDに応じたIPを付与
-    ' 会社のIPを使用するSSIDの場合には、有線のIPを削除
-    ' 会社のIPを使用しないSSIDの場合には、有線に会社IPを付与
-
-    ' IPの付け替え（無線なしの場合）
-    ' 有線に会社IPを付与
-
-
-    ' 変更がない場合
-    ' 終了
 
 
 End Class
