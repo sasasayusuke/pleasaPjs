@@ -71,8 +71,7 @@ Public Class FormMain
         If Constants.currentSSID <> tmpSsid Then
             Constants.currentSSID = tmpSsid
             ' ListView の端にアイコンを追加
-            Dim icon As New Icon("green_wi-fi_icon.ico")
-            Util.SetIconToListView(SsidListView, icon, Constants.currentSSID)
+            Util.SetIconToListView(SsidListView, "red_wifi_icon.ico", Constants.currentSSID)
             Dim index As Integer = Util.FindItemIndexByListView(SsidListView, Constants.currentSSID)
             If index <> -1 Then
 

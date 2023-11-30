@@ -2,6 +2,10 @@
 
 Public Class Constants
     ' 設定ファイルのパスを保持するShared ReadOnlyプロパティ
+    Public Const APPLICATION_VERSION = "1.1.1"
+    Public Const APPLICATION_COMPANY = "©SMSDatatech"
+    Public Const APPLICATION_NAME = "WifiAutoIPChanger"
+
     Public Const EMPTY_IP_ADDRESS As String = "___.___.___.___"
 
     Public Const SETTING_FILE As String = "Settings.xml"

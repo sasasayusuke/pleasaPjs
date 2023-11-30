@@ -3,6 +3,12 @@
 Public Class FormConf
     ' フォームのロード時に一度だけマスクを設定します。
     Private Sub FormConf_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' バージョン情報等へ書き込み
+        LabelAppVersion.Text = Constants.APPLICATION_VERSION
+        LabelAppCompany.Text = Constants.APPLICATION_COMPANY
+        LabelAppName.Text = Constants.APPLICATION_NAME
+
+
         ' 全般情報へ書き込み
         Dim cbs = {ComboBoxWiredNetwork, ComboBoxWirelessNetwork}
         For Each cb In cbs
@@ -61,6 +67,5 @@ Public Class FormConf
         MessageBox.Show("設定内容を保存しました", "保存", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Me.Close()
     End Sub
-
 
 End Class

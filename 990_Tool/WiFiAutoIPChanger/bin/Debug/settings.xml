@@ -40,9 +40,9 @@
     <Setting Key="MaskedTextBoxGateway">222.222.222.222</Setting>
     <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
     <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
-    <Setting Key="CheckSpecificCompanyIP">True</Setting>
-    <Setting Key="RadioAutoObtainIP">False</Setting>
-    <Setting Key="RadioSpecificIP">True</Setting>
+    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
+    <Setting Key="RadioSpecificIP">False</Setting>
     <Setting Key="RadioAutoObtainDNS">True</Setting>
     <Setting Key="RadioSpecificDNS">False</Setting>
   </IP>
@@ -95,6 +95,18 @@
     <Setting Key="RadioSpecificDNS">True</Setting>
   </IP>
   <IP Key="SDT_7FNW_DevR">
+    <Setting Key="MaskedTextBoxIPAddress">...</Setting>
+    <Setting Key="MaskedTextBoxSubnet">...</Setting>
+    <Setting Key="MaskedTextBoxGateway">...</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">...</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">...</Setting>
+    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
+    <Setting Key="RadioSpecificIP">False</Setting>
+    <Setting Key="RadioAutoObtainDNS">True</Setting>
+    <Setting Key="RadioSpecificDNS">False</Setting>
+  </IP>
+  <IP Key="HG8045-DC06-a">
     <Setting Key="MaskedTextBoxIPAddress">...</Setting>
     <Setting Key="MaskedTextBoxSubnet">...</Setting>
     <Setting Key="MaskedTextBoxGateway">...</Setting>

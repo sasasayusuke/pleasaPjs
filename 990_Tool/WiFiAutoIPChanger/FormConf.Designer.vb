@@ -23,12 +23,7 @@ Partial Class FormConf
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormConf))
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.ComboBoxWirelessNetwork = New System.Windows.Forms.ComboBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.ComboBoxWiredNetwork = New System.Windows.Forms.ComboBox()
-        Me.Label6 = New System.Windows.Forms.Label()
+        Me.ConfSave = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.MaskedTextBoxSecondaryDNS = New System.Windows.Forms.MaskedTextBox()
         Me.MaskedTextBoxGateway = New System.Windows.Forms.MaskedTextBox()
@@ -40,78 +35,33 @@ Partial Class FormConf
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.ConfSave = New System.Windows.Forms.Button()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.LabelAppName = New System.Windows.Forms.Label()
+        Me.LabelAppCompany = New System.Windows.Forms.Label()
+        Me.LabelAppVersion = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.ComboBoxWirelessNetwork = New System.Windows.Forms.ComboBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.ComboBoxWiredNetwork = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage2.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabControl1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TabControl1
+        'ConfSave
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.ImeMode = System.Windows.Forms.ImeMode.[On]
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.Multiline = True
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(435, 369)
-        Me.TabControl1.TabIndex = 0
-        Me.TabControl1.Visible = False
-        '
-        'TabPage1
-        '
-        Me.TabPage1.Controls.Add(Me.ComboBoxWirelessNetwork)
-        Me.TabPage1.Controls.Add(Me.Label7)
-        Me.TabPage1.Controls.Add(Me.ComboBoxWiredNetwork)
-        Me.TabPage1.Controls.Add(Me.Label6)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(427, 343)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "全般"
-        Me.TabPage1.UseVisualStyleBackColor = True
-        '
-        'ComboBoxWirelessNetwork
-        '
-        Me.ComboBoxWirelessNetwork.FormattingEnabled = True
-        Me.ComboBoxWirelessNetwork.Items.AddRange(New Object() {"Wi-Fi"})
-        Me.ComboBoxWirelessNetwork.Location = New System.Drawing.Point(131, 83)
-        Me.ComboBoxWirelessNetwork.Name = "ComboBoxWirelessNetwork"
-        Me.ComboBoxWirelessNetwork.Size = New System.Drawing.Size(121, 20)
-        Me.ComboBoxWirelessNetwork.TabIndex = 94
-        Me.ComboBoxWirelessNetwork.Text = "Wi-Fi"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(22, 87)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(63, 12)
-        Me.Label7.TabIndex = 93
-        Me.Label7.Text = "無線接続 ："
-        '
-        'ComboBoxWiredNetwork
-        '
-        Me.ComboBoxWiredNetwork.FormattingEnabled = True
-        Me.ComboBoxWiredNetwork.Items.AddRange(New Object() {"イーサネット"})
-        Me.ComboBoxWiredNetwork.Location = New System.Drawing.Point(131, 32)
-        Me.ComboBoxWiredNetwork.Name = "ComboBoxWiredNetwork"
-        Me.ComboBoxWiredNetwork.Size = New System.Drawing.Size(121, 20)
-        Me.ComboBoxWiredNetwork.TabIndex = 92
-        Me.ComboBoxWiredNetwork.Text = "イーサネット"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(22, 36)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(63, 12)
-        Me.Label6.TabIndex = 3
-        Me.Label6.Text = "有線接続 ："
+        Me.ConfSave.Location = New System.Drawing.Point(347, 376)
+        Me.ConfSave.Name = "ConfSave"
+        Me.ConfSave.Size = New System.Drawing.Size(75, 23)
+        Me.ConfSave.TabIndex = 91
+        Me.ConfSave.Text = "保存"
+        Me.ConfSave.UseVisualStyleBackColor = True
         '
         'TabPage2
         '
@@ -228,24 +178,137 @@ Partial Class FormConf
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "IPアドレス ："
         '
-        'ConfSave
+        'TabPage1
         '
-        Me.ConfSave.Location = New System.Drawing.Point(347, 376)
-        Me.ConfSave.Name = "ConfSave"
-        Me.ConfSave.Size = New System.Drawing.Size(75, 23)
-        Me.ConfSave.TabIndex = 91
-        Me.ConfSave.Text = "保存"
-        Me.ConfSave.UseVisualStyleBackColor = True
+        Me.TabPage1.Controls.Add(Me.LabelAppName)
+        Me.TabPage1.Controls.Add(Me.LabelAppCompany)
+        Me.TabPage1.Controls.Add(Me.LabelAppVersion)
+        Me.TabPage1.Controls.Add(Me.Label10)
+        Me.TabPage1.Controls.Add(Me.Label9)
+        Me.TabPage1.Controls.Add(Me.Label8)
+        Me.TabPage1.Controls.Add(Me.ComboBoxWirelessNetwork)
+        Me.TabPage1.Controls.Add(Me.Label7)
+        Me.TabPage1.Controls.Add(Me.ComboBoxWiredNetwork)
+        Me.TabPage1.Controls.Add(Me.Label6)
+        Me.TabPage1.Controls.Add(Me.PictureBox1)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(427, 343)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "全般"
+        Me.TabPage1.UseVisualStyleBackColor = True
         '
-        'TabPage3
+        'LabelAppName
         '
-        Me.TabPage3.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(427, 343)
-        Me.TabPage3.TabIndex = 2
-        Me.TabPage3.Text = "バージョン"
-        Me.TabPage3.UseVisualStyleBackColor = True
+        Me.LabelAppName.AutoSize = True
+        Me.LabelAppName.Location = New System.Drawing.Point(284, 82)
+        Me.LabelAppName.Name = "LabelAppName"
+        Me.LabelAppName.Size = New System.Drawing.Size(0, 12)
+        Me.LabelAppName.TabIndex = 101
+        '
+        'LabelAppCompany
+        '
+        Me.LabelAppCompany.AutoSize = True
+        Me.LabelAppCompany.Location = New System.Drawing.Point(284, 63)
+        Me.LabelAppCompany.Name = "LabelAppCompany"
+        Me.LabelAppCompany.Size = New System.Drawing.Size(0, 12)
+        Me.LabelAppCompany.TabIndex = 100
+        '
+        'LabelAppVersion
+        '
+        Me.LabelAppVersion.AutoSize = True
+        Me.LabelAppVersion.Location = New System.Drawing.Point(284, 42)
+        Me.LabelAppVersion.Name = "LabelAppVersion"
+        Me.LabelAppVersion.Size = New System.Drawing.Size(0, 12)
+        Me.LabelAppVersion.TabIndex = 99
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(200, 63)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(51, 12)
+        Me.Label10.TabIndex = 98
+        Me.Label10.Text = "会社名 ："
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(200, 82)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(51, 12)
+        Me.Label9.TabIndex = 97
+        Me.Label9.Text = "製品名 ："
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(200, 42)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(60, 12)
+        Me.Label8.TabIndex = 96
+        Me.Label8.Text = "バージョン ："
+        '
+        'ComboBoxWirelessNetwork
+        '
+        Me.ComboBoxWirelessNetwork.FormattingEnabled = True
+        Me.ComboBoxWirelessNetwork.Items.AddRange(New Object() {"Wi-Fi"})
+        Me.ComboBoxWirelessNetwork.Location = New System.Drawing.Point(105, 261)
+        Me.ComboBoxWirelessNetwork.Name = "ComboBoxWirelessNetwork"
+        Me.ComboBoxWirelessNetwork.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxWirelessNetwork.TabIndex = 94
+        Me.ComboBoxWirelessNetwork.Text = "Wi-Fi"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(19, 264)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(63, 12)
+        Me.Label7.TabIndex = 93
+        Me.Label7.Text = "無線接続 ："
+        '
+        'ComboBoxWiredNetwork
+        '
+        Me.ComboBoxWiredNetwork.FormattingEnabled = True
+        Me.ComboBoxWiredNetwork.Items.AddRange(New Object() {"イーサネット"})
+        Me.ComboBoxWiredNetwork.Location = New System.Drawing.Point(105, 290)
+        Me.ComboBoxWiredNetwork.Name = "ComboBoxWiredNetwork"
+        Me.ComboBoxWiredNetwork.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxWiredNetwork.TabIndex = 92
+        Me.ComboBoxWiredNetwork.Text = "イーサネット"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(19, 290)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(63, 12)
+        Me.Label6.TabIndex = 3
+        Me.Label6.Text = "有線接続 ："
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.WiFiAutoIPChanger.My.Resources.Resources.sdt
+        Me.PictureBox1.Location = New System.Drawing.Point(3, 0)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(192, 219)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.PictureBox1.TabIndex = 95
+        Me.PictureBox1.TabStop = False
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.ImeMode = System.Windows.Forms.ImeMode.[On]
+        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
+        Me.TabControl1.Multiline = True
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(435, 369)
+        Me.TabControl1.TabIndex = 0
         '
         'FormConf
         '
@@ -260,17 +323,16 @@ Partial Class FormConf
         Me.MinimizeBox = False
         Me.Name = "FormConf"
         Me.Text = "環境設定"
-        Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabControl1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents ConfSave As Button
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents MaskedTextBoxSecondaryDNS As MaskedTextBox
     Friend WithEvents MaskedTextBoxGateway As MaskedTextBox
@@ -282,10 +344,17 @@ Partial Class FormConf
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents ConfSave As Button
-    Friend WithEvents Label6 As Label
-    Friend WithEvents ComboBoxWiredNetwork As ComboBox
+    Friend WithEvents TabPage1 As TabPage
     Friend WithEvents ComboBoxWirelessNetwork As ComboBox
     Friend WithEvents Label7 As Label
-    Friend WithEvents TabPage3 As TabPage
+    Friend WithEvents ComboBoxWiredNetwork As ComboBox
+    Friend WithEvents Label6 As Label
+    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label10 As Label
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents LabelAppName As Label
+    Friend WithEvents LabelAppCompany As Label
+    Friend WithEvents LabelAppVersion As Label
 End Class

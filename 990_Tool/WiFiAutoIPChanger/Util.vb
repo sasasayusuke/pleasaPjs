@@ -165,7 +165,7 @@ Public Class Util
     End Function
 
     ' ListView の左端にアイコンを追加
-    Public Shared Sub SetIconToListView(ByVal listView As ListView, ByVal icon As Icon, searchText As String)
+    Public Shared Sub SetIconToListView(ByVal listView As ListView, ByVal imagePath As String, searchText As String)
         listView.SmallImageList = New ImageList()
         ' 先に ImageIndex をリセット
         For Each item As ListViewItem In listView.Items
@@ -175,7 +175,7 @@ Public Class Util
         Dim index As Integer = Util.FindItemIndexByListView(listView, searchText)
         If index <> -1 Then
             ' 新しいアイコンを追加
-            listView.SmallImageList.Images.Add(icon)
+            listView.SmallImageList.Images.Add(Image.FromFile(imagePath))
             ' ImageIndex をセット
             listView.Items(index).ImageIndex = 0
         End If

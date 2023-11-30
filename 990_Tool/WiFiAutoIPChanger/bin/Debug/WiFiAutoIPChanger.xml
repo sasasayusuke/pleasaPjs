@@ -22,5 +22,10 @@ WiFiAutoIPChanger
   現在のスレッドの CurrentUICulture プロパティをオーバーライドします。
 </summary>
 </member>
+<member name="P:WiFiAutoIPChanger.My.Resources.Resources.sdt">
+<summary>
+  型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+</summary>
+</member>
 </members>
 </doc>

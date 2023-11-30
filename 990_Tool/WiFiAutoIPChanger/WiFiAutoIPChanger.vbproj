@@ -49,7 +49,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>green_wi-fi_icon.ico</ApplicationIcon>
+    <ApplicationIcon>blue_wifi_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -146,7 +146,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="green_wi-fi_icon.ico" />
+    <Content Include="blue_wifi_icon.ico" />
+    <None Include="Resources\sdt.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
