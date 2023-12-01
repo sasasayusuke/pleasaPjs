@@ -21,16 +21,27 @@ Public Class FormConf
 
         ' 会社情報へ書き込み
         Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
+        Dim rbs = {RadioAutoObtainIP, RadioSpecificIP, RadioAutoObtainDNS, RadioSpecificDNS}
+
         For Each mtb In mtbs
             mtb.Mask = "000\.000\.000\.000"
             mtb.PromptChar = "_"
-            Dim ip = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, mtb.Name)
+            Dim ip As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, mtb.Name)
             If String.IsNullOrEmpty(ip) Then
                 mtb.Text = Constants.EMPTY_IP_ADDRESS
             Else
                 mtb.Text = Util.ConvertIpAddressFormat(ip)
             End If
         Next
+
+        For Each rb In rbs
+            Dim check = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, rb.Name)
+            If String.IsNullOrEmpty(check) Then
+            Else
+                rb.Checked = Boolean.Parse(check)
+            End If
+        Next
+
     End Sub
 
 
@@ -48,6 +59,42 @@ Public Class FormConf
 
     End Sub
 
+    Private Sub RadioAutoObtainIP_Changed(sender As Object, e As EventArgs) Handles RadioAutoObtainIP.CheckedChanged
+        ' IPアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを無効化
+        If RadioAutoObtainIP.Checked Then
+            MaskedTextBoxIPAddress.Enabled = False
+            MaskedTextBoxSubnet.Enabled = False
+            MaskedTextBoxGateway.Enabled = False
+            RadioSpecificIP.Checked = False
+        End If
+    End Sub
+    Private Sub RadioSpecificIP_Changed(sender As Object, e As EventArgs) Handles RadioSpecificIP.CheckedChanged
+        ' 次のIPアドレスを使う をチェックした場合は以下のテキストボックスを有効化
+        If RadioSpecificIP.Checked Then
+            MaskedTextBoxIPAddress.Enabled = True
+            MaskedTextBoxSubnet.Enabled = True
+            MaskedTextBoxGateway.Enabled = True
+            RadioAutoObtainIP.Checked = False
+        End If
+    End Sub
+    Private Sub RadioAutoObtainDNS_Changed(sender As Object, e As EventArgs) Handles RadioAutoObtainDNS.CheckedChanged
+        ' DNSサーバのアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを無効化
+        If RadioAutoObtainDNS.Checked Then
+            MaskedTextBoxPrimaryDNS.Enabled = False
+            MaskedTextBoxSecondaryDNS.Enabled = False
+            RadioSpecificDNS.Checked = False
+        End If
+    End Sub
+    Private Sub RadioSpecificDNS_Changed(sender As Object, e As EventArgs) Handles RadioSpecificDNS.CheckedChanged
+        ' 次のDNSサーバのアドレスを自動的に取得する をチェックした場合は以下のテキストボックスを有効化
+        If RadioSpecificDNS.Checked Then
+            MaskedTextBoxPrimaryDNS.Enabled = True
+            MaskedTextBoxSecondaryDNS.Enabled = True
+            RadioAutoObtainDNS.Checked = False
+        End If
+    End Sub
+
+
     ' 保存ボタンクリック
     Private Sub ConfSave_Click(sender As Object, e As EventArgs) Handles ConfSave.Click
         ' XMLファイルに書き込み
@@ -60,9 +107,14 @@ Public Class FormConf
 
         ' 全てのMaskedTextBox
         Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
+        Dim rbs = {RadioAutoObtainIP, RadioSpecificIP, RadioAutoObtainDNS, RadioSpecificDNS}
+
         For Each mtb In mtbs
             Dim ip As String = mtb.Text.Replace(" ", "")
             Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, mtb.Name, ip)
+        Next
+        For Each rb In rbs
+            Util.WriteValueToXml(Constants.PAGE_CONF, Constants.PAGE_CONF_COMPANY, rb.Name, rb.Checked)
         Next
         MessageBox.Show("設定内容を保存しました", "保存", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Me.Close()

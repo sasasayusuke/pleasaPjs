@@ -9,6 +9,10 @@
     <Setting Key="MaskedTextBoxGateway">192.168.1.1</Setting>
     <Setting Key="MaskedTextBoxPrimaryDNS">192.168.1.237</Setting>
     <Setting Key="MaskedTextBoxSecondaryDNS">202.234.232.6</Setting>
+    <Setting Key="RadioAutoObtainIP">False</Setting>
+    <Setting Key="RadioSpecificIP">True</Setting>
+    <Setting Key="RadioAutoObtainDNS">True</Setting>
+    <Setting Key="RadioSpecificDNS">False</Setting>
   </Conf>
   <IP Key="SDT_3FNW_MtgR">
     <Setting Key="MaskedTextBoxIPAddress">111.111.111.111</Setting>
@@ -76,7 +80,7 @@
     <Setting Key="MaskedTextBoxGateway">212.121.111.1</Setting>
     <Setting Key="MaskedTextBoxPrimaryDNS">221.211.111.1</Setting>
     <Setting Key="MaskedTextBoxSecondaryDNS">21.212.121.1</Setting>
-    <Setting Key="CheckSpecificCompanyIP">False</Setting>
+    <Setting Key="CheckSpecificCompanyIP">True</Setting>
     <Setting Key="RadioAutoObtainIP">False</Setting>
     <Setting Key="RadioSpecificIP">True</Setting>
     <Setting Key="RadioAutoObtainDNS">True</Setting>
@@ -117,5 +121,16 @@
     <Setting Key="RadioSpecificIP">False</Setting>
     <Setting Key="RadioAutoObtainDNS">True</Setting>
     <Setting Key="RadioSpecificDNS">False</Setting>
+  </IP>
+  <IP Key="">
+    <Setting Key="MaskedTextBoxIPAddress">192.168.1.116</Setting>
+    <Setting Key="MaskedTextBoxSubnet">255.255.255.0</Setting>
+    <Setting Key="MaskedTextBoxGateway">192.168.1.1</Setting>
+    <Setting Key="MaskedTextBoxPrimaryDNS">192.168.1.237</Setting>
+    <Setting Key="MaskedTextBoxSecondaryDNS">202.234.232.6</Setting>
+    <Setting Key="RadioAutoObtainIP">True</Setting>
+    <Setting Key="RadioSpecificIP">False</Setting>
+    <Setting Key="RadioAutoObtainDNS">False</Setting>
+    <Setting Key="RadioSpecificDNS">True</Setting>
   </IP>
 </Settings>

@@ -2,7 +2,7 @@
 Public Class FormIp
 
     ' フォームのロード時に一度だけマスクを設定します。
-    Private Sub FormConf_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub FormIp_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' 全てのMaskedTextBoxの共通の設定
         Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
         Dim rbs = {CheckSpecificCompanyIP, RadioAutoObtainIP, RadioSpecificIP, RadioAutoObtainDNS, RadioSpecificDNS}
@@ -94,7 +94,6 @@ Public Class FormIp
     ' 保存ボタンクリック
     Private Sub IpSave_Click(sender As Object, e As EventArgs) Handles IpSave.Click
         ' XMLファイルに書き込み
-
         Dim mtbs = {MaskedTextBoxIPAddress, MaskedTextBoxSubnet, MaskedTextBoxGateway, MaskedTextBoxPrimaryDNS, MaskedTextBoxSecondaryDNS}
         Dim rbs = {CheckSpecificCompanyIP, RadioAutoObtainIP, RadioSpecificIP, RadioAutoObtainDNS, RadioSpecificDNS}
 
