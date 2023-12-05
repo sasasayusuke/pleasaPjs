@@ -30,36 +30,37 @@ Partial Class FormMain
         Me.CloseMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.SsidLabel = New System.Windows.Forms.Label()
-        Me.OptionLabel = New System.Windows.Forms.Label()
         Me.SsidListView = New System.Windows.Forms.ListView()
         Me.SSID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.LabelWired = New System.Windows.Forms.Label()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'ContextMenuStrip1
         '
+        Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewMenuItem, Me.ConfMenuItem, Me.CloseMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(146, 70)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(149, 70)
         '
         'ViewMenuItem
         '
         Me.ViewMenuItem.Name = "ViewMenuItem"
-        Me.ViewMenuItem.Size = New System.Drawing.Size(145, 22)
+        Me.ViewMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ViewMenuItem.Text = "メイン画面表示"
         '
         'ConfMenuItem
         '
         Me.ConfMenuItem.Name = "ConfMenuItem"
-        Me.ConfMenuItem.Size = New System.Drawing.Size(145, 22)
+        Me.ConfMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ConfMenuItem.Text = "環境設定"
         '
         'CloseMenuItem
         '
         Me.CloseMenuItem.Name = "CloseMenuItem"
-        Me.CloseMenuItem.Size = New System.Drawing.Size(145, 22)
+        Me.CloseMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.CloseMenuItem.Text = "終了"
         '
         'NotifyIcon1
@@ -74,18 +75,9 @@ Partial Class FormMain
         Me.SsidLabel.AutoSize = True
         Me.SsidLabel.Location = New System.Drawing.Point(12, 12)
         Me.SsidLabel.Name = "SsidLabel"
-        Me.SsidLabel.Size = New System.Drawing.Size(122, 12)
+        Me.SsidLabel.Size = New System.Drawing.Size(61, 12)
         Me.SsidLabel.TabIndex = 1
-        Me.SsidLabel.Text = "端末登録済み無線LAN"
-        '
-        'OptionLabel
-        '
-        Me.OptionLabel.AutoSize = True
-        Me.OptionLabel.Location = New System.Drawing.Point(270, 12)
-        Me.OptionLabel.Name = "OptionLabel"
-        Me.OptionLabel.Size = New System.Drawing.Size(75, 12)
-        Me.OptionLabel.TabIndex = 2
-        Me.OptionLabel.Text = "詳細情報"
+        Me.SsidLabel.Text = "有線LAN : "
         '
         'SsidListView
         '
@@ -120,15 +112,26 @@ Partial Class FormMain
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 10000
         '
+        'LabelWired
+        '
+        Me.LabelWired.AutoSize = True
+        Me.LabelWired.ForeColor = System.Drawing.Color.Blue
+        Me.LabelWired.Location = New System.Drawing.Point(69, 12)
+        Me.LabelWired.Name = "LabelWired"
+        Me.LabelWired.Size = New System.Drawing.Size(27, 12)
+        Me.LabelWired.TabIndex = 5
+        Me.LabelWired.Text = "OFF"
+        '
         'FormMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(534, 291)
+        Me.Controls.Add(Me.LabelWired)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.SsidListView)
-        Me.Controls.Add(Me.OptionLabel)
         Me.Controls.Add(Me.SsidLabel)
+        Me.ForeColor = System.Drawing.Color.Black
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -147,9 +150,9 @@ Partial Class FormMain
     Friend WithEvents ConfMenuItem As ToolStripMenuItem
     Friend WithEvents CloseMenuItem As ToolStripMenuItem
     Friend WithEvents SsidLabel As Label
-    Friend WithEvents OptionLabel As Label
     Friend WithEvents SsidListView As ListView
     Friend WithEvents Panel1 As Panel
     Friend WithEvents SSID As ColumnHeader
     Friend WithEvents Timer1 As Timer
+    Friend WithEvents LabelWired As Label
 End Class

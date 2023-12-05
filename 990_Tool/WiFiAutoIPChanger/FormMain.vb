@@ -2,16 +2,9 @@
 Public Class FormMain
     ' 起動時動作
     Private Sub FormMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        ' 初期ではメイン情報画面を表示しない
-        Me.Visible = False
-        Me.ShowInTaskbar = False
-
-        Dim SsidList = Util.GetKnownWiFi()
-
-        For i = 0 To SsidList.Count - 1
-            SsidListView.Items.Add(SsidList(i))
-        Next i
-
+        Me.Visible = True
+        Me.ShowInTaskbar = True
+        CheckNetworkStatusChange(Me, e)
     End Sub
 
 
@@ -65,52 +58,6 @@ Public Class FormMain
         Me.Close()
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        ' 現在接続中のWiFi確認
-        Dim tmpSsid As String = Util.GetCurrentSSID()
-        If Constants.currentSSID <> tmpSsid Then
-            Constants.currentSSID = tmpSsid
-            ' ListView の端にアイコンを追加
-            Util.SetIconToListView(SsidListView, "red_wifi_icon.ico", Constants.currentSSID)
-            Dim index As Integer = Util.FindItemIndexByListView(SsidListView, Constants.currentSSID)
-            If index <> -1 Then
-
-
-                ' 設定情報を取得
-                Dim setting As NetworkSettings = Util.GetNetworkSettings(Constants.currentSSID)
-
-                Dim interfaceWired As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWiredNetwork")
-                Dim interfaceWireless As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWirelessNetwork")
-
-                ' 有線のIPを解除
-                Dim response = Constants.currentSSID & "へ接続します。以下の設定をしました" & vbCrLf
-                response += Util.UpdateIPToDHCP(interfaceWired)
-                response += Util.UpdateDNSToDHCP(interfaceWired)
-
-                ' 設定情報を更新
-                If setting.autoObtainIP Then
-                    response += Util.UpdateIPToDHCP(interfaceWireless)
-                Else
-                    response += Util.UpdateStaticIPAddress(interfaceWireless, setting.ipAddress, setting.subnetMask, setting.gateway)
-                End If
-
-                If setting.autoObtainDNS Then
-                    response += Util.UpdateDNSToDHCP(interfaceWireless)
-                Else
-                    response += Util.UpdateStaticPrimaryDNS(interfaceWireless, setting.primaryDNS)
-                    If Not String.IsNullOrEmpty(setting.secondaryDNS) Then
-                        response += Util.UpdateStaticSecondaryDNS(interfaceWireless, setting.secondaryDNS)
-                    End If
-
-                End If
-
-                MessageBox.Show(response, "実行結果", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-
-        End If
-    End Sub
-
-
 
 
     ' 現在接続中のWiFi確認
@@ -128,4 +75,134 @@ Public Class FormMain
 
     ' 変更がない場合
     ' 終了
+    Private Sub CheckNetworkStatusChange(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Dim commandList As New List(Of String)
+
+        Dim interfaceWired As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWiredNetwork")
+        Dim interfaceWireless As String = Util.ReadValueFromXml(Constants.PAGE_CONF, Constants.PAGE_CONF_GENERAL, "ComboBoxWirelessNetwork")
+
+        ' 有線接続中
+        If Util.IsEthernetConnected() AndAlso Not Constants.currentWired Then
+            Constants.currentWired = True
+            LabelWired.Text = "ON"
+            LabelWired.ForeColor = Color.Crimson
+            ' 設定情報を取得
+            Dim setting As NetworkSettings = Util.GetNetworkSettings("", True)
+
+
+            ' 設定情報を更新
+            If Constants.currentUseCompany Then
+                Constants.currentUseCompany = False
+                commandList.Add(Util.GetCmdUpdateIPToDHCP(interfaceWireless))
+                commandList.Add(Util.GetCmdUpdateDNSToDHCP(interfaceWireless))
+            End If
+
+            If setting.autoObtainIP Then
+                commandList.Add(Util.GetCmdUpdateIPToDHCP(interfaceWired))
+            Else
+                commandList.Add(Util.GetCmdUpdateStaticIPAddress(interfaceWired, setting.ipAddress, setting.subnetMask, setting.gateway))
+            End If
+
+            If setting.autoObtainDNS Then
+                commandList.Add(Util.GetCmdUpdateDNSToDHCP(interfaceWired))
+            Else
+                commandList.Add(Util.GetCmdUpdateStaticPrimaryDNS(interfaceWired, setting.primaryDNS))
+                If Not String.IsNullOrEmpty(setting.secondaryDNS) Then
+                    commandList.Add(Util.GetCmdUpdateStaticSecondaryDNS(interfaceWired, setting.secondaryDNS))
+                End If
+
+            End If
+        ElseIf Not Util.IsEthernetConnected() AndAlso Constants.currentWired Then
+            Constants.currentWired = False
+            LabelWired.Text = "OFF"
+            LabelWired.ForeColor = Color.Blue
+        End If
+
+
+        ' 現在接続中のWiFi確認
+        Dim tmpSsid As String = Util.GetCurrentSSID()
+
+        If Constants.currentSSID <> tmpSsid Then
+            Constants.currentSSID = tmpSsid
+
+            Try
+                ' ListViewの描画を一時停止
+                SsidListView.BeginUpdate()
+
+                ' 既存のアイテムをクリア
+                SsidListView.Items.Clear()
+
+                ' 既知WiFiリストを取得してListViewに追加
+                Dim SsidList = Util.GetKnownWiFi()
+                For i = 0 To SsidList.Count - 1
+                    SsidListView.Items.Add(SsidList(i))
+                Next i
+
+                ' ListView の端にアイコンを追加
+                Util.SetIconToListView(SsidListView, "red_wifi_icon.ico", Constants.currentSSID)
+
+            Finally
+                ' ListViewの描画を再開
+                SsidListView.EndUpdate()
+            End Try
+
+
+            Dim index As Integer = Util.FindItemIndexByListView(SsidListView, Constants.currentSSID)
+            If index <> -1 Then
+
+
+                ' 設定情報を取得
+                Dim setting As NetworkSettings = Util.GetNetworkSettings(Constants.currentSSID)
+
+
+                ' 会社のIPを使用するSSIDの場合
+                ' 有線のIPを解除
+                If setting.useCompany Then
+                    Constants.currentUseCompany = True
+                    commandList.Add(Util.GetCmdUpdateIPToDHCP(interfaceWired))
+                    commandList.Add(Util.GetCmdUpdateDNSToDHCP(interfaceWired))
+                End If
+
+                ' 設定情報を更新
+                If setting.autoObtainIP Then
+                    commandList.Add(Util.GetCmdUpdateIPToDHCP(interfaceWireless))
+                Else
+                    commandList.Add(Util.GetCmdUpdateStaticIPAddress(interfaceWireless, setting.ipAddress, setting.subnetMask, setting.gateway))
+                End If
+
+                If setting.autoObtainDNS Then
+                    commandList.Add(Util.GetCmdUpdateDNSToDHCP(interfaceWireless))
+                Else
+                    commandList.Add(Util.GetCmdUpdateStaticPrimaryDNS(interfaceWireless, setting.primaryDNS))
+                    If Not String.IsNullOrEmpty(setting.secondaryDNS) Then
+                        commandList.Add(Util.GetCmdUpdateStaticSecondaryDNS(interfaceWireless, setting.secondaryDNS))
+                    End If
+
+                End If
+            End If
+        End If
+
+
+        Dim cmd As String = String.Join(" & ", commandList)
+
+
+        If Not String.IsNullOrEmpty(cmd) Then
+            Util.ExecuteCommand(cmd, True)
+        End If
+    End Sub
+
+
+    Private Sub NotifyIcon1_MouseClick(ByVal sender As Object, ByVal e As MouseEventArgs) Handles NotifyIcon1.MouseClick
+        If e.Button = MouseButtons.Left Then
+            ' フォームの表示状態を切り替える
+            Me.Visible = Not Me.Visible
+            If Me.Visible Then
+                ' フォームをアクティブにする
+                Me.Activate()
+                Me.Show()
+            End If
+        End If
+    End Sub
+
+
 End Class

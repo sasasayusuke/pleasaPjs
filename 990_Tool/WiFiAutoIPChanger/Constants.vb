@@ -16,10 +16,10 @@ Public Class Constants
     Public Const PAGE_CONF As String = "Conf"
     Public Const PAGE_CONF_GENERAL As String = "General"
     Public Const PAGE_CONF_COMPANY As String = "Company"
-    Public Const INTERFACE_WIFI As String = "Wi-Fi"
-    Public Const INTERFACE_ETHA As String = "イーサネット"
 
-    Public Shared currentSSID As String
+    Public Shared currentSSID As String = ""
+    Public Shared currentWired As Boolean = False
+    Public Shared currentUseCompany As Boolean = False
 
     Public Shared selectedSSID As String
 
